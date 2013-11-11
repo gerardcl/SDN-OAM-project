@@ -1,0 +1,195 @@
+body{background-color: #F7F7F6;}
+
+.top{
+	margin-top: 65px;
+}
+
+.login {
+  position: relative;
+  margin: 0 auto;
+  padding-top: 60px;
+  width: 300px;
+  @include box-shadow(0 0 200px rgba(white, .5), 0 1px 2px rgba(black, .3));
+
+}
+.center{
+   float: none; 
+   margin:0 auto;
+
+:invalid { 
+  border-color: #e88;
+  -webkit-box-shadow: 0 0 5px rgba(255, 0, 0, .8);
+  -moz-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+  -o-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+  -ms-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+  box-shadow:0 0 5px rgba(255, 0, 0, .8);
+}
+
+:required {
+  border-color: #88a;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  -o-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  -ms-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+}
+
+
+
+form {
+  width: auto;
+  margin: 20px auto;
+}
+
+input {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border:1px solid #ccc;
+  font-size:20px;
+  width:250px;
+  min-height:30px;
+  display:block;
+  margin-bottom:15px;
+  margin-top:5px;
+  outline: none;
+
+  -webkit-border-radius:5px;
+  -moz-border-radius:5px;
+  -o-border-radius:5px;
+  -ms-border-radius:5px;
+  border-radius:5px;
+}
+
+input[type=submit] {
+  background:none;
+  padding:10px;
+  margin-bottom:60px;
+}
+
+.input {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border:1px solid #ccc;
+  font-size:15px;
+  width:250px;
+  overflow:auto;
+  resize:none;
+
+
+  margin-bottom:15px;
+  margin-top:5px;
+  outline: none;
+
+  -webkit-border-radius:5px;
+  -moz-border-radius:5px;
+  -o-border-radius:5px;
+  -ms-border-radius:5px;
+  border-radius:5px;
+}
+
+}
+.wrapper{
+	width: 90%;
+	margin: auto;
+  margin-top: 30px;
+}
+
+
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  border-color: #e88;
+  
+}
+
+h4 {
+  margin-top: 25px;
+}
+.row {
+  margin-bottom: 20px;
+}
+.row .row {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+[class*="col-"] {
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+}
+
+hr {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+
+
+/* Proves meves */
+#statisticsDialog {
+    position: absolute;
+    overflow-y: auto;
+}
+
+.page-header {
+  margin-top: 0;
+}
+
+.panel-body {
+  padding-top: 0;
+}
+
+.modal-dialog-full {
+  width: 90%;
+  height: 90%;
+  padding: 0;
+}
+
+.modal-content-full {
+  height: 90%;
+  border-radius: 0;
+}
+
+
+
+/* bootstrap overrides */
+
+html, body {
+    height: 100%;
+}
+
+.main, .row-fluid {
+    height: 100%;
+}
+
+.main:before, .main:after,
+.column:before, .column:after {
+    content: "";
+    display: table;
+}
+
+.main:after,
+.column:after {
+    clear: both;
+}
+
+.column {
+    height: 100%;
+    overflow: auto;
+    *zoom:1;
+}
+
+.column .padding {
+    padding: 20px;
+}
+
+.box {
+  	bottom: 0; /* increase for footer use */
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 40px;
+}
+
+.span9.full {
+    width: 100%;
+}
+

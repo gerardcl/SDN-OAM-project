@@ -1,0 +1,108 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+        <title>Devices</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href = "css/bootstrap.min.css" rel = "stylesheet" media="screen">
+        <link href = "css/styles.css" rel = "stylesheet" media="screen">
+
+  </head>
+
+<body>
+<!-- Navigation Bar -->
+ <div class = "navbar navbar-inverse navbar-fixed-top">
+              <div class = "container">  
+                      <a href = "#" class = "navbar-brand">Devices Manager beta</a>
+                      <button class = "navbar-toggle" data-toggle = "collapse" data-target = ".navHeaderCollapse">
+                              <span class = "icon-bar"></span>
+                              <span class = "icon-bar"></span>
+                              <span class = "icon-bar"></span>
+                      </button>
+                      <div class = "collapse navbar-collapse navHeaderCollapse">                        
+                              <ul class = "nav navbar-nav navbar-right">
+                                      <li class = "active"><a href = "#">Home</a></li>
+                                      <li class = "dropdown">
+                                              <a href = "#" class = "dropdown-toggle" data-toggle = "dropdown">Devices <b class = "caret"></b></a>
+                                              <ul class = "dropdown-menu">
+                                                      <li><a href = "#">Controller</a></li>
+                                                      <li><a href = "#">Switch</a></li>
+                                                      <li><a href = "#">Nodes</a></li>
+                                                      <li><a href = "#">Links</a></li>
+                                              </ul>
+                                      </li>
+                                      <li><a href = "#">About</a></li>
+                              </ul>
+                      </div>   
+              </div>
+</div>
+<!-- Navigation Ends -->
+ 
+<!-- Main Container -->
+<section class="login">
+  <div class="well">
+    <form>
+      <fieldset>
+        <center>
+          <legend>Login</legend>
+          <input type="text" id="username" class="input-block-level" name="username" placeholder="Username" required>
+          <br><br>
+          <input type="password" id="password" class="input-block-level" name="password" placeholder="Password" required>
+          <label class="checkbox">
+            <input type="checkbox" name="remember" value="1">Remember Me
+          </label>
+          <input type="submit" name="submit" class="btn btn-primary" value="login">
+          <a class="btn btn-info" href="#register" role="button" data-toggle="modal">Register</a>
+        </center>
+      </fieldset>
+    </form>
+  </div>
+</section><!-- Main Container Ends -->
+ 
+<!-- Register Model Box -->
+<div class = "modal fade" id = "register" role = "dialog">
+    <div class = "modal-dialog">
+        <div class = "modal-content ">
+            <div class = "modal-header">
+                <h4>Register</h4>
+            </div>
+            
+            <div class = "modal-body">
+
+              <div class="form-group">
+                <label for = "name" class = "col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label">Name:</label>  
+                <div class = "col-lg-8 col-md-8 col-sm-8 col-xs-8">  
+                  <input type="text" id="username" class="input-block-level" name="username" placeholder="Username" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for = "Password" class = "col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label">Password:</label> 
+                <div class = "col-lg-8 col-md-8 col-sm-8 col-xs-8"> 
+                  <input type="password" id="password" class="input-block-level" name="password" placeholder="Password" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for = "Password2" class = "col-lg-4 col-md-4 col-sm-4 col-xs-4">Confirm password:</label>  
+                <div class = "col-lg-8 col-md-8 col-sm-8 col-xs-8"> 
+                  <input type="password" id="password2" class="input-block-level" name="password2" placeholder="Password" required>
+                </div>
+              </div>
+
+            <div class = "modal-footer">
+              <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button>
+              <button class="btn btn-success">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- JavaScript -->
+    <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src = "js/bootstrap.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+    <script src="js/client.js"></script>
+</body>
+</html>

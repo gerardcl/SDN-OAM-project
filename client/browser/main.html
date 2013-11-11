@@ -1,0 +1,205 @@
+ <!DOCTYPE html>
+<html lang="en">
+  <head>
+        <title>Devices</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href = "css/bootstrap.min.css" rel = "stylesheet" media="screen">
+        <link href = "css/styles.css" rel = "stylesheet" media="screen">
+
+  </head>
+
+<body>
+<!-- Navigation Bar -->
+ <div class = "navbar navbar-inverse navbar-fixed-top">
+              <div class = "container">  
+                      <a href = "#" class = "navbar-brand">Devices Manager beta</a>
+                      <button class = "navbar-toggle" data-toggle = "collapse" data-target = ".navHeaderCollapse">
+                              <span class = "icon-bar"></span>
+                              <span class = "icon-bar"></span>
+                              <span class = "icon-bar"></span>
+                      </button>
+                      <div class = "collapse navbar-collapse navHeaderCollapse">                        
+                              <ul class = "nav navbar-nav navbar-right">
+                                      <li class = "active"><a href = "#">Home</a></li>
+                                      <li class = "dropdown">
+                                              <a href = "#" class = "dropdown-toggle" data-toggle = "dropdown">Devices <b class = "caret"></b></a>
+                                              <ul class = "dropdown-menu">
+                                                      <li><a href = "#">Controller</a></li>
+                                                      <li><a href = "#">Switch</a></li>
+                                                      <li><a href = "#">Nodes</a></li>
+                                                      <li><a href = "#">Links</a></li>
+                                              </ul>
+                                      </li>
+                                      <li><a href = "#">About</a></li>
+                              </ul>
+                      </div>   
+              </div>
+</div>
+<!-- Navigation Ends -->
+
+
+<div class="container top">
+  <div class="col-lg-12 col-md-12 col-sm-12 well">
+      <div class="panel-body">
+        <h2><center>TOPOLOGY SUMMARY</center></h2>
+        
+        <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
+          <h3><center><span class="label label-success">Hosts</span></center></h3>
+          <h3><center><span class="label label-danger">Hosts</span></center></h3>
+        </div>
+        
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
+          <h3><center><span class="label label-success">Nodes</span></center></h3>
+          <h3><center><span class="label label-danger">Nodes</span></center></h3>
+        </div>
+        
+        <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
+          <h3><center><span class="label label-success">Link</span></center></h3>
+          <h3><center><span class="label label-danger">Link</span></center></h3>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="panel-body well">
+              <h1>TOPOLOGY</h1>
+              <h3>Here the image</h3>
+              <form class="wrapper" id="add-device">
+                <input type="submit" id="device1" class="btn btn-primary" value="Device 1"/>
+              </form>
+              <form class="wrapper" id="add-device2">
+                <input type="submit" id="device2" class="btn btn-primary" value="Device 2"/>
+              </form>
+        </div>
+      
+    </div>
+              
+    <div class="col-lg-4 col-md-4 col-sm-4"> <!--SIDEBAR-->
+
+        <div class="panel-body well">
+          <div id="devices">  
+            <div class="device-container">
+              <div>  
+                <h3>Name:  name </h3>
+                <p>Id: id </p>
+                <p>Status: status </p>
+                <p>Ports Connected: portsConnected </p>
+                <p>Total Ports: totalPorts </p>
+                <p>MAC 1: mac1 </p>
+                <p>MAC 2: mac2 </p>
+                <p>MAC 3: mac3 </p>
+                <p>MAC 4: mac4 </p>
+              </div> 
+
+            </div>
+            <script type="text/template" id="device-template">  
+              <div>  
+                <h3>Name: <%= name %></h3>
+                <p>Id: <%= id %></p>
+                <p>Status: <%= status %></p>
+                <p>Ports Connected: <%= portsConnected %></p>
+                <p>Total Ports: <%= totalPorts %></p>
+                <p>MAC 1: <%= mac1 %></p>
+                <p>MAC 2: <%= mac2 %></p>
+                <p>MAC 3: <%= mac3 %></p>
+                <p>MAC 4: <%= mac4 %></p>
+              </div> 
+              </script>
+          </div>
+          <a class="btn btn-success btn-lg btn-block" href="#statisticsDialog" role="button" data-toggle="modal">Statistics</a>
+        </div>
+      
+    </div><!--END SIDEBAR-->
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+ <div class = "modal fade" id = "statisticsDialog" role = "dialog">
+    <div class = "modal-dialog">
+        <div class = "modal-content">
+            <div class = "modal-header">
+              <h4>Statistics</h4>
+              <div class="btn-group btn-block">
+
+               <div class="col-lg-4 col-md-4 col-sm-4">
+                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                  Interfaces <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Interface 1</a></li>
+                  <li><a href="#">Interface 2</a></li>
+                  <li><a href="#">Interface 3</a></li>
+                  <li><a href="#">Interface 4</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">ALL interfaces</a></li>
+                </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
+                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                  Data to draw <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Packets received</a></li>
+                  <li><a href="#">Bytes received</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Packets transmitted</a></li>
+                  <li><a href="#">Bytes transmitted</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Dropped received</a></li>
+                  <li><a href="#">Dropped transmitted</a></li>
+                  <li><a href="#">Errors received</a></li>
+                  <li><a href="#">Errors transmitted</a></li>
+                  <li><a href="#">Frame errors received</a></li>
+                  <li><a href="#">Overrun errors received</a></li>
+                </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                  Time interval <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">1 Minute</a></li>
+                  <li><a href="#">1 Hour</a></li>
+                  <li><a href="#">1 Day</a></li>
+                  <li><a href="#">1 Week</a></li>
+                </ul>
+
+
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class = "modal-body">
+               <Textarea class="form-control" rows="10"></Textarea>
+            </div>
+
+            <div class = "modal-footer">  
+                <a class = "btn btn-primary" data-dismiss = "modal">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ 
+<!-- JavaScript -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+    <script src="js/client.js"></script>
+
+<!-- Templates -->
+</body>
+</html>
