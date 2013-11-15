@@ -2,37 +2,38 @@
 
 	var Device = Backbone.Model.extend({
 		defaults:{
-			id:"1",
-			name:"Device1",
-			status:"UP",
-			portsConnected:"3",
-			totalPorts:"4",
-			mac1:"11:11:11:11:11:11",
-			mac2:"12:12:12:12:12:12",
-			mac3:"13:13:13:13:13:13",
-			mac4:"14:14:14:14:14:14"
+			id:"its unique id",
+			name:"device name",
+			status:"actual state",
+			portsConnected:"number of active ports",
+			totalPorts:"total number of ports",
+			mac1:"mac1",
+			mac2:"mac2",
+			mac3:"mac3",
+			mac4:"mac4"
 		}
 	});
 
 	var DevicesList = Backbone.Collection.extend({
 		model: Device,
-		url:'http://localhost:8080/device-manager-api/webapi/devices/routers',
+		//url:'http://localhost:8080/device-manager-api/webapi/devices/routers',
+		url:'http://ec2-54-229-220-96.eu-west-1.compute.amazonaws.com:7474/db/data/node/1',
 		parse:function (response) {
 			console.log(response);
 			//response.id = response.inventoryId;
 			// Parse the response and construct models
-			for ( var i = 0, length = response.routers.length; i < length; i++) {
-				var currentValue = response.routers[i];
-				var devObject = {};
-				console.log(currentValue);
-				devObject.interfaces = currentValue.interfaces;
-				devObject.routingTable = currentValue.routingTable;
-				devObject.ports = currentValue.ports;
-				devObject.inventoryId = currentValue.inventoryId;
-				// push the model object
-				this.push(devObject);
-			}
-			console.log(this.toJSON());
+//			for ( var i = 0, length = response.routers.length; i < length; i++) {
+//				var currentValue = response.routers[i];
+//				var devObject = {};
+//				console.log(currentValue);
+//				devObject.interfaces = currentValue.interfaces;
+//				devObject.routingTable = currentValue.routingTable;
+//				devObject.ports = currentValue.ports;
+//				devObject.inventoryId = currentValue.inventoryId;
+//				// push the model object
+//				this.push(devObject);
+//			}
+//			console.log(this.toJSON());
 
 			//return models
 			return this.models;
@@ -74,6 +75,7 @@
 //		model: Device
 //	});
 
+	//Global View if needed, now not used
 	var DevicesView = Backbone.View.extend({
 		model: devices,
 		el: $('#devices-container'),
@@ -104,20 +106,18 @@
 		}
 
 	});
-	
-	//$("#devices").html(devicesView.render().el);
-	
+	var deviceView = new DeviceView();
+	var devicesView = new DevicesView();
+
 	$(document).ready(function(){
+		//$("#devices").html(devicesView.render().el);
+		$("#devices").html(deviceView.render().el);
+
 		$('#add-device').submit(function(ev){
 			//var the_id= "RT-"+ ++numDevices;
 			//var device = new Device({id:the_id,name:$('#device-name').val(),ip:$('#device-ip').val(),description:$('#device-description').val()});
 			var device = new Device({inventoryId:$('#device-inventoryId').val(),ports:$('#device-ports').val(),interfaces:$('#device-interfaces').val(),routingTable:$('#device-routingTable').val()});
 			devices.add(device);
-			// var device2 = new Device({id:'RT-2',name:'Router
-			// 2',ip:'192.168.1.12',description:'second router'});
-			// var device3 = new Device({id:'RT-3',name:'Router
-			// 3',ip:'192.168.1.13',description:'third router'});
-			// console.log(device.get('description'));
 			console.log(devices.toJSON());
 //			device.save({id:device.get('id'),name:$('#device-name').val(),ip:$('#device-ip').val(),description:$('#device-description').val()},{
 //			succes: function(){ consol.log("successfully saved device!");},
@@ -126,6 +126,5 @@
 			return false;	
 		});
 
-		var appView = new DevicesView();
 	});
 })(jQuery);
