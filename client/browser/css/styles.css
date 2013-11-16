@@ -146,6 +146,11 @@ hr {
   padding-bottom: 5px;
 }
 
+.small-h4{
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
 .panel-body {
   padding-top: 0;
 }

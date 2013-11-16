@@ -37,32 +37,46 @@
 </div>
 <!-- Navigation Ends -->
 
-<!--Jumbotron-->
-<div class="jumbotron page-header">
+<!--Jumbotron Desktop-->
+<div class="jumbotron page-header hidden-xs">
   <div class="container">
     <div class="panel-body">
-
       <h2 class="jumbotron-data"><center>TOPOLOGY SUMMARY</center></h2>
-
-      <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4 small-padding">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 small-padding">
         <h3><center><span class="label label-success">Hosts UP</span></center></h3>
         <h3><center><span class="label label-danger">Hosts DOWN</span></center></h3>
       </div>
-      
-
-      <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4 small-padding">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 small-padding">
         <h3><center><span class="label label-success">Nodes UP</span></center></h3>
         <h3><center><span class="label label-danger">Nodes DOWN</span></center></h3>
       </div>
-      
-      <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4 small-padding">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 small-padding">
         <h3><center><span class="label label-success">Links UP</span></center></h3>
         <h3><center><span class="label label-danger">Links DOWN</span></center></h3>
       </div>
-
     </div>
   </div>
 </div><!--END Jumbotron-->
+
+<!--Jumbotron Small screen-->
+<div class="jumbotron page-header visible-xs">
+  <div class="container">
+    <div>
+      <h4 class="small-h4"><center>TOPOLOGY SUMMARY</center></h4>
+      <div class="col-xs-6 panel-body">
+        <h5><center><span class="label label-success">Hosts UP</span></center></h5>
+        <h5><center><span class="label label-success">Nodes UP</span></center></h5>
+        <h5><center><span class="label label-success">Links UP</span></center></h5>
+
+      </div>
+      <div class="col-xs-6 panel-body">
+        <h5><center><span class="label label-danger">Hosts DOWN</span></center></h5>
+        <h5><center><span class="label label-danger">Nodes DOWN</span></center></h5>
+        <h5><center><span class="label label-danger">Links DOWN</span></center></h5>
+      </div>
+    </div>
+  </div>
+</div><!--END Jumbotron--> 
 
 <!--Topology representation-->
 <div class="container">
