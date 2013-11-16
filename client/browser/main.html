@@ -37,43 +37,41 @@
 </div>
 <!-- Navigation Ends -->
 
+<!--Jumbotron-->
+<div class="jumbotron page-header">
+  <div class="container">
+    <div class="panel-body">
 
-<div class="container top">
-  <div class="col-lg-12 col-md-12 col-sm-12 well">
-      <div class="panel-body">
-        <h2><center>TOPOLOGY SUMMARY</center></h2>
-        
-        <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
-          <h3><center><span class="label label-success">Hosts</span></center></h3>
-          <h3><center><span class="label label-danger">Hosts</span></center></h3>
-        </div>
-        
+      <h2 class="jumbotron-data"><center>TOPOLOGY SUMMARY</center></h2>
 
-        <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
-          <h3><center><span class="label label-success">Nodes</span></center></h3>
-          <h3><center><span class="label label-danger">Nodes</span></center></h3>
-        </div>
-        
-        <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
-          <h3><center><span class="label label-success">Link</span></center></h3>
-          <h3><center><span class="label label-danger">Link</span></center></h3>
-        </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4 small-padding">
+        <h3><center><span class="label label-success">Hosts UP</span></center></h3>
+        <h3><center><span class="label label-danger">Hosts DOWN</span></center></h3>
       </div>
-  </div>
-</div>
+      
 
+      <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4 small-padding">
+        <h3><center><span class="label label-success">Nodes UP</span></center></h3>
+        <h3><center><span class="label label-danger">Nodes DOWN</span></center></h3>
+      </div>
+      
+      <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4 small-padding">
+        <h3><center><span class="label label-success">Links UP</span></center></h3>
+        <h3><center><span class="label label-danger">Links DOWN</span></center></h3>
+      </div>
+
+    </div>
+  </div>
+</div><!--END Jumbotron-->
+
+<!--Topology representation-->
 <div class="container">
   <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-8">
         <div class="panel-body well">
-              <h1>TOPOLOGY</h1>
-              <h3>Here the image</h3>
-              <form class="wrapper" id="add-device">
-                <input type="submit" id="device1" class="btn btn-primary" value="Device 1"/>
-              </form>
-              <form class="wrapper" id="add-device2">
-                <input type="submit" id="device2" class="btn btn-primary" value="Device 2"/>
-              </form>
+              <h2 class="page-header">TOPOLOGY</h2>
+              <br>
+              <Textarea class="form-control" rows="15"></Textarea>
         </div>
       
     </div>
@@ -115,77 +113,56 @@
       
     </div><!--END SIDEBAR-->
   </div>
-</div>
+</div><!--END Topology representation-->
 
 
 
-<!-- Modal -->
+<!-- Modal statistics -->
  <div class = "modal fade" id = "statisticsDialog" role = "dialog">
     <div class = "modal-dialog">
         <div class = "modal-content">
             <div class = "modal-header">
               <h4>Statistics</h4>
-              <div class="btn-group btn-block">
-
-               <div class="col-lg-4 col-md-4 col-sm-4">
-                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-                  Interfaces <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Interface 1</a></li>
-                  <li><a href="#">Interface 2</a></li>
-                  <li><a href="#">Interface 3</a></li>
-                  <li><a href="#">Interface 4</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">ALL interfaces</a></li>
-                </ul>
+                <div class="btn-group btn-block">   
+                  <button id="devicesSelec" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                    Select device <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                    <li><a tabindex="-1" href="#">Device 1 </a></li>
+                    <li><a tabindex="-1" href="#">Device 2 </a></li>
+                  </ul>
                 </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
-                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                  Data to draw <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Packets received</a></li>
-                  <li><a href="#">Bytes received</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Packets transmitted</a></li>
-                  <li><a href="#">Bytes transmitted</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Dropped received</a></li>
-                  <li><a href="#">Dropped transmitted</a></li>
-                  <li><a href="#">Errors received</a></li>
-                  <li><a href="#">Errors transmitted</a></li>
-                  <li><a href="#">Frame errors received</a></li>
-                  <li><a href="#">Overrun errors received</a></li>
-                </ul>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-4 col-sm-4">
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                  Time interval <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">1 Minute</a></li>
-                  <li><a href="#">1 Hour</a></li>
-                  <li><a href="#">1 Day</a></li>
-                  <li><a href="#">1 Week</a></li>
-                </ul>
-
-
-
-                </div>
-
-              </div>
-
+              
             </div>
 
             <div class = "modal-body">
-               <Textarea class="form-control" rows="10"></Textarea>
+
+              <div class="tabbable">
+                <ul class="nav nav-pills nav-justified">
+                  <li class="active"><a href="sended" data-toggle="tab">Sended</a></li>
+                  <li><a href="received" data-toggle="tab">Received</a></li>
+                  <li><a href="errors" data-toggle="tab">Errors</a></li>
+                </ul>
+              <div class="tab-content">
+                <div id="sended" class="tab-pane active">
+                  <br>
+                  <Textarea class="form-control" rows="10"></Textarea>
+                </div>
+                <div id="received" class="tab-pane">
+                  <br>
+                  <Textarea class="form-control" rows="10"></Textarea>
+                </div>
+                <div id="errors" class="tab-pane">
+                  <br>
+                  <Textarea class="form-control" rows="10"></Textarea>
+                </div>
+              </div> <!-- tab-content -->
+                
+              </div><!-- tabbable -->
             </div>
 
             <div class = "modal-footer">  
-                <a class = "btn btn-primary" data-dismiss = "modal">Close</a>
+                <a class = "btn btn-danger" data-dismiss = "modal">Close</a>
             </div>
         </div>
     </div>
@@ -201,7 +178,5 @@
     <script src="js/client.js"></script>
 
 <!-- Templates -->
-
-
 </body>
 </html>

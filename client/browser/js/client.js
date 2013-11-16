@@ -76,6 +76,7 @@
 //	});
 
 	//Global View if needed, now not used
+	//Maybe to be used for nodes association on graph topology
 	var DevicesView = Backbone.View.extend({
 		model: devices,
 		el: $('#devices-container'),
@@ -112,11 +113,12 @@
 	$(document).ready(function(){
 		//$("#devices").html(devicesView.render().el);
 		$("#devices").html(deviceView.render().el);
-
+		$("#devices").append("for each here, per mac and so on!<p></p>");
+		
 		$('#add-device').submit(function(ev){
 			//var the_id= "RT-"+ ++numDevices;
 			//var device = new Device({id:the_id,name:$('#device-name').val(),ip:$('#device-ip').val(),description:$('#device-description').val()});
-			var device = new Device({inventoryId:$('#device-inventoryId').val(),ports:$('#device-ports').val(),interfaces:$('#device-interfaces').val(),routingTable:$('#device-routingTable').val()});
+			var device = new Device();//{inventoryId:$('#device-inventoryId').val(),ports:$('#device-ports').val(),interfaces:$('#device-interfaces').val(),routingTable:$('#device-routingTable').val()});
 			devices.add(device);
 			console.log(devices.toJSON());
 //			device.save({id:device.get('id'),name:$('#device-name').val(),ip:$('#device-ip').val(),description:$('#device-description').val()},{
@@ -126,5 +128,12 @@
 			return false;	
 		});
 
+	});
+	//put the name of the Device selected on the button
+	$(function(){  
+	  $(".dropdown-menu li a").click(function(){
+	    $(".btn.dropdown-toggle:first-child").text($(this).text());
+	    $(".btn.dropdown-toggle:first-child:first-child").val($(this).text()+ ' <span class="caret"></span>');
+	  });
 	});
 })(jQuery);
