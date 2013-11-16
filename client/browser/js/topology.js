@@ -1,11 +1,11 @@
-var width = 640, height = 360;
+var width = 640, height = 330;
 
 var color = d3.scale.category20();
 
-var force = d3.layout.force().charge(-1120).linkDistance(80).size(
+var force = d3.layout.force().charge(-1120).linkDistance(30).size(
 		[ width, height ]);
 
-var svg = d3.select("form-control").append("svg").attr("width", width).attr(
+var svg = d3.select(".topo").append("svg").attr("width", width).attr(
 		"height", height);
 
 /*POST GUAY CON OBTENCION DE PARAMETROS!*/

@@ -230,6 +230,11 @@ html, body {
 	stroke: #999;
 	stroke-opacity: .6;
 }
+
+.topo {
+	width: 330px;
+	height: 310px;
+}
 /*
 .linkRED {
   stroke: #F00;
