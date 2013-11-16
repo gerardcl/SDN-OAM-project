@@ -56,9 +56,9 @@
       </div>
     </div>
   </div>
-</div><!--END Jumbotron-->
+</div><!--END Jumbotron Desktop-->
 
-<!--Jumbotron Small screen-->
+<!--Jumbotron Mobile-->
 <div class="jumbotron page-header visible-xs">
   <div class="container">
     <div>
@@ -76,7 +76,7 @@
       </div>
     </div>
   </div>
-</div><!--END Jumbotron--> 
+</div><!--END Jumbotron Mobile--> 
 
 <!--Topology representation-->
 <div class="container">
@@ -108,7 +108,7 @@
               </div> 
               </script>
           </div>
-          <a class="btn btn-success btn-lg btn-block" href="#statisticsDialog" role="button" data-toggle="modal">Statistics</a>
+          <a class="btn btn-success btn-lg btn-block" href="#statisticsDialog" role="button" data-toggle="modal"> <span class="glyphicon glyphicon-stats"></span> Statistics</a>
         </div>
       
     </div><!--END SIDEBAR-->
@@ -121,17 +121,17 @@
  <div class = "modal fade" id = "statisticsDialog" role = "dialog">
     <div class = "modal-dialog">
         <div class = "modal-content">
-            <div class = "modal-header">
-              <h4>Statistics</h4>
-                <div class="btn-group btn-block">   
-                  <button id="devicesSelec" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                    Select device <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                    <li><a tabindex="-1" href="#">Device 1 </a></li>
-                    <li><a tabindex="-1" href="#">Device 2 </a></li>
-                  </ul>
-                </div>
+            <div class = "modal-header center-btn">
+              <h4><span class="glyphicon glyphicon-stats"></span> Statistics</h4>  
+              <div class="btn-group">
+                <button id="devicesSelec" type="button" class="btn btn-info dropdown-toggle center" data-toggle="dropdown">
+                  Select device <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                  <li><a tabindex="-1" href="#">Device 1 </a></li>
+                  <li><a tabindex="-1" href="#">Device 2 </a></li>
+                </ul>
+              </div>
               
             </div>
 
@@ -139,9 +139,9 @@
 
               <div class="tabbable">
                 <ul class="nav nav-pills nav-justified">
-                  <li class="active"><a href="sended" data-toggle="tab">Sended</a></li>
-                  <li><a href="received" data-toggle="tab">Received</a></li>
-                  <li><a href="errors" data-toggle="tab">Errors</a></li>
+                  <li class="active"><a href="sended" data-toggle="tab"> <span class="glyphicon glyphicon-circle-arrow-up"></span> Sended</a> </li>
+                  <li><a href="received" data-toggle="tab"><span class="glyphicon glyphicon-circle-arrow-down"></span> Received</a></li>
+                  <li><a href="errors" data-toggle="tab"><span class="glyphicon glyphicon-remove-sign"></span> Errors</a></li>
                 </ul>
               <div class="tab-content">
                 <div id="sended" class="tab-pane active">
