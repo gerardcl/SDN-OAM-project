@@ -17,7 +17,7 @@
 	var DevicesList = Backbone.Collection.extend({
 		model: Device,
 		//url:'http://localhost:8080/device-manager-api/webapi/devices/routers',
-		url:'http://ec2-54-229-220-96.eu-west-1.compute.amazonaws.com:7474/db/data/node/1',
+		url:'http://localhost:7474/db/data/node/1',
 		parse:function (response) {
 			console.log(response);
 			//response.id = response.inventoryId;
@@ -46,7 +46,7 @@
 	var DeviceView = Backbone.View.extend({
 		model: new Device(),
 		tagName:"div",
-		className:"device-container",
+		className:"device",
 		template:$("#device-template").html(),
 
 		render:function () {
@@ -127,6 +127,9 @@
 //			})
 			return false;	
 		});
+		
+		
+		
 
 	});
 	//put the name of the Device selected on the button
