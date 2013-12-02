@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SDN Client</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+  </head>
+
+  <body>
+
+    <div id="wrapper">
+
+      <!-- Sidebar -->
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="userMain.html"><i class="fa fa-gears"></i> SDN Client</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav side-nav">
+            <li><a href="userMain.html"><i class="fa fa-globe"></i> Global State</a></li>
+            <li class="active"><a href="userData.html"><i class="fa fa-briefcase"></i> Org. Data</a></li>
+            <li><a href="userFlows.html"><i class="fa fa-link"></i> Flows</a></li>
+            <li><a href="userAccessPoints.html"><i class="fa fa-desktop"></i> Access points</a></li>
+            <li><a href="userTrafficAnalysis.html"><i class="fa fa-th"></i> Traffic Analysis</a></li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right navbar-user">
+            <li class="dropdown user-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Ingvar Feodor <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+                <li class="divider"></li>
+                <li><a href="#"><i class="fa fa-power-off"></i> Log Out</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </nav>
+
+      <div id="page-wrapper">
+
+        <div class="row"><!-- Container row -->
+
+          <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title"> Ikea</h3>
+              </div>
+
+                <div class="panel-body">
+                  <div class="row padding-10">
+
+                    <div class="row"> <!-- ROW Org.Data + Org.Users -->  
+                      <div class="col-lg-12">
+                        <div class="panel">
+                          <div class="tabbable">
+                            <ul class="nav nav-pills nav-justified">
+                              <li class="active"><a href="#data" data-toggle="tab"> <i class="fa fa-briefcase"></i> Organization Data</a></li>
+                              <li class=""><a href="#users" data-toggle="tab"> <i class="fa fa-group"></i> Organization Users</a></li>
+                            </ul>
+                                          
+                            <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+
+                              <div class="tab-pane active" id="data"><!-- ROW Org.Data --> 
+                                <div class="row">
+                                  <div class="col-lg-12 col-md-12 col-sm-12">
+                                    
+                                    <div class="panel panel-primary">
+                                      <div class="panel-body">
+
+                                        <div id="OD-data">
+                                          <form class="form-horizontal" role="form">
+                                            <div class="form-group">
+                                              <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                                              <div class="col-sm-10">
+                                                <input type="email" class="form-control" id="inputEmail3" placeholder="NetworkManagement@ikea.com">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="inputEmail" class="col-sm-2 control-label">Address</label>
+                                              <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="inputEmail3" placeholder="Upper Basement, Parklane Hotel, 310 Gloucester Road, Causeway Bay">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="bankAccount" class="col-sm-2 control-label">Bank Account</label>
+                                              <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="inputEmail3" placeholder="3894859229384956">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="cif" class="col-sm-2 control-label">CIF</label>
+                                              <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="inputEmail3" placeholder="9588493">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+                                              <div class="col-sm-10">
+                                                <input type="password" class="form-control" id="inputPassword3" placeholder="************">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-warning">Save changes</button>
+                                              </div>
+                                            </div>
+                                          </form>                                        
+                                        </div>
+              
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div><!-- /ROW Org.Data --> 
+
+                              <div class="tab-pane" id="users"><!-- Org.Users -->       
+                                <div class="row">
+                                  <div class="col-lg-12 col-md-12 col-sm-12">
+                                    
+                                    <div class="panel panel-primary">
+                                      <div class="panel-body">
+                                        <div id="OD-users">
+                                          <div>
+                                            <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
+                                            <br>
+                                            <br>
+                                          </div>
+                                          <div class="table-responsive">
+                                            <table class="table table-bordered table-hover table-striped tablesorter">
+                                              <thead>
+                                                <tr>
+                                                  <th>Name <i class="fa fa-sort"></i></th>
+                                                  <th>e-mail <i class="fa fa-sort"></i></th>
+                                                  <th>Nif <i class="fa fa-sort"></i></th>
+                                                  <th>Edit Data <i class="fa fa-edit"></i></th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <td>Ramón Bertran</td>
+                                                  <td>rbertran@ikea.com</td>
+                                                  <td>12345678L</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Hamid Solhu</td>
+                                                  <td>hsolhu@ikea.com</td>
+                                                  <td>45123678L</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Ingvar Feodor Kamprad</td>
+                                                  <td>theBoss@ikea.com</td>
+                                                  <td>56781234R</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Slor Isildur</td>
+                                                  <td>sisildur@ikea.com</td>
+                                                  <td>67123458J</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Ramón Bertran</td>
+                                                  <td>rbertran@ikea.com</td>
+                                                  <td>12345678L</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Ramón Bertran</td>
+                                                  <td>rbertran@ikea.com</td>
+                                                  <td>12345678L</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Ramón Bertran</td>
+                                                  <td>rbertran@ikea.com</td>
+                                                  <td>12345678L</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Ramón Bertran</td>
+                                                  <td>rbertran@ikea.com</td>
+                                                  <td>12345678L</td>
+                                                  <td><button type="button" class="btn btn-info btn-sm">Edit user</button></td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </div>                                      
+                                    </div>
+                                  </div>
+                                </div>
+                              </div><!-- /Org.Users -->  
+
+                            </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                          
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- /ROW Org.Data + Org.Users -->
+
+                  </div>  <!-- /row-->
+                </div>
+              
+            </div>
+          </div><!-- Org INFO  -->
+
+        </div>
+      </div><!-- /#page-wrapper -->
+
+    </div><!-- /#wrapper -->
+
+    <!-- JavaScript -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/jquery.slimscroll.min.js"></script>
+
+    <!-- Page Specific Plugins -->
+    <script src="js/tablesorter/jquery.tablesorter.js"></script>
+    <script src="js/tablesorter/tables.js"></script>
+    <script>
+      $(function(){
+          $('#OD-data').slimScroll({
+              height: '380px'
+          });
+          $('#OD-users').slimScroll({
+              height: '380px',
+          });
+      });
+    </script>
+
+
+  </body>
+</html>
