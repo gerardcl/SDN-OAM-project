@@ -9,11 +9,11 @@
     <title>OAM SDN Manager</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
-    <link href="css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link href="../css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css">
   </head>
 
   <body>
@@ -37,10 +37,10 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav side-nav">
             <li><a href="index.html"><i class="fa fa-globe"></i> Global State</a></li>
-            <li><a href="organizations.html"><i class="fa fa-briefcase"></i> Organizations</a></li>
+            <li><a href="orgManager.html"><i class="fa fa-briefcase"></i> Organizations</a></li>
             <li class="active"><a href="flows.html"><i class="fa fa-link"></i> Flows</a></li>
             <li><a href="accessPoints.html"><i class="fa fa-desktop"></i> Access points</a></li>
-            <li><a href="orgManager.html"><i class="fa fa-group"></i> Org. Manager</a></li>
+            
             <li><a href="trafficAnalysis.html"><i class="fa fa-th"></i> Traffic Analysis</a></li>
           </ul>
 
@@ -106,6 +106,10 @@
 
       <div id="page-wrapper">
 
+        <div class="padding-10-bot">
+          <button class="btn btn-success" data-toggle="modal" data-target="#newFlow"> Create new FLOW</button>
+        </div>
+
         <div class="row"><!-- Active FLOWS -->
           <div class="col-sm-12">
             <div class="panel panel-success">    
@@ -126,6 +130,9 @@
                           <th>Date <i class="fa fa-sort"></i></th>
                           <th>Time start <i class="fa fa-sort"></i></th>
                           <th>Duration  <i class="fa fa-sort"></i></th>
+                          <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                          <th><center><i class="fa fa-edit"></i></center></th>
+                          <th><center><i class="fa fa-eraser"></i></center></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -142,6 +149,9 @@
                           <td>11/21/2013</td>
                           <td>3:29 AM</td>
                           <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 35</td>
@@ -156,6 +166,9 @@
                           <td>11/21/2013</td>
                           <td>2:00 AM</td>
                           <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 36</td>
@@ -170,6 +183,9 @@
                           <td>11/21/2013</td>
                           <td>2:30 AM</td>
                           <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 37</td>
@@ -184,6 +200,9 @@
                           <td>11/21/2013</td>
                           <td>2:45 AM</td>
                           <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 34</td>
@@ -198,6 +217,9 @@
                           <td>11/21/2013</td>
                           <td>3:29 AM</td>
                           <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 35</td>
@@ -212,6 +234,9 @@
                           <td>11/21/2013</td>
                           <td>2:00 AM</td>
                           <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 36</td>
@@ -226,6 +251,9 @@
                           <td>11/21/2013</td>
                           <td>2:30 AM</td>
                           <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 37</td>
@@ -240,6 +268,9 @@
                           <td>11/21/2013</td>
                           <td>2:45 AM</td>
                           <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 34</td>
@@ -254,6 +285,9 @@
                           <td>11/21/2013</td>
                           <td>3:29 AM</td>
                           <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 35</td>
@@ -268,6 +302,9 @@
                           <td>11/21/2013</td>
                           <td>2:00 AM</td>
                           <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 36</td>
@@ -282,6 +319,9 @@
                           <td>11/21/2013</td>
                           <td>2:30 AM</td>
                           <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 37</td>
@@ -296,6 +336,9 @@
                           <td>11/21/2013</td>
                           <td>2:45 AM</td>
                           <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 34</td>
@@ -310,6 +353,9 @@
                           <td>11/21/2013</td>
                           <td>3:29 AM</td>
                           <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 35</td>
@@ -324,6 +370,9 @@
                           <td>11/21/2013</td>
                           <td>2:00 AM</td>
                           <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 36</td>
@@ -338,6 +387,9 @@
                           <td>11/21/2013</td>
                           <td>2:30 AM</td>
                           <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 37</td>
@@ -352,6 +404,9 @@
                           <td>11/21/2013</td>
                           <td>2:45 AM</td>
                           <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                       </tbody>
                     </table>
@@ -382,6 +437,8 @@
                           <th>Date <i class="fa fa-sort"></i></th>
                           <th>Time start <i class="fa fa-sort"></i></th>
                           <th>Duration  <i class="fa fa-sort"></i></th>
+                          <th><center><i class="fa fa-edit"></i></center></th>
+                          <th><center><i class="fa fa-eraser"></i></center></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -394,6 +451,8 @@
                           <td>11/21/2013</td>
                           <td>5:00 AM</td>
                           <td>30 minutes</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 39</td>
@@ -404,6 +463,8 @@
                           <td>11/21/2013</td>
                           <td>5:30 AM</td>
                           <td>5 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 40</td>
@@ -414,6 +475,8 @@
                           <td>11/21/2013</td>
                           <td>5:45 AM</td>
                           <td>1 hour</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 41</td>
@@ -424,6 +487,8 @@
                           <td>11/21/2013</td>
                           <td>5:45 AM</td>
                           <td>6 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 38</td>
@@ -434,6 +499,8 @@
                           <td>11/21/2013</td>
                           <td>5:00 AM</td>
                           <td>30 minutes</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 39</td>
@@ -444,6 +511,8 @@
                           <td>11/21/2013</td>
                           <td>5:30 AM</td>
                           <td>5 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 40</td>
@@ -454,6 +523,8 @@
                           <td>11/21/2013</td>
                           <td>5:45 AM</td>
                           <td>1 hour</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 41</td>
@@ -464,6 +535,8 @@
                           <td>11/21/2013</td>
                           <td>5:45 AM</td>
                           <td>6 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 38</td>
@@ -474,6 +547,8 @@
                           <td>11/21/2013</td>
                           <td>5:00 AM</td>
                           <td>30 minutes</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 39</td>
@@ -484,6 +559,8 @@
                           <td>11/21/2013</td>
                           <td>5:30 AM</td>
                           <td>5 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 40</td>
@@ -494,6 +571,8 @@
                           <td>11/21/2013</td>
                           <td>5:45 AM</td>
                           <td>1 hour</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                         <tr>
                           <td>Flow 41</td>
@@ -504,6 +583,8 @@
                           <td>11/21/2013</td>
                           <td>5:45 AM</td>
                           <td>6 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
                         </tr>
                       </tbody>
                     </table>
@@ -524,15 +605,92 @@
 
     </div><!-- /#wrapper -->
 
+<!-- MODALS WINDOWS-->
+
+<!-- STATISTICS-->
+<div class="modal fade" id="statistics" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="statisticsModalLabel">Statistics flow X</h4>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal STATISTICS -->
+
+<!-- EDIT-->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="editModalLabel">Edit flow X</h4>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal EDIT -->
+
+<!-- REMOVE-->
+<div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="removeModalLabel">Remove flow X</h4>
+      </div>
+      <div class="modal-body">
+        <h2>Are you sure you want to remove this flow?</h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger">Remove flow</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal EDIT -->
+
+<!-- ADD NEW flow-->
+<div class="modal fade" id="newFlow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="removeModalLabel">Remove flow X</h4>
+      </div>
+      <div class="modal-body">
+        <h2>Are you sure you want to remove this flow?</h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger">Remove flow</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal ADD NEW flow -->
+
     <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <script src="../js/jquery-1.10.2.js"></script>
+    <script src="../js/bootstrap.js"></script>
 
     <!-- Page Specific Plugins -->
-    <script src="js/tablesorter/jquery.tablesorter.js"></script>
-    <script src="js/tablesorter/tables.js"></script>
+    <script src="../js/tablesorter/jquery.tablesorter.js"></script>
+    <script src="../js/tablesorter/tables.js"></script>
 
-    <script type="text/javascript" src="js/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.slimscroll.min.js"></script>
     <script>
       $(function(){
           $('#FLW-active').slimScroll({
