@@ -58,8 +58,8 @@ $(function(){
 
     var OrganizationView = Backbone.View.extend({
         tagName:"div",
-        className:"organization-container",
-        template:$("#organization-template").html(),
+        className:"organizations-container",
+        template:$("#organizations-template").html(),
 
         render:function () {
             var tmpl = _.template(this.template); //tmpl is a function that takes a JSON object and returns html
@@ -72,6 +72,9 @@ $(function(){
 
  var OrganizationsView = Backbone.View.extend({
         el:$("#organizations"),
+        events: {
+              'click .name': 'orgSelected'
+            },
 
         initialize:function(){
             this.collection = new Organizations(organizations);
@@ -83,6 +86,11 @@ $(function(){
             _.each(this.collection.models, function(item){
                 that.renderOrganization(item);
             }, this);
+        },
+
+        orgSelected: function(ev){
+          ev.preventDefault();
+          this.$('.name').attr('contenteditable',true).focus();
         },
 
         renderOrganization:function(item){
@@ -100,7 +108,7 @@ $(function(){
     var OrganizationDataView = Backbone.View.extend({
         tagName:"div",
         className:"orgData-container",
-        template:$("#organization-data-template").html(),
+        template:$("#orgData-template").html(),
 
         render:function () {
             var tmpl = _.template(this.template); //tmpl is a function that takes a JSON object and returns html
@@ -110,30 +118,5 @@ $(function(){
         }
     });
 
-
-	// Router
-	var AppRouter = Backbone.Router.extend({
-
-	    routes:{
-	        "":"list",
-	        "organizations/:id":"orgData"
-	    },
-
-	    list:function () {
-	        this.wineList = new WineCollection();
-	        this.wineListView = new WineListView({model:this.wineList});
-	        this.wineList.fetch();
-	        $('#organizations-container').html(this.wineListView.render().el);
-	    },
-
-	    orgData:function (id) {
-	        this.wine = this.wineList.get(id);
-	        this.wineView = new WineView({model:this.wine});
-	        $('#orgData-container').html(this.wineView.render().el);
-	    }
-	});
-
-	var app = new AppRouter();
-	Backbone.history.start();
 
 })(jQuery);

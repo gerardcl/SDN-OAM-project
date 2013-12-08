@@ -135,7 +135,7 @@
           <div class="col-md-9 col-sm-9 slim-flows"> <!-- Org INFO  -->
             <div class="panel panel-primary">
               <div class="panel-heading">
-                <h3 class="panel-title"> Ikea</h3>
+                <h3 id="organization-name-container"></h3>
               </div>
               <div class="padding-15">
                 <div class="panel-body padding-0-bot">
@@ -677,13 +677,19 @@
 <!-- TEMPLATES -->
 
     <!-- ORGANIZATIONS LIST-->
-    <script type="text/template" id="organization-template">
+    <script type="text/template" id="organizations-template">
         <a href="#" class="list-group-item"><span class="name"><%= name %></span></a>
     </script>
     <!-- /ORGANIZATIONS LIST-->
 
+    <!-- ORGANIZATION NAME-->
+    <script type="text/template" id="organization-name-template">
+      <h3 class="panel-title"><span class="name"><%= name %></span></h3>
+    </script>
+    <!-- /ORGANIZATION NAME-->
+
     <!-- ORG DATA-->
-    <script type="text/template" id="organization-data-template">
+    <script type="text/template" id="orgData-template">
 
       <form class="form-horizontal" role="form">
 
