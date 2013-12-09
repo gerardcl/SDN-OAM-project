@@ -187,6 +187,8 @@
 
 
                                         <div id="OM-users">
+                                          <div id="orgUsers-container"></div>
+<!--
                                           <div class="table-responsive">
                                             <table class="table table-bordered table-hover table-striped tablesorter">
                                               <thead>
@@ -250,6 +252,7 @@
 
                                             </table>
                                           </div>
+-->                                    
                                         </div>
               
                                       </div>
@@ -678,7 +681,7 @@
 
     <!-- ORGANIZATIONS LIST-->
     <script type="text/template" id="organizations-template">
-        <a href="#" class="list-group-item"><span class="name"><%= name %></span></a>
+        <a href='#organizations/<%= id %>' class="list-group-item"><%= name %></a>
     </script>
     <!-- /ORGANIZATIONS LIST-->
 
@@ -744,10 +747,35 @@
           </div>
         </div>
       </form>   
-
     </script>
     <!-- /ORGA DATA-->
 
+    <!-- ORG USERS DATA-->
+    <script type="text/template" id="orgUsers-template">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped tablesorter">
+          <thead>
+            <tr>
+              <th>ID <i class="fa fa-sort"></i></th>
+              <th>e-mail <i class="fa fa-sort"></i></th>
+              <th>telephone <i class="fa fa-sort"></i></th>
+              <th>Admin? <i class="fa fa-sort"></i></th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr>
+              <td><span class="id"><%= id %></span></td>
+              <td><span class="email"><%= email %></span></td>
+              <td><span class="telephone"><%= telephone %></span></td>
+              <td><span class="isAdmin"><%= isAdmin %></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </script>
+    <!-- /ORG USERS DATA-->
+
+<!-- /TEMPLATES -->
 
     <!-- JavaScript -->
     <script src="../js/jquery-1.10.2.js"></script>
@@ -758,8 +786,8 @@
     <script src="../js/tablesorter/jquery.tablesorter.js"></script>
     <script src="../js/tablesorter/tables.js"></script>
 
-    <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
-    <script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+    <script src="../js/underscore-min.js"></script>
+    <script src="../js/backbone-min.js"></script>
     <script type="text/javascript" src="js/orgManager.js"></script>
 
 
