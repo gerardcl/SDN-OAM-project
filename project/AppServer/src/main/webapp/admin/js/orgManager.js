@@ -80,6 +80,7 @@ $(function(){
        model:Organization,
        url: '/organizations'
     });
+    
     //ORGANIZATIONS LIST HARDCODED
     var organizations = [{id:'1',name:'Ikea',cif:'111111111111',telephone:'+34 911111111',bankAccount:'1111111111111-01',isOAM:'false'},
         {id:'2',name:'Danone',cif:'222222222222',telephone:'+34 922222222',bankAccount:'22222222222222-02',isOAM:'false'},

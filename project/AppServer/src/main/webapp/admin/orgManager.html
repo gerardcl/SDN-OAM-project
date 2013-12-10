@@ -681,7 +681,9 @@
 
     <!-- ORGANIZATIONS LIST-->
     <script type="text/template" id="organizations-template">
-        <a href='#organizations/<%= id %>' class="list-group-item"><%= name %></a>
+    <% _each(organizations, function (organization) { %>
+      <a href='#organizations/<%= id %>' class="list-group-item"><%= organization.get('name') %></a>
+    <% }); %>
     </script>
     <!-- /ORGANIZATIONS LIST-->
 
@@ -788,7 +790,7 @@
 
     <script src="../js/underscore-min.js"></script>
     <script src="../js/backbone-min.js"></script>
-    <script type="text/javascript" src="js/orgManager.js"></script>
+    <script type="text/javascript" src="js/orgManager2.js"></script>
 
 
 
