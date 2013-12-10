@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 
 import dxat.appserver.manager.OrgFlowManager;
 import dxat.appserver.manager.pojos.OrgFlow;
+import dxat.appserver.manager.pojos.OrgFlowCollection;
 
 @Path("/manager")
 public class OrgFlowResource {
@@ -23,20 +24,23 @@ public class OrgFlowResource {
 //	+ deleteOrgFlow(String, String)
 //	+ updateOrgFlow(String, OrgFlow)
 	private OrgFlowManager orgFlowManager = OrgFlowManager.getInstance();
-	/*
+	
 	@GET
-	@Path("/")
-	@Produces(MediaType.DEVICES_COLLECTION)
-	public DeviceCollection getDevices() { 
-		repo = DeviceRepository.getInstance();
-	}*/
+	@Path("/all/flows")
+	@Produces(MediaType.ORG_FLOW_COLLECTION)
+	public OrgFlowCollection getAllFlows() {
+		return (OrgFlowCollection) orgFlowManager.getAllFlows();
+	}
 	
 	@GET
 	@Path("/flows/{orgId}")
-	//@Produces(MediaType.ROUTERS_COLLECTION)
-	public List<OrgFlow> getAllOrgFlows(String orgId) {
-		return orgFlowManager.getAllOrgFlows(orgId);
+	@Produces(MediaType.ORG_FLOW_COLLECTION)
+	public OrgFlowCollection getAllOrgFlows(@PathParam("orgId") String orgId) {
+		return (OrgFlowCollection) orgFlowManager.getAllOrgFlows(orgId);
 	}
+	
+	
+	
 //	@GET
 //	@Path("/flow/{flowId}")
 //	//@Produces(MediaType.SWITCHES_COLLECTION)
@@ -78,6 +82,4 @@ public class OrgFlowResource {
 //	public Router updateRouter(Router router){
 //		return repo.updateRouter(router);
 //	}
-
-	
 }

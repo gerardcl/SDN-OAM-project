@@ -1,7 +1,7 @@
 package dxat.appserver.manager.pojos;
 
 public class OrgFlow {
-	private String identifier;
+	public String identifier;
 	private String name;
 	private String srcOTidentifier;
 	private String dstOTidentifier;

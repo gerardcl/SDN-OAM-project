@@ -3,6 +3,9 @@ package dxat.appserver.manager.resources;
 import javax.ws.rs.Path;
 
 import dxat.appserver.manager.OrgUserManager;
+import dxat.appserver.manager.pojos.OrgUser;
+import java.util.List;
+
 
 @Path("/manager")
 public class OrgUserResource {
@@ -15,4 +18,12 @@ public class OrgUserResource {
 //+ CheckPassword(String, String): Boolean
 	private OrgUserManager orgUserManager = OrgUserManager.getInstance();
 	
+	
+	public List<OrgUser> getAllOrgUsers(){
+		//TODO
+		return null;
+	}
+	public void addOrgUser(String orgId, OrgUser user){
+		
+	}
 }

@@ -1,36 +1,61 @@
 package dxat.appserver.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.OrgTerminal;
-import dxat.appserver.manager.pojos.Organization;
-import dxat.appserver.manager.pojos.TOrganization;
+import dxat.appserver.manager.pojos.Org;
+import dxat.appserver.manager.pojos.TOrg;
 
 public class OrgManager {
 	private static OrgManager instance;
-	private HashMap<String, Organization> orgs;
+	private HashMap<String, Org> orgs;
 	private OrgManager(){
-		orgs = new HashMap<String, Organization>();
+		orgs = new HashMap<String, Org>();
 		/*some test init*/
+		int i = 0;
+		for(i = 1; i < 6; i++){
+			Org org = new Org();
+			String id = "orgId";
+			String name = "orgName";
+			id += Integer.toString(i);
+			name += Integer.toString(i);
+			org.setIdentifier(id);
+			org.setName(name);
+			org.setNIF("192.168.1.10");
+			org.setTelephone("689400423");
+			org.setBankAccount("2342343-23452345-23452345-23452345");
+			org.setOAM(true);
+			
+			orgs.put(org.getIdentifier(), org);
+		}
 	}
+
 	public static OrgManager getInstance(){
 		if(instance == null)
 			instance = new OrgManager();
 		return instance;
 	}
-	public Organization getOrg(String id){
+	public OrgCollection getAllOrgs(){
+		List<Org> orgList = new ArrayList<Org>(orgs.values());
+		OrgCollection orgs = new OrgCollection();
+		orgs.setOrgCollection(orgList);
+		return orgs;
+	}
+	public Org getOrg(String id){
 		//TODO
 		return null;
 	}
-	public void addOrg(TOrganization id){
+	public void addOrg(TOrg id){
 		//TODO
 	}
-	public TOrganization delete(String id){
+	public TOrg delete(String id){
 		//TODO
 		return null;
 	}
-	public Organization updateOrg(Organization org){
+	public Org updateOrg(Org org){
 		//TODO
 		return org;
 	}
@@ -38,7 +63,7 @@ public class OrgManager {
 		//TODO
 		return false;
 	}
-	public List<Organization> getOrgs(){
+	public List<Org> getOrgs(){
 		//TODO
 		return null;
 	}
