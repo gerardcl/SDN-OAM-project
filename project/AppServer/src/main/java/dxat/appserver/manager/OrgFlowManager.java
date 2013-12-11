@@ -23,10 +23,10 @@ public class OrgFlowManager {
 			String name = "namee";
 			String orgS = "src";
 			String orgD = "dst";
-			id.concat(Integer.toString(i));
-			name.concat(Integer.toString(i));
-			orgS.concat(Integer.toString(i));
-			orgD.concat(Integer.toString(i));
+			id += Integer.toString(i);
+			name += Integer.toString(i);
+			orgS += Integer.toString(i);
+			orgD += Integer.toString(i);
 			flow.setIdentifier(id);
 			flow.setBandwidth(5000000);
 			flow.setDstPort(5000);

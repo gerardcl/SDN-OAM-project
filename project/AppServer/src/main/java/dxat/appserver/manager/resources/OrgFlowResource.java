@@ -25,19 +25,30 @@ public class OrgFlowResource {
 //	+ updateOrgFlow(String, OrgFlow)
 	private OrgFlowManager orgFlowManager = OrgFlowManager.getInstance();
 	
+	//AQUESTA ES PASSARÀ AL ORGMANAGER QUE TINDRÀ TOTES LES ORGS ALLÀ
+	//EL QUE FAREM AQUÍ SERÀ TRACTARO JA COM FLOWS D'UNA ORG
+	//LA INTENCIÓ ÉS PASSAR AQUÍ SEMPRE LES ORGID
+	//EL MOTIU ÉS PER LA DEFINICIÓ COEHERENT DE URLS I SEGURETAT
 	@GET
-	@Path("/all/flows")
+	@Path("/flow/all")
 	@Produces(MediaType.ORG_FLOW_COLLECTION)
 	public OrgFlowCollection getAllFlows() {
 		return (OrgFlowCollection) orgFlowManager.getAllFlows();
 	}
 	
-	@GET
-	@Path("/flows/{orgId}")
-	@Produces(MediaType.ORG_FLOW_COLLECTION)
-	public OrgFlowCollection getAllOrgFlows(@PathParam("orgId") String orgId) {
-		return (OrgFlowCollection) orgFlowManager.getAllOrgFlows(orgId);
-	}
+//	@GET
+//	@Path("/flow/{flowId}")
+//	@Produces(MediaType.ORG_FLOW_COLLECTION)
+//	public OrgFlowCollection getOrgFlow(@PathParam("flowId") String flowId) {
+//		return (OrgFlowCollection) orgFlowManager.getAllOrgFlows(flowId);
+//	}
+//	
+//	@GET
+//	@Path("/flow/all")
+//	@Produces(MediaType.ORG_FLOW_COLLECTION)
+//	public OrgFlowCollection getAllOrgFlows(@PathParam("flowId") String flowId) {
+//		return (OrgFlowCollection) orgFlowManager.getAllOrgFlows(flowId);
+//	}
 	
 	
 	

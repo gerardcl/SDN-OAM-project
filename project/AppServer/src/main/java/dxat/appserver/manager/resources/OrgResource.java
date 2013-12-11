@@ -6,6 +6,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import dxat.appserver.manager.OrgManager;
+import dxat.appserver.manager.pojos.Org;
 import dxat.appserver.manager.pojos.OrgCollection;
 
 @Path("/manager")
@@ -20,7 +21,7 @@ public class OrgResource {
 	private OrgManager orgManager = OrgManager.getInstance();
 
 	@GET
-	@Path("/all/orgs")
+	@Path("/org/all")
 	@Produces(MediaType.ORG_COLLECTION)
 	public OrgCollection getAllOrgs() {
 		//System.out.println(orgManager.getAllOrgs());
@@ -28,10 +29,11 @@ public class OrgResource {
 	}
 	
 	@GET
-	@Path("/flows/{orgId}")
+	@Path("/org/{orgId}")
 	@Produces(MediaType.ORG_COLLECTION)
-	public OrgCollection getAllOrgFlows(@PathParam("orgId") String orgId) {
-		return (OrgCollection) orgManager.getAllOrgs();
+	public Org getOrg(@PathParam("orgId") String orgId) {
+		return orgManager.getOrg(orgId);
 	}
+	
 
 }

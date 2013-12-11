@@ -29,6 +29,7 @@ public class OrgManager {
 			org.setBankAccount("2342343-23452345-23452345-23452345");
 			org.setOAM(true);
 			
+			
 			orgs.put(org.getIdentifier(), org);
 		}
 	}
@@ -45,8 +46,7 @@ public class OrgManager {
 		return orgs;
 	}
 	public Org getOrg(String id){
-		//TODO
-		return null;
+		return orgs.get(id);
 	}
 	public void addOrg(TOrg id){
 		//TODO
