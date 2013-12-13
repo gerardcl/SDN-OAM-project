@@ -1,7 +1,7 @@
 package dxat.appserver.manager.pojos;
 
 public class OrgTerminal {
-	private String identifier;
+	public String identifier;
 	private String hostName;
 	private String ipAddress;
 	private String mac;

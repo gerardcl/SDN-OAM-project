@@ -9,7 +9,8 @@ public class OrgUserManager {
 	private OrgManager orgManager;
 	private OrgUserManager(){
 		//TODO initialize!
-		
+		orgManager = OrgManager.getInstance();
+
 	}
 	public static OrgUserManager getInstance(){
 		if(instance == null)

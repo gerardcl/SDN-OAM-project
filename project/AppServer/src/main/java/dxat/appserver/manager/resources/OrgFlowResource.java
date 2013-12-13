@@ -1,5 +1,6 @@
 package dxat.appserver.manager.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -12,6 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import dxat.appserver.manager.OrgFlowManager;
+import dxat.appserver.manager.OrgManager;
+import dxat.appserver.manager.pojos.Org;
+import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.OrgFlow;
 import dxat.appserver.manager.pojos.OrgFlowCollection;
 
@@ -30,14 +34,22 @@ public class OrgFlowResource {
 	//LA INTENCIÓ ÉS PASSAR AQUÍ SEMPRE LES ORGID
 	//EL MOTIU ÉS PER LA DEFINICIÓ COEHERENT DE URLS I SEGURETAT
 	@GET
-	@Path("/flow/all")
-	@Produces(MediaType.ORG_FLOW_COLLECTION)
+	@Path("/flow/all")	
+	//@Path("/org/flow/all")		//AFEGIR --> /org/ ????
+	@Produces(MediaType.ORG_FLOW_COLLECTION) 
 	public OrgFlowCollection getAllFlows() {
-		return (OrgFlowCollection) orgFlowManager.getAllFlows();
+		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getFlows().values());
+		OrgFlowCollection orgFlows = new OrgFlowCollection();
+		orgFlows.setOrgFlows(orgFlowList);
+		return orgFlows;//(OrgFlowCollection) orgFlowManager.getAllFlows();
 	}
 	
+	//AFEGIR MÈTODE GETALLFLOWS AMD ORGID PER GETALLORGFLOWS
+	
+	
+	//AQUÍ S'ENVIA ORGID I FLOWID!!!!!
 //	@GET
-//	@Path("/flow/{flowId}")
+//	@Path("/flow/{flowId}") 
 //	@Produces(MediaType.ORG_FLOW_COLLECTION)
 //	public OrgFlowCollection getOrgFlow(@PathParam("flowId") String flowId) {
 //		return (OrgFlowCollection) orgFlowManager.getAllOrgFlows(flowId);

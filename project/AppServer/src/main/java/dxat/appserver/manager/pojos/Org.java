@@ -12,7 +12,14 @@ public class Org {
 	private HashMap<String, OrgUser> users;
 	private HashMap<String, OrgTerminal> terminals;
 	private HashMap<String, OrgFlow> flows;
+	private TOrg torg;
 	
+	public TOrg getTorg() {
+		return torg;
+	}
+	public void setTorg(TOrg torg) {
+		this.torg = torg;
+	}
 	public String getIdentifier() {
 		return identifier;
 	}
