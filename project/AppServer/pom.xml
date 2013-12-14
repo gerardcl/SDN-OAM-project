@@ -48,11 +48,13 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-moxy</artifactId>
 		</dependency>
+		<!-- JSON Serializer for Controller AppServer communication -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
+		<!-- Web Socket needed dependencies -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -69,6 +71,12 @@
 			<version>7.0.42</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/catalina.jar</systemPath>
+		</dependency>
+		<!-- Neo4j Dependency -->
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 	</dependencies>
 	<properties>
