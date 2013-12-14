@@ -59,14 +59,14 @@
             </div>
 
             <div class="row">
-			<div class="msg">
-            <center><a href="admin"><button class="btn btn-lg btn-danger"><h1><i class="fa fa-gears"></i> ERROR MESSAGE </h1></button></center>
+			<div class="msg" id="msg">
+            <center><text class="btn btn-danger"><h1><i class="fa fa-gears"></i> output messages </h1></text></center>
 			</div>
 			<br>
-			<div class="admin">
-            <center><a href="client"><button class="btn btn-lg btn-success"><h1><i class="fa fa-user"></i> ADMIN VIEW </h1></button></center>
+			<div class="admin" id="admin">
+            <center><a href="admin"><button class="btn btn-lg btn-success"><h1><i class="fa fa-user"></i> ADMIN VIEW </h1></button></center>
 			</div>
-			<div class=client"">
+			<div class="client" id="client">
             <center><a href="client"><button class="btn btn-lg btn-success"><h1><i class="fa fa-user"></i> CLIENT VIEW </h1></button></center>
 			</div>
             </div>
@@ -85,7 +85,9 @@
     </div><!-- /#wrapper -->
 
     <!-- JavaScript -->
+
     <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/underscore-min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/backbone-min.js"></script>
     <script src="js/tablesorter/jquery.tablesorter.js"></script>
