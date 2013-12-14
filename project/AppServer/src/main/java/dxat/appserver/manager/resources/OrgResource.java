@@ -24,7 +24,7 @@ public class OrgResource {
 
 	@GET
 	@Path("/fullorg/all")
-	@Produces(MediaType.ORG_COLLECTION)
+	@Produces(AppServerMediaType.ORG_COLLECTION)
 	public OrgCollection getAllOrgs() {
 		//System.out.println(orgManager.getAllOrgs());
 		return orgManager.getAllOrgs();
@@ -32,14 +32,14 @@ public class OrgResource {
 	
 	@GET
 	@Path("/fullorg/{orgId}")
-	@Produces(MediaType.ORG_COLLECTION)
+	@Produces(AppServerMediaType.ORG_COLLECTION)
 	public Org getOrg(@PathParam("orgId") String orgId) {
 		return orgManager.getOrg(orgId);
 	}
 	
 	@GET
 	@Path("/org/all")
-	@Produces(MediaType.ORG_COLLECTION)
+	@Produces(AppServerMediaType.ORG_COLLECTION)
 	public TOrgCollection getAllTOrgs() {
 		//System.out.println(orgManager.getAllOrgs());
 		return orgManager.getAllTOrgs();
@@ -47,7 +47,7 @@ public class OrgResource {
 	
 	@GET
 	@Path("/org/{orgId}")
-	@Produces(MediaType.ORG_COLLECTION)
+	@Produces(AppServerMediaType.ORG_COLLECTION)
 	public TOrg getTOrg(@PathParam("orgId") String orgId) {
 		return orgManager.getOrg(orgId).getTorg();
 	}

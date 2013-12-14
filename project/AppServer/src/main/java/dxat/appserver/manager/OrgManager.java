@@ -79,7 +79,7 @@ public class OrgManager {
 				flow.setQos(2000);
 				flow.setActive(i%3==0?true:false);
 				flow.setDstOTidentifier(orgTD);
-				flow.setDstOTidentifier(orgTS);
+				flow.setSrcOTidentifier(orgTS);
 				tempFlows.put(flow.identifier, flow);
 				flows.put(flow.identifier, flow);
 			}
@@ -174,23 +174,16 @@ public class OrgManager {
 		List<Org> orgList = new ArrayList<Org>(orgs.values());
 		OrgCollection orgs = new OrgCollection();
 		orgs.setOrgCollection(orgList);
-		
-		//ES POT PASSAR MODELS ENTRE HTMLS?¿
-		
-		
 		return orgs;
 	}
 
 	public TOrgCollection getAllTOrgs(){
-		List<TOrg> torgList = new ArrayList<TOrg>(torgs.values());
-		TOrgCollection orgs = new TOrgCollection();
-		orgs.setTorgs(torgList);
-		
 		//AQUÍ IMPLEMENTEM LA GESTIÓ DE TORGS DINS ORGMANAGER, 
 		//AIXÍ NO CAL FER
 		//UN REST PER A TORG
-		
-		
+		List<TOrg> torgList = new ArrayList<TOrg>(torgs.values());
+		TOrgCollection orgs = new TOrgCollection();
+		orgs.setTorgs(torgList);
 		return orgs;
 	}
 	

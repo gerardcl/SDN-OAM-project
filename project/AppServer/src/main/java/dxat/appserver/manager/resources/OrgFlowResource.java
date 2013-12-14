@@ -11,6 +11,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import dxat.appserver.manager.OrgFlowManager;
 import dxat.appserver.manager.OrgManager;
@@ -34,9 +36,8 @@ public class OrgFlowResource {
 	//LA INTENCIÓ ÉS PASSAR AQUÍ SEMPRE LES ORGID
 	//EL MOTIU ÉS PER LA DEFINICIÓ COEHERENT DE URLS I SEGURETAT
 	@GET
-	@Path("/flow/all")	
-	//@Path("/org/flow/all")		//AFEGIR --> /org/ ????
-	@Produces(MediaType.ORG_FLOW_COLLECTION) 
+	@Path("/fullflow/all")	
+	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION) 
 	public OrgFlowCollection getAllFlows() {
 		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getFlows().values());
 		OrgFlowCollection orgFlows = new OrgFlowCollection();
@@ -44,45 +45,24 @@ public class OrgFlowResource {
 		return orgFlows;//(OrgFlowCollection) orgFlowManager.getAllFlows();
 	}
 	
-	//AFEGIR MÈTODE GETALLFLOWS AMD ORGID PER GETALLORGFLOWS
+	@GET
+	@Path("/flow/all")	
+	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION) 
+	public OrgFlowCollection getAllOrgFlows(@QueryParam("orgId") String orgId) {
+		System.out.println("\n\nORG ID RECEIVED IS: "+orgId+"\n\n");
+		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getOrg(orgId).getFlows().values());
+		OrgFlowCollection orgFlows = new OrgFlowCollection();
+		orgFlows.setOrgFlows(orgFlowList);
+		return orgFlows;//(OrgFlowCollection) orgFlowManager.getAllFlows();
+	}	
 	
-	
-	//AQUÍ S'ENVIA ORGID I FLOWID!!!!!
-//	@GET
-//	@Path("/flow/{flowId}") 
-//	@Produces(MediaType.ORG_FLOW_COLLECTION)
-//	public OrgFlowCollection getOrgFlow(@PathParam("flowId") String flowId) {
-//		return (OrgFlowCollection) orgFlowManager.getAllOrgFlows(flowId);
-//	}
-//	
-//	@GET
-//	@Path("/flow/all")
-//	@Produces(MediaType.ORG_FLOW_COLLECTION)
-//	public OrgFlowCollection getAllOrgFlows(@PathParam("flowId") String flowId) {
-//		return (OrgFlowCollection) orgFlowManager.getAllOrgFlows(flowId);
-//	}
-	
-	
-	
-//	@GET
-//	@Path("/flow/{flowId}")
-//	//@Produces(MediaType.SWITCHES_COLLECTION)
-//	public OrgFlow getOrgFlow(String flowId) {
-//		return orgFlowManager.getOrgFlow(orgId, flowId)
-//	}
-//	@GET
-//	@Path("/flow/{}")
-//	@Produces(MediaType.ROUTER)
-//	public Router getRouter(@PathParam("inventoryId") String inventoryId){
-//		return repo.getRouter(inventoryId);
-//	}
-//	@GET
-//	@Path("/switches/{inventoryId}")
-//	@Produces(MediaType.SWITCH)
-//	public Switch getSwitch(@PathParam("inventoryId") String inventoryId){
-//		return repo.getSwitch(inventoryId);
-//	}
-//	
+	@GET
+	@Path("/flow/{flowId}") 
+	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION)
+	public OrgFlow getOrgFlow(@QueryParam("orgId") String orgId, @PathParam("flowId") String flowId) {
+		return orgFlowManager.orgManager.getOrg(orgId).getFlows().get(flowId);
+	}
+
 //	@POST
 //	@Path("/routers")
 //	@Consumes(MediaType.ROUTER)
