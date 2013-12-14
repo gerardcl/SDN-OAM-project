@@ -6,10 +6,11 @@ import dxat.appserver.manager.pojos.OrgTerminal;
 
 public class OrgTerminalManager {
 	private static OrgTerminalManager instance;
-	private OrgManager orgManager;
+	public OrgManager orgManager;
 	private OrgTerminalManager(){
 		//TODO initialize!
-		
+		orgManager = OrgManager.getInstance();
+
 	}
 	public static OrgTerminalManager getInstance(){
 		if(instance == null)

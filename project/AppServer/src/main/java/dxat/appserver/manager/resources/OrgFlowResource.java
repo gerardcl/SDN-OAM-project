@@ -49,7 +49,6 @@ public class OrgFlowResource {
 	@Path("/flow/all")	
 	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION) 
 	public OrgFlowCollection getAllOrgFlows(@QueryParam("orgId") String orgId) {
-		System.out.println("\n\nORG ID RECEIVED IS: "+orgId+"\n\n");
 		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getOrg(orgId).getFlows().values());
 		OrgFlowCollection orgFlows = new OrgFlowCollection();
 		orgFlows.setOrgFlows(orgFlowList);

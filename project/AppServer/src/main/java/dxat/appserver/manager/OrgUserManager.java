@@ -6,11 +6,10 @@ import dxat.appserver.manager.pojos.OrgUser;
 
 public class OrgUserManager {
 	private static OrgUserManager instance;
-	private OrgManager orgManager;
+	public OrgManager orgManager;
 	private OrgUserManager(){
 		//TODO initialize!
 		orgManager = OrgManager.getInstance();
-
 	}
 	public static OrgUserManager getInstance(){
 		if(instance == null)
