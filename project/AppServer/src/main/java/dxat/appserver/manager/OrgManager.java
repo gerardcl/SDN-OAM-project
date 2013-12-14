@@ -38,10 +38,10 @@ public class OrgManager {
 			name += Integer.toString(j);
 			org.setIdentifier(id);
 			org.setName(name);
-			org.setNIF("192.168.1.10");
-			org.setTelephone("689400423");
-			org.setBankAccount("2342343-23452345-23452345-23452345");
-			org.setOAM(true);
+			org.setNIF("C-123456"+Integer.toString(i)+Integer.toString(j));
+			org.setTelephone("689404"+Integer.toString(i)+Integer.toString(j));
+			org.setBankAccount("2013-1234-5678-2345234"+Integer.toString(j)+Integer.toString(i));
+			org.setOAM(i%5==0?true:false);
 			HashMap<String, OrgFlow> tempFlows;
 			HashMap<String, OrgUser> tempUsers;
 			HashMap<String, OrgTerminal> tempTerminals;			
@@ -56,20 +56,20 @@ public class OrgManager {
 			org.setTorg(torg);
 
 			tempFlows = new HashMap<String, OrgFlow>();
-			for(i=1; i<11; i++){
+			for(i=0; i<10; i++){
 				OrgFlow flow = new OrgFlow();
 				String fid = "flouu";
 				String fname = "namee";
-				String orgS = "src";
-				String orgD = "dst";
+				String orgTS = "src";
+				String orgTD = "dst";
 				fid += Integer.toString(j);
 				fid += Integer.toString(i);
 				fname += Integer.toString(j);
 				fname += Integer.toString(i);
-				orgS += Integer.toString(j);
-				orgS += Integer.toString(i);
-				orgD += Integer.toString(j);
-				orgD += Integer.toString(i);
+				orgTS += Integer.toString(j);
+				orgTS += Integer.toString(i);
+				orgTD += Integer.toString(j);
+				orgTD += Integer.toString(i);
 				flow.setIdentifier(fid);
 				flow.setBandwidth(5000000);
 				flow.setDstPort(5000);
@@ -77,60 +77,52 @@ public class OrgManager {
 				flow.setProtocol("TCP");
 				flow.setName(fname);
 				flow.setQos(2000);
-				flow.setActive(true);
-				flow.setDstOTidentifier(orgD);
-				flow.setDstOTidentifier(orgS);
+				flow.setActive(i%3==0?true:false);
+				flow.setDstOTidentifier(orgTD);
+				flow.setDstOTidentifier(orgTS);
 				tempFlows.put(flow.identifier, flow);
 				flows.put(flow.identifier, flow);
 			}
 			org.setFlows(tempFlows);
 			
 			tempUsers = new HashMap<String, OrgUser>();
-			for(i=1; i<11; i++){
+			for(i=0; i<10; i++){
 				OrgUser user = new OrgUser();
 				String uid = "useer";
 				String uname = "namee";
-
 				uid += Integer.toString(j);
 				uid += Integer.toString(i);
 				uname += Integer.toString(j);
 				uname += Integer.toString(i);
 				user.setIdentifier(uid);
-//				user.setBandwidth(5000000);
-//				user.setDstPort(5000);
-//				user.setSrcPort(6000);
-//				user.setProtocol("TCP");
 				user.setName(uname);
-//				user.setQos(2000);
-				user.setActive(true);
-//				user.setDstOTidentifier(orgD);
-//				user.setDstOTidentifier(orgS);
+				user.setEmail(uid+"@"+org.getName()+".com");
+				user.setTelephone(654321000+i*100+j*10+i+j);
+				user.setPassword(org.getName()+"dxat"+Integer.toString(i));
+				user.setAdmin(i%4==0?true:false);
+				user.setActive(i%3==0?true:false);
 				tempUsers.put(user.identifier, user);
 				users.put(user.identifier, user);
 			}
 			org.setUsers(tempUsers);
 			
 			tempTerminals = new HashMap<String, OrgTerminal>();
-			for(i=1; i<11; i++){
+			for(i=0; i<10; i++){
 				OrgTerminal terminal = new OrgTerminal();
 				String tid = "terminall";
 				String tname = "namee";
-				String orgS = "src";
-				String orgD = "dst";
 				tid += Integer.toString(j);
 				tid += Integer.toString(i);
 				tname += Integer.toString(j);
 				tname += Integer.toString(i);
-//				orgS += Integer.toString(i);
-//				terminal.setBandwidth(5000000);
-//				terminal.setDstPort(5000);
-//				terminal.setSrcPort(6000);
-//				terminal.setProtocol("TCP");
+				terminal.setIdentifier(tid);
 				terminal.setHostName(tname);
-//				terminal.setQos(2000);
-				terminal.setActive(true);
-//				terminal.setDstOTidentifier(orgD);
-//				terminal.setDstOTidentifier(orgS);
+				terminal.setDescription("terminal host for ");
+				terminal.setDescription(terminal.getDescription() + org.getName());
+				terminal.setIfaceSpeed(i*10000);
+				terminal.setIpAddress("192.168."+Integer.toString(i)+"."+Integer.toString(j)+"0");
+				terminal.setMac("DD:XX:AA:TT:"+Integer.toString(j)+"B:"+Integer.toString(i)+"C");
+				terminal.setActive(i%2==0?true:false);
 				tempTerminals.put(terminal.identifier, terminal);
 				terminals.put(terminal.identifier, terminal);
 			}
