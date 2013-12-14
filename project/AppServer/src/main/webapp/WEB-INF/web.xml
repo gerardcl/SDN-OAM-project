@@ -4,21 +4,13 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	<servlet>
-		<servlet-name>Jersey Web Application</servlet-name>
-		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>dxat.appserver</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Jersey Web Application</servlet-name>
-		<url-pattern>/webapi/*</url-pattern>
-	</servlet-mapping>
+	<!-- <servlet> <servlet-name>Jersey Web Application</servlet-name> <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class> 
+		<init-param> <param-name>jersey.config.server.provider.packages</param-name> 
+		<param-value>dxat.appserver</param-value> </init-param> <load-on-startup>1</load-on-startup> 
+		</servlet> <servlet-mapping> <servlet-name>Jersey Web Application</servlet-name> 
+		<url-pattern>/webapi/*</url-pattern> </servlet-mapping> -->
 	<!-- BEGIN TOPOLOGY SERVER -->
-	<servlet>
+	<!--<servlet>
 		<servlet-name>DXAT Topology Server</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>
@@ -29,7 +21,17 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>DXAT Topology Server</servlet-name>
-		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
+		<url-pattern>/webapi/topology/*</url-pattern>
+	</servlet-mapping>-->
 	<!-- END TOPOLOGY SERVER -->
+	<!-- BEGIN REALTIME WEBSOCKET -->
+	<servlet>
+		<servlet-name>defaultWebSocket</servlet-name>
+		<servlet-class>dxat.appserver.realtime.resources.RealTimeWebSocket</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>defaultWebSocket</servlet-name>
+		<url-pattern>/realtimewebsocket</url-pattern>
+	</servlet-mapping>
+	<!-- END REALTIME WEBSOCKET -->
 </web-app>

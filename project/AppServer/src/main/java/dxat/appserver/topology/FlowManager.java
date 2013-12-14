@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dxat.appserver.realtime.interfaces.IRTFlowManager;
 import dxat.appserver.topology.exceptions.FlowNotFoundException;
 import dxat.appserver.topology.interfaces.ITopoFlowManager;
 import dxat.appserver.topology.pojos.Flow;
 import dxat.appserver.topology.pojos.FlowCollection;
-import dxat.appserver.topology.realtime.IRTFlowManager;
 
 public class FlowManager implements ITopoFlowManager, IRTFlowManager {
 	private static FlowManager instance = null;

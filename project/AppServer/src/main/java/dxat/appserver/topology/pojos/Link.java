@@ -30,6 +30,6 @@ public class Link {
 	}
 
 	public String getLinkKey() {
-		return this.getSrcPortId() + ":" + this.getDstPortId();
+		return this.getSrcPortId() + "->" + this.getDstPortId();
 	}
 }

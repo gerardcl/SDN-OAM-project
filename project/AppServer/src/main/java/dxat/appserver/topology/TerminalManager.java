@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dxat.appserver.realtime.RealTimeManager;
+import dxat.appserver.realtime.interfaces.IRTTerminalManager;
 import dxat.appserver.topology.exceptions.TerminalNotFoundException;
 import dxat.appserver.topology.interfaces.ITopoTerminalManager;
 import dxat.appserver.topology.pojos.Terminal;
 import dxat.appserver.topology.pojos.TerminalCollection;
-import dxat.appserver.topology.realtime.IRTTerminalManager;
 
 public class TerminalManager implements IRTTerminalManager,
 		ITopoTerminalManager {
@@ -22,7 +23,6 @@ public class TerminalManager implements IRTTerminalManager,
 	public static TerminalManager getInstance() {
 		if (instance == null)
 			instance = new TerminalManager();
-
 		return instance;
 	}
 
@@ -45,6 +45,8 @@ public class TerminalManager implements IRTTerminalManager,
 		try {
 			this.updateTerminal(terminal);
 		} catch (TerminalNotFoundException e) {
+			RealTimeManager.getInstance().broadcast(
+					"[ADDING TERMINAL] Terminal Key: " + terminal.getTerminalId());
 			this.terminals.put(terminal.getTerminalId(), terminal);
 		}
 	}
@@ -55,6 +57,8 @@ public class TerminalManager implements IRTTerminalManager,
 		if (!terminals.containsKey(updateTerminal.getTerminalId()))
 			throw new TerminalNotFoundException("Terminal with identifier '"
 					+ updateTerminal.getTerminalId() + "' not found");
+		RealTimeManager.getInstance().broadcast(
+				"[UPDATING TERMINAL] Terminal Key: " + updateTerminal.getTerminalId());
 		Terminal terminal = terminals.get(updateTerminal.getTerminalId());
 		terminal.setEnabled(updateTerminal.getEnabled());
 		terminal.setIpv4(updateTerminal.getIpv4());
@@ -68,6 +72,8 @@ public class TerminalManager implements IRTTerminalManager,
 		if (!terminals.containsKey(terminalId))
 			throw new TerminalNotFoundException("Terminal with identifier '"
 					+ terminalId + "' not found");
+		RealTimeManager.getInstance().broadcast(
+				"[ENABLING TERMINAL] Terminal Key: " + terminalId);
 		terminals.get(terminalId).setEnabled(true);
 	}
 
@@ -77,6 +83,8 @@ public class TerminalManager implements IRTTerminalManager,
 		if (terminals.containsKey(terminalId))
 			throw new TerminalNotFoundException("Host with identifier '"
 					+ terminalId + "' not found");
+		RealTimeManager.getInstance().broadcast(
+				"[DISABLING TERMINAL] Terminal Key: " + terminalId);
 		terminals.get(terminalId).setEnabled(false);
 	}
 }

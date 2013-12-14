@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dxat.appserver.realtime.RealTimeManager;
+import dxat.appserver.realtime.interfaces.IRTLinkManager;
 import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.interfaces.ITopoLinkManager;
 import dxat.appserver.topology.pojos.Link;
 import dxat.appserver.topology.pojos.LinkCollection;
-import dxat.appserver.topology.realtime.IRTLinkManager;
 
 public class LinkManager implements ITopoLinkManager, IRTLinkManager {
 	private static LinkManager instance = null;
@@ -21,13 +22,18 @@ public class LinkManager implements ITopoLinkManager, IRTLinkManager {
 	public static LinkManager getInstance() {
 		if (instance == null)
 			instance = new LinkManager();
-
 		return instance;
 	}
 
 	@Override
 	public void addLink(Link link) {
-
+		try {
+			updateLink(link);
+		} catch (LinkNotFoundException e) {
+			RealTimeManager.getInstance().broadcast(
+					"[ADDING LINK] Link Key: " + link.getLinkKey());
+			links.put(link.getLinkKey(), link);
+		}
 	}
 
 	@Override
@@ -37,6 +43,9 @@ public class LinkManager implements ITopoLinkManager, IRTLinkManager {
 					+ linkUpdate.getSrcPortId()
 					+ "' to the destination port id '"
 					+ linkUpdate.getDstPortId() + "'.");
+
+		RealTimeManager.getInstance().broadcast(
+				"[UPDATING LINK] Link Key: " + linkUpdate.getLinkKey());
 		Link link = links.get(linkUpdate.getLinkKey());
 		link.setDstPortId(linkUpdate.getDstPortId());
 		link.setEnabled(linkUpdate.getEnabled());
@@ -54,6 +63,8 @@ public class LinkManager implements ITopoLinkManager, IRTLinkManager {
 			throw new LinkNotFoundException("Link with source port id '"
 					+ srcPortId + "' to the destination port id '" + dstPortId
 					+ "'.");
+		RealTimeManager.getInstance().broadcast(
+				"[ENABLING LINK] Link Key: " + link.getLinkKey());
 		links.get(link.getLinkKey()).setEnabled(true);
 	}
 
@@ -68,13 +79,16 @@ public class LinkManager implements ITopoLinkManager, IRTLinkManager {
 			throw new LinkNotFoundException("Link with source port id '"
 					+ srcPortId + "' to the destination port id '" + dstPortId
 					+ "'.");
+
+		RealTimeManager.getInstance().broadcast(
+				"[DISABLING LINK] Link Key: " + link.getLinkKey());
 		links.get(link.getLinkKey()).setEnabled(false);
 	}
 
 	@Override
 	public LinkCollection getLinks() {
-		List <Link> linkList = new ArrayList<Link>(links.values());
-		LinkCollection linkCollection= new LinkCollection();
+		List<Link> linkList = new ArrayList<Link>(links.values());
+		LinkCollection linkCollection = new LinkCollection();
 		linkCollection.setLinks(linkList);
 		return linkCollection;
 	}

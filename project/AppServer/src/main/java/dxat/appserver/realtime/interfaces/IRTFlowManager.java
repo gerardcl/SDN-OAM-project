@@ -1,4 +1,4 @@
-package dxat.appserver.topology.realtime;
+package dxat.appserver.realtime.interfaces;
 
 import dxat.appserver.topology.exceptions.FlowNotFoundException;
 import dxat.appserver.topology.pojos.Flow;
