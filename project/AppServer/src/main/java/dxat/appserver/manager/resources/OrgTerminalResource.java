@@ -41,7 +41,6 @@ public class OrgTerminalResource {
 	@Path("/terminal/all")	
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION) 
 	public OrgTerminalCollection getAllOrgTerminals(@QueryParam("orgId") String orgId) {
-		System.out.println("\n\nORG ID RECEIVED IS: "+orgId+"\n\n");
 		List<OrgTerminal> orgTerminalList = new ArrayList<OrgTerminal>(orgTerminalManager.orgManager.getInstance().getOrg(orgId).getTerminals().values());
 		OrgTerminalCollection orgTerminals = new OrgTerminalCollection();
 		orgTerminals.setOrgTerminals(orgTerminalList);

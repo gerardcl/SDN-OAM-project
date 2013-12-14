@@ -43,7 +43,6 @@ public class OrgUserResource {
 	@Path("/user/all")	
 	@Produces(AppServerMediaType.ORG_USER_COLLECTION) 
 	public OrgUserCollection getAllOrgUsers(@QueryParam("orgId") String orgId) {
-		System.out.println("\n\nORG ID RECEIVED IS: "+orgId+"\n\n");
 		List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserManager.orgManager.getInstance().getOrg(orgId).getUsers().values());
 		OrgUserCollection orgUsers = new OrgUserCollection();
 		orgUsers.setOrgUsers(orgUserList);

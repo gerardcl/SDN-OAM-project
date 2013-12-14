@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>OAM SDN Manager</title>
+    <title>OAM SDN project</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -24,13 +24,7 @@
       <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="DEMO.html">OAM SDN Admin DEMO</a>
+          <a class="navbar-brand" href="">OAM SDN project</a>
         </div>
 
 
@@ -54,10 +48,8 @@
                         <legend>Login</legend>
                         <input type="text" id="username" class="input-block-level" name="username" placeholder="Username" required>
                         <br><br>
-                        <input type="password" id="password" class="input-block-level" name="password" placeholder="Password" required>
-                        <label class="checkbox">
-                          <input type="checkbox" name="remember" value="1">Remember Me
-                        </label>
+                        <input type="password" id="password" class="input-block-level" name="password" placeholder="Password" required><br>
+                        <input type="checkbox" name="remember" value="1">Remember Me<br><br><br>
                         <input type="submit" name="submit" class="btn btn-primary" value="login">
                       </center>
                     </fieldset>
@@ -67,13 +59,16 @@
             </div>
 
             <div class="row">
-
-            <center><a href="admin/index.html"><button class="btn btn-lg btn-success"><h1><i class="fa fa-gears"></i> ADMIN VIEW</h1></button></center>
-
-            <br><br>
-
-            <center><a href="client/index.html"><button class="btn btn-lg btn-danger"><h1><i class="fa fa-user"></i> CLIENT VIEW</h1></button></center>
-
+			<div class="msg">
+            <center><a href="admin"><button class="btn btn-lg btn-danger"><h1><i class="fa fa-gears"></i> ERROR MESSAGE </h1></button></center>
+			</div>
+			<br>
+			<div class="admin">
+            <center><a href="client"><button class="btn btn-lg btn-success"><h1><i class="fa fa-user"></i> ADMIN VIEW </h1></button></center>
+			</div>
+			<div class=client"">
+            <center><a href="client"><button class="btn btn-lg btn-success"><h1><i class="fa fa-user"></i> CLIENT VIEW </h1></button></center>
+			</div>
             </div>
 
         </div><!-- /HEAD ROW -->
@@ -92,13 +87,10 @@
     <!-- JavaScript -->
     <script src="js/jquery-1.10.2.js"></script>
     <script src="js/bootstrap.js"></script>
-
-    <!-- Page Specific Plugins -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-
-
+    <script src="js/backbone-min.js"></script>
     <script src="js/tablesorter/jquery.tablesorter.js"></script>
     <script src="js/tablesorter/tables.js"></script>
+    <script src="js/util.js"></script>
 
 
   </body>

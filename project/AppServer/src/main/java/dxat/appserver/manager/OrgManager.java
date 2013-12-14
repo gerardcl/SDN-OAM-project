@@ -28,9 +28,10 @@ public class OrgManager {
 		terminals = new HashMap<String, OrgTerminal>();
 		
 		/*some test init*/
+		int maxorgs = 10;
 		int i = 0;
 		int j = 0;
-		for(j = 1; j < 6; j++){
+		for(j = 1; j < maxorgs; j++){
 			Org org = new Org();
 			String id = "orgId";
 			String name = "orgName";
@@ -41,7 +42,7 @@ public class OrgManager {
 			org.setNIF("C-123456"+Integer.toString(i)+Integer.toString(j));
 			org.setTelephone("689404"+Integer.toString(i)+Integer.toString(j));
 			org.setBankAccount("2013-1234-5678-2345234"+Integer.toString(j)+Integer.toString(i));
-			org.setOAM(i%5==0?true:false);
+			org.setOAM(j%(maxorgs-1)==0?true:false);
 			HashMap<String, OrgFlow> tempFlows;
 			HashMap<String, OrgUser> tempUsers;
 			HashMap<String, OrgTerminal> tempTerminals;			
