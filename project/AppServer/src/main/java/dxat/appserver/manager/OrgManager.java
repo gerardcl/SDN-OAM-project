@@ -102,7 +102,7 @@ public class OrgManager {
 				user.setEmail(uid+"@"+org.getName()+".com");
 				user.setTelephone(654321000+i*100+j*10+i+j);
 				user.setPassword(org.getName()+"dxat"+Integer.toString(i));
-				user.setAdmin(i%4==0?true:false);
+				user.setAdmin(j%(maxorgs-1)==0?true:false);
 				user.setActive(i%3==0?true:false);
 				tempUsers.put(user.identifier, user);
 				users.put(user.identifier, user);
