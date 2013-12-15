@@ -3,6 +3,8 @@ package dxat.appserver.manager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.OrgFlow;
@@ -205,6 +207,17 @@ public class OrgManager {
 	public boolean existOrg(OrgTerminal orgT){
 		//TODO
 		return false;
+	}
+	public String existUser(String username){
+		for (Entry<String, OrgUser> entry : users.entrySet()) {
+		    String key = entry.getKey();
+		    Object value = entry.getValue();
+		    if(((OrgUser) value).getName().equals(username)) {
+		    	System.out.println("OK");
+		    	return ((OrgUser) value).getIdentifier();
+		    }
+		}
+		return null;
 	}
 	public List<Org> getOrgs(){
 		//TODO

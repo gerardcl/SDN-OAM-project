@@ -62,7 +62,7 @@ public class OrgUserResource {
 	@Path("/user/auth")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String checkUserAuth(@QueryParam("username") String username,@QueryParam("password") String password){
-		System.out.println(username+" with "+password);
+		System.out.println("Checking login for :"+username);
 		String result = null;
 		switch (orgUserManager.checkPassword(username, password)){
 			case 0:
