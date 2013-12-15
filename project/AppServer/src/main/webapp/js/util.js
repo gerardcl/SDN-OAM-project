@@ -5,7 +5,10 @@
 	});
 
 	//$("#submit").click($("#msg").show());
-
+	$("#msg").click(function(){
+		$("#msg").hide();
+	});
+	
 	$('#check').click(function() {
 		$("#msg").hide();
 		$("#loading").show();
