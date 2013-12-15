@@ -1,12 +1,15 @@
 (function($){
 	$(document).ready(function(){
 		$("#msg").hide();
+		$("#loading").hide();
 	});
 
 	//$("#submit").click($("#msg").show());
 
 	$('#check').click(function() {
 		$("#msg").hide();
+		$("#loading").show();
+
 		console.log("submitting user and password to server...");
 		var requestUrl =
 			"/AppServer/webapp/manager/user/auth?username=" + $('#username').val() +
@@ -32,13 +35,19 @@
 		    success: function(msg){
 		        console.log(msg);
 		        console.log("success");
-		        if(msg == "0") $("#msg").show();
+		        if(msg == "0"){
+		        	$("#loading").hide();
+		        	$("#msg").show();
+		        }
 		    	else if(msg == "1") location.href = "/AppServer/admin";
 		    	else if(msg == "2") location.href = "/AppServer/client";
 		    },
 		    error: function(xhr, msg) { 
 		    	console.log(msg + '\n' + xhr.responseText);
-		    	if(xhr.responseText == "0") $("#msg").show();
+		    	if(xhr.responseText == "0"){
+		        	$("#loading").hide();
+		        	$("#msg").show();
+		        }
 		    	else if(xhr.responseText == "1") location.href = "/AppServer/admin";
 		    	else if(xhr.responseText == "2") location.href = "/AppServer/client";
 		    }
