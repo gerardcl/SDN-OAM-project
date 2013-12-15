@@ -33,8 +33,17 @@ public class OrgUserManager {
 	public void updateOrgUser(String orgId, OrgUser user){
 		//TODO
 	}
-	public boolean checkPassword(String userId, String password){
+	public int checkPassword(String userId, String password){
 		//TODO
-		return false;
+		if(orgManager.getInstance().getUsers().get(userId) != null){
+			System.out.println("USER EXISTS");
+			if(orgManager.getInstance().getUsers().get(userId).getPassword().equals(password)){
+				System.out.println("CORRECT PASSWORD");
+				if(orgManager.getInstance().getUsers().get(userId).isAdmin()) 
+					return 1;
+				else return 2;
+			}
+		}
+		return 0;
 	}
 }

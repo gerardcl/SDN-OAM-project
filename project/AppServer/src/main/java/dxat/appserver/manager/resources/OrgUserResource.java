@@ -5,6 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import dxat.appserver.manager.OrgUserManager;
 import dxat.appserver.manager.pojos.OrgUser;
@@ -56,5 +57,29 @@ public class OrgUserResource {
 		return orgUserManager.orgManager.getOrg(orgId).getUsers().get(userId);
 	}	
 
+	//CHECK USER PASSWORD...
+	@GET
+	@Path("/user/auth")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String checkUserAuth(@QueryParam("username") String username,@QueryParam("password") String password){
+		System.out.println(username+" with "+password);
+		String result = null;
+		switch (orgUserManager.checkPassword(username, password)){
+			case 0:
+				result = "0";
+				break;
+			case 1:
+				result = "1";
+				break;
+			case 2:
+				result = "2";
+				break;
+			default:
+				result = "something went wrong, try again...";
+				break;
+		}
+		
+		return result;
+	}
 
 }
