@@ -75,10 +75,9 @@ public class OrgUserResource {
 				result = "2";
 				break;
 			default:
-				result = "something went wrong, try again...";
+				result = "0";
 				break;
 		}
-		
 		return result;
 	}
 
