@@ -1,105 +1,50 @@
 (function($){
 	$(document).ready(function(){
-		$("#msg").show();//.append("for each here, per mac and so on!<p></p>");
-		$("#admin").hide();
-		$("#client").hide();
-
-		//var appView = new DevicesView();
+		$("#msg").hide();
 	});
 
-	var Session = Backbone.Model.extend({
-		defaults: 
-		{
-			user: ' ',
-			password: ' ',
-			session: ' ',
-			msg: ' '
-		}
+	//$("#submit").click($("#msg").show());
+
+	$('#check').click(function() {
+		$("#msg").hide();
+		console.log("submitting user and password to server...");
+		var requestUrl =
+			"/AppServer/webapp/manager/user/auth?username=" + $('#username').val() +
+			"&password=" + $('#password').val();
+		console.log(requestUrl); //firebug console output
+//		$.getJSON(requestUrl,
+//				function(data) {
+//					console.log(this.data); //firebug console output
+//					$("#msg").html(data.username);
+//					$("#admin").show();
+//		});
+		$.ajax({
+		    type: "GET",
+		    url: requestUrl,
+//		    dataType: "json",
+//		    data: "{" +
+//		        "\"session\" : {" +
+//		            "\"username\" : [\"$('#username').val()\"]," +
+//		            "\"password\" : \"$('#password').val()\"" +
+//		        "}" +
+//		    "}",
+//		    contentType: "application/json; charset=UTF-8",
+		    success: function(msg){
+		        console.log(msg);
+		        console.log("success");
+		        if(msg == "0") $("#msg").show();
+		    	else if(msg == "1") location.href = "/AppServer/admin";
+		    	else if(msg == "2") location.href = "/AppServer/client";
+		    },
+		    error: function(xhr, msg) { 
+		    	console.log(msg + '\n' + xhr.responseText);
+		    	if(xhr.responseText == "0") $("#msg").show();
+		    	else if(xhr.responseText == "1") location.href = "/AppServer/admin";
+		    	else if(xhr.responseText == "2") location.href = "/AppServer/client";
+		    }
+		});
 	});
 
-	var SessionList = Backbone.Collection.extend({
-		model: Session
-	});
-	var numDevices = 0;
-	var devices = new SessionList();
-
-	var DeviceView = Backbone.View.extend({
-		model: new Session(),
-		tagName: 'div',
-		events: {
-			'click .msg': 'updateName',
-			'click .ip': 'updateIp',
-			'click .description': 'updateDesc',
-//			'click .delete': 'delete',
-			'blur .name': 'close',
-			'blur .ip': 'close',
-			'blur .description': 'close',
-			'keypress .name': 'onEnterUpdate',
-			'keypress .ip': 'onEnterUpdate',
-			'keypress .description': 'onEnterUpdate'
-		},
-		initialize: function(){
-			this.template = _.template($('#device-template').html()); //using underscore template
-		},
-		updateName: function(ev){
-			ev.preventDefault();
-			this.$('.msg').html("helloworld");
-		},
-		updateIp: function(ev){
-			ev.preventDefault();
-			this.$('.ip').attr('contenteditable',true).focus();
-		},
-		updateDesc: function(ev){
-			ev.preventDefault();
-			this.$('.description').attr('contenteditable',true).focus();
-		},
-		close: function(ev){
-			var name = this.$('.name').text();
-			var ip = this.$('.ip').text();
-			var description = this.$('.description').text();
-			this.model.set('name', name);
-			this.model.set('ip', ip);
-			this.model.set('description', description);
-			this.$('.name').removeAttr('contenteditable');
-			this.$('.ip').removeAttr('contenteditable');
-			this.$('.description').removeAttr('contenteditable');
-		},
-		onEnterUpdate: function(ev){
-			var self = this;
-			if(ev.keyCode==13){
-				this.close();
-				_.delay(function(){ self.$('.name').blur()},100);
-				_.delay(function(){ self.$('.ip').blur()},100);
-				_.delay(function(){ self.$('.description').blur()},100);
-			}
-		},
-//		delete: function(ev){
-//			ev.preventDefault();
-//			devices.remove(this.model);
-//		},
-		render: function(){
-			this.$el.html(this.template(this.model.toJSON()));
-			return this;
-		}
-	});
-
-	var DevicesView = Backbone.View.extend({
-		model: devices,
-		el: $('#devices-container'),
-		initialize: function(){
-			this.model.on('add', this.render, this);
-			this.model.on('remove', this.render,this);
-		},					
-		render: function(){
-			var self = this;
-			self.$el.html('');
-			_.each(this.model.toArray(),function(device,i){
-				self.$el.append((new DeviceView({model: device})).render().$el);
-			});
-			return this;
-		}
-
-	});
 
 
 
