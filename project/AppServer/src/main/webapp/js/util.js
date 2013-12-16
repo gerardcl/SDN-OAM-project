@@ -33,14 +33,14 @@
 		        console.log(msg);
 		        console.log("success");
 		        if(msg == "0") $("#msg").show();
-		    	else if(msg == "1") location.href = "/AppServer/admin";
-		    	else if(msg == "2") location.href = "/AppServer/client";
+		    	else if(msg == "1") location.href = "#/adminOverview";
+		    	else if(msg == "2") location.href = "#/client/overview";
 		    },
 		    error: function(xhr, msg) { 
 		    	console.log(msg + '\n' + xhr.responseText);
 		    	if(xhr.responseText == "0") $("#msg").show();
-		    	else if(xhr.responseText == "1") location.href = "/AppServer/admin";
-		    	else if(xhr.responseText == "2") location.href = "/AppServer/client";
+		    	else if(xhr.responseText == "1") location.href = "#/admin/overview";
+		    	else if(xhr.responseText == "2") location.href = "#/client/overview";
 		    }
 		});
 	});

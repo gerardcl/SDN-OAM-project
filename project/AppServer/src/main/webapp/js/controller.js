@@ -1,4 +1,4 @@
-//Backbone
+//Backbone aaaa
 (function($){
 
 //COLLESCTIONS
@@ -14,9 +14,9 @@
 
 //VIEWS
 
-  //SIDEBAR SIMPLE VIEW #sidebar-template
-    var SidebarSimpleView = Backbone.View.extend({
-      el: '#sidebar-simple-container',
+  //LOGIN VIEW #login-template
+    var LoginView = Backbone.View.extend({
+      el: '.sidebar-container',
       render: function () {
         var that = this;
         var template = _.template($('#login-template').html());
@@ -24,22 +24,34 @@
       }
     });
 
-    var sidebarSimpleView = new SidebarSimpleView();
-  // /GLOBAL VIEW #global-template
+    var loginView = new LoginView();
+  // /LOGIN VIEW #login-template
 
-  //GLOBAL VIEW #global-template
-    var GlobalView = Backbone.View.extend({
-      el: '.page',
+  //ADMIN SIDEBAR #login-template
+    var AdminSidebarView = Backbone.View.extend({
+      el: '.sidebar-container',
       render: function () {
-    	  console.log('ENTRA AL RENDER de GlobalView');
         var that = this;
-        var template = _.template($('#global-template').html());
+        var template = _.template($('#admin-sidebar-template').html());
         that.$el.html(template);
       }
     });
 
-    var globalView = new GlobalView();
-  // /GLOBAL VIEW #global-template
+    var adminSidebarView = new AdminSidebarView();
+  // /LOGIN VIEW #login-template
+
+  //GLOBAL VIEW #admin-overview-template
+    var AdminOverviewView = Backbone.View.extend({
+      el: '.page',
+      render: function () {
+        var that = this;
+        var template = _.template($('#admin-overview-template').html());
+        that.$el.html(template);
+      }
+    });
+
+    var adminOverviewView = new AdminOverviewView();
+  // /GLOBAL VIEW #admin-overview-template
 
 
   //ORGANIZATIONS VIEW #organizations-template
@@ -48,7 +60,6 @@
       render: function () {
         var organizations = new Organizations();
         organizations.fetch()
-        console.log('ENTRA AL RENDER de OrganizationsView');
         var that = this;
         var template = _.template($('#organizations-template').html());
         that.$el.html(template);
@@ -56,26 +67,6 @@
     });
 
     var organizationsView = new OrganizationsView();
-
-    var OrganizationsListView = Backbone.View.extend({
-      el: '.page',
-      tag: 'nav',
-      render: function () {
-        var that = this;
-        var organizations = new Organizations();
-        organizations.fetch({
-          success: function (organizations) {                          // , {organizations: organizations.models}
-            var template = _.template($('#organizations-list-template').html());
-            that.$el.html(that.template(that.model.toJSON()));
-            return that;
-
-          }
-        })
-      }
-    });
-
-
-    var organizationsListView = new OrganizationsListView();
   // /ORGANIZATIONS VIEW #organizations-template
 
   //FLOWS VIEW #flows-template
@@ -121,11 +112,11 @@
     var Router = Backbone.Router.extend({
         routes: {
           "": "login", 
-          "organizations": "organizations",
-          "flows": "flows",
-          "terminals": "terminals",
-          "traffic": "traffic",
-          "/organizations/orgData":"orgData",
+          "adminOverview" : "adminOverview",
+          "adminOrgs": "organizations",
+          "adminFlows": "flows",
+          "adminTers": "terminals",
+          "adminTraffic": "traffic"
         }
     });
 
@@ -134,12 +125,15 @@
   //EVENTS FROM ROUTES
 
     router.on('route:login', function() {
-      sidebarSimpleView.render();
+      console.log('entra al route:login');
+      loginView.render();
     })
 
-    router.on('route:global', function() {
+    router.on('route:adminOverview', function() {
       // render global view
-      globalView.render();
+      console.log('entra al route:admin');
+      adminOverviewView.render();
+      adminSidebarView.render();
       //SlimScroll HEIGHTS
         $('#GS-alerts').slimScroll({
             height: '200px'
@@ -182,6 +176,7 @@
     })
 
     router.on('route:flows', function() {
+      console.log('entra al route:flows');
       // render global view
       flowsView.render();
       //SlimScroll HEIGHTS
