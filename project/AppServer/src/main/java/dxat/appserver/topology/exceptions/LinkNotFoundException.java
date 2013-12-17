@@ -1,5 +1,7 @@
 package dxat.appserver.topology.exceptions;
 
+import dxat.appserver.topology.pojos.Link;
+
 public class LinkNotFoundException extends Exception {
 
 	/**
@@ -7,29 +9,12 @@ public class LinkNotFoundException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public LinkNotFoundException() {
-		// TODO Auto-generated constructor stub
+	public LinkNotFoundException(Link link){
+		super("Link with id '" + link.getLinkKey() + "' not found");
 	}
 
-	public LinkNotFoundException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
-
-	public LinkNotFoundException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	public LinkNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	public LinkNotFoundException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
+	public LinkNotFoundException(String linkKey) {
+		super("Link with id '" + linkKey + "' not found");
 	}
 
 }

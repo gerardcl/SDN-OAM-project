@@ -10,8 +10,8 @@
 		</servlet> <servlet-mapping> <servlet-name>Jersey Web Application</servlet-name> 
 		<url-pattern>/webapi/*</url-pattern> </servlet-mapping> -->
 	<!-- BEGIN TOPOLOGY SERVER -->
-	<!--<servlet>
-		<servlet-name>DXAT Topology Server</servlet-name>
+	<servlet>
+		<servlet-name>DXAT Topology Service</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>jersey.config.server.provider.packages</param-name>
@@ -20,17 +20,17 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>DXAT Topology Server</servlet-name>
+		<servlet-name>DXAT Topology Service</servlet-name>
 		<url-pattern>/webapi/topology/*</url-pattern>
-	</servlet-mapping>-->
+	</servlet-mapping>
 	<!-- END TOPOLOGY SERVER -->
 	<!-- BEGIN REALTIME WEBSOCKET -->
 	<servlet>
-		<servlet-name>defaultWebSocket</servlet-name>
+		<servlet-name>Real Time Web Socket</servlet-name>
 		<servlet-class>dxat.appserver.realtime.resources.RealTimeWebSocket</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>defaultWebSocket</servlet-name>
+		<servlet-name>Real Time Web Socket</servlet-name>
 		<url-pattern>/realtimewebsocket</url-pattern>
 	</servlet-mapping>
 	<!-- END REALTIME WEBSOCKET -->

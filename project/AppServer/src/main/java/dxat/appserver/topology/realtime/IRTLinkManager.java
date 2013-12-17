@@ -1,4 +1,4 @@
-package dxat.appserver.realtime.interfaces;
+package dxat.appserver.topology.realtime;
 
 import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
@@ -9,7 +9,9 @@ public interface IRTLinkManager {
 
 	public void updateLink(Link link) throws LinkNotFoundException;
 
-	public void enableLink(String srcportId, String dstPortId) throws LinkNotFoundException;
+	public void enableLink(String srcportId, String dstPortId)
+			throws LinkNotFoundException;
 
-	public void disableLink(String srcportId, String dstPortId) throws LinkNotFoundException;
+	public void disableLink(String srcportId, String dstPortId)
+			throws LinkNotFoundException;
 }

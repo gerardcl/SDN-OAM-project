@@ -103,7 +103,11 @@ public class TopologyResource {
 	@Path("/all/terminals/")
 	@Produces(MediaType.TERMINALS_COLLECTION)
 	public TerminalCollection getAllTerminals() {
-		return terminalManager.getTerminals();
+		TerminalCollection terminalCollection = terminalManager.getTerminals();
+		if (terminalCollection == null){
+			return new TerminalCollection();
+		}
+		return terminalCollection;
 	}
 
 	@GET

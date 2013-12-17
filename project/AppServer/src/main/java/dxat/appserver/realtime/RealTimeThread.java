@@ -8,10 +8,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
+import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.topology.LinkManager;
 import dxat.appserver.topology.SwitchManager;
 import dxat.appserver.topology.TerminalManager;
+import dxat.appserver.topology.exceptions.LinkNotFoundException;
+import dxat.appserver.topology.exceptions.PortNotFoundException;
+import dxat.appserver.topology.exceptions.SwitchNotFoundException;
+import dxat.appserver.topology.exceptions.TerminalNotFoundException;
 import dxat.appserver.topology.pojos.Command;
 import dxat.appserver.topology.pojos.Flow;
 import dxat.appserver.topology.pojos.Link;
@@ -69,17 +75,30 @@ public class RealTimeThread implements Runnable {
 		}
 	}
 
+	/*private void processEvent(ControllerEvent controllerEvent){
+		System.out.println(controllerEvent.getEvent());
+		RealTimeManager.getInstance().broadcast(controllerEvent.getEvent());
+	}*/
+	
 	private void processCommand(Command cmd) {
 		// Switches Events
 		try {
+			System.out.println("[" + cmd.getEvent() + "]");
 			if (cmd.getEvent().equals(Command.ADD_SWITCH)) {
-				SwitchManager.getInstance().addSwitch(
-						new Gson().fromJson(cmd.getObject(), Switch.class));
+				Switch sw = new Gson().fromJson(cmd.getObject(), Switch.class);
+				SwitchManager.getInstance().addSwitch(sw);
+				RealTimeManager.getInstance().broadcast(
+						"[SWITCH CONNECTED] ID: '" + sw.getSwId() + "';");
 			} else if (cmd.getEvent().equals(Command.DISABLE_SWITCH)) {
-				SwitchManager.getInstance().disableSwitch(cmd.getObject());
+				String swId = cmd.getObject();
+				SwitchManager.getInstance().disableSwitch(swId);
+				RealTimeManager.getInstance().broadcast(
+						"[SWITCH DISCONNECTED] ID: '" + swId + "';");
 			} else if (cmd.getEvent().equals(Command.UPDATE_SWITCH)) {
-				SwitchManager.getInstance().updateSwitch(
-						new Gson().fromJson(cmd.getObject(), Switch.class));
+				Switch sw = new Gson().fromJson(cmd.getObject(), Switch.class);
+				SwitchManager.getInstance().updateSwitch(sw);
+				RealTimeManager.getInstance().broadcast(
+						"[SWITCH DISCONNECTED] ID: '" + sw.getSwId() + "';");
 				// Links Events
 			} else if (cmd.getEvent().equals(Command.ADD_LINK)) {
 				LinkManager.getInstance().addLink(
@@ -93,8 +112,12 @@ public class RealTimeThread implements Runnable {
 						new Gson().fromJson(cmd.getObject(), Link.class));
 				// Terminal Events
 			} else if (cmd.getEvent().equals(Command.ADD_TERMINAL)) {
-				TerminalManager.getInstance().addTerminal(
-						new Gson().fromJson(cmd.getObject(), Terminal.class));
+				Terminal terminal = new Gson().fromJson(cmd.getObject(),
+						Terminal.class);
+				TerminalManager.getInstance().addTerminal(terminal);
+				RealTimeManager.getInstance().broadcast(
+						"[TERMINAL CONNECTED] ID: '" + terminal.getTerminalId()
+								+ "';");
 			} else if (cmd.getEvent().equals(Command.DISABLE_TERMINAL)) {
 				Terminal terminal = new Gson().fromJson(cmd.getObject(),
 						Terminal.class);
@@ -103,16 +126,22 @@ public class RealTimeThread implements Runnable {
 			} else if (cmd.getEvent().equals(Command.UPDATE_TERMINAL)) {
 				TerminalManager.getInstance().updateTerminal(
 						new Gson().fromJson(cmd.getObject(), Terminal.class));
-			}/*
-			 * else if (cmd.getEvent().equals(Command.PUSH_STATS)) {
-			 * controller.pushStatistics(new Gson().fromJson(cmd.getObject(),
-			 * PortStatisticsCollection.class)); }
-			 */else {
+			} else if (cmd.getEvent().equals(Command.PUSH_STATS)) {
+				RealTimeManager.getInstance().broadcast("[STAT PUSH]");
+			} else {
 				System.out.println("WARNING!! Command not implemented: '"
 						+ cmd.getEvent() + "");
 			}
-		} catch (Exception e) {
-			System.out.println("[EXCEPTION] " + e.getMessage());
+		} catch (SwitchNotFoundException e) {
+			printException(e);
+		} catch (LinkNotFoundException e) {
+			printException(e);
+		} catch (TerminalNotFoundException e) {
+			printException(e);
+		} catch (JsonSyntaxException e) {
+			printException(e);
+		} catch (PortNotFoundException e) {
+			printException(e);
 		}
 	}
 
@@ -160,6 +189,8 @@ public class RealTimeThread implements Runnable {
 				try {
 					processCommand(new Gson().fromJson(reader.readLine(),
 							Command.class));
+					/*processEvent(new Gson().fromJson(reader.readLine(),
+							ControllerEvent.class) );*/
 				} catch (IOException e) {
 					try {
 						System.out.println("[Exception Reading line]");

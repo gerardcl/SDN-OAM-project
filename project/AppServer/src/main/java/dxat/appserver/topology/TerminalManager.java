@@ -1,11 +1,9 @@
 package dxat.appserver.topology;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import dxat.appserver.realtime.RealTimeManager;
 import dxat.appserver.realtime.interfaces.IRTTerminalManager;
+import dxat.appserver.topology.db.TerminalTopologyDB;
+import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
+import dxat.appserver.topology.exceptions.PortNotFoundException;
 import dxat.appserver.topology.exceptions.TerminalNotFoundException;
 import dxat.appserver.topology.interfaces.ITopoTerminalManager;
 import dxat.appserver.topology.pojos.Terminal;
@@ -14,10 +12,9 @@ import dxat.appserver.topology.pojos.TerminalCollection;
 public class TerminalManager implements IRTTerminalManager,
 		ITopoTerminalManager {
 	private static TerminalManager instance = null;
-	private HashMap<String, Terminal> terminals = null;
 
 	private TerminalManager() {
-		this.terminals = new HashMap<String, Terminal>();
+		super();
 	}
 
 	public static TerminalManager getInstance() {
@@ -28,63 +25,90 @@ public class TerminalManager implements IRTTerminalManager,
 
 	@Override
 	public TerminalCollection getTerminals() {
-		List<Terminal> terminalList = new ArrayList<Terminal>(
-				this.terminals.values());
-		TerminalCollection terminalCollection = new TerminalCollection();
-		terminalCollection.setTerminals(terminalList);
+		TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
+		TerminalCollection terminalCollection = null;
+		try {
+			terminalTopologyDB.opendb();
+			terminalCollection = terminalTopologyDB.getAllTerminals();
+		} catch (CannotOpenDataBaseException e) {
+			e.printStackTrace();
+		} finally {
+			terminalTopologyDB.closedb();
+		}
 		return terminalCollection;
 	}
 
 	@Override
 	public Terminal getTerminal(String terminalId) {
-		return terminals.get(terminalId);
+		TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
+		Terminal terminal = null;
+		try {
+			terminalTopologyDB.opendb();
+			terminal = terminalTopologyDB.getTerminal(terminalId);
+		} catch (CannotOpenDataBaseException e) {
+			e.printStackTrace();
+		} catch (TerminalNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			terminalTopologyDB.closedb();
+		}
+		return terminal;
 	}
 
 	@Override
 	public void addTerminal(Terminal terminal) {
+		TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
 		try {
-			this.updateTerminal(terminal);
-		} catch (TerminalNotFoundException e) {
-			RealTimeManager.getInstance().broadcast(
-					"[ADDING TERMINAL] Terminal Key: " + terminal.getTerminalId());
-			this.terminals.put(terminal.getTerminalId(), terminal);
+			terminalTopologyDB.opendb();
+			terminalTopologyDB.addTerminal(terminal);
+		} catch (CannotOpenDataBaseException e) {
+			e.printStackTrace();
+		} catch (PortNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			terminalTopologyDB.closedb();
 		}
 	}
 
 	@Override
 	public void updateTerminal(Terminal updateTerminal)
 			throws TerminalNotFoundException {
-		if (!terminals.containsKey(updateTerminal.getTerminalId()))
-			throw new TerminalNotFoundException("Terminal with identifier '"
-					+ updateTerminal.getTerminalId() + "' not found");
-		RealTimeManager.getInstance().broadcast(
-				"[UPDATING TERMINAL] Terminal Key: " + updateTerminal.getTerminalId());
-		Terminal terminal = terminals.get(updateTerminal.getTerminalId());
-		terminal.setEnabled(updateTerminal.getEnabled());
-		terminal.setIpv4(updateTerminal.getIpv4());
-		terminal.setMac(updateTerminal.getMac());
-		terminal.setPortAPId(updateTerminal.getPortAPId());
+		TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
+		try {
+			terminalTopologyDB.opendb();
+			terminalTopologyDB.updateTerminal(updateTerminal);
+		} catch (CannotOpenDataBaseException e) {
+			e.printStackTrace();
+		} finally {
+			terminalTopologyDB.closedb();
+		}
 	}
 
 	@Override
 	public void enableTerminal(String terminalId)
 			throws TerminalNotFoundException {
-		if (!terminals.containsKey(terminalId))
-			throw new TerminalNotFoundException("Terminal with identifier '"
-					+ terminalId + "' not found");
-		RealTimeManager.getInstance().broadcast(
-				"[ENABLING TERMINAL] Terminal Key: " + terminalId);
-		terminals.get(terminalId).setEnabled(true);
+		TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
+		try {
+			terminalTopologyDB.opendb();
+			terminalTopologyDB.enableTerminal(terminalId);
+		} catch (CannotOpenDataBaseException e) {
+			e.printStackTrace();
+		} finally {
+			terminalTopologyDB.closedb();
+		}
 	}
 
 	@Override
 	public void disableTerminal(String terminalId)
 			throws TerminalNotFoundException {
-		if (terminals.containsKey(terminalId))
-			throw new TerminalNotFoundException("Host with identifier '"
-					+ terminalId + "' not found");
-		RealTimeManager.getInstance().broadcast(
-				"[DISABLING TERMINAL] Terminal Key: " + terminalId);
-		terminals.get(terminalId).setEnabled(false);
+		TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
+		try {
+			terminalTopologyDB.opendb();
+			terminalTopologyDB.disableTerminal(terminalId);
+		} catch (CannotOpenDataBaseException e) {
+			e.printStackTrace();
+		} finally {
+			terminalTopologyDB.closedb();
+		}
 	}
 }

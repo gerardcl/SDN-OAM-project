@@ -1,5 +1,7 @@
 package dxat.appserver.topology.exceptions;
 
+import dxat.appserver.topology.pojos.Terminal;
+
 public class TerminalNotFoundException extends Exception {
 
 	/**
@@ -7,29 +9,11 @@ public class TerminalNotFoundException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public TerminalNotFoundException() {
-		// TODO Auto-generated constructor stub
+	public TerminalNotFoundException(Terminal terminal) {
+		super("Terminal with id '" + terminal.getTerminalId() + "' not found");
 	}
 
-	public TerminalNotFoundException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
+	public TerminalNotFoundException(String terminalId) {
+		super("Terminal with id '" + terminalId + "' not found");
 	}
-
-	public TerminalNotFoundException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	public TerminalNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	public TerminalNotFoundException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
-	}
-
 }
