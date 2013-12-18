@@ -4,7 +4,7 @@ public class StatResponse {
 	
 	private String idObject;
 	private String parameter;
-	private double[] timeAxxis;
+	private long[] timeAxxis;
 	private double[] valueAxxis;
 	public String getIdObject() {
 		return idObject;
@@ -18,11 +18,11 @@ public class StatResponse {
 	public void setParameter(String parameter) {
 		this.parameter = parameter;
 	}
-	public double[] getTimeAxxis() {
+	public long[] getTimeAxxis() {
 		return timeAxxis;
 	}
-	public void setTimeAxxis(double[] timeAxxis) {
-		this.timeAxxis = timeAxxis;
+	public void setTimeAxxis(long[] ls) {
+		this.timeAxxis = ls;
 	}
 	public double[] getValueAxxis() {
 		return valueAxxis;
