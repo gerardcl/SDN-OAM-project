@@ -115,7 +115,7 @@
           "adminOverview" : "adminOverview",
           "adminOrgs": "organizations",
           "adminFlows": "flows",
-          "adminTers": "terminals",
+          "adminTerminals": "terminals",
           "adminTraffic": "traffic"
         }
     });
@@ -146,6 +146,7 @@
     router.on('route:organizations', function() {
       // render organizations view
       organizationsView.render();
+      adminSidebarView.render();
       //SlimScroll HEIGHTS
         $('#OM-orgColumn').slimScroll({
             height: '455px'
@@ -179,6 +180,7 @@
       console.log('entra al route:flows');
       // render global view
       flowsView.render();
+      adminSidebarView.render();
       //SlimScroll HEIGHTS
         $('#FLW-active').slimScroll({
             height: '170px'
@@ -200,6 +202,7 @@
     router.on('route:traffic', function() {
       // render global view
       trafficView.render();
+      adminSidebarView.render();
       //SlimScroll HEIGHTS
         $('#TA-matrix').slimScroll({
             height: '520px'
