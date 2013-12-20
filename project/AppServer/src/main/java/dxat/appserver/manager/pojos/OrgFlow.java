@@ -11,6 +11,7 @@ public class OrgFlow {
 	private double bandwidth;
 	private String protocol;
 	private boolean active;
+	
 	public String getIdentifier() {
 		return identifier;
 	}
