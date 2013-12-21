@@ -10,8 +10,11 @@ import java.net.Socket;
 import com.google.gson.Gson;
 
 import dxat.appserver.realtime.interfaces.IServerRequests;
+import dxat.appserver.realtime.interfaces.IStatisticsEvent;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.realtime.pojos.ServerRequest;
+import dxat.appserver.stat.StatManager;
+import dxat.appserver.stat.pojos.StatCollection;
 import dxat.appserver.topology.pojos.Command;
 import dxat.appserver.topology.pojos.Flow;
 
@@ -70,6 +73,25 @@ public class RealTimeThread implements Runnable {
 		System.out.println("[" + controllerEvent.getEvent() + "]");
 		RealTimeManager.getInstance().broadcast(
 				"[" + controllerEvent.getEvent() + "]");
+		//************************************************************
+		//
+		//************************************************************
+		if (controllerEvent.getEvent().equals(IStatisticsEvent.PUSH_STATS)){
+			StatManager statManager = StatManager.getInstance();
+
+			StatCollection statCollection = (StatCollection) new Gson()
+					.fromJson(controllerEvent.getObject(), StatCollection.class);
+			try {
+				statManager.pushStat(statCollection);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out
+						.println("[EXCEPTION PUSHING STAT] " + e.getMessage());
+			}
+			System.out.print(new Gson().toJson(statCollection));
+			RealTimeManager.getInstance()
+					.broadcast(controllerEvent.getObject());
+		}
 	}
 
 	private void connect() {

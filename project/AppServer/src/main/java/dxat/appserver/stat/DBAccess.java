@@ -1,4 +1,4 @@
-package dxat.appserver.stat.database;
+package dxat.appserver.stat;
 
 import static org.rrd4j.ConsolFun.AVERAGE;
 import static org.rrd4j.ConsolFun.MAX;
@@ -13,7 +13,6 @@ import org.rrd4j.core.RrdDbPool;
 import org.rrd4j.core.RrdDef;
 import org.rrd4j.core.Util;
 
-import roundrobin.exceptions.PahtNotFoundException;
 
 public class DBAccess {
 	

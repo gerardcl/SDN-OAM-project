@@ -7,14 +7,16 @@ import org.rrd4j.core.RrdDef;
 import org.rrd4j.core.Sample;
 import org.rrd4j.core.Util;
 
-import roundrobin.database.pojos.PortStat;
-import roundrobin.database.pojos.StatCollection;
-import roundrobin.database.pojos.StatResponse;
-import roundrobin.database.pojos.SwitchStat;
-import roundrobin.database.queries.QueryController;
-import roundrobin.database.queries.QueryPort;
-import roundrobin.database.queries.QuerySwitch;
-import roundrobin.exceptions.PahtNotFoundException;
+import com.google.gson.Gson;
+
+import dxat.appserver.stat.pojos.PortStat;
+import dxat.appserver.stat.pojos.StatCollection;
+import dxat.appserver.stat.pojos.StatResponse;
+import dxat.appserver.stat.pojos.SwitchStat;
+import dxat.appserver.stat.queries.QueryController;
+import dxat.appserver.stat.queries.QueryPort;
+import dxat.appserver.stat.queries.QuerySwitch;
+
 
 //LLamada a la base de datos.
 public class StatManager {
@@ -36,6 +38,8 @@ public class StatManager {
 		// Pushing controllers statistics
 		// Creating round robin database for Controller
 		
+		//System.out.print(new Gson().toJson(statcollection));
+		
 		if (!db.rrdFileExists(db.rrdPath + "floodLight.rrd")) {
 			RrdDef rrdDef = db.createRrdDefController("floodLight",
 					Util.getTime());
@@ -47,6 +51,7 @@ public class StatManager {
 		else {
 
 			RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(db.rrdPath + "floodLight.rrd");
+			if (rrdDb.getLastUpdateTime()==Util.getTime()) return ;
 			Sample sample = rrdDb.createSample();
 			sample.setValue("CpuAvg", statcollection.getControllerStat().getCpuAvg());
 			sample.setValue("MemoryPCT", statcollection.getControllerStat().getMemoryPct());
@@ -59,11 +64,12 @@ public class StatManager {
 			if (!db.rrdFileExists(db.rrdPath + db.convertId(sw.getSwitchId()) + ".rrd")) {
 				
 				RrdDef rrdDef = db.createRrdDefSwitch(
-						db.convertId(sw.getSwitchId()), Util.getTime());
+						db.convertId(sw.getSwitchId()), Util.getTime()); 
 				RrdDb rrdInit = new RrdDb(rrdDef);
 				rrdInit.close();
 			} else {
 				RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(db.rrdPath + db.convertId(sw.getSwitchId() + ".rrd"));
+				if (rrdDb.getLastUpdateTime()==Util.getTime())return ;
 				Sample sample = rrdDb.createSample();
 				sample.setValue("packetCount", sw.getPacketCount());
 				sample.setValue("byteCount", sw.getByteCount());
@@ -82,6 +88,7 @@ public class StatManager {
 				rrdInit.close();
 			} else {
 				RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(db.rrdPath + db.convertId(port.getPortId() + ".rrd"));
+				if(rrdDb.getLastUpdateTime()==Util.getTime()) return ;
 				Sample sample = rrdDb.createSample();
 				sample.setValue("receivePackets", port.getReceivePackets());
 				sample.setValue("transmitPackets", port.getTransmitPackets());
