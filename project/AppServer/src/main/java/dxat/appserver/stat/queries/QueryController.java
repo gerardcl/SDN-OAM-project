@@ -26,7 +26,6 @@ public class QueryController {
 		
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
         request.setFilter("CpuAvg");
-        //rrdDb.exportXml("/home/jesus/rrd4j-testing/test.xml");
         FetchData fetchData = request.fetchData();
 		return fetchData.getValues("CpuAvg");
 	}

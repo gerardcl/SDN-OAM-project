@@ -7,8 +7,6 @@ import org.rrd4j.core.RrdDef;
 import org.rrd4j.core.Sample;
 import org.rrd4j.core.Util;
 
-import com.google.gson.Gson;
-
 import dxat.appserver.stat.pojos.PortStat;
 import dxat.appserver.stat.pojos.StatCollection;
 import dxat.appserver.stat.pojos.StatResponse;
@@ -121,7 +119,6 @@ public class StatManager {
 		long end   = actualTimeStamp;
 		
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
-		//String parameter = statParameter;
 		
 		response.setIdObject(itemId);
 		response.setParameter(statParameter);

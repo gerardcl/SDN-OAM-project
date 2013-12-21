@@ -23,7 +23,6 @@ public class QueryPort {
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
 		request.setFilter("receivePackets");
 		FetchData fetchData = request.fetchData();
-		//rrdDb.exportXml("/home/jesus/rrd4j-testing/test.xml");
 		return fetchData.getValues("receivePackets");
 	}
 	

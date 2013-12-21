@@ -4,26 +4,20 @@ import static org.rrd4j.ConsolFun.AVERAGE;
 import static org.rrd4j.ConsolFun.MAX;
 import static org.rrd4j.ConsolFun.MIN;
 import static org.rrd4j.DsType.GAUGE;
-import static org.rrd4j.DsType.COUNTER;
 
 import java.io.File;
 
-import org.rrd4j.DsType;
 import org.rrd4j.core.RrdDbPool;
 import org.rrd4j.core.RrdDef;
-import org.rrd4j.core.Util;
 
 
 public class DBAccess {
 	
-	//static final long START 		= Util.getTimestamp(2010, 6, 6, 6, 0);
-    //static final long END   		= Util.getTimestamp(2010, 6, 6, 7, 0);
     static final int MAX_STEP 		= 1;
     static String rrdPath			= "/home/jesus/rrd4j-testing/";
     static String xmlPath 			= "/home/jesus/rrd4j-testing/";
     static String rrdRestoredPath 	= "/home/jesus/rrd4j-testing/";
     
-    //private PoolingRrDb rrdDbPool; 
 	private RrdDbPool rrdDbPool = RrdDbPool.getInstance();
     
 	
