@@ -10,6 +10,7 @@ import org.neo4j.graphdb.ResourceIterator;
 
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
+import dxat.appserver.topology.exceptions.TerminalExistsException;
 import dxat.appserver.topology.exceptions.TerminalNotFoundException;
 import dxat.appserver.topology.pojos.Terminal;
 import dxat.appserver.topology.pojos.TerminalCollection;
@@ -45,6 +46,62 @@ public class TerminalTopologyDB extends TopologyDB {
 		terminalNode.setProperty("enabled", terminal.getEnabled());
 	}
 
+	private List<DbUpdate> updateNodeTerminalProperties(Node terminalNode,
+			Terminal terminal) {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+
+		String ipv4 = (String) terminalNode.getProperty("ipv4");
+		String mac = (String) terminalNode.getProperty("mac");
+		String portAPId = (String) terminalNode.getProperty("portAPId");
+		Boolean enabled = (Boolean) terminalNode.getProperty("enabled");
+
+		/* Detect if there is a change in the IPv4 Attribute */
+		if (!ipv4.equals(terminal.getIpv4())) {
+			DbUpdate update = new DbUpdate();
+			terminalNode.setProperty("ipv4", terminal.getIpv4());
+			update.setInventoryId(terminal.getTerminalId());
+			update.setPropertyId("ipv4");
+			update.setLegacyValue(ipv4);
+			update.setNewValue(terminal.getIpv4());
+			updates.add(update);
+		}
+
+		/* Detect if there is a change in the MAC Attribute */
+		if (!mac.equals(terminal.getMac())) {
+			DbUpdate update = new DbUpdate();
+			terminalNode.setProperty("mac", terminal.getMac());
+			update.setInventoryId(terminal.getTerminalId());
+			update.setPropertyId("mac");
+			update.setLegacyValue(mac);
+			update.setNewValue(terminal.getMac());
+			updates.add(update);
+		}
+
+		/* Detect if there is a change in the portAPId Attribute */
+		if (!portAPId.equals(terminal.getPortAPId())) {
+			DbUpdate update = new DbUpdate();
+			terminalNode.setProperty("portAPId", terminal.getPortAPId());
+			update.setInventoryId(terminal.getTerminalId());
+			update.setPropertyId("portAPId");
+			update.setLegacyValue(portAPId);
+			update.setNewValue(terminal.getPortAPId());
+			updates.add(update);
+		}
+
+		/* Detect if there is a change in the portAPId Attribute */
+		if (!mac.equals(terminal.getPortAPId())) {
+			DbUpdate update = new DbUpdate();
+			terminalNode.setProperty("enabled", terminal.getPortAPId());
+			update.setInventoryId(terminal.getTerminalId());
+			update.setPropertyId("enabled");
+			update.setLegacyValue(enabled.toString());
+			update.setNewValue(terminal.getEnabled().toString());
+			updates.add(update);
+		}
+
+		return updates;
+	}
+
 	private void getNodeTerminalProperties(Node terminalNode, Terminal terminal) {
 		terminal.setEnabled((Boolean) terminalNode.getProperty("enabled"));
 		terminal.setIpv4((String) terminalNode.getProperty("ipv4"));
@@ -68,23 +125,40 @@ public class TerminalTopologyDB extends TopologyDB {
 		return portNodes.next();
 	}
 
-	public void addTerminal(Terminal terminal) throws PortNotFoundException {
-		try {
-			updateTerminal(terminal);
-		} catch (TerminalNotFoundException e) {
-			// Create Link
-			Node terminalNode = graphDb.createNode(Labels.TERMINAL_LABEL);
-			getManagerNode().createRelationshipTo(terminalNode,
-					RelTypes.ELEMENT);
-			setNodeTerminalProperties(terminalNode, terminal);
+	public List<DbUpdate> addTerminal(Terminal terminal)
+			throws PortNotFoundException, TerminalExistsException {
+		// Check existence of the Terminal
+		if (existTerminal(terminal.getTerminalId()))
+			throw new TerminalExistsException(
+					"Trying to add a terminal whose identifier already exists('"
+							+ terminal.getTerminalId() + "')");
 
-			// Create Neo4j Port Link
-			Node srcPortNode = terminalNode;
-			Node dstPortNode = getNodePort(terminal.getPortAPId());
-			srcPortNode.createRelationshipTo(dstPortNode, RelTypes.LINK);
-			System.out.println("[NEO4J DEBUG] Terminal Added // node: '"
-					+ terminalNode.getId() + "'");
-		}
+		// Check existence of the Access point
+		Node dstPortNode = getNodePort(terminal.getPortAPId());
+
+		// Generate Update
+		List<DbUpdate> updates = null;
+		DbUpdate update = new DbUpdate();
+		update.setInventoryId(terminal.getTerminalId());
+		update.setPropertyId("TERMINAL");
+		update.setLegacyValue("NONE");
+		update.setNewValue("NEW");
+		updates = new ArrayList<DbUpdate>();
+		updates.add(update);
+
+		// Create Terminal
+		Node terminalNode = graphDb.createNode(Labels.TERMINAL_LABEL);
+		getManagerNode().createRelationshipTo(terminalNode, RelTypes.ELEMENT);
+		setNodeTerminalProperties(terminalNode, terminal);
+
+		// Create Neo4j Port Link
+		Node srcPortNode = terminalNode;
+		srcPortNode.createRelationshipTo(dstPortNode, RelTypes.LINK);
+		System.out.println("[NEO4J DEBUG] Terminal Added // node: '"
+				+ terminalNode.getId() + "'");
+
+		// Rerturn list of DB updates
+		return updates;
 	}
 
 	public Terminal getTerminal(String terminalId)
@@ -101,19 +175,17 @@ public class TerminalTopologyDB extends TopologyDB {
 		return terminal;
 	}
 
-	public void updateTerminal(Terminal terminal)
+	public List<DbUpdate> updateTerminal(Terminal terminal)
 			throws TerminalNotFoundException {
 		ResourceIterator<Node> terminalNodes = graphDb
 				.findNodesByLabelAndProperty(Labels.LINK_LABEL, ID_PROPERTY,
 						terminal.getTerminalId()).iterator();
+		// If terminal does not exist
 		if (!terminalNodes.hasNext())
 			throw new TerminalNotFoundException(terminal);
 
 		Node terminalNode = terminalNodes.next();
-		setNodeTerminalProperties(terminalNode, terminal);
-		System.out.println("[NEO4J DEBUG] Terminal updated // node: '"
-				+ terminalNode.getId() + "'");
-
+		return updateNodeTerminalProperties(terminalNode, terminal);
 	}
 
 	public TerminalCollection getAllTerminals() {
@@ -134,24 +206,53 @@ public class TerminalTopologyDB extends TopologyDB {
 		return terminalCollection;
 	}
 
-	public void disableTerminal(String terminalId)
+	public List<DbUpdate> disableTerminal(String terminalId)
 			throws TerminalNotFoundException {
+		List<DbUpdate> changes = new ArrayList<DbUpdate>();
+
 		ResourceIterator<Node> terminalNodes = graphDb
 				.findNodesByLabelAndProperty(Labels.TERMINAL_LABEL,
 						ID_PROPERTY, terminalId).iterator();
+
 		if (!terminalNodes.hasNext())
 			throw new TerminalNotFoundException(terminalId);
-		terminalNodes.next().setProperty("enabled", false);
+
+		Node terminalNode = terminalNodes.next();
+		Boolean enabled = (Boolean) terminalNode.getProperty("enabled");
+		if (enabled.equals(true)) {
+			terminalNode.setProperty("enabled", false);
+			DbUpdate change = new DbUpdate();
+			change.setInventoryId(terminalId);
+			change.setPropertyId("enabled");
+			change.setLegacyValue("true");
+			change.setNewValue("false");
+		}
+
+		return changes;
 	}
 
-	public void enableTerminal(String terminalId)
+	public List<DbUpdate> enableTerminal(String terminalId)
 			throws TerminalNotFoundException {
+		List<DbUpdate> changes = new ArrayList<DbUpdate>();
+
 		ResourceIterator<Node> terminalNodes = graphDb
 				.findNodesByLabelAndProperty(Labels.TERMINAL_LABEL,
 						ID_PROPERTY, terminalId).iterator();
+
 		if (!terminalNodes.hasNext())
 			throw new TerminalNotFoundException(terminalId);
-		terminalNodes.next().setProperty("enabled", true);
-	}
 
+		Node terminalNode = terminalNodes.next();
+		Boolean enabled = (Boolean) terminalNode.getProperty("enabled");
+		if (enabled.equals(true)) {
+			terminalNode.setProperty("enabled", false);
+			DbUpdate change = new DbUpdate();
+			change.setInventoryId(terminalId);
+			change.setPropertyId("enabled");
+			change.setLegacyValue("false");
+			change.setNewValue("true");
+		}
+
+		return changes;
+	}
 }

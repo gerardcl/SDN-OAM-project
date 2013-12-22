@@ -6,12 +6,19 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
 import dxat.appserver.realtime.interfaces.IServerRequests;
 import dxat.appserver.realtime.pojos.ControllerEvent;
+import dxat.appserver.realtime.pojos.RealTimeEvent;
 import dxat.appserver.realtime.pojos.ServerRequest;
+import dxat.appserver.topology.TerminalManager;
+import dxat.appserver.topology.db.DbUpdate;
+import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
+import dxat.appserver.topology.exceptions.PortNotFoundException;
+import dxat.appserver.topology.exceptions.TerminalNotFoundException;
 import dxat.appserver.topology.pojos.Command;
 import dxat.appserver.topology.pojos.Flow;
 
@@ -53,7 +60,6 @@ public class RealTimeThread implements Runnable {
 		Command cmd = new Command();
 		cmd.setEvent(Command.PUSH_FLOW);
 		cmd.setObject(new Gson().toJson(flow));
-		;
 	}
 
 	private void sendrequest(ServerRequest serverRequest) {
@@ -67,9 +73,25 @@ public class RealTimeThread implements Runnable {
 	}
 
 	private void processEvent(ControllerEvent controllerEvent) {
-		System.out.println("[" + controllerEvent.getEvent() + "]");
+		RealTimeEvent realTimeEvent = new RealTimeEvent();
+		realTimeEvent.setEvent(controllerEvent.getEvent());
+		realTimeEvent.setUpdates(new ArrayList<DbUpdate>());
+		try {
+			realTimeEvent.getUpdates()
+					.addAll(TerminalManager.getInstance().processEvent(
+							controllerEvent));
+		} catch (CannotOpenDataBaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PortNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TerminalNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		RealTimeManager.getInstance().broadcast(
-				"[" + controllerEvent.getEvent() + "]");
+				new Gson().toJson(realTimeEvent));
 	}
 
 	private void connect() {
