@@ -1,16 +1,58 @@
 //Backbone aaaa
 (function($){
 
+        $('#OM-orgColumn').slimScroll({
+          height: '55px'
+        });
+
+  $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+    options.url = 'http://localhost:8080/AppServer/webapp/manager' + options.url;
+  });
+
 //COLLESCTIONS
+
+    var Organization = Backbone.Model.extend({
+      urlRoot:'/org',
+      defaults:{
+        name: "",
+        NIF: "",
+        bankAccount: "",
+        identifier: "",
+        telephone: "",
+        OAM: ""
+
+      }
+    });
 
   //TOrg COLLECTION
     var Organizations = Backbone.Collection.extend({
-          url:'http://localhost:8080/AppServer/webapp/manager/org/all'
+        model: Organization,
+          url:'/org/all',
+      parse:function (response) {
+            //console.log(response);
+            //response.id = response.inventoryId;
+            // Parse the response and construct models
+            for ( var i = 0, length = response.torgs.length; i < length; i++) {
+
+              var currentValues = response.torgs[i];
+              var orgObject = {};
+              orgObject.name = currentValues.name;
+              orgObject.NIF = currentValues.NIF;
+              orgObject.bankAccount = currentValues.bankAccount;
+              orgObject.identifier = currentValues.identifier;
+              orgObject.telephone = currentValues.telephone;
+              orgObject.OAM = currentValues.OAM;
+              // push the model object
+              this.push(orgObject);
+            }
+      console.log(this.toJSON());
+      //return models
+      return this.models;
+            //return response;
+        }
     });
 
-    var Organization = Backbone.Model.extend({
-      urlRoot: 'http://localhost:8080/AppServer/webapp/manager/org/all'
-    });
+    var organizations = new Organizations();
 
 //VIEWS
 
@@ -30,6 +72,9 @@
   //ADMIN SIDEBAR #login-template
     var AdminSidebarView = Backbone.View.extend({
       el: '.sidebar-container',
+      updateClass: function() {
+        this.$el.toggleClass('active');
+      },
       render: function () {
         var that = this;
         var template = _.template($('#admin-sidebar-template').html());
@@ -38,7 +83,7 @@
     });
 
     var adminSidebarView = new AdminSidebarView();
-  // /LOGIN VIEW #login-template
+  // /ADMIN SIDEBAR #login-template
 
   //GLOBAL VIEW #admin-overview-template
     var AdminOverviewView = Backbone.View.extend({
@@ -53,21 +98,53 @@
     var adminOverviewView = new AdminOverviewView();
   // /GLOBAL VIEW #admin-overview-template
 
+  //ORGANIZATIONS
 
-  //ORGANIZATIONS VIEW #organizations-template
-    var OrganizationsView = Backbone.View.extend({
-      el: '.page',
-      render: function () {
-        var organizations = new Organizations();
-        organizations.fetch()
-        var that = this;
-        var template = _.template($('#organizations-template').html());
-        that.$el.html(template);
-      }
-    });
+    //Orgs List Bootstrap View
+      var OrgsListBSView = Backbone.View.extend({
+        el: '.page',
+        render: function () {
+          var that = this;
+          var organizations = new Organizations();
+          organizations.fetch({
+            success: function (organizations) {
+              var template = _.template($('#organizations-list-template').html(), {organizations: organizations.models});
+              that.$el.html(template);
+            }
+          })
+        }
+      });
 
-    var organizationsView = new OrganizationsView();
-  // /ORGANIZATIONS VIEW #organizations-template
+      var orgsListBSView = new OrgsListBSView();
+    // /Orgs List Bootstrap View
+
+    //OrgData View
+      var OrgDataView = Backbone.View.extend({
+        el: '.page',
+        render: function (options) { 
+          var that = this;
+          //if exists fetch details
+          if(options.identifier) {
+            console.log(options.identifier);
+            that.organization = new Organization({id: options.identifier});
+            console.log(that.organization.url);
+            that.organization.fetch({
+              success: function (organization) {    
+                var template = _.template($('#organizations-data-template').html(), {organization: organization});
+                that.$el.html(template);
+              }
+            })
+          } else {
+            var template = _.template($('#organizations-data-template').html(), {organization: null});
+            that.$el.html(template);
+          }
+        }
+      });
+
+      var orgDataView = new OrgDataView();
+    // /OrgData View
+
+  // /ORGANIZATIONS
 
   //FLOWS VIEW #flows-template
     var FlowsView = Backbone.View.extend({
@@ -113,7 +190,8 @@
         routes: {
           "": "login", 
           "adminOverview" : "adminOverview",
-          "adminOrgs": "organizations",
+          "adminOrgs": "adminOrgs",
+          "adminOrgs/:identifier": "orgData",
           "adminFlows": "flows",
           "adminTerminals": "terminals",
           "adminTraffic": "traffic"
@@ -132,8 +210,8 @@
     router.on('route:adminOverview', function() {
       // render global view
       console.log('entra al route:admin');
-      adminOverviewView.render();
       adminSidebarView.render();
+      adminOverviewView.render();
       //SlimScroll HEIGHTS
         $('#GS-alerts').slimScroll({
             height: '200px'
@@ -143,14 +221,65 @@
         });
     })
 
-    router.on('route:organizations', function() {
+    router.on('route:adminOrgs', function() {
       // render organizations view
-      organizationsView.render();
-      adminSidebarView.render();
-      //SlimScroll HEIGHTS
         $('#OM-orgColumn').slimScroll({
-            height: '455px'
+          height: '55px'
         });
+      adminSidebarView.render();
+      orgsListBSView.render(); 
+      //SlimScroll HEIGHTS
+
+      
+    })
+
+    router.on('route:orgData', function(identifier) {
+      adminSidebarView.render();
+      //orgsListBSView.render(); 
+      orgDataView.render({identifier: identifier}); 
+      //SlimScroll HEIGHTS
+    })
+
+    router.on('route:flows', function() {
+      console.log('entra al route:flows');
+      // render global view
+      adminSidebarView.render();
+      flowsView.render();
+      
+      //SlimScroll HEIGHTS
+        $('#FLW-active').slimScroll({
+            height: '170px'
+        });
+        $('#FLW-prg').slimScroll({
+            height: '170px'
+        });
+    })
+
+    router.on('route:terminals', function() {
+      // render global view
+      adminSidebarView.render();
+      terminalsView.render();
+      //SlimScroll HEIGHTS
+        $('#AP').slimScroll({
+            height: '500px'
+        });
+    })
+
+    router.on('route:traffic', function() {
+      // render global view
+      adminSidebarView.render();
+      trafficView.render();
+      
+      //SlimScroll HEIGHTS
+        $('#TA-matrix').slimScroll({
+            height: '520px'
+        });
+    })
+
+    router.on('route:orgData', function() {
+      // render global view
+      console.log('entra a router.on orgData');
+      //organizationsListView.render();
         $('#OM-data').slimScroll({
             height: '190px'
         });
@@ -169,51 +298,6 @@
         $('#OM-topo').slimScroll({
             height: '230px'
         });
-    })
-
-    router.on('route:orgid', function(id) {
-      userEditView.render({id: id}); 
-      //SlimScroll HEIGHTS
-    })
-
-    router.on('route:flows', function() {
-      console.log('entra al route:flows');
-      // render global view
-      flowsView.render();
-      adminSidebarView.render();
-      //SlimScroll HEIGHTS
-        $('#FLW-active').slimScroll({
-            height: '170px'
-        });
-        $('#FLW-prg').slimScroll({
-            height: '170px'
-        });
-    })
-
-    router.on('route:terminals', function() {
-      // render global view
-      terminalsView.render();
-      //SlimScroll HEIGHTS
-        $('#AP').slimScroll({
-            height: '500px'
-        });
-    })
-
-    router.on('route:traffic', function() {
-      // render global view
-      trafficView.render();
-      adminSidebarView.render();
-      //SlimScroll HEIGHTS
-        $('#TA-matrix').slimScroll({
-            height: '520px'
-        });
-    })
-
-    router.on('route:orgData', function() {
-      // render global view
-      console.log('entra a router.on orgData');
-      organizationsListView.render();
-      
     })
 
     Backbone.history.start();

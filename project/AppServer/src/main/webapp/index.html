@@ -25,8 +25,10 @@
 
       <div id="page-wrapper">
 
-        <div class="page">
-        </div>
+        <div class="page"></div>
+
+          
+              
 
       </div><!-- /#page-wrapper -->
 
@@ -122,7 +124,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#/overview"><i class="fa fa-gamepad"></i> OAM SDN Admin</a>
+          <a class="navbar-brand" href="#/adminOverview"><i class="fa fa-gamepad"></i> OAM SDN Admin</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -194,7 +196,6 @@
           </ul>
         </div><!-- /.navbar-collapse -->
       </nav>
-
     </script>
     <!-- /SIDEBAR ADMIN-->
 
@@ -398,46 +399,71 @@
   <!-- /ADMIN OVERVIEW VIEW -->
 
   <!-- ORGANIZATIONS VIEW -->
-    <!-- ORGANIZATIONS TEMPLATE -->
-    <script type="text/template" id="organizations-template">
+    <!-- ORGANIZATIONS VIEW TEMPLATE -->
+    <script type="text/template" id="organizations-list-template">
 
-      <div class="col-md-3 col-sm-3"><!-- Org LIST column -->
+      <!-- Org LIST column -->
+      <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
         <div class="row">
           <p><center>
-            <button type="button" class="btn btn-success">New</button>
-            <button type="button" class="btn btn-danger">Delete</button>
+            <button type="button" class="btn btn-lg btn-success"><i class="fa fa-pencil"></i>  Create new organization</button>
           </p></center>    
         </div>
+
         <div class="row">
           <div class="panel panel-primary">
             <div class="panel-heading">
               <h3 class="panel-title"><i class="fa fa-briefcase"></i> Organizations</h3>
             </div>
 
-            <div class="panel-body" id="OM-orgColumn">
+            <div class="panel-body">
+            
+              <div id="OM-orgColumn">
 
+                <div class="list-group">
 
-              <div id="organizations"> 
-                <div id="organizations-list-container"></div> 
+                  <!--ORGANIZATIONS LIST-->
+                  <% _.each(organizations, function(organization) { %>
+                    <a href="#/adminOrgs/<%= organization.get('identifier') %>" class="list-group-item"><span class="badge"><%= organization.get('identifier') %></span> <%= organization.get('name') %> </a>
+                  <% }); %>
+                </div>
+              
               </div>
-
             </div>
           </div>
         </div>
-      </div><!-- /Org LIST column -->
-
-          
-          
+      </div>
+      <!-- /Org LIST column -->     
     </script>
-    <!-- /ORGANIZATIONS TEMPLATE -->
+    <!-- /ORGANIZATIONS VIEW TEMPLATE -->
+    <script type="text/template" id="org-name-template">
+      <a href="#/adminOrgs/<%= identifier %>" class="list-group-item"><span class="badge"><%= identifier %></span> <%= name %> </a>
+    </script>
 
     <!-- ORGANIZATION DATA TEMPLATE -->
-    <script type="text/template" id="organizations-template">
-      <div class="col-md-9 col-sm-9 slim-flows"> <!-- Org INFO  -->
+    <script type="text/template" id="organizations-data-template">
+
+      <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
         <div class="panel panel-primary">
           <div class="panel-heading">
+            <div class="row">
 
-            <h3 id="organization-name-container"></h3>
+              <div class="col-md-4 col-sm-4">
+                <a href="#/adminOrgs">
+                  <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
+                  </button>
+                </a>
+              </div>
+
+              <div class="col-md-4 col-sm-4">
+                <center> <h4> <%= organization ? organization.get('name') : 'Fill the fields below' %> </center> </h4>
+              </div>
+
+              <div class="col-md-4 col-sm-4">
+                <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
+              </div>
+
+            </div>
           </div>
 
           <div class="padding-15"><!-- ORG TABS -->
@@ -467,7 +493,66 @@
 
                                     <div id="OM-data">
 
-                                      <div id="orgData-container"></div>
+                                      <form class="form-horizontal" role="form">
+
+                                        <div class="row">
+                                          <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                            <div class="form-group">
+                                              <label for="orgID" class="col-sm-4 control-label">ID</label>
+                                              <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="orgID" placeholder="orgID">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="orgName" class="col-sm-4 control-label">Name</label>
+                                              <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="orgName" placeholder="Ikea">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="orgBankAccount" class="col-sm-4 control-label">Bank Account</label>
+                                              <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="orgBankAccount" placeholder="46475956605938294">
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                            <div class="form-group">
+                                              <label for="orgCif" class="col-sm-4 control-label">CIF</label>
+                                              <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="orgCif" placeholder="34957684">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="orgPassword" class="col-sm-4 control-label">Password</label>
+                                              <div class="col-sm-8">
+                                                <input type="password" class="form-control" id="orgPassword" placeholder="*********">
+                                              </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="orgIsOam" class="col-sm-4 control-label">is OAM?</label>
+                                              <div class="col-sm-8">
+                                                <input type="checkbox" class="form-control" id="orgIsOam">
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="row">    
+                                          <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div class="form-group">
+                                              <center><button type="submit" class="btn btn-warning btn-lg">Save changes</button></center>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </form>  
 
                                     </div>
           
@@ -526,105 +611,6 @@
                                             </tr>
                                           </thead>
                                           <tbody>
-                                            <tr>
-                                              <td>Barcelona</td>
-                                              <td>H1</td>
-                                              <td>192.168.1.2</td>
-                                              <td>10 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Madrid</td>
-                                              <td>H2</td>
-                                              <td>192.168.1.3</td>
-                                              <td>1 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Paris</td>
-                                              <td>H3</td>
-                                              <td>192.168.1.4</td>
-                                              <td>10 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Berlin</td>
-                                              <td>H4</td>
-                                              <td>192.168.1.5</td>
-                                              <td>10 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Albacete</td>
-                                              <td>H5</td>
-                                              <td>192.168.1.6</td>
-                                              <td>1 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Badajoz</td>
-                                              <td>H6</td>
-                                              <td>192.168.1.7</td>
-                                              <td>1 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Barcelona</td>
-                                              <td>H7</td>
-                                              <td>192.168.2.2</td>
-                                              <td>10 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Madrid</td>
-                                              <td>H8</td>
-                                              <td>192.168.2.3</td>
-                                              <td>100 Mbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Coruña</td>
-                                              <td>H9</td>
-                                              <td>192.168.2.4</td>
-                                              <td>10 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Barcelona</td>
-                                              <td>H10</td>
-                                              <td>192.168.3.2</td>
-                                              <td>10 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
-                                            <tr>
-                                              <td>Madrid</td>
-                                              <td>H11</td>
-                                              <td>192.168.3.3</td>
-                                              <td>1 Gbps</td>
-                                              <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
-                                              <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
-                                              <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
-                                            </tr>
                                             <tr>
                                               <td>Paris</td>
                                               <td>H12</td>
@@ -905,13 +891,7 @@
     </script>
     <!-- /ORGANIZATION DATA TEMPLATE -->
 
-    <!-- ORGANIZATIONS LIST VIEW TEMPLATE -->
-    <script type="text/template" id="organizations-list-template">
-      <% _.each(users, function(user) { %>
-          <a href='#/<%= htmlEncode(user.get('firstname')) %' class="list-group-item"><%= name %></a>
-      <% }); %>
-    </script>
-    <!-- /ORGANIZATIONS LIST VIEW TEMPLATE -->
+
   <!-- /ORGANIZATIONS VIEW -->
 
   <!-- FLOWS VIEW -->
