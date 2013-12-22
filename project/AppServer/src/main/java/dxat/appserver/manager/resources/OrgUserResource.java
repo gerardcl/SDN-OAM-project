@@ -8,8 +8,15 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import dxat.appserver.manager.OrgUserManager;
+import dxat.appserver.manager.pojos.OrgSession;
 import dxat.appserver.manager.pojos.OrgUser;
 import dxat.appserver.manager.pojos.OrgUserCollection;
+
+//import net.sf.json.JSONArray;
+//import net.sf.json.JSONObject;
+//import org.json.JSONObject;
+//import com.google.gson.Gson;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,24 +68,17 @@ public class OrgUserResource {
 	@GET
 	@Path("/user/auth")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String checkUserAuth(@QueryParam("username") String username,@QueryParam("password") String password){
+	public OrgSession checkUserAuth(@QueryParam("username") String username,@QueryParam("password") String password){
 		System.out.println("Checking login for :"+username);
-		String result = null;
-		switch (orgUserManager.checkPassword(username, password)){
-			case 0:
-				result = "0";
-				break;
-			case 1:
-				result = "1";
-				break;
-			case 2:
-				result = "2";
-				break;
-			default:
-				result = "0";
-				break;
+		OrgSession session = orgUserManager.checkPassword(username, password);
+		if(session==null){
+			//ELIMINAR SESSIÓ TEMPORAL CREADA PQ EL PASSWORD 
+			//ERA ERRONI, GESTIÓ QUE S'HA DE FER PQ SINO ES
+			//DUPLIQUEN LES SESSIONS
+		}else{
+			//AQUÍ COMENÇA GESTIÓ DE TOKENS, NEXT STEPS...
 		}
-		return result;
+		return session;
 	}
 
 }
