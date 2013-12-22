@@ -2,7 +2,7 @@
 (function($){
 
   $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-    options.url = 'http://localhost:8080/AppServer/webapp/manager' + options.url;
+    options.url = '/AppServer/webapp/manager' + options.url;
   });
 
 
