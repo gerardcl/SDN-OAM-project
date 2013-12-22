@@ -1,23 +1,24 @@
 package dxat.appserver.topology;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import dxat.appserver.realtime.interfaces.ILinkEvents;
-import dxat.appserver.realtime.interfaces.ISwitchEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.db.LinkTopologyDB;
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
+import dxat.appserver.topology.exceptions.LinkExistsException;
 import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
 import dxat.appserver.topology.interfaces.ITopoLinkManager;
 import dxat.appserver.topology.pojos.Link;
 import dxat.appserver.topology.pojos.LinkCollection;
 
-public class LinkManager implements ITopoLinkManager, ILinkEvents {
+public class LinkManager implements ITopoLinkManager {
 	private static LinkManager instance = null;
 
 	public static LinkManager getInstance() {
@@ -26,100 +27,46 @@ public class LinkManager implements ITopoLinkManager, ILinkEvents {
 		return instance;
 	}
 
+	private Link getLinkFromJSON(String jsonStr) {
+		return new Gson().fromJson(jsonStr, Link.class);
+	}
+
 	public List<DbUpdate> processEvent(ControllerEvent controllerEvent)
-			throws JsonSyntaxException, PortNotFoundException, LinkNotFoundException {
+			throws JsonSyntaxException, PortNotFoundException,
+			LinkNotFoundException, CannotOpenDataBaseException {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 		String eventStr = controllerEvent.getEvent();
-		if (eventStr.equals(ILinkEvents.LINK_UPDATED)) {
-			LinkManager.getInstance().linkUpdated(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ILinkEvents.LINK_REMOVED)) {
-			LinkManager.getInstance().linkRemoved(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ILinkEvents.PORT_DOWN)) {
-			LinkManager.getInstance().portDown(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ILinkEvents.PORT_UP)) {
-			LinkManager.getInstance().portUp(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ILinkEvents.SWITCH_REMOVED)) {
-			LinkManager.getInstance().switchRemoved(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ILinkEvents.SWITCH_UPDATED)) {
-			LinkManager.getInstance().switchUpdated(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ILinkEvents.TUNEL_PORT_ADDED)) {
-			LinkManager.getInstance().tunelPortAdded(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ILinkEvents.TUNEL_PORT_REMOVED)) {
-			LinkManager.getInstance().tunelPortRemoved(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
-		} else if (eventStr.equals(ISwitchEvents.SWITCH_ACTIVATED)) {
-			LinkManager.getInstance().portUp(
-					new Gson().fromJson(controllerEvent.getObject(),
-							Link.class));
+		if (eventStr.equals(ILinkEvents.LINK_UPDATED)
+				|| eventStr.equals(ILinkEvents.SWITCH_UPDATED)
+				|| eventStr.equals(ILinkEvents.PORT_UP)
+				|| eventStr.equals(ILinkEvents.SWITCH_UPDATED)
+				|| eventStr.equals(ILinkEvents.TUNEL_PORT_ADDED)) {
+			Link link = getLinkFromJSON(controllerEvent.getObject());
+			LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
+			try {
+				linkTopologyDB.opendb();
+				try {
+					updates.addAll(linkTopologyDB.addLink(link));
+				} catch (LinkExistsException e) {
+					updates.addAll(linkTopologyDB.updateLink(link));
+				}
+			} finally {
+				linkTopologyDB.closedb();
+			}
+		} else if (eventStr.equals(ILinkEvents.LINK_REMOVED)
+				|| eventStr.equals(ILinkEvents.PORT_DOWN)
+				|| eventStr.equals(ILinkEvents.SWITCH_REMOVED)
+				|| eventStr.equals(ILinkEvents.TUNEL_PORT_REMOVED)) {
+			Link link = getLinkFromJSON(controllerEvent.getObject());
+			LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
+			try {
+				linkTopologyDB.opendb();
+				updates.addAll(linkTopologyDB.disableLink(link.getLinkKey()));
+			} finally {
+				linkTopologyDB.closedb();
+			}
 		}
-		return null;
-	}
-	
-	private void addLink(Link link) throws PortNotFoundException {
-		LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
-		try {
-			linkTopologyDB.opendb();
-			linkTopologyDB.addLink(link);
-		} catch (CannotOpenDataBaseException e) {
-			e.printStackTrace();
-		} finally {
-			linkTopologyDB.closedb();
-		}
-	}
-
-	private void updateLink(Link linkUpdate) throws LinkNotFoundException {
-		LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
-		try {
-			linkTopologyDB.opendb();
-			linkTopologyDB.updateLink(linkUpdate);
-		} catch (CannotOpenDataBaseException e) {
-			e.printStackTrace();
-		} finally {
-			linkTopologyDB.closedb();
-		}
-	}
-
-	/*private void enableLink(String srcPortId, String dstPortId)
-			throws LinkNotFoundException {
-		LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
-		try {
-			Link link = new Link();
-			link.setDstPortId(dstPortId);
-			link.setSrcPortId(srcPortId);
-			linkTopologyDB.opendb();
-			linkTopologyDB.enableLink(link.getLinkKey());
-		} catch (CannotOpenDataBaseException e) {
-			e.printStackTrace();
-		} finally {
-			linkTopologyDB.closedb();
-		}
-	}*/
-
-	private void disableLink(Link link)
-			throws LinkNotFoundException {
-		LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
-		try {
-			linkTopologyDB.opendb();
-			linkTopologyDB.enableLink(link.getLinkKey());
-		} catch (CannotOpenDataBaseException e) {
-			e.printStackTrace();
-		} finally {
-			linkTopologyDB.closedb();
-		}
+		return updates;
 	}
 
 	@Override
@@ -155,46 +102,6 @@ public class LinkManager implements ITopoLinkManager, ILinkEvents {
 			linkTopologyDB.closedb();
 		}
 		return link;
-	}
-
-	@Override
-	public void linkUpdated(Link link) throws LinkNotFoundException {
-		updateLink(link);
-	}
-
-	@Override
-	public void linkRemoved(Link link) throws LinkNotFoundException {
-		disableLink(link);
-	}
-
-	@Override
-	public void switchUpdated(Link link) throws LinkNotFoundException  {
-		updateLink(link);
-	}
-
-	@Override
-	public void switchRemoved(Link link)  throws LinkNotFoundException {
-		disableLink(link);
-	}
-
-	@Override
-	public void portUp(Link link)  throws PortNotFoundException {
-		addLink(link);
-	}
-
-	@Override
-	public void portDown(Link link)  throws LinkNotFoundException {
-		disableLink(link);
-	}
-
-	@Override
-	public void tunelPortAdded(Link link)  throws PortNotFoundException {
-		addLink(link);
-	}
-
-	@Override
-	public void tunelPortRemoved(Link link) throws LinkNotFoundException  {
-		disableLink(link);
 	}
 
 }

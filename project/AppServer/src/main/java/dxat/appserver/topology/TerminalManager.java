@@ -49,7 +49,6 @@ public class TerminalManager implements ITerminalEvents, ITopoTerminalManager {
 				try {
 					updates.addAll(terminalTopologyDB.addTerminal(terminal));
 				} catch (TerminalExistsException e) {
-					System.out.println("Fraking probe!");
 					updates.addAll(terminalTopologyDB.updateTerminal(terminal));
 				}
 			} catch (PortNotFoundException e) {

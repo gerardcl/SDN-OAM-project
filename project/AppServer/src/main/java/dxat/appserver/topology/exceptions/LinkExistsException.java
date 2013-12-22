@@ -1,14 +1,12 @@
 package dxat.appserver.topology.exceptions;
 
-public class LinkNotFoundException extends Exception {
-
+public class LinkExistsException extends Exception {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public LinkNotFoundException(String msg){
+	public LinkExistsException(String msg) {
 		super(msg);
 	}
-
 }

@@ -9,15 +9,18 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import dxat.appserver.realtime.interfaces.IServerRequests;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.realtime.pojos.RealTimeEvent;
 import dxat.appserver.realtime.pojos.ServerRequest;
+import dxat.appserver.topology.LinkManager;
 import dxat.appserver.topology.SwitchManager;
 import dxat.appserver.topology.TerminalManager;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
+import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
 import dxat.appserver.topology.exceptions.SwitchNotFoundException;
 import dxat.appserver.topology.exceptions.TerminalNotFoundException;
@@ -85,7 +88,9 @@ public class RealTimeThread implements Runnable {
 			realTimeEvent.getUpdates()
 			.addAll(SwitchManager.getInstance().processEvent(
 					controllerEvent));
-	
+			realTimeEvent.getUpdates()
+			.addAll(LinkManager.getInstance().processEvent(
+					controllerEvent));
 		} catch (CannotOpenDataBaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,6 +101,12 @@ public class RealTimeThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SwitchNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LinkNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
