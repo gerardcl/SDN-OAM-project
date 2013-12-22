@@ -14,10 +14,12 @@ import dxat.appserver.realtime.interfaces.IServerRequests;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.realtime.pojos.RealTimeEvent;
 import dxat.appserver.realtime.pojos.ServerRequest;
+import dxat.appserver.topology.SwitchManager;
 import dxat.appserver.topology.TerminalManager;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
+import dxat.appserver.topology.exceptions.SwitchNotFoundException;
 import dxat.appserver.topology.exceptions.TerminalNotFoundException;
 import dxat.appserver.topology.pojos.Command;
 import dxat.appserver.topology.pojos.Flow;
@@ -80,6 +82,10 @@ public class RealTimeThread implements Runnable {
 			realTimeEvent.getUpdates()
 					.addAll(TerminalManager.getInstance().processEvent(
 							controllerEvent));
+			realTimeEvent.getUpdates()
+			.addAll(SwitchManager.getInstance().processEvent(
+					controllerEvent));
+	
 		} catch (CannotOpenDataBaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,6 +93,9 @@ public class RealTimeThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TerminalNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SwitchNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

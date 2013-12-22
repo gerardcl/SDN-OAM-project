@@ -11,6 +11,7 @@ import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Label;
 
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
+import dxat.appserver.topology.exceptions.SwitchExistsException;
 import dxat.appserver.topology.exceptions.SwitchNotFoundException;
 import dxat.appserver.topology.pojos.Port;
 import dxat.appserver.topology.pojos.Switch;
@@ -40,6 +41,101 @@ public class SwitchTopologyDB extends TopologyDB {
 				.findNodesByLabelAndProperty(
 						DynamicLabel.label(Managers.SWITCH_MANAGER),
 						ID_PROPERTY, Managers.SWITCH_MANAGER).iterator().next();
+	}
+
+	private List<DbUpdate> updateNodeSwitchProperties(Node switchNode, Switch sw) {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+
+		Boolean enabled = (Boolean) switchNode.getProperty("enabled");
+		String hardware = (String) switchNode.getProperty("hardware");
+		String manufacturer = (String) switchNode.getProperty("manufacturer");
+		String software = (String) switchNode.getProperty("software");
+
+		if (!enabled.equals(sw.getEnabled())) {
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(sw.getSwId());
+			update.setPropertyId("enabled");
+			update.setLegacyValue(enabled.toString());
+			update.setNewValue(sw.getEnabled().toString());
+			updates.add(update);
+			switchNode.setProperty("enabled", sw.getEnabled());
+		}
+
+		if (!hardware.equals(sw.getHardware())) {
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(sw.getSwId());
+			update.setPropertyId("hardware");
+			update.setLegacyValue(hardware);
+			update.setNewValue(sw.getHardware());
+			updates.add(update);
+			switchNode.setProperty("hardware", sw.getHardware());
+		}
+
+		if (!manufacturer.equals(sw.getManufacturer())) {
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(sw.getSwId());
+			update.setPropertyId("manufacturer");
+			update.setLegacyValue(manufacturer);
+			update.setNewValue(sw.getManufacturer());
+			updates.add(update);
+			switchNode.setProperty("manufacturer", sw.getManufacturer());
+		}
+
+		if (!software.equals(sw.getSoftware())) {
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(sw.getSwId());
+			update.setPropertyId("software");
+			update.setLegacyValue(software);
+			update.setNewValue(sw.getSoftware());
+			updates.add(update);
+			switchNode.setProperty("software", sw.getSoftware());
+		}
+
+		HashMap<String, Node> portNodes = new HashMap<String, Node>();
+		HashMap<String, Port> ports = new HashMap<String, Port>();
+
+		// Get current node ports
+		Iterable<Relationship> relations = switchNode.getRelationships();
+		for (Relationship relation : relations) {
+			Node portNode = relation.getEndNode();
+			if (portNode.hasLabel(Labels.PORT_LABEL)) {
+				portNodes.put((String) portNode.getProperty(ID_PROPERTY),
+						portNode);
+			}
+		}
+
+		// Merge Switch -> Node Switch
+		List<Port> portList = sw.getPorts();
+		for (Port port : portList) {
+			if (portNodes.containsKey(port.getPortId())) {
+				updates.addAll(updateNodePortProperties(
+						portNodes.get(port.getPortId()), port));
+			} else {
+				// if the port does not exit, create new
+				Node portNode = graphDb.createNode(Labels.PORT_LABEL);
+				setNodePortProperties(portNode, port);
+				switchNode.createRelationshipTo(portNode, RelTypes.HAS);
+				System.out.println("[NEO4J DEBUG] Port Added // node: '"
+						+ portNode.getId() + "'");
+			}
+			ports.put(port.getPortId(), port);
+		}
+
+		// Merge Node Switch -> Switch
+		for (Node portNode : portNodes.values()) {
+			String portId = (String) portNode.getProperty(ID_PROPERTY);
+			enabled = (Boolean) portNode.getProperty("enabled");
+			if (!ports.containsKey(portId) && enabled) {
+				DbUpdate update = new DbUpdate();
+				update.setInventoryId(portId);
+				update.setLegacyValue(enabled.toString());
+				update.setNewValue("false");
+				update.setPropertyId("enabled");
+				updates.add(update);
+				portNode.setProperty("enabled", false);
+			}
+		}
+		return updates;
 	}
 
 	private void setNodeSwitchProperties(Node switchNode, Switch sw) {
@@ -123,6 +219,45 @@ public class SwitchTopologyDB extends TopologyDB {
 		portNode.setProperty("name", port.getName());
 	}
 
+	private List<DbUpdate> updateNodePortProperties(Node portNode, Port port) {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+		Boolean enabled = (Boolean) portNode.getProperty("enabled");
+		String mac = (String) portNode.getProperty("MAC");
+		String name = (String) portNode.getProperty("name");
+
+		if (!enabled.equals(port.getEnabled())) {
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(port.getPortId());
+			update.setLegacyValue(enabled.toString());
+			update.setNewValue(port.getEnabled().toString());
+			update.setPropertyId("enabled");
+			updates.add(update);
+			portNode.setProperty("enabled", port.getEnabled());
+		}
+
+		if (!mac.equals(port.getMac())) {
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(port.getPortId());
+			update.setLegacyValue(mac);
+			update.setNewValue(port.getMac());
+			update.setPropertyId("MAC");
+			updates.add(update);
+			portNode.setProperty("MAC", port.getMac());
+		}
+
+		if (!name.equals(port.getName())) {
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(port.getPortId());
+			update.setLegacyValue(name);
+			update.setNewValue(port.getName());
+			update.setPropertyId("name");
+			updates.add(update);
+			portNode.setProperty("name", port.getName());
+		}
+
+		return updates;
+	}
+
 	private void getNodePortProperties(Node portNode, Port port) {
 		port.setEnabled((Boolean) portNode.getProperty("enabled"));
 		port.setMac((String) portNode.getProperty("MAC"));
@@ -136,27 +271,37 @@ public class SwitchTopologyDB extends TopologyDB {
 						swId).iterator().hasNext();
 	}
 
-	public void addSwitch(Switch sw) {
-		try {
-			updateSwitch(sw);
-		} catch (SwitchNotFoundException e) {
-			// Create Switch
-			Node switchNode = graphDb.createNode(Labels.SWITCH_LABEL);
-			getManagerNode().createRelationshipTo(switchNode, RelTypes.ELEMENT);
-			setNodeSwitchProperties(switchNode, sw);
-			System.out.println("[NEO4J DEBUG] Switch Added // node: '"
-					+ switchNode.getId() + "'");
+	public List<DbUpdate> addSwitch(Switch sw) throws SwitchExistsException {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+		if (existSwitch(sw.getSwId()))
+			throw new SwitchExistsException(
+					"Trying to add a switch whose identifier already exists('"
+							+ sw.getSwId() + "')");
 
-			// Get and create ports
-			List<Port> portList = sw.getPorts();
-			for (Port port : portList) {
-				Node portNode = graphDb.createNode(Labels.SWITCH_LABEL);
-				setNodePortProperties(portNode, port);
-				switchNode.createRelationshipTo(portNode, RelTypes.HAS);
-				System.out.println("[NEO4J DEBUG] Port Added // node: '"
-						+ portNode.getId() + "'");
-			}
+		// Create Switch
+		Node switchNode = graphDb.createNode(Labels.SWITCH_LABEL);
+		getManagerNode().createRelationshipTo(switchNode, RelTypes.ELEMENT);
+		setNodeSwitchProperties(switchNode, sw);
+		DbUpdate update = new DbUpdate();
+		update.setInventoryId(sw.getSwId());
+		update.setLegacyValue("NONE");
+		update.setNewValue("NEW");
+		update.setPropertyId("SWITCH");
+		updates.add(update);
+
+		// Get and create ports
+		List<Port> portList = sw.getPorts();
+		for (Port port : portList) {
+			Node portNode = graphDb.createNode(Labels.SWITCH_LABEL);
+			setNodePortProperties(portNode, port);
+			switchNode.createRelationshipTo(portNode, RelTypes.HAS);
+			update = new DbUpdate();
+			update.setInventoryId(port.getPortId());
+			update.setLegacyValue("NONE");
+			update.setNewValue("NEW");
+			update.setPropertyId("PORT");
 		}
+		return updates;
 	}
 
 	public Switch getSwitch(String swId) throws SwitchNotFoundException {
@@ -172,7 +317,9 @@ public class SwitchTopologyDB extends TopologyDB {
 		return sw;
 	}
 
-	public void updateSwitch(Switch sw) throws SwitchNotFoundException {
+	public List<DbUpdate> updateSwitch(Switch sw)
+			throws SwitchNotFoundException {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 		ResourceIterator<Node> switchNodes = graphDb
 				.findNodesByLabelAndProperty(Labels.SWITCH_LABEL, ID_PROPERTY,
 						sw.getSwId()).iterator();
@@ -180,9 +327,8 @@ public class SwitchTopologyDB extends TopologyDB {
 			throw new SwitchNotFoundException(sw);
 
 		Node switchNode = switchNodes.next();
-		setNodeSwitchProperties(switchNode, sw);
-		System.out.println("[NEO4J DEBUG] Switch updated // node: '"
-				+ switchNode.getId() + "'");
+		updates.addAll(updateNodeSwitchProperties(switchNode, sw));
+		return updates;
 	}
 
 	public SwitchCollection getAllSwitches() {
@@ -210,21 +356,53 @@ public class SwitchTopologyDB extends TopologyDB {
 		return switchCollection;
 	}
 
-	public void disableSwitch(String swId) throws SwitchNotFoundException {
-		ResourceIterator<Node> switchNode = graphDb.findNodesByLabelAndProperty(
-				Labels.SWITCH_LABEL, ID_PROPERTY, swId).iterator();
+	public List<DbUpdate> disableSwitch(String swId) throws SwitchNotFoundException {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
-		if (!switchNode.hasNext())
+		ResourceIterator<Node> switchNodes = graphDb
+				.findNodesByLabelAndProperty(Labels.SWITCH_LABEL,
+						ID_PROPERTY, swId).iterator();
+
+		if (!switchNodes.hasNext())
 			throw new SwitchNotFoundException(swId);
-		switchNode.next().setProperty("enabled", false);
+
+		Node switchNode = switchNodes.next();
+		Boolean enabled = (Boolean) switchNode.getProperty("enabled");
+		if (enabled.equals(true)) {
+			switchNode.setProperty("enabled", false);
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(swId);
+			update.setPropertyId("enabled");
+			update.setLegacyValue("true");
+			update.setNewValue("false");
+			updates.add(update);
+		}
+
+		return updates;
 	}
 
-	public void enableSwitch(String swId) throws SwitchNotFoundException {
-		ResourceIterator<Node> switchNode = graphDb.findNodesByLabelAndProperty(
-				Labels.SWITCH_LABEL, ID_PROPERTY, swId).iterator();
+	public List<DbUpdate> enableSwitch(String swId) throws SwitchNotFoundException {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
-		if (!switchNode.hasNext())
+		ResourceIterator<Node> switchNodes = graphDb
+				.findNodesByLabelAndProperty(Labels.SWITCH_LABEL,
+						ID_PROPERTY, swId).iterator();
+
+		if (!switchNodes.hasNext())
 			throw new SwitchNotFoundException(swId);
-		switchNode.next().setProperty("enabled", true);
+
+		Node switchNode = switchNodes.next();
+		Boolean enabled = (Boolean) switchNode.getProperty("enabled");
+		if (enabled.equals(true)) {
+			switchNode.setProperty("enabled", true);
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(swId);
+			update.setPropertyId("enabled");
+			update.setLegacyValue("false");
+			update.setNewValue("true");
+			updates.add(update);
+		}
+
+		return updates;
 	}
 }

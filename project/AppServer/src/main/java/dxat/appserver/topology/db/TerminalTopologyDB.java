@@ -55,7 +55,6 @@ public class TerminalTopologyDB extends TopologyDB {
 		String portAPId = (String) terminalNode.getProperty("portAPId");
 		Boolean enabled = (Boolean) terminalNode.getProperty("enabled");
 
-		/* Detect if there is a change in the IPv4 Attribute */
 		if (!ipv4.equals(terminal.getIpv4())) {
 			DbUpdate update = new DbUpdate();
 			terminalNode.setProperty("ipv4", terminal.getIpv4());
@@ -66,7 +65,6 @@ public class TerminalTopologyDB extends TopologyDB {
 			updates.add(update);
 		}
 
-		/* Detect if there is a change in the MAC Attribute */
 		if (!mac.equals(terminal.getMac())) {
 			DbUpdate update = new DbUpdate();
 			terminalNode.setProperty("mac", terminal.getMac());
@@ -77,7 +75,6 @@ public class TerminalTopologyDB extends TopologyDB {
 			updates.add(update);
 		}
 
-		/* Detect if there is a change in the portAPId Attribute */
 		if (!portAPId.equals(terminal.getPortAPId())) {
 			DbUpdate update = new DbUpdate();
 			terminalNode.setProperty("portAPId", terminal.getPortAPId());
@@ -88,10 +85,9 @@ public class TerminalTopologyDB extends TopologyDB {
 			updates.add(update);
 		}
 
-		/* Detect if there is a change in the portAPId Attribute */
-		if (!mac.equals(terminal.getPortAPId())) {
+		if (!enabled.equals(terminal.getEnabled())) {
 			DbUpdate update = new DbUpdate();
-			terminalNode.setProperty("enabled", terminal.getPortAPId());
+			terminalNode.setProperty("enabled", terminal.getEnabled());
 			update.setInventoryId(terminal.getTerminalId());
 			update.setPropertyId("enabled");
 			update.setLegacyValue(enabled.toString());
@@ -134,7 +130,10 @@ public class TerminalTopologyDB extends TopologyDB {
 							+ terminal.getTerminalId() + "')");
 
 		// Check existence of the Access point
-		Node dstPortNode = getNodePort(terminal.getPortAPId());
+		Node dstPortNode = null;
+		if (!terminal.getPortAPId().equals("00:00:00:00:00:00:00:00:0")) {
+			dstPortNode = getNodePort(terminal.getPortAPId());
+		}
 
 		// Generate Update
 		List<DbUpdate> updates = null;
@@ -152,10 +151,10 @@ public class TerminalTopologyDB extends TopologyDB {
 		setNodeTerminalProperties(terminalNode, terminal);
 
 		// Create Neo4j Port Link
-		Node srcPortNode = terminalNode;
-		srcPortNode.createRelationshipTo(dstPortNode, RelTypes.LINK);
-		System.out.println("[NEO4J DEBUG] Terminal Added // node: '"
-				+ terminalNode.getId() + "'");
+		if (dstPortNode != null) {
+			Node srcPortNode = terminalNode;
+			srcPortNode.createRelationshipTo(dstPortNode, RelTypes.LINK);
+		}
 
 		// Rerturn list of DB updates
 		return updates;
@@ -178,8 +177,9 @@ public class TerminalTopologyDB extends TopologyDB {
 	public List<DbUpdate> updateTerminal(Terminal terminal)
 			throws TerminalNotFoundException {
 		ResourceIterator<Node> terminalNodes = graphDb
-				.findNodesByLabelAndProperty(Labels.LINK_LABEL, ID_PROPERTY,
+				.findNodesByLabelAndProperty(Labels.TERMINAL_LABEL, ID_PROPERTY,
 						terminal.getTerminalId()).iterator();
+
 		// If terminal does not exist
 		if (!terminalNodes.hasNext())
 			throw new TerminalNotFoundException(terminal);
@@ -208,7 +208,7 @@ public class TerminalTopologyDB extends TopologyDB {
 
 	public List<DbUpdate> disableTerminal(String terminalId)
 			throws TerminalNotFoundException {
-		List<DbUpdate> changes = new ArrayList<DbUpdate>();
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
 		ResourceIterator<Node> terminalNodes = graphDb
 				.findNodesByLabelAndProperty(Labels.TERMINAL_LABEL,
@@ -221,19 +221,20 @@ public class TerminalTopologyDB extends TopologyDB {
 		Boolean enabled = (Boolean) terminalNode.getProperty("enabled");
 		if (enabled.equals(true)) {
 			terminalNode.setProperty("enabled", false);
-			DbUpdate change = new DbUpdate();
-			change.setInventoryId(terminalId);
-			change.setPropertyId("enabled");
-			change.setLegacyValue("true");
-			change.setNewValue("false");
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(terminalId);
+			update.setPropertyId("enabled");
+			update.setLegacyValue("true");
+			update.setNewValue("false");
+			updates.add(update);
 		}
 
-		return changes;
+		return updates;
 	}
 
 	public List<DbUpdate> enableTerminal(String terminalId)
 			throws TerminalNotFoundException {
-		List<DbUpdate> changes = new ArrayList<DbUpdate>();
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
 		ResourceIterator<Node> terminalNodes = graphDb
 				.findNodesByLabelAndProperty(Labels.TERMINAL_LABEL,
@@ -244,15 +245,16 @@ public class TerminalTopologyDB extends TopologyDB {
 
 		Node terminalNode = terminalNodes.next();
 		Boolean enabled = (Boolean) terminalNode.getProperty("enabled");
-		if (enabled.equals(true)) {
-			terminalNode.setProperty("enabled", false);
-			DbUpdate change = new DbUpdate();
-			change.setInventoryId(terminalId);
-			change.setPropertyId("enabled");
-			change.setLegacyValue("false");
-			change.setNewValue("true");
+		if (enabled.equals(false)) {
+			terminalNode.setProperty("enabled", true);
+			DbUpdate update = new DbUpdate();
+			update.setInventoryId(terminalId);
+			update.setPropertyId("enabled");
+			update.setLegacyValue("false");
+			update.setNewValue("true");
+			updates.add(update);
 		}
 
-		return changes;
+		return updates;
 	}
 }
