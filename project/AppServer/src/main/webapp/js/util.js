@@ -9,7 +9,7 @@
 		$("#msg").hide();
 		console.log("submitting user and password to server...");
 		var requestUrl =
-			"/AppServer/webapp/manager/user/auth?username=" + $('#username').val() +
+			"/user/auth?username=" + $('#username').val() +
 			"&password=" + $('#password').val();
 		console.log(requestUrl); //firebug console output
 //		$.getJSON(requestUrl,
