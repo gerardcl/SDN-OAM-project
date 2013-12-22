@@ -33,7 +33,8 @@ public class SwitchManager implements ITopoSwitchManager, ISwitchEvents {
 		return new Gson().fromJson(jsonStr, Switch.class);
 	}
 
-	public List<DbUpdate> processEvent(ControllerEvent controllerEvent) throws CannotOpenDataBaseException, SwitchNotFoundException {
+	public List<DbUpdate> processEvent(ControllerEvent controllerEvent)
+			throws CannotOpenDataBaseException, SwitchNotFoundException {
 		String eventStr = controllerEvent.getEvent();
 		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
@@ -55,9 +56,9 @@ public class SwitchManager implements ITopoSwitchManager, ISwitchEvents {
 			SwitchTopologyDB switchDB = new SwitchTopologyDB();
 			try {
 				switchDB.opendb();
-				try{
-				updates.addAll(switchDB.addSwitch(sw));
-				} catch (SwitchExistsException e1){
+				try {
+					updates.addAll(switchDB.addSwitch(sw));
+				} catch (SwitchExistsException e1) {
 					updates.addAll(switchDB.updateSwitch(sw));
 				}
 			} catch (SwitchNotFoundException e) {
@@ -76,6 +77,13 @@ public class SwitchManager implements ITopoSwitchManager, ISwitchEvents {
 			} finally {
 				switchDB.closedb();
 			}
+		} else if (eventStr.equals(ISwitchEvents.SWITCHES_COLLECTION)) {
+			SwitchCollection switchCollection = new Gson().fromJson(
+					controllerEvent.getObject(), SwitchCollection.class);
+			SwitchTopologyDB switchDB = new SwitchTopologyDB();
+			switchDB.opendb();
+			updates.addAll(switchDB.mergeCollection(switchCollection));
+			switchDB.closedb();
 		}
 		return updates;
 	}

@@ -338,14 +338,7 @@ public class SwitchTopologyDB extends TopologyDB {
 
 		for (Relationship relation : switchRelations) {
 			Node switchNode = relation.getEndNode();
-			Boolean isSwitch = false;
-			for (Label label : switchNode.getLabels()) {
-				if (label.name().equals("Switch")) {
-					isSwitch = true;
-				}
-			}
-
-			if (isSwitch) {
+			if (switchNode.hasLabel(Labels.SWITCH_LABEL)) {
 				Switch sw = new Switch();
 				getNodeSwitchProperties(switchNode, sw);
 				switchList.add(sw);
@@ -356,12 +349,13 @@ public class SwitchTopologyDB extends TopologyDB {
 		return switchCollection;
 	}
 
-	public List<DbUpdate> disableSwitch(String swId) throws SwitchNotFoundException {
+	public List<DbUpdate> disableSwitch(String swId)
+			throws SwitchNotFoundException {
 		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
 		ResourceIterator<Node> switchNodes = graphDb
-				.findNodesByLabelAndProperty(Labels.SWITCH_LABEL,
-						ID_PROPERTY, swId).iterator();
+				.findNodesByLabelAndProperty(Labels.SWITCH_LABEL, ID_PROPERTY,
+						swId).iterator();
 
 		if (!switchNodes.hasNext())
 			throw new SwitchNotFoundException(swId);
@@ -381,12 +375,13 @@ public class SwitchTopologyDB extends TopologyDB {
 		return updates;
 	}
 
-	public List<DbUpdate> enableSwitch(String swId) throws SwitchNotFoundException {
+	public List<DbUpdate> enableSwitch(String swId)
+			throws SwitchNotFoundException {
 		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
 		ResourceIterator<Node> switchNodes = graphDb
-				.findNodesByLabelAndProperty(Labels.SWITCH_LABEL,
-						ID_PROPERTY, swId).iterator();
+				.findNodesByLabelAndProperty(Labels.SWITCH_LABEL, ID_PROPERTY,
+						swId).iterator();
 
 		if (!switchNodes.hasNext())
 			throw new SwitchNotFoundException(swId);
@@ -401,6 +396,41 @@ public class SwitchTopologyDB extends TopologyDB {
 			update.setLegacyValue("false");
 			update.setNewValue("true");
 			updates.add(update);
+		}
+
+		return updates;
+	}
+
+	public List<DbUpdate> mergeCollection(SwitchCollection switchCollection) {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+		List<Switch> switchList = switchCollection.getSwitches();
+		HashMap<String, Switch> switchMap = new HashMap<String, Switch>();
+
+		for (Switch sw : switchList) {
+			switchMap.put(sw.getSwId(), sw);
+			try {
+				updates.addAll(addSwitch(sw));
+			} catch (SwitchExistsException e) {
+				try {
+					updates.addAll(updateSwitch(sw));
+				} catch (SwitchNotFoundException e1) {
+				}
+			}
+		}
+
+		Iterable<Relationship> switchRelations = getManagerNode()
+				.getRelationships();
+		for (Relationship relation : switchRelations) {
+			Node switchNode = relation.getEndNode();
+			if (switchNode.hasLabel(Labels.SWITCH_LABEL)) {
+				String swId = (String) switchNode.getProperty(ID_PROPERTY);
+				if (!switchMap.containsKey(swId)) {
+					try {
+						updates.addAll(disableSwitch(swId));
+					} catch (SwitchNotFoundException e) {
+					}
+				}
+			}
 		}
 
 		return updates;
