@@ -21,7 +21,7 @@
     });
   //flow model  
     var Flow = Backbone.Model.extend({
-      urlRoot:'/flow/all?orgId=',
+    //  urlRoot:'/flow/all?orgId=',
       defaults:{
         identifier: "",
         active: "",
@@ -33,6 +33,20 @@
         qos: "",
         srcOTidentifier: "",
         srcPort: ""
+      }
+    });
+
+  //terminal model  
+    var Terminal = Backbone.Model.extend({
+    //  urlRoot:'/terminal/all?orgId=',
+      defaults:{
+        identifier: "",
+        active: "",
+        description: "",
+        hostName: "",
+        ifaceSpeed: "",
+        ipAddress: "",
+        mac: ""
       }
     });
 
@@ -93,6 +107,30 @@
     });
 
     var flows = new Flows();
+
+  //Terminals COLLECTION
+    var Terminals = Backbone.Collection.extend({
+        model: Terminal,
+          url:'/fullterminal/all',
+      parse:function (response) {
+            for ( var i = 0, length = response.orgTerminals.length; i < length; i++) {
+              var currentValues = response.orgTerminals[i];
+              var terminalObject = {};
+              terminalObject.identifier = currentValues.identifier;
+              terminalObject.active = currentValues.active;
+              terminalObject.hostName = currentValues.hostName;
+              terminalObject.ifaceSpeed = currentValues.ifaceSpeed;
+              terminalObject.ipAddress = currentValues.ipAddress;
+              terminalObject.mac = currentValues.mac;
+              this.push(terminalObject);
+            }
+      console.log(this.toJSON());
+      return this.models;
+        }
+    });
+
+    var terminals = new Terminals();
+
 //VIEWS
 
   //LOGIN VIEW #login-template
@@ -205,12 +243,18 @@
 
   //TERMINALS VIEW #terminals-template
     var TerminalsView = Backbone.View.extend({
-      el: '.page',
-      render: function () {
-        var that = this;
-        var template = _.template($('#terminals-template').html());
-        that.$el.html(template);
-      }
+        el: '.page',
+        render: function () {
+          var that = this;
+          var terminals = new Terminals();
+          terminals.fetch({
+            success: function (terminals) {
+              console.log(terminals.models);
+              var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
+              that.$el.html(template);
+            }
+          })
+        }
     });
 
     var terminalsView = new TerminalsView();
