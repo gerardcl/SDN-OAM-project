@@ -197,11 +197,21 @@ public class OrgManager {
 	public Org getOrg(String id){
 		return orgs.get(id);
 	}
+	
+	public TOrg getTOrg(String id){
+		//Quering Org from database
+		return null;
+	}
 	public void addOrg(TOrg id){
-		//TODO
+		//Adding TOrg in database
 	}
 	public TOrg delete(String id){
-		//TODO
+		//Deleting TOrg from database
+		return null;
+	}
+	
+	public TOrg updateTOrg(TOrg torg){
+		//Updating TOrg from database
 		return null;
 	}
 	public Org updateOrg(Org org){
