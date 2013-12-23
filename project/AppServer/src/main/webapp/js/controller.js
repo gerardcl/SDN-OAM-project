@@ -19,9 +19,10 @@
         OAM: ""
       }
     });
+
   //flow model  
     var Flow = Backbone.Model.extend({
-      //urlRoot:'/flow/all?orgId=',
+      urlRoot:'/flow/all?orgId=',
       defaults:{
         identifier: "",
         active: "",
@@ -38,7 +39,7 @@
 
   //terminal model  
     var Terminal = Backbone.Model.extend({
-      //urlRoot:'/terminal/all?orgId=',
+      urlRoot:'/terminal/all?orgId=',
       defaults:{
         identifier: "",
         active: "",
@@ -145,7 +146,13 @@
   //Users COLLECTION
     var Users = Backbone.Collection.extend({
         model: User,
-          url:'/fulluser/all',
+      url: function(orgId){
+          var aux = JSON.stringfy(orgId)
+            console.log(aux);
+            var uri = '/user/all?orgId=' + aux;
+            console.log(uri);
+            return uri;
+          },
       parse:function (response) {
             for ( var i = 0, length = response.orgUsers.length; i < length; i++) {
               var currentValues = response.orgUsers[i];
@@ -244,8 +251,7 @@
             that.organization.fetch({
               success: function (organization) {
               //if there is TOrg, we fetch its users
-                this.users = new Users({id: organization.identifier});
-                this.users.fetch();
+                
                 var template = _.template($('#organizations-data-template').html(), {organization: organization, users: users.models});
                 that.$el.html(template);
                 //SlimScroll
@@ -402,6 +408,9 @@
       adminSidebarView.render();
       //orgsListBSView.render(); 
       orgDataView.render({identifier: identifier});
+      this.users = new Users({orgId: identifier});
+      this.users.url({orgId: identifier});
+      this.users.fetch();
       //orgUsersView.render({identifier: identifier}); 
     })
 

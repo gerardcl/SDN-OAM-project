@@ -440,8 +440,8 @@
 
 	<!-- ORGANIZATION NAME -->
 	<script type="text/template" id="org-name-template">
-        <a href="#/adminOrgs/<%= identifier %>" class="list-group-item"><span class="badge"><%= identifier %></span> <%= name %> </a>
-      </script>
+    <a href="#/adminOrgs/<%= identifier %>" class="list-group-item"><span class="badge"><%= identifier %></span> <%= name %> </a>
+  </script>
 	<!-- /ORGANIZATION NAME -->
 
 	<!-- ORGANIZATION DATA TEMPLATE -->
@@ -594,7 +594,7 @@
                                               <tbody >
 
                                                 <% _.each(users, function(user) { 
-                                                  //if(user.get('active')==true){ %>  
+                                                  if(user.get('active')==true){ %>  
 
 
                                                     <tr>
@@ -605,7 +605,7 @@
                                                       <td><%= user.get('telephone') %></td>
                                                     </tr>
 
-                                                  <%//}
+                                                  <%}
                                                 }); %>
 
                                               </tbody>
