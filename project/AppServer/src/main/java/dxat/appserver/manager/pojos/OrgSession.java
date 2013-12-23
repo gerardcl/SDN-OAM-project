@@ -1,20 +1,34 @@
 package dxat.appserver.manager.pojos;
 
 public class OrgSession {
-	public String user;
-	public String password;
+	public String userId;
+	public String orgId;
 	public String session;
-	public String getUser() {
-		return user;
+	public String token;
+	public String msg;
+	public String getMsg() {
+		return msg;
 	}
-	public void setUser(String user) {
-		this.user = user;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
-	public String getPassword() {
-		return password;
+	public String getUserId() {
+		return userId;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setUserId(String user) {
+		this.userId = user;
+	}
+	public String getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	public String getSession() {
 		return session;
@@ -22,5 +36,4 @@ public class OrgSession {
 	public void setSession(String session) {
 		this.session = session;
 	}
-	
 }

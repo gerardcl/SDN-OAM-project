@@ -1,17 +1,23 @@
 (function($){
 	$(document).ready(function(){
 		$("#msg").hide();
+		$("#loading").hide();
 	});
 
 	//$("#submit").click($("#msg").show());
-
+	$("#msg").click(function(){
+		$("#msg").hide();
+	});
+	
 	$('#check').click(function() {
 		$("#msg").hide();
+		$("#loading").show();
+
 		console.log("submitting user and password to server...");
 		var requestUrl =
-			"/AppServer/webapp/manager/user/auth?username=" + $('#username').val() +
+			"/user/auth?username=" + $('#username').val() +
 			"&password=" + $('#password').val();
-		console.log(requestUrl); //firebug console output
+		//console.log(requestUrl); //firebug console output
 //		$.getJSON(requestUrl,
 //				function(data) {
 //					console.log(this.data); //firebug console output
@@ -30,24 +36,26 @@
 //		    "}",
 //		    contentType: "application/json; charset=UTF-8",
 		    success: function(msg){
-		        console.log(msg);
-		        console.log("success");
-		        if(msg == "0") $("#msg").show();
-		    	else if(msg == "1") location.href = "#/adminOverview";
-		    	else if(msg == "2") location.href = "#/client/overview";
+		        //console.log(msg);
+		        //console.log("success");
+		        if(!msg){
+		        	$("#loading").hide();
+		        	$("#msg").show();
+		        }
+		    	else if(msg.msg == "1") location.href = "/AppServer/#/adminOverview";
+		    	else if(msg.msg == "2") location.href = "/AppServer/#/clientOverview";
 		    },
 		    error: function(xhr, msg) { 
 		    	console.log(msg + '\n' + xhr.responseText);
-		    	if(xhr.responseText == "0") $("#msg").show();
-		    	else if(xhr.responseText == "1") location.href = "#/admin/overview";
-		    	else if(xhr.responseText == "2") location.href = "#/client/overview";
+		    	if(!xhr.responseText){
+		        	$("#loading").hide();
+		        	$("#msg").show();
+		        }
+		    	else if(xhr.responseText.msg == "1") location.href = "/AppServer/#/adminOverview";
+		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/#/clientOverview";
 		    }
 		});
 	});
-
-
-
-
 })(jQuery);
 
 

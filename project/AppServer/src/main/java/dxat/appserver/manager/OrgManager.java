@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.OrgFlow;
+import dxat.appserver.manager.pojos.OrgSession;
 import dxat.appserver.manager.pojos.OrgTerminal;
 import dxat.appserver.manager.pojos.Org;
 import dxat.appserver.manager.pojos.OrgUser;
@@ -20,6 +22,7 @@ public class OrgManager {
 	private HashMap<String, TOrg> torgs; //same orgs ids
 	private HashMap<String, OrgFlow> flows;
 	private HashMap<String, OrgUser> users;
+	private HashMap<String, OrgSession> sessions;
 	private HashMap<String, OrgTerminal> terminals;
 
 	private OrgManager(){
@@ -28,6 +31,7 @@ public class OrgManager {
 		flows = new HashMap<String, OrgFlow>();
 		users = new HashMap<String, OrgUser>();
 		terminals = new HashMap<String, OrgTerminal>();
+		sessions = new HashMap<String, OrgSession>();
 		
 		/*some test init*/
 		int maxorgs = 10;
@@ -101,8 +105,8 @@ public class OrgManager {
 				user.setName(uname);
 				user.setEmail(uid+"@"+org.getName()+".com");
 				user.setTelephone(654321000+i*100+j*10+i+j);
-				user.setPassword(org.getName()+"dxat"+Integer.toString(i));
-				user.setAdmin(i%4==0?true:false);
+				user.setPassword(Integer.toString(j)+"dxat"+Integer.toString(i));
+				user.setAdmin(j%(maxorgs-1)==0?true:false);
 				user.setActive(i%3==0?true:false);
 				tempUsers.put(user.identifier, user);
 				users.put(user.identifier, user);
@@ -208,13 +212,33 @@ public class OrgManager {
 		//TODO
 		return false;
 	}
-	public String existUser(String username){
+	private String getOrgIdFromUserId(String userId){
+		String orgId = null;
+		for (Entry<String, Org> entry1 : orgs.entrySet()) {
+			orgId = entry1.getKey();
+			Org org = entry1.getValue();
+			for (Entry<String, OrgUser> entry2 : org.getUsers().entrySet()) {
+				if(entry2.getValue().getIdentifier().equals(userId)){
+					return orgId;
+				}
+			}
+		}
+		return orgId;
+	}
+	public OrgSession existUser(String username){
+		//TO CHECK IT BY GOING THROUGH EACH ORG?¿ NEXT STEPS...
 		for (Entry<String, OrgUser> entry : users.entrySet()) {
-		    String key = entry.getKey();
 		    Object value = entry.getValue();
 		    if(((OrgUser) value).getName().equals(username)) {
 		    	System.out.println("OK");
-		    	return ((OrgUser) value).getIdentifier();
+		    	OrgSession session = new OrgSession();
+		    	session.setUserId(((OrgUser) value).getIdentifier());
+		    	session.setSession(UUID.randomUUID().toString());
+		    	session.setToken("notoken");
+		    	//CHECK IF ORGID == NULL THEN...
+		    	session.setOrgId(getOrgIdFromUserId(session.getUserId()));
+		    	sessions.put(((OrgUser) value).getName(), session);
+		    	return ((OrgSession) session);
 		    }
 		}
 		return null;

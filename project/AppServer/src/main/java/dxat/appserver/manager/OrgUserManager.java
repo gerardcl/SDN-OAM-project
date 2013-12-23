@@ -2,6 +2,7 @@ package dxat.appserver.manager;
 
 import java.util.List;
 
+import dxat.appserver.manager.pojos.OrgSession;
 import dxat.appserver.manager.pojos.OrgUser;
 
 public class OrgUserManager {
@@ -33,19 +34,22 @@ public class OrgUserManager {
 	public void updateOrgUser(String orgId, OrgUser user){
 		//TODO
 	}
-	public int checkPassword(String username, String password){
-		//TODO
-		//if(orgManager.getInstance().getUsers().get(userId) != null){
-		String userId = orgManager.getInstance().existUser(username);
-		if(userId!=null){
+	public OrgSession checkPassword(String username, String password){
+		OrgSession session = orgManager.getInstance().existUser(username);
+		if(session!=null){
 			System.out.println("USER EXIST");
-			if(orgManager.getInstance().getUsers().get(userId).getPassword().equals(password)){
+			if(orgManager.getInstance().getUsers().get(session.getUserId()).getPassword().equals(password)){
 				System.out.println("CORRECT PASSWORD");
-				if(orgManager.getInstance().getUsers().get(userId).isAdmin()) 
-					return 1;
-				else return 2;
+				if(orgManager.getInstance().getUsers().get(session.getUserId()).isAdmin()){
+					session.setMsg("1");
+					return session;
+				}
+				else{
+					session.setMsg("2");
+					return session;
+				}
 			}else System.out.println("INCORRECT PASSWORD");
 		}else System.out.println("USER DOES NOT EXIST");
-		return 0;
+		return null;
 	}
 }
