@@ -1,6 +1,7 @@
 package dxat.appserver.topology.db;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.neo4j.graphdb.DynamicLabel;
@@ -224,4 +225,39 @@ public class LinkTopologyDB extends TopologyDB {
 		return updates;
 	}
 
+	public List<DbUpdate> mergeCollection(LinkCollection linkCollection) throws PortNotFoundException {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+		List<Link> linkList = linkCollection.getLinks();
+		HashMap<String, Link> linkMap = new HashMap<String, Link>();
+
+		for (Link link : linkList) {
+			linkMap.put(link.getLinkKey(), link);
+			try {
+				updates.addAll(addLink(link));
+			} catch (LinkExistsException e) {
+				try {
+					updates.addAll(updateLink(link));
+				} catch (LinkNotFoundException e1) {
+				}
+			}
+		}
+
+		Iterable<Relationship> linkRelations = getManagerNode()
+				.getRelationships();
+		for (Relationship relation : linkRelations) {
+			Node linkNode = relation.getEndNode();
+			if (linkNode.hasLabel(Labels.LINK_LABEL)) {
+				String linkKey = (String) linkNode.getProperty(ID_PROPERTY);
+				if (!linkMap.containsKey(linkKey)) {
+					try {
+						updates.addAll(disableLink(linkKey));
+					} catch (LinkNotFoundException e) {
+					}
+				}
+			}
+		}
+
+		return updates;
+	}
+	
 }

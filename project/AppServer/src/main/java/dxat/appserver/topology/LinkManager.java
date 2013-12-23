@@ -65,6 +65,13 @@ public class LinkManager implements ITopoLinkManager {
 			} finally {
 				linkTopologyDB.closedb();
 			}
+		} else if (eventStr.equals(ILinkEvents.LINKS_COLLECTION)) {
+			LinkCollection linkCollection = new Gson().fromJson(
+					controllerEvent.getObject(), LinkCollection.class);
+			LinkTopologyDB linkDB = new LinkTopologyDB();
+			linkDB.opendb();
+			updates.addAll(linkDB.mergeCollection(linkCollection));
+			linkDB.closedb();
 		}
 		return updates;
 	}

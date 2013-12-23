@@ -38,10 +38,10 @@ public class TerminalManager implements ITerminalEvents, ITopoTerminalManager {
 			throws CannotOpenDataBaseException, PortNotFoundException,
 			TerminalNotFoundException {
 
-		String enentStr = controllerEvent.getEvent();
+		String eventStr = controllerEvent.getEvent();
 		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 
-		if (enentStr.equals(ITerminalEvents.TERMINAL_ADDED)) {
+		if (eventStr.equals(ITerminalEvents.TERMINAL_ADDED)) {
 			TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
 			terminalTopologyDB.opendb();
 			Terminal terminal = fromJSON(controllerEvent.getObject());
@@ -59,9 +59,9 @@ public class TerminalManager implements ITerminalEvents, ITopoTerminalManager {
 				terminalTopologyDB.closedb();
 			}
 
-		} else if (enentStr.equals(ITerminalEvents.TERMINAL_IPV4_CHANGED)
-				|| enentStr.equals(ITerminalEvents.TERMINAL_MOVED)
-				|| enentStr.equals(ITerminalEvents.TERMINAL_VLAN_CHANGED)) {
+		} else if (eventStr.equals(ITerminalEvents.TERMINAL_IPV4_CHANGED)
+				|| eventStr.equals(ITerminalEvents.TERMINAL_MOVED)
+				|| eventStr.equals(ITerminalEvents.TERMINAL_VLAN_CHANGED)) {
 			TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
 			terminalTopologyDB.opendb();
 			Terminal terminal = fromJSON(controllerEvent.getObject());
@@ -72,8 +72,7 @@ public class TerminalManager implements ITerminalEvents, ITopoTerminalManager {
 			} finally {
 				terminalTopologyDB.closedb();
 			}
-		} else if (controllerEvent.getEvent().equals(
-				ITerminalEvents.TERMINAL_REMOVED)) {
+		} else if (eventStr.equals(ITerminalEvents.TERMINAL_REMOVED)) {
 			TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
 			terminalTopologyDB.opendb();
 			Terminal terminal = fromJSON(controllerEvent.getObject());
@@ -85,6 +84,13 @@ public class TerminalManager implements ITerminalEvents, ITopoTerminalManager {
 			} finally {
 				terminalTopologyDB.closedb();
 			}
+		} else if (eventStr.equals(ITerminalEvents.TERMINALS_COLLECTION)) {
+			TerminalCollection terminalCollection = new Gson().fromJson(
+					controllerEvent.getObject(), TerminalCollection.class);
+			TerminalTopologyDB terminalDB = new TerminalTopologyDB();
+			terminalDB.opendb();
+			updates.addAll(terminalDB.mergeCollection(terminalCollection));
+			terminalDB.closedb();
 		}
 
 		return updates;

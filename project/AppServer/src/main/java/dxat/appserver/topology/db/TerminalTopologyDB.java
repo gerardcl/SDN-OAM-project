@@ -1,6 +1,7 @@
 package dxat.appserver.topology.db;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.neo4j.graphdb.DynamicLabel;
@@ -253,6 +254,41 @@ public class TerminalTopologyDB extends TopologyDB {
 			update.setLegacyValue("false");
 			update.setNewValue("true");
 			updates.add(update);
+		}
+
+		return updates;
+	}
+	
+	public List<DbUpdate> mergeCollection(TerminalCollection terminalCollection) throws PortNotFoundException {
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+		List<Terminal> terminalList = terminalCollection.getTerminals();
+		HashMap<String, Terminal> terminalMap = new HashMap<String, Terminal>();
+
+		for (Terminal terminal : terminalList) {
+			terminalMap.put(terminal.getTerminalId(), terminal);
+			try {
+				updates.addAll(addTerminal(terminal));
+			} catch (TerminalExistsException e) {
+				try {
+					updates.addAll(updateTerminal(terminal));
+				} catch (TerminalNotFoundException e1) {
+				}
+			}
+		}
+
+		Iterable<Relationship> terminalRelations = getManagerNode()
+				.getRelationships();
+		for (Relationship relation : terminalRelations) {
+			Node terminalNode = relation.getEndNode();
+			if (terminalNode.hasLabel(Labels.TERMINAL_LABEL)) {
+				String terminalId = (String) terminalNode.getProperty(ID_PROPERTY);
+				if (!terminalMap.containsKey(terminalId)) {
+					try {
+						updates.addAll(disableTerminal(terminalId));
+					} catch (TerminalNotFoundException e) {
+					}
+				}
+			}
 		}
 
 		return updates;
