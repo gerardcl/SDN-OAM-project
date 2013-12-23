@@ -4,6 +4,7 @@ public class ControllerEvent {
 	/*
 	 * Attributes
 	 */
+	private Long timestamp;
 	private String event = ""; // Available commands
 	private String object = ""; // Serialized object class
 
@@ -12,6 +13,14 @@ public class ControllerEvent {
 	 */
 	public String getEvent() {
 		return event;
+	}
+
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public void setEvent(String event) {

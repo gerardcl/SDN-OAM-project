@@ -82,6 +82,7 @@ public class RealTimeThread implements Runnable {
 		RealTimeEvent realTimeEvent = new RealTimeEvent();
 		realTimeEvent.setEvent(controllerEvent.getEvent());
 		realTimeEvent.setUpdates(new ArrayList<DbUpdate>());
+		realTimeEvent.setTimestamp(controllerEvent.getTimestamp());
 		try {
 			realTimeEvent.getUpdates()
 					.addAll(TerminalManager.getInstance().processEvent(
@@ -112,8 +113,10 @@ public class RealTimeThread implements Runnable {
 		} catch (LinkKeyBadFormatException e) {
 			printException(e);
 		}
+		if (realTimeEvent.getUpdates().size()>0){
 		RealTimeManager.getInstance().broadcast(
 				new Gson().toJson(realTimeEvent));
+		}
 	}
 
 	private void connect() {
