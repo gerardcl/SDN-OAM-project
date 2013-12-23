@@ -8,6 +8,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.Label;
 
+import dxat.appserver.config.LoadConfig;
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
 
 public abstract class TopologyDB {
@@ -28,7 +29,7 @@ public abstract class TopologyDB {
 		public static final Label TERMINAL_LABEL = DynamicLabel.label("Terminal");
 	}
 	
-	protected static final String DB_PATH = "/home/xavier/neo4jDB";
+	protected static final String DB_PATH = LoadConfig.getProperty("neo4j.dir");
 	protected static final String ID_PROPERTY = "inventoryId";
 
 	protected GraphDatabaseService graphDb = null;

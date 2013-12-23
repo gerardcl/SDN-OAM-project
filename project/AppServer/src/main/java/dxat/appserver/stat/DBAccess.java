@@ -11,12 +11,12 @@ import java.io.File;
 import org.rrd4j.core.RrdDbPool;
 import org.rrd4j.core.RrdDef;
 
+import dxat.appserver.config.LoadConfig;
+
 public class DBAccess {
 
 	public static final int MAX_STEP = 1;
-	public static final String rrdPath = "/home/xavier/rrd4j-testing/";
-	public static final String xmlPath = "/home/xavier/rrd4j-testing/";
-	public static final String rrdRestoredPath = "/home/xavier/rrd4j-testing/";
+	public static final String rrdPath = LoadConfig.getProperty("rrd4j.dir");
 
 	private RrdDbPool rrdDbPool = RrdDbPool.getInstance();
 

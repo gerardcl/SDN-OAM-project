@@ -3,6 +3,7 @@ package dxat.appserver.realtime;
 import java.util.Collection;
 import java.util.HashMap;
 
+import dxat.appserver.config.LoadConfig;
 import dxat.appserver.realtime.interfaces.IRealTimeManager;
 import dxat.appserver.realtime.interfaces.IRealTimeSuscriber;
 
@@ -13,10 +14,10 @@ public class RealTimeManager implements IRealTimeManager {
 	private RealTimeManager() {
 		super();
 		suscribers = new HashMap<String, IRealTimeSuscriber>();
-		Thread rtThread = new Thread(new RealTimeThread("localhost", 7666),
+		Thread rtThread = new Thread(new RealTimeThread(
+				LoadConfig.getProperty("controller.ip"),
+				Integer.valueOf(LoadConfig.getProperty("controller.port"))),
 				"DXAT AppServer Real Time Module");
-		/*Thread rtThread = new Thread(new RealTimeThread("147.83.118.254", 7666),
-				"DXAT AppServer Real Time Module");*/
 		rtThread.start();
 	}
 
