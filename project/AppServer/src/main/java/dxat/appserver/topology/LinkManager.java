@@ -12,6 +12,7 @@ import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.db.LinkTopologyDB;
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
 import dxat.appserver.topology.exceptions.LinkExistsException;
+import dxat.appserver.topology.exceptions.LinkKeyBadFormatException;
 import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
 import dxat.appserver.topology.interfaces.ITopoLinkManager;
@@ -33,9 +34,10 @@ public class LinkManager implements ITopoLinkManager {
 
 	public List<DbUpdate> processEvent(ControllerEvent controllerEvent)
 			throws JsonSyntaxException, PortNotFoundException,
-			LinkNotFoundException, CannotOpenDataBaseException {
+			LinkNotFoundException, CannotOpenDataBaseException, LinkKeyBadFormatException {
 		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 		String eventStr = controllerEvent.getEvent();
+		
 		if (eventStr.equals(ILinkEvents.LINK_UPDATED)
 				|| eventStr.equals(ILinkEvents.SWITCH_UPDATED)
 				|| eventStr.equals(ILinkEvents.PORT_UP)

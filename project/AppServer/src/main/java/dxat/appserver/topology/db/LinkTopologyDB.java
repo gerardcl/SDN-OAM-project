@@ -11,6 +11,7 @@ import org.neo4j.graphdb.ResourceIterator;
 
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
 import dxat.appserver.topology.exceptions.LinkExistsException;
+import dxat.appserver.topology.exceptions.LinkKeyBadFormatException;
 import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
 import dxat.appserver.topology.pojos.Link;
@@ -103,7 +104,10 @@ public class LinkTopologyDB extends TopologyDB {
 	}
 
 	public List<DbUpdate> addLink(Link link) throws PortNotFoundException,
-			LinkExistsException {
+			LinkExistsException, LinkKeyBadFormatException {
+		if (link.getLinkKey().equals("->"))
+			throw new LinkKeyBadFormatException("Empty Link Key");
+		
 		if (existLink(link.getLinkKey()))
 			throw new LinkExistsException(
 					"Trying to add a link whose identifier already exists('"
@@ -174,8 +178,9 @@ public class LinkTopologyDB extends TopologyDB {
 	}
 
 	public List<DbUpdate> disableLink(String linkKey)
-			throws LinkNotFoundException {
-		List<DbUpdate> updates = new ArrayList<DbUpdate>();
+			throws LinkNotFoundException, LinkKeyBadFormatException {
+		if (linkKey.equals("->"))
+			throw new LinkKeyBadFormatException("Empty Link Key");
 
 		ResourceIterator<Node> linkNodes = graphDb.findNodesByLabelAndProperty(
 				Labels.SWITCH_LABEL, ID_PROPERTY, linkKey).iterator();
@@ -183,7 +188,8 @@ public class LinkTopologyDB extends TopologyDB {
 		if (!linkNodes.hasNext())
 			throw new LinkNotFoundException("Trying disable link with id '"
 					+ linkKey + "'. It has not been found.");
-
+		
+		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 		Node linkNode = linkNodes.next();
 		Boolean enabled = (Boolean) linkNode.getProperty("enabled");
 		if (enabled.equals(true)) {
@@ -200,7 +206,10 @@ public class LinkTopologyDB extends TopologyDB {
 	}
 
 	public List<DbUpdate> enableLink(String linkKey)
-			throws LinkNotFoundException {
+			throws LinkNotFoundException, LinkKeyBadFormatException {
+		if (linkKey.equals("->"))
+			throw new LinkKeyBadFormatException("Empty Link Key");
+		
 		ResourceIterator<Node> linkNodes = graphDb.findNodesByLabelAndProperty(
 				Labels.SWITCH_LABEL, ID_PROPERTY, linkKey).iterator();
 
@@ -225,7 +234,8 @@ public class LinkTopologyDB extends TopologyDB {
 		return updates;
 	}
 
-	public List<DbUpdate> mergeCollection(LinkCollection linkCollection) throws PortNotFoundException {
+	public List<DbUpdate> mergeCollection(LinkCollection linkCollection)
+			throws PortNotFoundException, LinkKeyBadFormatException {
 		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 		List<Link> linkList = linkCollection.getLinks();
 		HashMap<String, Link> linkMap = new HashMap<String, Link>();

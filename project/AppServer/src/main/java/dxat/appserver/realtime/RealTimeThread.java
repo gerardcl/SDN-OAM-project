@@ -20,6 +20,7 @@ import dxat.appserver.topology.SwitchManager;
 import dxat.appserver.topology.TerminalManager;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
+import dxat.appserver.topology.exceptions.LinkKeyBadFormatException;
 import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
 import dxat.appserver.topology.exceptions.SwitchNotFoundException;
@@ -95,8 +96,7 @@ public class RealTimeThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (PortNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			printException(e);
 		} catch (TerminalNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -109,6 +109,8 @@ public class RealTimeThread implements Runnable {
 		} catch (LinkNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (LinkKeyBadFormatException e) {
+			printException(e);
 		}
 		RealTimeManager.getInstance().broadcast(
 				new Gson().toJson(realTimeEvent));
