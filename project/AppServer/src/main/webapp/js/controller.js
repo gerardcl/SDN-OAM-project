@@ -56,11 +56,8 @@
         model: Organization,
           url:'/org/all',
       parse:function (response) {
-            //console.log(response);
-            //response.id = response.inventoryId;
             // Parse the response and construct models
             for ( var i = 0, length = response.torgs.length; i < length; i++) {
-
               var currentValues = response.torgs[i];
               var orgObject = {};
               orgObject.name = currentValues.name;
@@ -185,9 +182,11 @@
           var organizations = new Organizations();
           organizations.fetch({
             success: function (organizations) {
-              console.log(organizations.models);
               var template = _.template($('#organizations-list-template').html(), {organizations: organizations.models});
               that.$el.html(template);
+              $('#OM-orgColumn').slimScroll({
+                  height: '455px'
+              });
             }
           })
         }
@@ -208,6 +207,66 @@
               success: function (organization) {    
                 var template = _.template($('#organizations-data-template').html(), {organization: organization});
                 that.$el.html(template);
+                $('#OM-data').slimScroll({
+                    height: '190px'
+                });
+                $('#OM-topo').slimScroll({
+                    height: '230px'
+                });
+                $('#OM-flows').slimScroll({
+                    height: '135px'
+                });
+                $('#OM-prgFlows').slimScroll({
+                    height: '135px'
+                });
+                $('#OM-users').slimScroll({
+                    height: '135px'
+                });
+                $('#OM-ap').slimScroll({
+                    height: '135px'
+                });
+              }
+            })
+          } else {
+            var template = _.template($('#organizations-data-template').html(), {organization: null});
+            that.$el.html(template);
+            $('#OM-data').slimScroll({
+                height: '190px'
+            });       
+            $('#OM-topo').slimScroll({
+                height: '230px'
+            });
+            $('#OM-flows').slimScroll({
+                height: '135px'
+            });
+            $('#OM-prgFlows').slimScroll({
+                height: '135px'
+            });
+            $('#OM-users').slimScroll({
+                height: '135px'
+            });
+            $('#OM-ap').slimScroll({
+                height: '135px'
+            });
+          }
+        }
+      });
+
+      var orgDataView = new OrgDataView();
+    // /OrgData View
+
+    //OrgUsers View
+      var OrgUsersView = Backbone.View.extend({
+        el: '.page',
+        render: function (options) { 
+          var that = this;
+          //if exists fetch details
+          if(options.identifier) {
+            that.organization = new Organization({id: options.identifier});
+            that.organization.fetch({
+              success: function (organization) {    
+                var template = _.template($('#organizations-data-template').html(), {organization: organization});
+                that.$el.html(template);
               }
             })
           } else {
@@ -217,7 +276,7 @@
         }
       });
 
-      var orgDataView = new OrgDataView();
+      var orgUsersView = new OrgUsersView();
     // /OrgData View
 
   // /ORGANIZATIONS
@@ -230,9 +289,14 @@
           var flows = new Flows();
           flows.fetch({
             success: function (flows) {
-              console.log(flows.models);
               var template = _.template($('#flows-template').html(), {flows: flows.models});
               that.$el.html(template);
+              $('#FLW-active').slimScroll({
+                  height: '190px'
+              });
+              $('#FLW-prg').slimScroll({
+                  height: '190px'
+              });
             }
           })
         }
@@ -249,9 +313,11 @@
           var terminals = new Terminals();
           terminals.fetch({
             success: function (terminals) {
-              console.log(terminals.models);
               var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
               that.$el.html(template);
+              $('#AP').slimScroll({
+                  height: '500px'
+              });
             }
           })
         }
@@ -291,13 +357,11 @@
   //EVENTS FROM ROUTES
 
     router.on('route:login', function() {
-      console.log('entra al route:login');
       loginView.render();
     })
 
     router.on('route:adminOverview', function() {
       // render global view
-      console.log('entra al route:admin');
       adminSidebarView.render();
       adminOverviewView.render();
       //SlimScroll HEIGHTS
@@ -311,44 +375,27 @@
 
     router.on('route:adminOrgs', function() {
       // render organizations view
-        $('#OM-orgColumn').slimScroll({
-          height: '55px'
-        });
       adminSidebarView.render();
-      orgsListBSView.render(); 
-      //SlimScroll HEIGHTS    
+      orgsListBSView.render();  
     })
 
     router.on('route:orgData', function(identifier) {
       adminSidebarView.render();
       //orgsListBSView.render(); 
-      orgDataView.render({identifier: identifier}); 
-      //SlimScroll HEIGHTS
+      orgDataView.render({identifier: identifier});
+      orgUsersView.render({identifier: identifier}); 
     })
 
     router.on('route:flows', function() {
-      console.log('entra al route:flows');
       // render global view
       adminSidebarView.render();
       flowsView.render();
-      
-      //SlimScroll HEIGHTS
-        $('#FLW-active').slimScroll({
-            height: '170px'
-        });
-        $('#FLW-prg').slimScroll({
-            height: '170px'
-        });
     })
 
     router.on('route:terminals', function() {
       // render global view
       adminSidebarView.render();
       terminalsView.render();
-      //SlimScroll HEIGHTS
-        $('#AP').slimScroll({
-            height: '500px'
-        });
     })
 
     router.on('route:traffic', function() {
