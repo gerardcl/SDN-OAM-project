@@ -93,12 +93,10 @@ public class RealTimeThread implements Runnable {
 			realTimeEvent.getUpdates()
 					.addAll(TerminalManager.getInstance().processEvent(
 							controllerEvent));
-			realTimeEvent.getUpdates()
-			.addAll(SwitchManager.getInstance().processEvent(
-					controllerEvent));
-			realTimeEvent.getUpdates()
-			.addAll(LinkManager.getInstance().processEvent(
-					controllerEvent));
+			realTimeEvent.getUpdates().addAll(
+					SwitchManager.getInstance().processEvent(controllerEvent));
+			realTimeEvent.getUpdates().addAll(
+					LinkManager.getInstance().processEvent(controllerEvent));
 		} catch (CannotOpenDataBaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,15 +118,15 @@ public class RealTimeThread implements Runnable {
 			printException(e);
 		}
 
-		if (realTimeEvent.getUpdates().size()>0){
-		RealTimeManager.getInstance().broadcast(
-				new Gson().toJson(realTimeEvent));
-				"[" + controllerEvent.getEvent() + "]");
+		if (realTimeEvent.getUpdates().size() > 0) {
+			RealTimeManager.getInstance().broadcast(
+					new Gson().toJson(realTimeEvent));
+		}
 
-		//************************************************************
+		// ************************************************************
 		//
-		//************************************************************
-		if (controllerEvent.getEvent().equals(IStatisticsEvent.PUSH_STATS)){
+		// ************************************************************
+		if (controllerEvent.getEvent().equals(IStatisticsEvent.PUSH_STATS)) {
 			StatManager statManager = StatManager.getInstance();
 
 			StatCollection statCollection = (StatCollection) new Gson()
@@ -139,9 +137,9 @@ public class RealTimeThread implements Runnable {
 				System.out
 						.println("[EXCEPTION PUSHING STAT] " + e.getMessage());
 			}
-			System.out.print(new Gson().toJson(statCollection));
-			RealTimeManager.getInstance()
-					.broadcast(controllerEvent.getObject());
+			//System.out.print(new Gson().toJson(statCollection));
+			/*RealTimeManager.getInstance()
+					.broadcast(controllerEvent.getObject());*/
 		}
 	}
 

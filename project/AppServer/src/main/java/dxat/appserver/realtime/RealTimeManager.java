@@ -13,10 +13,10 @@ public class RealTimeManager implements IRealTimeManager {
 	private RealTimeManager() {
 		super();
 		suscribers = new HashMap<String, IRealTimeSuscriber>();
-		/*Thread rtThread = new Thread(new RealTimeThread("localhost", 7666),
-				"DXAT AppServer Real Time Module");*/
-		Thread rtThread = new Thread(new RealTimeThread("147.83.118.254", 7666),
+		Thread rtThread = new Thread(new RealTimeThread("localhost", 7666),
 				"DXAT AppServer Real Time Module");
+		/*Thread rtThread = new Thread(new RealTimeThread("147.83.118.254", 7666),
+				"DXAT AppServer Real Time Module");*/
 		rtThread.start();
 	}
 
