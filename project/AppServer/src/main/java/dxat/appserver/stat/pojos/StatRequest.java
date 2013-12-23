@@ -6,6 +6,9 @@ public class StatRequest {
 	private String parameter;
 	private String type;
 	private String granularity;
+	private long start;
+	private long end;
+	
 	public String getIdIbject() {
 		return idIbject;
 	}
@@ -29,6 +32,18 @@ public class StatRequest {
 	}
 	public void setGranularity(String granularity) {
 		this.granularity = granularity;
+	}
+	public long getStart() {
+		return start;
+	}
+	public void setStart(long start) {
+		this.start = start;
+	}
+	public long getEnd() {
+		return end;
+	}
+	public void setEnd(long end) {
+		this.end = end;
 	}
 	
 	

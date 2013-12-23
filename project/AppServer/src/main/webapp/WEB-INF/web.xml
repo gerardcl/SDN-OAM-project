@@ -34,4 +34,14 @@
 		<url-pattern>/realtimewebsocket</url-pattern>
 	</servlet-mapping>
 	<!-- END REALTIME WEBSOCKET -->
+	<!-- BEGIN STATISTICS REST -->
+	<servlet>
+		<servlet-name> Statistics REST</servlet-name>
+		<servlet-class>dxat.appserver.stat.resources.StatResource</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name> Statistics REST</servlet-name>
+		<url-pattern>/webapi/statistics/*</url-pattern>
+	</servlet-mapping>
+	<!-- END STATISTICS REST -->
 </web-app>

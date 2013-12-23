@@ -12,9 +12,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import dxat.appserver.realtime.interfaces.IServerRequests;
+import dxat.appserver.realtime.interfaces.IStatisticsEvent;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.realtime.pojos.RealTimeEvent;
 import dxat.appserver.realtime.pojos.ServerRequest;
+
 import dxat.appserver.topology.LinkManager;
 import dxat.appserver.topology.SwitchManager;
 import dxat.appserver.topology.TerminalManager;
@@ -25,6 +27,10 @@ import dxat.appserver.topology.exceptions.LinkNotFoundException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;
 import dxat.appserver.topology.exceptions.SwitchNotFoundException;
 import dxat.appserver.topology.exceptions.TerminalNotFoundException;
+
+import dxat.appserver.stat.StatManager;
+import dxat.appserver.stat.pojos.StatCollection;
+
 import dxat.appserver.topology.pojos.Command;
 import dxat.appserver.topology.pojos.Flow;
 
@@ -113,9 +119,29 @@ public class RealTimeThread implements Runnable {
 		} catch (LinkKeyBadFormatException e) {
 			printException(e);
 		}
+
 		if (realTimeEvent.getUpdates().size()>0){
 		RealTimeManager.getInstance().broadcast(
 				new Gson().toJson(realTimeEvent));
+				"[" + controllerEvent.getEvent() + "]");
+
+		//************************************************************
+		//
+		//************************************************************
+		if (controllerEvent.getEvent().equals(IStatisticsEvent.PUSH_STATS)){
+			StatManager statManager = StatManager.getInstance();
+
+			StatCollection statCollection = (StatCollection) new Gson()
+					.fromJson(controllerEvent.getObject(), StatCollection.class);
+			try {
+				statManager.pushStat(statCollection);
+			} catch (IOException e) {
+				System.out
+						.println("[EXCEPTION PUSHING STAT] " + e.getMessage());
+			}
+			System.out.print(new Gson().toJson(statCollection));
+			RealTimeManager.getInstance()
+					.broadcast(controllerEvent.getObject());
 		}
 	}
 
