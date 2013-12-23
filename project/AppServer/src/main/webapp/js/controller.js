@@ -21,7 +21,7 @@
     });
   //flow model  
     var Flow = Backbone.Model.extend({
-    //  urlRoot:'/flow/all?orgId=',
+      //urlRoot:'/flow/all?orgId=',
       defaults:{
         identifier: "",
         active: "",
@@ -38,7 +38,7 @@
 
   //terminal model  
     var Terminal = Backbone.Model.extend({
-    //  urlRoot:'/terminal/all?orgId=',
+      //urlRoot:'/terminal/all?orgId=',
       defaults:{
         identifier: "",
         active: "",
@@ -47,6 +47,20 @@
         ifaceSpeed: "",
         ipAddress: "",
         mac: ""
+      }
+    });
+
+  //user model 
+    var User = Backbone.Model.extend({
+      urlRoot:'/user/all?orgId=',
+      defaults:{
+        identifier: "",
+        name: "",
+        active: "",
+        admin: "",
+        email: "",
+        password: "",
+        telephone: ""
       }
     });
 
@@ -128,6 +142,30 @@
 
     var terminals = new Terminals();
 
+  //Users COLLECTION
+    var Users = Backbone.Collection.extend({
+        model: User,
+          url:'/fulluser/all',
+      parse:function (response) {
+            for ( var i = 0, length = response.orgUsers.length; i < length; i++) {
+              var currentValues = response.orgUsers[i];
+              var userObject = {};
+              userObject.identifier = currentValues.identifier;
+              userObject.name = currentValues.name;
+              userObject.active = currentValues.active;
+              userObject.admin = currentValues.admin;
+              userObject.email = currentValues.email;
+              userObject.password = currentValues.password;
+              userObject.telephone = currentValues.telephone;
+              this.push(userObject);
+            }
+      console.log(this.toJSON());
+      return this.models;
+        }
+    });
+
+    var users = new Users();
+
 //VIEWS
 
   //LOGIN VIEW #login-template
@@ -204,80 +242,60 @@
           if(options.identifier) {
             that.organization = new Organization({id: options.identifier});
             that.organization.fetch({
-              success: function (organization) {    
-                var template = _.template($('#organizations-data-template').html(), {organization: organization});
+              success: function (organization) {
+              //if there is TOrg, we fetch its users
+                this.users = new Users({id: organization.identifier});
+                this.users.fetch();
+                var template = _.template($('#organizations-data-template').html(), {organization: organization, users: users.models});
                 that.$el.html(template);
-                $('#OM-data').slimScroll({
-                    height: '190px'
-                });
-                $('#OM-topo').slimScroll({
-                    height: '230px'
-                });
-                $('#OM-flows').slimScroll({
-                    height: '135px'
-                });
-                $('#OM-prgFlows').slimScroll({
-                    height: '135px'
-                });
-                $('#OM-users').slimScroll({
-                    height: '135px'
-                });
-                $('#OM-ap').slimScroll({
-                    height: '135px'
-                });
+                //SlimScroll
+                  $('#OM-data').slimScroll({
+                      height: '190px'
+                  });
+                  $('#OM-topo').slimScroll({
+                      height: '230px'
+                  });
+                  $('#OM-flows').slimScroll({
+                      height: '135px'
+                  });
+                  $('#OM-prgFlows').slimScroll({
+                      height: '135px'
+                  });
+                  $('#OM-users').slimScroll({
+                      height: '135px'
+                  });
+                  $('#OM-ap').slimScroll({
+                      height: '135px'
+                  });
               }
             })
           } else {
             var template = _.template($('#organizations-data-template').html(), {organization: null});
             that.$el.html(template);
-            $('#OM-data').slimScroll({
-                height: '190px'
-            });       
-            $('#OM-topo').slimScroll({
-                height: '230px'
-            });
-            $('#OM-flows').slimScroll({
-                height: '135px'
-            });
-            $('#OM-prgFlows').slimScroll({
-                height: '135px'
-            });
-            $('#OM-users').slimScroll({
-                height: '135px'
-            });
-            $('#OM-ap').slimScroll({
-                height: '135px'
-            });
+            //SlimScroll
+              $('#OM-data').slimScroll({
+                  height: '190px'
+              });       
+              $('#OM-topo').slimScroll({
+                  height: '230px'
+              });
+              $('#OM-flows').slimScroll({
+                  height: '135px'
+              });
+              $('#OM-prgFlows').slimScroll({
+                  height: '135px'
+              });
+              $('#OM-users').slimScroll({
+                  height: '135px'
+              });
+              $('#OM-ap').slimScroll({
+                  height: '135px'
+              });
           }
         }
       });
 
       var orgDataView = new OrgDataView();
-    // /OrgData View
-
-    //OrgUsers View
-      var OrgUsersView = Backbone.View.extend({
-        el: '.page',
-        render: function (options) { 
-          var that = this;
-          //if exists fetch details
-          if(options.identifier) {
-            that.organization = new Organization({id: options.identifier});
-            that.organization.fetch({
-              success: function (organization) {    
-                var template = _.template($('#organizations-data-template').html(), {organization: organization});
-                that.$el.html(template);
-              }
-            })
-          } else {
-            var template = _.template($('#organizations-data-template').html(), {organization: null});
-            that.$el.html(template);
-          }
-        }
-      });
-
-      var orgUsersView = new OrgUsersView();
-    // /OrgData View
 
   // /ORGANIZATIONS
 
@@ -291,12 +309,13 @@
             success: function (flows) {
               var template = _.template($('#flows-template').html(), {flows: flows.models});
               that.$el.html(template);
-              $('#FLW-active').slimScroll({
-                  height: '190px'
-              });
-              $('#FLW-prg').slimScroll({
-                  height: '190px'
-              });
+              //SlimScroll
+                $('#FLW-active').slimScroll({
+                    height: '190px'
+                });
+                $('#FLW-prg').slimScroll({
+                    height: '190px'
+                });
             }
           })
         }
@@ -383,7 +402,7 @@
       adminSidebarView.render();
       //orgsListBSView.render(); 
       orgDataView.render({identifier: identifier});
-      orgUsersView.render({identifier: identifier}); 
+      //orgUsersView.render({identifier: identifier}); 
     })
 
     router.on('route:flows', function() {

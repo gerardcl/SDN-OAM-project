@@ -576,7 +576,39 @@
 
 
                                       <div id="OM-users">
-                                        <div id="orgUsers-container"></div>
+
+                                         <div class="table-responsive">
+                                            <table class="table table-bordered table-hover table-striped tablesorter">
+                                              <thead>
+                                                <tr>
+                                                  <th>ID <i class="fa fa-sort"></i></th>
+                                                  <th>Name <i class="fa fa-sort"></i></th>
+                                                  <th>e-mail <i class="fa fa-sort"></i></th>
+                                                  <th>Admin? <i class="fa fa-sort"></i></th>
+                                                  <th>Telephone <i class="fa fa-sort"></i></th>
+                                                </tr>
+                                              </thead>
+                                              <tbody >
+
+                                                <% _.each(users, function(user) { 
+                                                  //if(user.get('active')==true){ %>  
+
+
+                                                    <tr>
+                                                      <td><%= user.get('identifier') %></td>
+                                                      <td><%= user.get('name') %></td>
+                                                      <td><%= user.get('email') %></td>
+                                                      <td><%= user.get('admin') %></td>
+                                                      <td><%= user.get('telephone') %></td>
+                                                    </tr>
+
+                                                  <%//}
+                                                }); %>
+
+                                              </tbody>
+
+                                            </table>
+                                          </div>
                                 
                                       </div>
             
