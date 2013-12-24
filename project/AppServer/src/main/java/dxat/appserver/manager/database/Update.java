@@ -1,5 +1,5 @@
 package dxat.appserver.manager.database;
 
-public class Updates {
+public class Update {
 
 }

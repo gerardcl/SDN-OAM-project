@@ -2,7 +2,7 @@ package dxat.appserver.manager.database;
 
 import com.mongodb.DB;
 
-public class Queries {
+public class Read {
 	
 	
 	public boolean existsOrg(DB db, String id){
