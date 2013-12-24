@@ -53,7 +53,7 @@
 
   //user model 
     var User = Backbone.Model.extend({
-      urlRoot:'/user/all?orgId=',
+      //urlRoot:'/user/all?orgId=',
       defaults:{
         identifier: "",
         name: "",
@@ -147,12 +147,17 @@
     var Users = Backbone.Collection.extend({
         model: User,
       url: function(orgId){
-          var aux = JSON.stringfy(orgId)
-            console.log(aux);
-            var uri = '/user/all?orgId=' + aux;
-            console.log(uri);
-            return uri;
-          },
+            if(orgId!=null){
+              var aux = orgId.orgId;
+                console.log('Entra a la funcio URL i treu com a uri:');
+                var uri = '/user/all?orgId=' + aux;
+                console.log(uri);
+                return uri;
+              }else{
+                console.log('Entra lelse');
+                return '/fulluser/all';
+              }
+            },
       parse:function (response) {
             for ( var i = 0, length = response.orgUsers.length; i < length; i++) {
               var currentValues = response.orgUsers[i];
@@ -171,6 +176,7 @@
         }
     });
 
+    console.log('var users = new users()');
     var users = new Users();
 
 //VIEWS
@@ -249,11 +255,9 @@
           if(options.identifier) {
             that.organization = new Organization({id: options.identifier});
             that.organization.fetch({
-              success: function (organization) {
-              //if there is TOrg, we fetch its users
-                
-                var template = _.template($('#organizations-data-template').html(), {organization: organization, users: users.models});
-                that.$el.html(template);
+              success: function (organization) {  
+                var template = _.template($('#organizations-data-template').html(), {organization: organization});
+                that.$el.html(template); 
                 //SlimScroll
                   $('#OM-data').slimScroll({
                       height: '190px'
@@ -302,6 +306,32 @@
       });
 
       var orgDataView = new OrgDataView();
+
+
+    //OrgUsers View
+      var OrgUsersView = Backbone.View.extend({
+        el: '.page',
+        render: function (options) { 
+          var that = this;
+          //if exists fetch details
+          if(options.identifier) {
+            that.user = new User({id: options.identifier});
+            that.user.fetch({
+              success: function (user) {  
+                var template = _.template($('#organizations-user-template').html(), {user: user});
+                that.$el.html(template); 
+                //SlimScroll
+              }
+            })
+          } else {
+            var template = _.template($('#organizations-user-template').html(), {user: null});
+            that.$el.html(template);
+            //SlimScroll
+          }
+        }
+      });
+
+      var orgUsersView = new OrgUsersView();
 
   // /ORGANIZATIONS
 
@@ -370,9 +400,12 @@
           "": "login", 
           "adminOverview" : "adminOverview",
           "adminOrgs": "adminOrgs",
-          "adminOrgs/:identifier": "orgData",
+            "adminOrgs/:identifier": "orgData",
+            "adminUsers/:identifier": "orgUsers",
           "adminFlows": "flows",
+            "adminFlows/identifier": "orgFlows",
           "adminTerminals": "terminals",
+            "adminTerminals/:identifier": "orgTerminals",
           "adminTraffic": "traffic"
         }
     });
@@ -408,9 +441,15 @@
       adminSidebarView.render();
       //orgsListBSView.render(); 
       orgDataView.render({identifier: identifier});
-      this.users = new Users({orgId: identifier});
-      this.users.url({orgId: identifier});
-      this.users.fetch();
+      
+      //orgUsersView.render({identifier: identifier}); 
+    })
+
+    router.on('route:orgUsers', function(identifier) {
+      console.log('entra a orgUsers route');
+      adminSidebarView.render();
+      orgUsersView.render({identifier: identifier});
+      
       //orgUsersView.render({identifier: identifier}); 
     })
 
