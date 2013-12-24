@@ -2,14 +2,14 @@
 (function($){
 
   $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-    options.url = '/AppServer/webapp/manager' + options.url;
+    options.url = '/AppServer/webapp' + options.url;
   });
 
 
 //Models
   //TOrg data model  
     var Organization = Backbone.Model.extend({
-      urlRoot:'/org',
+      urlRoot:'/manager/org',
       defaults:{
         name: "",
         NIF: "",
@@ -22,7 +22,7 @@
 
   //flow model  
     var Flow = Backbone.Model.extend({
-      urlRoot:'/flow/all?orgId=',
+      urlRoot:'/manager/flow/all?orgId=',
       defaults:{
         identifier: "",
         active: "",
@@ -39,7 +39,7 @@
 
   //terminal model  
     var Terminal = Backbone.Model.extend({
-      urlRoot:'/terminal/all?orgId=',
+      urlRoot:'/manager/terminal/all?orgId=',
       defaults:{
         identifier: "",
         active: "",
@@ -54,6 +54,7 @@
   //user model 
     var User = Backbone.Model.extend({
       //urlRoot:'/user/all?orgId=',
+      urlRoot:'/manager/user/all?orgId=',
       defaults:{
         identifier: "",
         name: "",
@@ -69,7 +70,7 @@
   //TOrg data COLLECTION
     var Organizations = Backbone.Collection.extend({
         model: Organization,
-          url:'/org/all',
+          url:'/manager/org/all',
       parse:function (response) {
             // Parse the response and construct models
             for ( var i = 0, length = response.torgs.length; i < length; i++) {
@@ -96,7 +97,7 @@
   //Flows COLLECTION
     var Flows = Backbone.Collection.extend({
         model: Flow,
-          url:'/fullflow/all',
+          url:'/manager/fullflow/all',
       parse:function (response) {
             for ( var i = 0, length = response.orgFlows.length; i < length; i++) {
               var currentValues = response.orgFlows[i];
@@ -123,7 +124,7 @@
   //Terminals COLLECTION
     var Terminals = Backbone.Collection.extend({
         model: Terminal,
-          url:'/fullterminal/all',
+          url:'/manager/fullterminal/all',
       parse:function (response) {
             for ( var i = 0, length = response.orgTerminals.length; i < length; i++) {
               var currentValues = response.orgTerminals[i];
@@ -156,8 +157,16 @@
               }else{
                 console.log('Entra lelse');
                 return '/fulluser/all';
-              }
-            },
+              
+            }
+
+          var aux = JSON.stringify(orgId)
+            console.log(aux);
+            var uri = '/manager/user/all?orgId=' + aux;
+            console.log(uri);
+            return uri;
+          },
+
       parse:function (response) {
             for ( var i = 0, length = response.orgUsers.length; i < length; i++) {
               var currentValues = response.orgUsers[i];

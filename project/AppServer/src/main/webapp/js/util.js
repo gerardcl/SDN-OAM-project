@@ -15,7 +15,7 @@
 
 		console.log("submitting user and password to server...");
 		var requestUrl =
-			"/user/auth?username=" + $('#username').val() +
+			"/manager/user/auth?username=" + $('#username').val() +
 			"&password=" + $('#password').val();
 		//console.log(requestUrl); //firebug console output
 //		$.getJSON(requestUrl,
