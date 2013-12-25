@@ -38,9 +38,6 @@ public class Create {
 			List<BasicDBObject> users 	  = new ArrayList<BasicDBObject>();
 			List<BasicDBObject> terminals = new ArrayList<BasicDBObject>();
 			List<BasicDBObject> flows	  = new ArrayList<BasicDBObject>();
-			users.add(null);
-			terminals.add(null);
-			flows.add(null);
 			
 			doc.put("identifier",torg.getIdentifier());
 			doc.put("name", torg.getName());
@@ -54,32 +51,41 @@ public class Create {
 			collection.insert(doc);
 			
 		} else {
-			dbaccess.closeConn();
+			
 			throw new OrgAlreadyExistsException("Organization with identifier "
 					+ torg.getIdentifier() + " already exists.");
 		}
-		dbaccess.closeConn();
+		
 	}
-	/*
-	public void CreateUser(OrgUser user, String idOrg) throws OrgNotFoundException {
+	
+	public void CreateUser(OrgUser user, String idOrg)
+			throws OrgNotFoundException, UserAlreadyExistsException {
 		DBCollection collection = getCollection(OCOLLECTION);
 
-		if (!existsOrg(collection, idOrg)) {
-			
-			
-			
-			DBObject doc = new BasicDBObject();
-			DBObject dbObject = (DBObject) JSON.parse(new Gson().toJson(user));
-			doc.putAll(dbObject);
-			collection.insert(doc);
+		if (existsOrg(collection, idOrg)) {
+			if (!existsElement(collection, idOrg, user.getIdentifier(), "users")) {
+				BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
+				DBObject org = collection.findOne(updateOrg);
+				DBObject userdoc = new BasicDBObject();
+				userdoc.put("identifier", user.getIdentifier());
+				userdoc.put("name", user.getName());
+				userdoc.put("email", user.getEmail());
+				userdoc.put("password", user.getPassword());
+				userdoc.put("telephone", user.getTelephone());
+
+				BasicDBObject update = new BasicDBObject("$push",
+						new BasicDBObject("users", userdoc));
+				collection.update(org, update);
+			} else {
+				throw new UserAlreadyExistsException("User with identifier "
+						+ user.identifier + "already exists.");
+			}
 		} else {
-			dbaccess.closeConn();
 			throw new OrgNotFoundException("Organization with identifier "
 					+ idOrg + " does not exists.");
 		}
-		dbaccess.closeConn();
 	}
-	
+	/*
 	public void insertFlow(OrgFlow flow, String idOrg) throws FlowAlreadyExistsException {
 		DBCollection collection = getCollection(FCOLLECTION);
 
@@ -113,17 +119,8 @@ public class Create {
 		}
 		dbaccess.closeConn();
 	}
-	
-	public DBCursor getOrg(DBCollection collection, String id) throws OrgNotFoundException {
-		BasicDBObject query = new BasicDBObject("identifier", id);
-		DBCursor cursor  	= collection.find(query);
-		if (!existsOrg(collection, id)) {
-
-		}else{
-			
-		}
-	}
 	*/
+	
 	
 	public boolean existsOrg(DBCollection collection, String id) {
 		BasicDBObject query = new BasicDBObject("identifier", id);
@@ -132,6 +129,15 @@ public class Create {
 		else return false;
 		
 	}
+	
+	public boolean existsElement(DBCollection collection, String idOrg, String id, String type){
+		BasicDBObject query = new BasicDBObject("identifier", idOrg);
+		query.put("users.identifier", id);
+		DBCursor cursor = collection.find(query);
+		if(cursor.count()!=0) return true;
+		else return false;
+	}
+	
 	
 	public DBCollection getCollection(String colName) {
 		if (db.collectionExists(colName)) {
