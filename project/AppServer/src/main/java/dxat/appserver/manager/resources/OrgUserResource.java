@@ -48,9 +48,9 @@ public class OrgUserResource {
 	}
 	
 	@GET
-	@Path("/user/all")	
+	@Path("/user/{orgId}/all")	
 	@Produces(AppServerMediaType.ORG_USER_COLLECTION) 
-	public OrgUserCollection getAllOrgUsers(@QueryParam("orgId") String orgId) {
+	public OrgUserCollection getAllOrgUsers(@PathParam("orgId") String orgId) {
 		List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserManager.orgManager.getInstance().getOrg(orgId).getUsers().values());
 		OrgUserCollection orgUsers = new OrgUserCollection();
 		orgUsers.setOrgUsers(orgUserList);
@@ -58,9 +58,9 @@ public class OrgUserResource {
 	}	
 	
 	@GET
-	@Path("/user/{userId}") 
+	@Path("/user/{orgId}/{userId}") 
 	@Produces(AppServerMediaType.ORG_USER_COLLECTION)
-	public OrgUser getOrgUser(@QueryParam("orgId") String orgId, @PathParam("userId") String userId) {
+	public OrgUser getOrgUser(@PathParam("orgId") String orgId, @PathParam("userId") String userId) {
 		return orgUserManager.orgManager.getOrg(orgId).getUsers().get(userId);
 	}	
 

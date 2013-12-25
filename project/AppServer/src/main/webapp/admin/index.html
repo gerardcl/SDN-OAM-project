@@ -21,6 +21,101 @@
     <div id="wrapper">
 
       <!-- Sidebar -->
+      <div id="sidebar-simple-container"></div>
+
+      <div id="page-wrapper">
+
+        <div class="page">
+        </div>
+
+      </div><!-- /#page-wrapper -->
+
+    </div><!-- /#wrapper -->
+
+<!-- TEMPLATES -->
+
+    <!-- LOGIN TEMPLATE -->
+    <script type="text/template" id="login-template">
+
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="">OAM SDN project</a>
+        </div>
+      </nav>
+
+      <div id="loginForm">
+
+        <div class="row">
+          <!-- Template -->
+          <!-- HEAD ROW -->
+          <div class="col-lg-12">
+
+            <div class="row">
+              <div class="col-md-4 col-md-offset-4">
+                <br>
+                <div class="well">
+                  <form>
+                    <fieldset>
+                      <center>
+                        <legend>Login</legend>&nbsp;
+                        <input type="text" id="username" class="input-block-level"
+                          name="username" placeholder="Username" required> 
+                        <br>
+                        <br><input type="password" id="password"
+                          class="input-block-level" name="password"
+                          placeholder="Password" required><br> 
+                        <!--<input type="checkbox" name="remember" value="1">Remember Me<br> <br> -->
+                        <br>
+
+
+
+                      </center>
+                    </fieldset>
+                  </form>
+                  <center>
+                    <button id="check" class="btn btn-lg btn-success">
+                        <i class="fa fa-user"></i> submit
+                    </button>
+                  </center>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <center>
+                <div class="loading" id="loading">
+                  <img src="../img/loading.gif" width="350px" height="150px">
+                </div>
+              </center>
+              <div class="msg" id="msg">
+                <center>
+                  <a href="/AppServer">
+                  <button class="btn btn-danger">
+                  <h5>
+                    <i class="fa fa-gears"></i>
+                    <text class="msg">input error <br>
+                    try again </text>
+                  </h5>
+                  </button>
+                  </a>
+                </center>
+              </div>
+            </div>
+          </div>
+          <!-- /HEAD ROW -->
+        </div>
+        <!-- /#page-wrapper -->
+      </div>
+
+
+    </script>
+    <!-- /LOGIN TEMPLATE -->
+
+  <!-- SIDEBAR VIEW -->
+
+    <!-- SIDEBAR ADMIN-->
+    <script type="text/template" id="sidebar-template">
       <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -30,18 +125,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html"><i class="fa fa-gamepad"></i> OAM SDN Admin</a>
+          <a class="navbar-brand" href="#/overview"><i class="fa fa-gamepad"></i> OAM SDN Admin</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav side-nav">
-            <li class="active"><a href="index.html"><i class="fa fa-globe"></i> Global State</a></li>
-            <li><a href="orgManager.html"><i class="fa fa-briefcase"></i> Organizations</a></li>
-            <li><a href="flows.html"><i class="fa fa-link"></i> Flows</a></li>
-            <li><a href="accessPoints.html"><i class="fa fa-desktop"></i> Access points</a></li>
+            <li class=""><a href="#/overview"><i class="fa fa-globe"></i> Global State</a></li>
+            <li><a href="#/organizations"><i class="fa fa-briefcase"></i> Organizations</a></li>
+            <li><a href="#/flows"><i class="fa fa-link"></i> Flows</a></li>
+            <li><a href="#/terminals"><i class="fa fa-desktop"></i> Access points</a></li>
             
-            <li><a href="trafficAnalysis.html"><i class="fa fa-th"></i> Traffic Analysis</a></li>
+            <li><a href="#/traffic"><i class="fa fa-th"></i> Traffic Analysis</a></li>
           </ul>
 
           <ul class="nav navbar-nav navbar-right navbar-user">
@@ -104,205 +198,1408 @@
         </div><!-- /.navbar-collapse -->
       </nav>
 
-      <div id="page-wrapper">
+    </script>
+    <!-- /SIDEBAR ADMIN-->
 
-        <div class="row"> <!-- TOPOLOGY GRAPH ROM -->
-          <div class="col-lg-12">
+  <!-- /SIDEBAR VIEW -->
 
-            <div class="panel panel-primary">
-            
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-cloud"></i> Network Topology Overview</h3>
-              </div>
+  <!-- GLOBAL VIEW -->
+    <!-- GLOBAL VIEW TEMPLATE -->
+    <script type="text/template" id="global-template">
+          <div class="row"> <!-- TOPOLOGY GRAPH ROM -->
+            <div class="col-lg-12">
 
-              <div class="panel-body">
-            
-                <div id="GS-topo">
-                  <p class="text-center">
-                    <img src="http://placehold.it/600x300">
-                  </p>
+              <div class="panel panel-primary">
+              
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-cloud"></i> Network Topology Overview</h3>
+                </div>
+
+                <div class="panel-body">
+              
+                  <div id="GS-topo">
+                    <p class="text-center">
+                      <img src="http://placehold.it/600x300">
+                    </p>
+                  </div>
+
                 </div>
 
               </div>
-
             </div>
-          </div>
-        </div><!-- /TOPOLOGY GRAPH ROM -->
+          </div><!-- /TOPOLOGY GRAPH ROM -->
 
-        <div class="row"> <!-- Bottom row -->  
-          <div class="col-lg-12">
-            <div class="panel">
-              <div class="tabbable">
-                <ul class="nav nav-pills nav-justified">
-                  <li class="active"><a href="#alarms" data-toggle="tab"> <i class="fa fa-bell"></i> Alarms</a></li>
-                  <li class=""><a href="#statistics" data-toggle="tab"> <i class="fa fa-bar-chart-o"></i> Statistics</a></li>
-                </ul>
+          <div class="row"> <!-- Bottom row -->  
+            <div class="col-lg-12">
+              <div class="panel">
+                <div class="tabbable">
+                  <ul class="nav nav-pills nav-justified">
+                    <li class="active"><a href="#alarms" data-toggle="tab"> <i class="fa fa-bell"></i> Alarms</a></li>
+                    <li class=""><a href="#statistics" data-toggle="tab"> <i class="fa fa-bar-chart-o"></i> Statistics</a></li>
+                  </ul>
 
-                <div class="tab-content"><!-- tabs ALARMS and STATISTICS content -->
+                  <div class="tab-content"><!-- tabs ALARMS and STATISTICS content -->
 
-                  <div class="tab-pane active" id="alarms"><!-- tab ALARMS content -->
-                    <div class="row">
-                      <div class="col-lg-12 col-md-12 col-sm-12">
-                        
-                        <div class="panel panel-primary">
-                          <div class="panel-body">
-                            <div id="GS-alerts">
-                              <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-striped tablesorter">
-                                  <thead>
-                                    <tr>
-                                      <th>Alert <i class="fa fa-sort"></i></th>
-                                      <th>Date <i class="fa fa-sort"></i></th>
-                                      <th>Time <i class="fa fa-sort"></i></th>
-                                      <th>Status <i class="fa fa-sort"></i></th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td><span class="label label-success">Flow succeeded</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>3:29 PM</td>
-                                      <td>DONE</td>
-                                    </tr>
-                                    <tr>
-                                      <td><span class="label label-warning">Host unreachable</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>3:20 PM</td>
-                                      <td>DOWN</td>
-                                    </tr>
-                                    <tr>
-                                      <td><span class="label label-info">New host connected</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>3:03 PM</td>
-                                      <td>DONE</td>
-                                    </tr>
-                                    <tr>
-                                      <td><span class="label label-success">Flow succeeded</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>3:00 PM</td>
-                                      <td>DONE</td>
-                                    </tr>
-                                    <tr>
-                                      <td><span class="label label-danger">Link down!</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>2:49 PM</td>
-                                      <td>FIXED</td>
-                                    </tr>
-                                    <tr>
-                                      <td><span class="label label-danger">Link down!</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>2:23 PM</td>
-                                      <td>DOWN</td>
-                                    </tr>
-                                    <tr>
-                                      <td><span class="label label-success">Flow succeeded</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>2:15 PM</td>
-                                      <td>DONE</td>
-                                    </tr>
-                                    <tr>
-                                      <td><span class="label label-warning">Host unreachable</span></td>
-                                      <td>11/21/2013</td>
-                                      <td>2:13 PM</td>
-                                      <td>DOWN</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+                    <div class="tab-pane active" id="alarms"><!-- tab ALARMS content -->
+                      <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                          
+                          <div class="panel panel-primary">
+                            <div class="panel-body">
+                              <div id="GS-alerts">
+                                <div class="table-responsive">
+                                  <table class="table table-bordered table-hover table-striped tablesorter">
+                                    <thead>
+                                      <tr>
+                                        <th>Alert <i class="fa fa-sort"></i></th>
+                                        <th>Date <i class="fa fa-sort"></i></th>
+                                        <th>Time <i class="fa fa-sort"></i></th>
+                                        <th>Status <i class="fa fa-sort"></i></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td><span class="label label-success">Flow succeeded</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>3:29 PM</td>
+                                        <td>DONE</td>
+                                      </tr>
+                                      <tr>
+                                        <td><span class="label label-warning">Host unreachable</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>3:20 PM</td>
+                                        <td>DOWN</td>
+                                      </tr>
+                                      <tr>
+                                        <td><span class="label label-info">New host connected</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>3:03 PM</td>
+                                        <td>DONE</td>
+                                      </tr>
+                                      <tr>
+                                        <td><span class="label label-success">Flow succeeded</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>3:00 PM</td>
+                                        <td>DONE</td>
+                                      </tr>
+                                      <tr>
+                                        <td><span class="label label-danger">Link down!</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>2:49 PM</td>
+                                        <td>FIXED</td>
+                                      </tr>
+                                      <tr>
+                                        <td><span class="label label-danger">Link down!</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>2:23 PM</td>
+                                        <td>DOWN</td>
+                                      </tr>
+                                      <tr>
+                                        <td><span class="label label-success">Flow succeeded</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>2:15 PM</td>
+                                        <td>DONE</td>
+                                      </tr>
+                                      <tr>
+                                        <td><span class="label label-warning">Host unreachable</span></td>
+                                        <td>11/21/2013</td>
+                                        <td>2:13 PM</td>
+                                        <td>DOWN</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
                               </div>
+                              <div class="text-right">
+                                <a href="#">View All Alarms <i class="fa fa-arrow-circle-right"></i></a>
+                              </div>      
+    
                             </div>
-                            <div class="text-right">
-                              <a href="#">View All Alarms <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>      
-  
+                          </div>
+
+                        </div>
+                      </div>
+                    </div><!-- /tab ALARMS content -->
+
+                    <div class="tab-pane" id="statistics"><!-- tab STATISTICS content -->      
+                      <div class="row">
+
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                          <div class="panel panel-primary">
+                            <div class="panel-body">
+
+                              <div class="col-lg-3 col-md-3 col-sm-6">
+                                <div class="panel panel-primary">
+                                  <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 1</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                    <div>
+                                      <p class="text-center">
+                                        <img src="http://placehold.it/150x150">
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-lg-3 col-md-3 col-sm-6">
+                                <div class="panel panel-primary">
+                                  <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 2</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                    <div>
+                                      <p class="text-center">
+                                        <img src="http://placehold.it/150x150">
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-lg-3 col-md-3 col-sm-6">
+                                <div class="panel panel-primary">
+                                  <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 3</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                    <div>
+                                      <p class="text-center">
+                                        <img src="http://placehold.it/150x150">
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-lg-3 col-md-3 col-sm-6">
+                                <div class="panel panel-primary">
+                                  <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 4</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                    <div>
+                                      <p class="text-center">
+                                        <img src="http://placehold.it/150x150">
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
                           </div>
                         </div>
 
-                      </div>
-                    </div>
-                  </div><!-- /tab ALARMS content -->
-
-                  <div class="tab-pane" id="statistics"><!-- tab STATISTICS content -->      
-                    <div class="row">
-
-                      <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="panel panel-primary">
-                          <div class="panel-body">
-
-                            <div class="col-lg-3 col-md-3 col-sm-6">
-                              <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                  <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 1</h3>
-                                </div>
-                                <div class="panel-body">
-                                  <div>
-                                    <p class="text-center">
-                                      <img src="http://placehold.it/150x150">
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6">
-                              <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                  <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 2</h3>
-                                </div>
-                                <div class="panel-body">
-                                  <div>
-                                    <p class="text-center">
-                                      <img src="http://placehold.it/150x150">
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6">
-                              <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                  <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 3</h3>
-                                </div>
-                                <div class="panel-body">
-                                  <div>
-                                    <p class="text-center">
-                                      <img src="http://placehold.it/150x150">
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6">
-                              <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                  <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 4</h3>
-                                </div>
-                                <div class="panel-body">
-                                  <div>
-                                    <p class="text-center">
-                                      <img src="http://placehold.it/150x150">
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-
-                    </div><!-- /.row -->
-                  </div><!-- /tab STATISTICS content -->
-                </div><!-- tabs ALARMS and STATISTICS content -->
+                      </div><!-- /.row -->
+                    </div><!-- /tab STATISTICS content -->
+                  </div><!-- tabs ALARMS and STATISTICS content -->
+                </div>
               </div>
             </div>
+          </div><!-- /Bottom row -->
+    </script>
+    <!-- /GLOBAL VIEW TEMPLATE -->
+  <!-- /GLOBAL VIEW -->
+
+  <!-- ORGANIZATIONS VIEW -->
+    <!-- ORGANIZATIONS TEMPLATE -->
+    <script type="text/template" id="organizations-template">
+          <div class="row"><!-- Container row -->
+
+
+            <div class="col-md-3 col-sm-3"><!-- Org LIST column -->
+              <div class="row">
+                <p><center>
+                  <button type="button" class="btn btn-success">New</button>
+                  <button type="button" class="btn btn-danger">Delete</button>
+                </p></center>    
+              </div>
+              <div class="row">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-briefcase"></i> Organizations</h3>
+                  </div>
+
+                  <div class="panel-body" id="OM-orgColumn">
+
+
+                    <div id="organizations"> 
+                      <div id="organizations-list-container"></div> 
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div><!-- /Org LIST column -->
+
+            <div class="col-md-9 col-sm-9 slim-flows"> <!-- Org INFO  -->
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+
+                  <h3 id="organization-name-container"></h3>
+
+                </div>
+                <div class="padding-15">
+                  <div class="panel-body padding-0-bot">
+                    <div class="row">
+
+                      <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
+                        <div class="col-lg-12">
+                          <div class="panel margin-0-bot">
+                            <div class="tabbable">
+                              <ul class="nav nav-pills nav-justified">
+                                <li class="active"><a href="#/organizations/orgData" data-toggle="tab"> <i class="fa fa-edit"></i> Org. Data</a></li>
+                                <li class=""><a href="#users" data-toggle="tab"> <i class="fa fa-group"></i> Org. Users</a></li>
+                                <li class=""><a href="#aPoints" data-toggle="tab"> <i class="fa fa-desktop"></i> Access Points</a></li>
+                                <li class=""><a href="#activeFlows" data-toggle="tab"> <i class="fa fa-bolt"></i> Active flows</a></li>
+                                <li class=""><a href="#prgFlows" data-toggle="tab"> <i class="fa fa-calendar"></i> Programmed flows</a></li>
+                              </ul>
+                                            
+                              <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+
+                                <div class="tab-pane active" id="orgData"><!-- ROW Org.Data --> 
+                                  <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                      
+                                      <div class="panel panel-primary">
+                                        <div class="panel-body">
+
+                                          <div id="OM-data">
+
+                                            <div id="orgData-container"></div>
+
+                                          </div>
+                
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!-- /ROW Org.Data --> 
+
+                                <div class="tab-pane" id="users"><!-- Org.Users -->       
+                                  <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                      
+                                      <div class="panel panel-primary">
+                                        <div class="panel-body">
+
+                                          <div class="padding-10-bot">
+                                            <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
+                                          </div>
+
+
+                                          <div id="OM-users">
+                                            <div id="orgUsers-container"></div>
+                                    
+                                          </div>
+                
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!-- /Org.Users -->  
+
+                                <div class="tab-pane" id="aPoints"><!-- Access Points -->       
+                                  <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                      
+                                      <div class="panel panel-primary">
+                                        <div class="panel-body">
+
+                                          <div class="padding-10-bot">
+                                            <button type="button" class="btn btn-success btn-lg"><i class="fa fa-laptop"></i> ADD Node</button>
+                                          </div>
+
+                                          <div id="OM-ap">
+                                            <div class="table-responsive">
+                                              <table class="table table-bordered table-hover table-striped tablesorter">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Host name <i class="fa fa-sort"></i></th>
+                                                    <th>ID <i class="fa fa-sort"></i></th>
+                                                    <th>IP <i class="fa fa-sort"></i></th>
+                                                    <th>Interface <i class="fa fa-sort"></i></th>
+                                                    <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                                                    <th><center><i class="fa fa-edit"></i></center></th>
+                                                    <th><center><i class="fa fa-eraser"></i></center></th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                  <tr>
+                                                    <td>Barcelona</td>
+                                                    <td>H1</td>
+                                                    <td>192.168.1.2</td>
+                                                    <td>10 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Madrid</td>
+                                                    <td>H2</td>
+                                                    <td>192.168.1.3</td>
+                                                    <td>1 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Paris</td>
+                                                    <td>H3</td>
+                                                    <td>192.168.1.4</td>
+                                                    <td>10 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Berlin</td>
+                                                    <td>H4</td>
+                                                    <td>192.168.1.5</td>
+                                                    <td>10 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Albacete</td>
+                                                    <td>H5</td>
+                                                    <td>192.168.1.6</td>
+                                                    <td>1 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Badajoz</td>
+                                                    <td>H6</td>
+                                                    <td>192.168.1.7</td>
+                                                    <td>1 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Barcelona</td>
+                                                    <td>H7</td>
+                                                    <td>192.168.2.2</td>
+                                                    <td>10 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Madrid</td>
+                                                    <td>H8</td>
+                                                    <td>192.168.2.3</td>
+                                                    <td>100 Mbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Coruña</td>
+                                                    <td>H9</td>
+                                                    <td>192.168.2.4</td>
+                                                    <td>10 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Barcelona</td>
+                                                    <td>H10</td>
+                                                    <td>192.168.3.2</td>
+                                                    <td>10 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Madrid</td>
+                                                    <td>H11</td>
+                                                    <td>192.168.3.3</td>
+                                                    <td>1 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Paris</td>
+                                                    <td>H12</td>
+                                                    <td>192.168.3.4</td>
+                                                    <td>10 Gbps</td>
+                                                    <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                                                    <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                                                    <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          </div>
+                
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!-- /Access Points -->  
+
+                                <div class="tab-pane" id="activeFlows"><!-- ACTIVE Flows -->       
+                                  <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                      
+                                      <div class="panel panel-primary">
+                                        <div class="panel-body">
+
+                                          <div class="padding-10-bot">
+                                            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW</button>
+                                          </div>
+
+
+
+                                          <div id="OM-flows">
+                                            <div class="table-responsive">
+                                              <table class="table table-bordered table-hover table-striped tablesorter">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Point A <i class="fa fa-sort"></i></th>
+                                                    <th>Point B <i class="fa fa-sort"></i></th>
+                                                    <th>Start <i class="fa fa-sort"></i></th>
+                                                    <th>End <i class="fa fa-sort"></i></th>                              
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                  <tr>
+                                                    <td>Barcelona</td>
+                                                    <td>Madrid</td>
+                                                    <td>22-11-2014</td>
+                                                    <td>23-11-2014</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Barcelona</td>
+                                                    <td>Calella</td>
+                                                    <td>24-11-2014</td>
+                                                    <td>25-11-2014</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Calella</td>
+                                                    <td>Tarragona</td>
+                                                    <td>21-11-2014</td>
+                                                    <td>23-11-2014</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Madrid</td>
+                                                    <td>Paris</td>
+                                                    <td>22-11-2014</td>
+                                                    <td>27-11-2014</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Hospitalet</td>
+                                                    <td>Sevilla</td>
+                                                    <td>22-11-2014</td>
+                                                    <td>23-11-2014</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Calella</td>
+                                                    <td>Tarragona</td>
+                                                    <td>21-11-2014</td>
+                                                    <td>23-11-2014</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Madrid</td>
+                                                    <td>Paris</td>
+                                                    <td>22-11-2014</td>
+                                                    <td>27-11-2014</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Hospitalet</td>
+                                                    <td>Sevilla</td>
+                                                    <td>22-11-2014</td>
+                                                    <td>23-11-2014</td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            
+                                            </div>
+                                          </div>
+                
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!-- /ACTIVE Flows -->  
+
+                                <div class="tab-pane" id="prgFlows"><!-- Programmed Flows -->       
+                                  <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                      
+                                      <div class="panel panel-primary">
+                                        <div class="panel-body">
+
+                                          <div class="padding-10-bot">
+                                            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW</button>
+                                          </div>
+
+
+
+                                          <div id="OM-prgFlows">
+                                            <div class="table-responsive">
+                                              <table class="table table-bordered table-hover table-striped tablesorter">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Flow ID <i class="fa fa-sort"></i></th>
+                                                    <th>From <i class="fa fa-sort"></i></th>
+                                                    <th>To <i class="fa fa-sort"></i></th>
+                                                    <th>Speed <i class="fa fa-sort"></i></th>
+                                                    <th>Date <i class="fa fa-sort"></i></th>
+                                                    <th>Time start <i class="fa fa-sort"></i></th>
+                                                    <th>Duration  <i class="fa fa-sort"></i></th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                  <tr>
+                                                    <td>Flow 38</td>
+                                                    <td>Zaragoza</td>
+                                                    <td>Madrid</td>
+                                                    <td>100 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:00 AM</td>
+                                                    <td>30 minutes</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 39</td>
+                                                    <td>St. Cugat</td>
+                                                    <td>Barcelona</td>
+                                                    <td>10 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:30 AM</td>
+                                                    <td>5 hours</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 40</td>
+                                                    <td>Barcelona</td>
+                                                    <td>Madrid</td>
+                                                    <td>1 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:45 AM</td>
+                                                    <td>1 hour</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 41</td>
+                                                    <td>Point A</td>
+                                                    <td>Point B</td>
+                                                    <td>10 Mbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:45 AM</td>
+                                                    <td>6 hours</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 38</td>
+                                                    <td>Zaragoza</td>
+                                                    <td>Madrid</td>
+                                                    <td>100 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:00 AM</td>
+                                                    <td>30 minutes</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 39</td>
+                                                    <td>St. Cugat</td>
+                                                    <td>Barcelona</td>
+                                                    <td>10 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:30 AM</td>
+                                                    <td>5 hours</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 40</td>
+                                                    <td>Barcelona</td>
+                                                    <td>Madrid</td>
+                                                    <td>1 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:45 AM</td>
+                                                    <td>1 hour</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 41</td>
+                                                    <td>Point A</td>
+                                                    <td>Point B</td>
+                                                    <td>10 Mbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:45 AM</td>
+                                                    <td>6 hours</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 38</td>
+                                                    <td>Zaragoza</td>
+                                                    <td>Madrid</td>
+                                                    <td>100 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:00 AM</td>
+                                                    <td>30 minutes</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 39</td>
+                                                    <td>St. Cugat</td>
+                                                    <td>Barcelona</td>
+                                                    <td>10 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:30 AM</td>
+                                                    <td>5 hours</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 40</td>
+                                                    <td>Barcelona</td>
+                                                    <td>Madrid</td>
+                                                    <td>1 Gbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:45 AM</td>
+                                                    <td>1 hour</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Flow 41</td>
+                                                    <td>Point A</td>
+                                                    <td>Point B</td>
+                                                    <td>10 Mbps</td>
+                                                    <td>11/21/2013</td>
+                                                    <td>5:45 AM</td>
+                                                    <td>6 hours</td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          </div>
+                
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!-- /Programmed Flows -->  
+
+                              </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                            </div>
+                          </div>
+                        </div>
+                      </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
+
+                    </div>  <!-- /row-->
+
+                  </div>
+                </div> 
+
+                <div class="row" id="OM-topo">
+                  <div class"col-md-12">
+                    <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
+                    <div>
+                      <p class="text-center">
+                        <img src="http://placehold.it/500x200">
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div><!-- /panel body-->
+
+            </div>
+
           </div>
-        </div><!-- /Bottom row -->
+    </script>
+    <!-- /ORGANIZATIONS TEMPLATE -->
+
+    <!-- ORGANIZATIONS LIST VIEW TEMPLATE -->
+    <script type="text/template" id="organizations-list-template">
+      <% _.each(users, function(user) { %>
+          <a href='#/<%= htmlEncode(user.get('firstname')) %' class="list-group-item"><%= name %></a>
+      <% }); %>
+    </script>
+    <!-- /ORGANIZATIONS LIST VIEW TEMPLATE -->
+  <!-- /ORGANIZATIONS VIEW -->
+
+  <!-- FLOWS VIEW -->
+    <script type="text/template" id="flows-template">
+
+      <div class="padding-10-bot">
+        <button class="btn btn-success" data-toggle="modal" data-target="#newFlow"> Create new FLOW</button>
+      </div>
+
+      <div class="row"><!-- Active FLOWS -->
+        <div class="col-sm-12">
+          <div class="panel panel-success">    
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-bolt"></i> Active flows</h3>
+            </div>
+            <div class="panel-body">
+              <div id="FLW-active">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped tablesorter">
+                    <thead>
+                      <tr>
+                        <th>Flow ID <i class="fa fa-sort"></i></th>
+                        <th>From <i class="fa fa-sort"></i></th>
+                        <th>To <i class="fa fa-sort"></i></th>
+                        <th>Speed <i class="fa fa-sort"></i></th>
+                        <th>Progress</th>
+                        <th>Date <i class="fa fa-sort"></i></th>
+                        <th>Time start <i class="fa fa-sort"></i></th>
+                        <th>Duration  <i class="fa fa-sort"></i></th>
+                        <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                        <th><center><i class="fa fa-edit"></i></center></th>
+                        <th><center><i class="fa fa-eraser"></i></center></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Flow 34</td>
+                        <td>Barcelona</td>
+                        <td>Paris</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar  progress-bar-success" style="width: 30%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>3:29 AM</td>
+                        <td>2 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 35</td>
+                        <td>Calella</td>
+                        <td>Tarragona</td>
+                        <td>10 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 72%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:00 AM</td>
+                        <td>2 hour 45 minutes</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 36</td>
+                        <td>Barcelona</td>
+                        <td>Madrid</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 50%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:30 AM</td>
+                        <td>1 hour</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 37</td>
+                        <td>Node 4</td>
+                        <td>Node 12</td>
+                        <td>100 Mbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 60%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:45 AM</td>
+                        <td>6 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 34</td>
+                        <td>Barcelona</td>
+                        <td>Paris</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 37%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>3:29 AM</td>
+                        <td>2 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 35</td>
+                        <td>Calella</td>
+                        <td>Tarragona</td>
+                        <td>10 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 56%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:00 AM</td>
+                        <td>2 hour 45 minutes</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 36</td>
+                        <td>Barcelona</td>
+                        <td>Madrid</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:30 AM</td>
+                        <td>1 hour</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 37</td>
+                        <td>Node 4</td>
+                        <td>Node 12</td>
+                        <td>100 Mbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 85%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:45 AM</td>
+                        <td>6 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 34</td>
+                        <td>Barcelona</td>
+                        <td>Paris</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 75%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>3:29 AM</td>
+                        <td>2 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 35</td>
+                        <td>Calella</td>
+                        <td>Tarragona</td>
+                        <td>10 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 65%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:00 AM</td>
+                        <td>2 hour 45 minutes</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 36</td>
+                        <td>Barcelona</td>
+                        <td>Madrid</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 55%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:30 AM</td>
+                        <td>1 hour</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 37</td>
+                        <td>Node 4</td>
+                        <td>Node 12</td>
+                        <td>100 Mbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 45%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:45 AM</td>
+                        <td>6 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 34</td>
+                        <td>Barcelona</td>
+                        <td>Paris</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 35%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>3:29 AM</td>
+                        <td>2 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 35</td>
+                        <td>Calella</td>
+                        <td>Tarragona</td>
+                        <td>10 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 23%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:00 AM</td>
+                        <td>2 hour 45 minutes</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 36</td>
+                        <td>Barcelona</td>
+                        <td>Madrid</td>
+                        <td>1 Gbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 17%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:30 AM</td>
+                        <td>1 hour</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 37</td>
+                        <td>Node 4</td>
+                        <td>Node 12</td>
+                        <td>100 Mbps</td>
+                        <td>
+                          <div class="progress progress-striped active margin-0">
+                            <div class="progress-bar progress-bar-success" style="width: 10%"></div>
+                          </div>
+                        </td>
+                        <td>11/21/2013</td>
+                        <td>2:45 AM</td>
+                        <td>6 hours</td>
+                        <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>             
+          </div>
+        </div>
+      </div><!-- /Active FLOWS -->
+
+      <div class="row"><!-- Programmed FLOWS -->
+        <div class="col-sm-12">
+          <div class="panel panel-primary">    
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-calendar"></i> Programmed flows</h3>
+            </div>
+            <div class="panel-body">
+              <div id="FLW-prg">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped tablesorter">
+                    <thead>
+                      <tr>
+                        <th>Flow ID <i class="fa fa-sort"></i></th>
+                        <th>Organization <i class="fa fa-sort"></i></th>
+                        <th>From <i class="fa fa-sort"></i></th>
+                        <th>To <i class="fa fa-sort"></i></th>
+                        <th>Speed <i class="fa fa-sort"></i></th>
+                        <th>Date <i class="fa fa-sort"></i></th>
+                        <th>Time start <i class="fa fa-sort"></i></th>
+                        <th>Duration  <i class="fa fa-sort"></i></th>
+                        <th><center><i class="fa fa-edit"></i></center></th>
+                        <th><center><i class="fa fa-eraser"></i></center></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Flow 38</td>
+                        <td>Danone</td>
+                        <td>Zaragoza</td>
+                        <td>Madrid</td>
+                        <td>100 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:00 AM</td>
+                        <td>30 minutes</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 39</td>
+                        <td>Sony</td>
+                        <td>St. Cugat</td>
+                        <td>Barcelona</td>
+                        <td>10 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:30 AM</td>
+                        <td>5 hours</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 40</td>
+                        <td>Seat</td>
+                        <td>Barcelona</td>
+                        <td>Madrid</td>
+                        <td>1 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:45 AM</td>
+                        <td>1 hour</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 41</td>
+                        <td>Zara</td>
+                        <td>Point A</td>
+                        <td>Point B</td>
+                        <td>10 Mbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:45 AM</td>
+                        <td>6 hours</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 38</td>
+                        <td>Danone</td>
+                        <td>Zaragoza</td>
+                        <td>Madrid</td>
+                        <td>100 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:00 AM</td>
+                        <td>30 minutes</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 39</td>
+                        <td>Sony</td>
+                        <td>St. Cugat</td>
+                        <td>Barcelona</td>
+                        <td>10 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:30 AM</td>
+                        <td>5 hours</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 40</td>
+                        <td>Seat</td>
+                        <td>Barcelona</td>
+                        <td>Madrid</td>
+                        <td>1 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:45 AM</td>
+                        <td>1 hour</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 41</td>
+                        <td>Zara</td>
+                        <td>Point A</td>
+                        <td>Point B</td>
+                        <td>10 Mbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:45 AM</td>
+                        <td>6 hours</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 38</td>
+                        <td>Danone</td>
+                        <td>Zaragoza</td>
+                        <td>Madrid</td>
+                        <td>100 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:00 AM</td>
+                        <td>30 minutes</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 39</td>
+                        <td>Sony</td>
+                        <td>St. Cugat</td>
+                        <td>Barcelona</td>
+                        <td>10 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:30 AM</td>
+                        <td>5 hours</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 40</td>
+                        <td>Seat</td>
+                        <td>Barcelona</td>
+                        <td>Madrid</td>
+                        <td>1 Gbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:45 AM</td>
+                        <td>1 hour</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                      <tr>
+                        <td>Flow 41</td>
+                        <td>Zara</td>
+                        <td>Point A</td>
+                        <td>Point B</td>
+                        <td>10 Mbps</td>
+                        <td>11/21/2013</td>
+                        <td>5:45 AM</td>
+                        <td>6 hours</td>
+                        <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                        <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>             
+          </div>
+        </div>
+      </div><!-- /Programmed FLOWS -->
+    </script>
+  <!-- /FLOWS VIEW -->
+
+  <!-- TERMINALS VIEW -->
+    <script type="text/template" id="terminals-template">
+      <div class="row"><!-- Acccess Points -->
+        <div class="col-sm-12">
+
+          <div class="panel panel-primary">
+          
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-desktop"></i> Access Points</h3>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-responsive" id="AP">
+                <table class="table table-bordered table-hover table-striped tablesorter">
+                  <thead>
+                    <tr>
+                      <th>Host name <i class="fa fa-sort"></i></th>
+                      <th>ID <i class="fa fa-sort"></i></th>
+                      <th>Organization <i class="fa fa-sort"></i></th>
+                      <th>IP <i class="fa fa-sort"></i></th>
+                      <th>Interface <i class="fa fa-sort"></i></th>
+                      <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                      <th><center><i class="fa fa-edit"></i></center></th>
+                      <th><center><i class="fa fa-eraser"></i></center></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Barcelona</td>
+                      <td>H1</td>
+                      <td>IKEA</td>
+                      <td>192.168.1.2</td>
+                      <td>10 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Madrid</td>
+                      <td>H2</td>
+                      <td>IKEA</td>
+                      <td>192.168.1.3</td>
+                      <td>1 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Paris</td>
+                      <td>H3</td>
+                      <td>IKEA</td>
+                      <td>192.168.1.4</td>
+                      <td>10 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Berlin</td>
+                      <td>H4</td>
+                      <td>IKEA</td>
+                      <td>192.168.1.5</td>
+                      <td>10 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Albacete</td>
+                      <td>H5</td>
+                      <td>IKEA</td>
+                      <td>192.168.1.6</td>
+                      <td>1 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Badajoz</td>
+                      <td>H6</td>
+                      <td>IKEA</td>
+                      <td>192.168.1.7</td>
+                      <td>1 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Barcelona</td>
+                      <td>H7</td>
+                      <td>Zara</td>
+                      <td>192.168.2.2</td>
+                      <td>10 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Madrid</td>
+                      <td>H8</td>
+                      <td>Zara</td>
+                      <td>192.168.2.3</td>
+                      <td>100 Mbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Coruña</td>
+                      <td>H9</td>
+                      <td>Zara</td>
+                      <td>192.168.2.4</td>
+                      <td>10 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Barcelona</td>
+                      <td>H10</td>
+                      <td>Seat</td>
+                      <td>192.168.3.2</td>
+                      <td>10 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Madrid</td>
+                      <td>H11</td>
+                      <td>Seat</td>
+                      <td>192.168.3.3</td>
+                      <td>1 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                    <tr>
+                      <td>Paris</td>
+                      <td>H12</td>
+                      <td>Seat</td>
+                      <td>192.168.3.4</td>
+                      <td>10 Gbps</td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>              
+            </div>
+            
+          </div>
+
+        </div>
+      </div><!-- /Access Points -->
+    </script>
+  <!-- /TERMINALS VIEW -->
+
+  <!-- TRAFFIC VIEW -->
+    <script type="text/template" id="traffic-template">
+      <div class="row"> <!-- Traffic Matrix -->
+        <div class="col-lg-12">
+
+          <div class="panel panel-primary">
+          
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-th"></i> Traffic Matrix</h3>
+            </div>
+
+            <div class="panel-body">
+          
+              <div id="TA-matrix">
+                <p class="text-center">
+                  <img src="http://placehold.it/600x600">
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div><!-- /Traffic Matrix -->
+    </script>
+  <!-- /TRAFFIC VIEW -->
+
+<!-- /TEMPLATES -->
 
 
 
-
-      </div><!-- /#page-wrapper -->
-
-    </div><!-- /#wrapper -->
 
     <!-- JavaScript -->
     <script src="../js/jquery-1.10.2.js"></script>
@@ -311,17 +1608,12 @@
 
     <!-- Page Specific Plugins -->
     <script src="../js/tablesorter/jquery.tablesorter.js"></script>
-    <script src="../js/tablesorter/tables.js"></script>
-    <script>
-      $(function(){
-          $('#GS-alerts').slimScroll({
-              height: '200px'
-          });
-          $('#GS-topo').slimScroll({
-              height: '200px'
-          });
-      });
-    </script>
+
+    <!-- BACKBONE -->
+    <script src="../js/underscore-min.js"></script>
+    <script src="../js/backbone-min.js"></script>
+    <script type="text/javascript" src="js/admin.js"></script>
+    <script type="text/javascript" src="../js/util.js"></script>
 
   </body>
 </html>

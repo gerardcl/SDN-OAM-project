@@ -28,7 +28,7 @@ public class OrgTerminalResource {
 	//LA INTENCIÓ ÉS PASSAR AQUÍ SEMPRE LES ORGID
 	//EL MOTIU ÉS PER LA DEFINICIÓ COEHERENT DE URLS I SEGURETAT
 	@GET
-	@Path("/fullterminal/all")	
+	@Path("/terminal/all")	
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION) 
 	public OrgTerminalCollection getAllTerminals() {
 		List<OrgTerminal> orgTerminalList = new ArrayList<OrgTerminal>(orgTerminalManager.orgManager.getInstance().getTerminals().values());
@@ -38,9 +38,9 @@ public class OrgTerminalResource {
 	}
 	
 	@GET
-	@Path("/terminal/all")	
+	@Path("/terminal/{orgId}/all")	
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION) 
-	public OrgTerminalCollection getAllOrgTerminals(@QueryParam("orgId") String orgId) {
+	public OrgTerminalCollection getAllOrgTerminals(@PathParam("orgId") String orgId) {
 		List<OrgTerminal> orgTerminalList = new ArrayList<OrgTerminal>(orgTerminalManager.orgManager.getInstance().getOrg(orgId).getTerminals().values());
 		OrgTerminalCollection orgTerminals = new OrgTerminalCollection();
 		orgTerminals.setOrgTerminals(orgTerminalList);
@@ -48,9 +48,9 @@ public class OrgTerminalResource {
 	}	
 	
 	@GET
-	@Path("/terminal/{terminalId}") 
+	@Path("/terminal/{orgId}/{terminalId}") 
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION)
-	public OrgTerminal getOrgTerminal(@QueryParam("orgId") String orgId, @PathParam("terminalId") String terminalId) {
+	public OrgTerminal getOrgTerminal(@PathParam("orgId") String orgId, @PathParam("terminalId") String terminalId) {
 		return orgTerminalManager.orgManager.getOrg(orgId).getTerminals().get(terminalId);
 	}	
 	

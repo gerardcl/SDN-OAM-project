@@ -36,7 +36,7 @@ public class OrgFlowResource {
 	//LA INTENCIÓ ÉS PASSAR AQUÍ SEMPRE LES ORGID
 	//EL MOTIU ÉS PER LA DEFINICIÓ COEHERENT DE URLS I SEGURETAT
 	@GET
-	@Path("/fullflow/all")	
+	@Path("/flow/all")	
 	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION) 
 	public OrgFlowCollection getAllFlows() {
 		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getFlows().values());
@@ -46,9 +46,9 @@ public class OrgFlowResource {
 	}
 	
 	@GET
-	@Path("/flow/all")	
+	@Path("/flow/{orgId}/all")	
 	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION) 
-	public OrgFlowCollection getAllOrgFlows(@QueryParam("orgId") String orgId) {
+	public OrgFlowCollection getAllOrgFlows(@PathParam("orgId") String orgId) {
 		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getOrg(orgId).getFlows().values());
 		OrgFlowCollection orgFlows = new OrgFlowCollection();
 		orgFlows.setOrgFlows(orgFlowList);
@@ -56,9 +56,9 @@ public class OrgFlowResource {
 	}	
 	
 	@GET
-	@Path("/flow/{flowId}") 
+	@Path("/flow/{orgId}/{flowId}") 
 	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION)
-	public OrgFlow getOrgFlow(@QueryParam("orgId") String orgId, @PathParam("flowId") String flowId) {
+	public OrgFlow getOrgFlow(@PathParam("orgId") String orgId, @PathParam("flowId") String flowId) {
 		return orgFlowManager.orgManager.getOrg(orgId).getFlows().get(flowId);
 	}
 

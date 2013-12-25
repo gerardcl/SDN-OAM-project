@@ -15,7 +15,7 @@
 
 		console.log("submitting user and password to server...");
 		var requestUrl =
-			"/AppServer/webapp/manager/user/auth?username=" + $('#username').val() +
+			"/manager/user/auth?username=" + $('#username').val() +
 			"&password=" + $('#password').val();
 		//console.log(requestUrl); //firebug console output
 //		$.getJSON(requestUrl,
@@ -42,8 +42,8 @@
 		        	$("#loading").hide();
 		        	$("#msg").show();
 		        }
-		    	else if(msg.msg == "1") location.href = "/AppServer/admin";
-		    	else if(msg.msg == "2") location.href = "/AppServer/client";
+		    	else if(msg.msg == "1") location.href = "/AppServer/#/adminOverview";
+		    	else if(msg.msg == "2") location.href = "/AppServer/#/clientOverview";
 		    },
 		    error: function(xhr, msg) { 
 		    	console.log(msg + '\n' + xhr.responseText);
@@ -51,15 +51,11 @@
 		        	$("#loading").hide();
 		        	$("#msg").show();
 		        }
-		    	else if(xhr.responseText.msg == "1") location.href = "/AppServer/admin";
-		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/client";
+		    	else if(xhr.responseText.msg == "1") location.href = "/AppServer/#/adminOverview";
+		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/#/clientOverview";
 		    }
 		});
 	});
-
-
-
-
 })(jQuery);
 
 
