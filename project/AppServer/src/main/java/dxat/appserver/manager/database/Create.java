@@ -85,23 +85,41 @@ public class Create {
 					+ idOrg + " does not exists.");
 		}
 	}
-	/*
-	public void insertFlow(OrgFlow flow, String idOrg) throws FlowAlreadyExistsException {
-		DBCollection collection = getCollection(FCOLLECTION);
+	
+	public void insertFlow(OrgFlow flow, String idOrg)
+			throws FlowAlreadyExistsException, OrgNotFoundException {
+		DBCollection collection = db.getCollection(OCOLLECTION);
 
-		if (!existsElement(collection, flow.getIdentifier())) {
-			DBObject doc = new BasicDBObject();
-			DBObject dbObject = (DBObject) JSON.parse(new Gson().toJson(flow));
-			doc.putAll(dbObject);
-			collection.insert(doc);
+		if (existsOrg(collection, idOrg)) {
+			if (!existsElement(collection, idOrg, flow.getIdentifier(), "flows")) {
+				BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
+				DBObject org = collection.findOne(updateOrg);
+
+				DBObject userdoc = new BasicDBObject();
+				userdoc.put("identifier", flow.getIdentifier());
+				userdoc.put("name", flow.getName());
+				userdoc.put("srcOTidentifier", flow.getSrcOTidentifier());
+				userdoc.put("dstOTidentifier", flow.getDstOTidentifier());
+				userdoc.put("srcPort", flow.getSrcPort());
+				userdoc.put("dstPort", flow.getDstPort());
+				userdoc.put("qos", flow.getQos());
+				userdoc.put("bandwidth", flow.getBandwidth());
+				userdoc.put("protocol", flow.getProtocol());
+				// important get flow.getActive();
+
+				BasicDBObject update = new BasicDBObject("$push",
+						new BasicDBObject("flows", userdoc));
+				collection.update(org, update);
+			} else {
+				throw new FlowAlreadyExistsException("Flow with identifier " + flow.getIdentifier() + "already exists.");
+			}
 		} else {
-			dbaccess.closeConn();
-			throw new FlowAlreadyExistsException("Flow with identifier "
-					+ flow.getIdentifier());
+			throw new OrgNotFoundException("Organization with identifier "
+					+ idOrg + " does not exists.");
 		}
-		dbaccess.closeConn();
-	}
 
+	}
+	/*
 	public void insertTerminal(OrgTerminal terminal, String idOrg)
 			throws TerminalAlreadyExistsException {
 		DBCollection collection = getCollection(TCOLLECTION);
