@@ -86,7 +86,7 @@ public class Create {
 		}
 	}
 	
-	public void insertFlow(OrgFlow flow, String idOrg)
+	public void createFlow(OrgFlow flow, String idOrg)
 			throws FlowAlreadyExistsException, OrgNotFoundException {
 		DBCollection collection = db.getCollection(OCOLLECTION);
 
@@ -119,26 +119,39 @@ public class Create {
 		}
 
 	}
-	/*
-	public void insertTerminal(OrgTerminal terminal, String idOrg)
-			throws TerminalAlreadyExistsException {
-		DBCollection collection = getCollection(TCOLLECTION);
-
-		if (!existsElement(collection, terminal.getIdentifier())) {
-			DBObject doc = new BasicDBObject();
-			DBObject dbObject = (DBObject) JSON.parse(new Gson()
-					.toJson(terminal));
-			doc.putAll(dbObject);
-			collection.insert(doc);
-		} else {
-			dbaccess.closeConn();
-			throw new TerminalAlreadyExistsException(
-					"Terminal with identifier " + terminal.getIdentifier());
-		}
-		dbaccess.closeConn();
-	}
-	*/
 	
+	public void createTerminal(OrgTerminal terminal, String idOrg)
+			throws TerminalAlreadyExistsException, OrgNotFoundException {
+
+		DBCollection collection = db.getCollection(OCOLLECTION);
+
+		if (existsOrg(collection, idOrg)) {
+			if (!existsElement(collection, idOrg, terminal.getIdentifier(),
+					"terminals")) {
+				BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
+				DBObject org = collection.findOne(updateOrg);
+
+				DBObject userdoc = new BasicDBObject();
+
+				userdoc.put("identifier", terminal.getIdentifier());
+				userdoc.put("hostName", terminal.getHostName());
+				userdoc.put("ipAddress", terminal.getIpAddress());
+				userdoc.put("mac", terminal.getMac());
+				userdoc.put("ifaceSpeed", terminal.getIfaceSpeed());
+				userdoc.put("description", terminal.getDescription());
+				// important get terminal.getActive();
+
+				BasicDBObject update = new BasicDBObject("$push",
+						new BasicDBObject("terminals", userdoc));
+				collection.update(org, update);
+			} else {
+				throw new TerminalAlreadyExistsException("Terminal with identifier " + terminal.getIdentifier() + "already exists.");
+			}
+		} else {
+				throw new OrgNotFoundException("Organization with identifier " + idOrg + " does not exists.");
+		}
+
+	}
 	
 	public boolean existsOrg(DBCollection collection, String id) {
 		BasicDBObject query = new BasicDBObject("identifier", id);
