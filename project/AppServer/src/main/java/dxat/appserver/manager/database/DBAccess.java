@@ -18,14 +18,8 @@ public class DBAccess {
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
-			return db;
 		}
-	}
-	
-	public void closeConn(){
-		this.conn.close();
-	}
-	
+		return db;
+	}	
 
 }
