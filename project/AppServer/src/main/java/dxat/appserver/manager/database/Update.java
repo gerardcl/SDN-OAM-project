@@ -8,10 +8,12 @@ import com.mongodb.DBObject;
 
 import dxat.appserver.manager.exceptions.FlowNotFoundException;
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
+import dxat.appserver.manager.exceptions.TerminalNotFoundException;
 import dxat.appserver.manager.exceptions.UserNotFoundException;
 import dxat.appserver.manager.pojos.TOrg;
 import dxat.appserver.manager.pojos.OrgUser;
 import dxat.appserver.manager.pojos.OrgFlow;
+import dxat.appserver.manager.pojos.OrgTerminal;
 
 public class Update {
 	private static final String OCOLLECTION   = "ORG_COLLECTION";
@@ -74,8 +76,41 @@ public class Update {
 		}
 	}
 	
-	public void updateTerminal(){
-		
+	public void updateTerminal(OrgTerminal terminal, String idOrg)
+			throws TerminalNotFoundException, OrgNotFoundException {
+
+		DBCollection collection = db.getCollection(OCOLLECTION);
+
+		if (existsOrg(collection, idOrg)) {
+			if (existsElement(collection, idOrg, terminal.getIdentifier(),
+					"terminals")) {
+
+				BasicDBObject query = new BasicDBObject("identifier", idOrg);
+				query.put("terminals.identifier", terminal.getIdentifier());
+				DBObject terminaldoc = new BasicDBObject();
+
+				terminaldoc.put("terminals.$.identifier",
+						terminal.getIdentifier());
+				terminaldoc.put("terminals.$.hostName", terminal.getHostName());
+				terminaldoc.put("terminals.$.ipAddress",
+						terminal.getIpAddress());
+				terminaldoc.put("terminals.$.mac", terminal.getMac());
+				terminaldoc.put("terminals.$.ifaceSpeed",
+						terminal.getIfaceSpeed());
+				terminaldoc.put("terminals.$.description",
+						terminal.getDescription());
+
+				BasicDBObject update = new BasicDBObject("$set", terminaldoc);
+				collection.update(query, update);
+			} else {
+				throw new TerminalNotFoundException("Terminal with identifier "
+						+ terminal.getIdentifier() + "does not exists.");
+			}
+		} else {
+			throw new OrgNotFoundException("Organization with identifier "
+					+ idOrg + "does not exists.");
+		}
+
 	}
 	
 	public void updateFlow(OrgFlow flow, String idOrg)
