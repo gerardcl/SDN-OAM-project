@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import dxat.appserver.manager.exceptions.FlowNotFoundException;
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
 import dxat.appserver.manager.exceptions.TerminalNotFoundException;
 import dxat.appserver.manager.exceptions.UserNotFoundException;
@@ -55,28 +56,51 @@ public class Delete {
 		}
 
 	}
-	public void deleteTerminal(String idOrg, String id) throws TerminalNotFoundException, OrgNotFoundException{
+
+	public void deleteTerminal(String idOrg, String id)
+			throws TerminalNotFoundException, OrgNotFoundException {
 
 		DBCollection collection = db.getCollection(OCOLLECTION);
-		if(existsOrg(collection, idOrg)){
-			if(existsElement(collection, idOrg, id, "terminals")){
+		if (existsOrg(collection, idOrg)) {
+			if (existsElement(collection, idOrg, id, "terminals")) {
 				saveElement(idOrg, "terminals");
 				DBObject match = new BasicDBObject("identifier", idOrg);
-				//DBObject documentOrg = collection.findOne(query);
-				DBObject update = new BasicDBObject("terminals", new BasicDBObject("identifier", id));
-				collection.update(match, new BasicDBObject("$pull", update));				
+				// DBObject documentOrg = collection.findOne(query);
+				DBObject update = new BasicDBObject("terminals",
+						new BasicDBObject("identifier", id));
+				collection.update(match, new BasicDBObject("$pull", update));
+			} else {
+				throw new TerminalNotFoundException("Terminal with identifier "
+						+ id + "does not exists.");
 			}
-			else{
-				throw new TerminalNotFoundException("Terminal with identifier " + id + "does not exists.");
-			}
-		}else{
+		} else {
 			throw new OrgNotFoundException("Organization with identifier "
 					+ idOrg + "does not exists.");
 		}
-	
+
 	}
-	public void deleteFlow(String idOrg){
-		
+
+	public void deleteFlow(String idOrg, String id)
+			throws FlowNotFoundException, OrgNotFoundException {
+
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		if (existsOrg(collection, idOrg)) {
+			if (existsElement(collection, idOrg, id, "flows")) {
+				saveElement(idOrg, "flows");
+				DBObject match = new BasicDBObject("identifier", idOrg);
+				// DBObject documentOrg = collection.findOne(query);
+				DBObject update = new BasicDBObject("flows", new BasicDBObject(
+						"identifier", id));
+				collection.update(match, new BasicDBObject("$pull", update));
+			} else {
+				throw new FlowNotFoundException("Flow with identifier " + id
+						+ "does not exists.");
+			}
+		} else {
+			throw new OrgNotFoundException("Organization with identifier "
+					+ idOrg + "does not exists.");
+		}
+
 	}
 	
 	public void saveElement(String idOrg, String type) {
