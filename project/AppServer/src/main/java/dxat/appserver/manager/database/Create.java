@@ -38,7 +38,6 @@ public class Create {
 			List<BasicDBObject> users 	  = new ArrayList<BasicDBObject>();
 			List<BasicDBObject> terminals = new ArrayList<BasicDBObject>();
 			List<BasicDBObject> flows	  = new ArrayList<BasicDBObject>();
-			
 			doc.put("identifier",torg.getIdentifier());
 			doc.put("name", torg.getName());
 			doc.put("NIF", torg.getNIF());
@@ -47,6 +46,7 @@ public class Create {
 			doc.put("users", users);
 			doc.put("terminals", terminals);
 			doc.put("flows", flows);
+			doc.put("isOAM",torg.isOAM());
 
 			collection.insert(doc);
 			
@@ -72,6 +72,8 @@ public class Create {
 				userdoc.put("email", user.getEmail());
 				userdoc.put("password", user.getPassword());
 				userdoc.put("telephone", user.getTelephone());
+				userdoc.put("isAdmin", user.isAdmin());
+				userdoc.put("active",user.isActive());
 
 				BasicDBObject update = new BasicDBObject("$push",
 						new BasicDBObject("users", userdoc));
@@ -94,7 +96,6 @@ public class Create {
 			if (!existsElement(collection, idOrg, flow.getIdentifier(), "flows")) {
 				BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
 				DBObject org = collection.findOne(updateOrg);
-
 				DBObject userdoc = new BasicDBObject();
 				userdoc.put("identifier", flow.getIdentifier());
 				userdoc.put("name", flow.getName());
@@ -105,7 +106,7 @@ public class Create {
 				userdoc.put("qos", flow.getQos());
 				userdoc.put("bandwidth", flow.getBandwidth());
 				userdoc.put("protocol", flow.getProtocol());
-				// important get flow.getActive();
+				userdoc.put("active", flow.isActive());
 
 				BasicDBObject update = new BasicDBObject("$push",
 						new BasicDBObject("flows", userdoc));
@@ -132,15 +133,14 @@ public class Create {
 				DBObject org = collection.findOne(updateOrg);
 
 				DBObject userdoc = new BasicDBObject();
-
 				userdoc.put("identifier", terminal.getIdentifier());
 				userdoc.put("hostName", terminal.getHostName());
 				userdoc.put("ipAddress", terminal.getIpAddress());
 				userdoc.put("mac", terminal.getMac());
 				userdoc.put("ifaceSpeed", terminal.getIfaceSpeed());
 				userdoc.put("description", terminal.getDescription());
-				// important get terminal.getActive();
-
+				userdoc.put("active",terminal.isActive());
+				
 				BasicDBObject update = new BasicDBObject("$push",
 						new BasicDBObject("terminals", userdoc));
 				collection.update(org, update);
