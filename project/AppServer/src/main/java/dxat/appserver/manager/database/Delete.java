@@ -7,6 +7,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
+import dxat.appserver.manager.exceptions.UserNotFoundException;
 
 public class Delete {
 	
@@ -22,7 +23,7 @@ public class Delete {
 	public void deleteOrg(String idOrg) throws OrgNotFoundException {
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		if (existsOrg(collection, idOrg)) {
-			saveOrg(idOrg);
+			saveElement(idOrg,"orgs");
 			BasicDBObject query = new BasicDBObject("identifier", idOrg);
 			collection.remove(query);
 		} else {
@@ -32,8 +33,26 @@ public class Delete {
 
 	}
 	
-	public void deleteUser(String idOrg){
-		
+	public void deleteUser(String idOrg, String id)
+			throws UserNotFoundException, OrgNotFoundException {
+
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		if (existsOrg(collection, idOrg)) {
+			if (existsElement(collection, idOrg, id, "users")) {
+				saveElement(idOrg, "users");
+				DBObject match = new BasicDBObject("identifier", idOrg);
+				DBObject update = new BasicDBObject("users", new BasicDBObject(
+						"identifier", id));
+				collection.update(match, new BasicDBObject("$pull", update));
+			} else {
+				throw new UserNotFoundException("User with identifier " + id
+						+ "does not exists.");
+			}
+		} else {
+			throw new OrgNotFoundException("Organization with identifier "
+					+ idOrg + "does not exists.");
+		}
+
 	}
 	public void deleteTerminal(String idOrg){
 	
@@ -41,14 +60,41 @@ public class Delete {
 	public void deleteFlow(String idOrg){
 		
 	}
-
-	public void saveOrg(String idOrg) {
-		
+	
+	public void saveElement(String idOrg, String type) {
 		DBCollection collection = db.getCollection(OCOLLECTION);
-		DBCollection collectionSave = db.getCollection(SOCOLLECTION);
+		DBCollection collectionSave = null;
+
+		if (type.equals("orgs")) {
+			collectionSave = db.getCollection(SOCOLLECTION);
+		} else if (type.equals("users")) {
+			collectionSave = db.getCollection(SUCOLLECTION);
+		} else if (type.equals("flows")) {
+			collectionSave = db.getCollection(SFCOLLECTION);
+		} else if (type.equals("terminals")) {
+			collectionSave = db.getCollection(STCOLLECTION);
+
+		}
 		BasicDBObject query = new BasicDBObject("identifier", idOrg);
 		DBObject documentOrg = collection.findOne(query);
+
 		collectionSave.insert(documentOrg);
+
+	}
+	/*
+	public void saveUser(String idOrg,String id){
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		DBCollection collectionSave = db.getCollection(SUCOLLECTION);
+		//BasicDBObject query = new BasicDBObject("identifier", idOrg);
+		//DBObject documentOrg = collection.findOne(query);
+		DBObject query = new BasicDBObject();//("identifier", idOrg);
+		query.put("users.identifier", id);
+		DBObject subarray = new BasicDBObject("users.$", 1);
+		DBObject userdata = collection.findOne(query,subarray);
+		
+		System.out.println("userdata: " + userdata);
+		collectionSave.insert(userdata);
+		
 	}
 	public void saveUser(String idOrg){
 		
@@ -59,7 +105,7 @@ public class Delete {
 	public void saveFlow(String idOrg){
 		
 	}
-	
+	*/
 	public boolean existsOrg(DBCollection collection, String id) {
 		BasicDBObject query = new BasicDBObject("identifier", id);
 		DBCursor cursor 	= collection.find(query);
@@ -67,5 +113,11 @@ public class Delete {
 		else return false;
 		
 	}
-	
+	public boolean existsElement(DBCollection collection, String idOrg, String id, String type){
+		BasicDBObject query = new BasicDBObject("identifier", idOrg);
+		query.put("users.identifier", id);
+		DBCursor cursor = collection.find(query);
+		if(cursor.count()!=0) return true;
+		else return false;
+	}
 }
