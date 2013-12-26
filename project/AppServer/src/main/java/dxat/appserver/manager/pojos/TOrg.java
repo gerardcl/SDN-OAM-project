@@ -6,6 +6,8 @@ public class TOrg {
 	private String NIF;
 	private String telephone;
 	private String bankAccount;
+	private boolean isOAM;
+
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -42,5 +44,4 @@ public class TOrg {
 	public void setOAM(boolean isOAM) {
 		this.isOAM = isOAM;
 	}
-	private boolean isOAM;
 }
