@@ -1,16 +1,17 @@
 package dxat.appserver.manager.database;
 
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import dxat.appserver.manager.exceptions.FlowNotFoundException;
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
 import dxat.appserver.manager.exceptions.UserNotFoundException;
 import dxat.appserver.manager.pojos.TOrg;
 import dxat.appserver.manager.pojos.OrgUser;
+import dxat.appserver.manager.pojos.OrgFlow;
 
 public class Update {
 	private static final String OCOLLECTION   = "ORG_COLLECTION";
@@ -77,8 +78,41 @@ public class Update {
 		
 	}
 	
-	public void updateFlow(){
-		
+	public void updateFlow(OrgFlow flow, String idOrg)
+			throws FlowNotFoundException, OrgNotFoundException {
+
+		DBCollection collection = db.getCollection(OCOLLECTION);
+
+		if (existsOrg(collection, idOrg)) {
+			if (existsElement(collection, idOrg, flow.getIdentifier(), "flows")) {
+
+				BasicDBObject query = new BasicDBObject("identifier", idOrg);
+				query.put("flows.identifier", flow.getIdentifier());
+				DBObject flowdoc = new BasicDBObject();
+
+				flowdoc.put("flows.$.identifier", flow.getIdentifier());
+				flowdoc.put("flows.$.name", flow.getName());
+				flowdoc.put("flows.$.srcOTidentifier",
+						flow.getSrcOTidentifier());
+				flowdoc.put("flows.$.dstOTidentifier",
+						flow.getDstOTidentifier());
+				flowdoc.put("flows.$.srcPort", flow.getSrcPort());
+				flowdoc.put("flows.$.dstPort", flow.getDstPort());
+				flowdoc.put("flows.$.qos", flow.getQos());
+				flowdoc.put("flows.$.bandwidth", flow.getBandwidth());
+				flowdoc.put("flows.$.protocol", flow.getProtocol());
+
+				BasicDBObject update = new BasicDBObject("$set", flowdoc);
+				collection.update(query, update);
+			} else {
+				throw new FlowNotFoundException("Flow with identifier "
+						+ flow.getIdentifier() + " does not exists.");
+			}
+		} else {
+			throw new OrgNotFoundException("Organization with identifier "
+					+ idOrg + "does not exists.");
+		}
+
 	}
 	
 	public boolean existsOrg(DBCollection collection, String id) {
