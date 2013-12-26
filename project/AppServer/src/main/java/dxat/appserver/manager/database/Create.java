@@ -58,7 +58,7 @@ public class Create {
 		
 	}
 	
-	public void CreateUser(OrgUser user, String idOrg)
+	public void createUser(OrgUser user, String idOrg)
 			throws OrgNotFoundException, UserAlreadyExistsException {
 		DBCollection collection = getCollection(OCOLLECTION);
 

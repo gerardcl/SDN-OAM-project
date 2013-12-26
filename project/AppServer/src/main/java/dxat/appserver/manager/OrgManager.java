@@ -7,6 +7,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import dxat.appserver.manager.database.Create;
+import dxat.appserver.manager.exceptions.FlowAlreadyExistsException;
+import dxat.appserver.manager.exceptions.OrgAlreadyExistsException;
+import dxat.appserver.manager.exceptions.OrgNotFoundException;
+import dxat.appserver.manager.exceptions.TerminalAlreadyExistsException;
+import dxat.appserver.manager.exceptions.UserAlreadyExistsException;
 import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.OrgFlow;
 import dxat.appserver.manager.pojos.OrgSession;
@@ -24,8 +30,10 @@ public class OrgManager {
 	private HashMap<String, OrgUser> users;
 	private HashMap<String, OrgSession> sessions;
 	private HashMap<String, OrgTerminal> terminals;
+	private Create dbcreate;
 
 	private OrgManager(){
+		dbcreate = new Create();
 		orgs = new HashMap<String, Org>();
 		torgs = new HashMap<String, TOrg>();
 		flows = new HashMap<String, OrgFlow>();
@@ -53,7 +61,6 @@ public class OrgManager {
 			HashMap<String, OrgUser> tempUsers;
 			HashMap<String, OrgTerminal> tempTerminals;			
 			TOrg torg = new TOrg();
-			
 			torg.setBankAccount(org.getBankAccount());
 			torg.setIdentifier(org.getIdentifier());
 			torg.setName(org.getName());
@@ -61,6 +68,13 @@ public class OrgManager {
 			torg.setOAM(org.isOAM());
 			torg.setTelephone(org.getTelephone());
 			org.setTorg(torg);
+			
+			try {
+				dbcreate.createOrg(torg);
+			} catch (OrgAlreadyExistsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			tempFlows = new HashMap<String, OrgFlow>();
 			for(i=0; i<10; i++){
@@ -89,6 +103,15 @@ public class OrgManager {
 				flow.setSrcOTidentifier(orgTS);
 				tempFlows.put(flow.identifier, flow);
 				flows.put(flow.identifier, flow);
+				try {
+					dbcreate.createFlow(flow, org.getIdentifier());
+				} catch (FlowAlreadyExistsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OrgNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			org.setFlows(tempFlows);
 			
@@ -110,6 +133,15 @@ public class OrgManager {
 				user.setActive(i%3==0?true:false);
 				tempUsers.put(user.identifier, user);
 				users.put(user.identifier, user);
+				try {
+					dbcreate.createUser(user, org.getIdentifier());
+				} catch (OrgNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UserAlreadyExistsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			org.setUsers(tempUsers);
 			
@@ -132,6 +164,15 @@ public class OrgManager {
 				terminal.setActive(i%2==0?true:false);
 				tempTerminals.put(terminal.identifier, terminal);
 				terminals.put(terminal.identifier, terminal);
+				try {
+					dbcreate.createTerminal(terminal, org.getIdentifier());
+				} catch (TerminalAlreadyExistsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OrgNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			org.setTerminals(tempTerminals);
 			
