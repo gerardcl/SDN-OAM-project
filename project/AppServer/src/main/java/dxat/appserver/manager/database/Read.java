@@ -124,7 +124,35 @@ public class Read {
 	}
 	//RETURN ORG USERS
 	public HashMap<String, OrgUser> getDBOrgUser(String idOrg) {
-		return null;
+		
+		HashMap<String, OrgUser> usersHM = new HashMap<String, OrgUser>();
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
+		DBObject org = collection.findOne(updateOrg);
+		BasicDBList usersOrg = (BasicDBList) org.get("users");
+		for (int i =0;i<usersOrg.size();i++){
+			OrgUser orgUser = new OrgUser();
+			DBObject user = (BasicDBObject) usersOrg.get(i);
+			
+			String identifier = (String) user.get("identifier");
+			String name = (String) user.get("name");
+			String email = (String) user.get("email");
+			String password = (String) user.get("password");
+			int telephone = (Integer) user.get("telephone");
+			boolean isAdmin = (Boolean) user.get("isAdmin");
+			boolean active = (Boolean) user.get("active");
+
+			orgUser.setIdentifier(identifier);
+			orgUser.setName(name);
+			orgUser.setEmail(email);
+			orgUser.setPassword(password);
+			orgUser.setTelephone(telephone);
+			orgUser.setAdmin(isAdmin);
+			orgUser.setActive(active);
+
+			usersHM.put(identifier, orgUser);
+		}
+		return usersHM;
 	}
 	//RETURN ALL USERS
 	public HashMap<String, OrgUser> getDBUsers() {
