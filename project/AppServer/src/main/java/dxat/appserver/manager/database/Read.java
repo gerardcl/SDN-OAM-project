@@ -191,10 +191,48 @@ public class Read {
 		return usersHM;
 
 	}
+
 	public HashMap<String, OrgFlow> getDBFlows() {
-		// TODO Auto-generated method stub
-		return null;
+
+		HashMap<String, OrgFlow> flowsHM = new HashMap<String, OrgFlow>();
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		DBCursor cursor;
+
+		cursor = collection.find();
+		while (cursor.hasNext()) {
+			BasicDBList flows = (BasicDBList) cursor.next().get("flows");
+			for (int i = 0; i < flows.size(); i++) {
+				OrgFlow orgFlow = new OrgFlow();
+				DBObject flow = (BasicDBObject) flows.get(i);
+
+				String identifier = (String) flow.get("identifier");
+				String name = (String) flow.get("name");
+				String srcOTidentifier = (String) flow.get("srcOTidentifier");
+				String dstOTidentifier = (String) flow.get("dstOTidentifier");
+				int srcPort = (Integer) flow.get("srcPort");
+				int dstPort = (Integer) flow.get("dstPort");
+				int qos = (Integer) flow.get("gos");
+				double bandwidth = (Double) flow.get("bandwidth");
+				String protocol = (String) flow.get("protocol");
+				boolean active = (Boolean) flow.get("active");
+
+				orgFlow.setIdentifier(identifier);
+				orgFlow.setName(name);
+				orgFlow.setSrcOTidentifier(srcOTidentifier);
+				orgFlow.setDstOTidentifier(dstOTidentifier);
+				orgFlow.setSrcPort(srcPort);
+				orgFlow.setDstPort(dstPort);
+				orgFlow.setQos(qos);
+				orgFlow.setBandwidth(bandwidth);
+				orgFlow.setProtocol(protocol);
+				orgFlow.setActive(active);
+
+				flowsHM.put(identifier, orgFlow);
+			}
+		}
+		return flowsHM;
 	}
+	
 	public HashMap<String, OrgTerminal> getDBTerminals() {
 		// TODO Auto-generated method stub
 		return null;
