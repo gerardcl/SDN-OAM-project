@@ -1,8 +1,8 @@
 package dxat.appserver.manager.database;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -128,31 +128,40 @@ public class Read {
 	}
 	//RETURN ALL USERS
 	public HashMap<String, OrgUser> getDBUsers() {
-		HashMap<String, OrgFlow> usersHM = null;
+
+		HashMap<String, OrgUser> usersHM = new HashMap<String, OrgUser>();
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		DBCursor cursor;
 
 		cursor = collection.find();
-		while(cursor.hasNext()) {
-			DBObject o = cursor.next();
-			Object users = o.get("users");
+		while (cursor.hasNext()) {
+			BasicDBList users = (BasicDBList) cursor.next().get("users");
+			for (int i = 0; i < users.size(); i++) {
+				OrgUser orgUser = new OrgUser();
+				DBObject user = (BasicDBObject) users.get(i);
 
-			//users[i] 
-			System.out.println("GETTING USERS");
-			System.out.println(users);
-			//TODO RECORRER EL ARRAY USERS (mira consola cuando haces llamada a la web
-			//para que veas que efectivamente users és una array (confirmado): 
-			//http://localhost:8080/AppServer/#/adminOrgs
-			//para tener una db inicializada como hacemos tienes primero que poner el
-			//booleano en OrgManager a true (dbExists)
-			//luego cuando ya tengas la db montada (comprueba con robomongo)
-			//podras volverla a false y a jugar
-			//NOTA: esta implementació serà la clave para getDBOrgUser luego
+				String identifier = (String) user.get("identifier");
+				String name = (String) user.get("name");
+				String email = (String) user.get("email");
+				String password = (String) user.get("password");
+				int telephone = (Integer) user.get("telephone");
+				boolean isAdmin = (Boolean) user.get("isAdmin");
+				boolean active = (Boolean) user.get("active");
 
+				orgUser.setIdentifier(identifier);
+				orgUser.setName(name);
+				orgUser.setEmail(email);
+				orgUser.setPassword(password);
+				orgUser.setTelephone(telephone);
+				orgUser.setAdmin(isAdmin);
+				orgUser.setActive(active);
 
+				usersHM.put(identifier, orgUser);
 
+			}
 		}
-		return null;
+		return usersHM;
+
 	}
 	public HashMap<String, OrgFlow> getDBFlows() {
 		// TODO Auto-generated method stub
