@@ -67,6 +67,7 @@ public class Read {
 			String bankAccount = (String) o.get("bankAccount") ; 
 			String isOAM_s = (String) o.get("isOAM").toString() ;
 			boolean isOAM = (isOAM_s.equals("true")? true : false);
+			//torg
 			TOrg torg = new TOrg();
 			torg.setIdentifier(identifier);
 			torg.setName(name);
@@ -75,11 +76,14 @@ public class Read {
 			torg.setBankAccount(bankAccount);
 			torg.setOAM(isOAM);
 			//users
-			//TODO cargar hashmap users de dentro de org <-- getDBOrgUser(orgId/identifier) 
+			HashMap<String, OrgUser> users = getDBOrgUser(identifier);
+			org.setUsers(users);
 			//flows
-			//TODO cargar hashmap flows de dentro de org <-- getDBOrgFlows(orgId/identifier) 
+			HashMap<String, OrgFlow> flows = getDBOrgFlow(identifier);
+			org.setFlows(flows);
 			//terminals
-			//TODO cargar hashmap terminals de dentro de org <-- getDBOrgTerminals(ororgId/identifiergId) 
+			HashMap<String, OrgTerminal> terminals = getDBOrgTerminal(identifier);
+			org.setTerminals(terminals);
 
 			org.setIdentifier(identifier);
 			org.setName(name);
@@ -93,7 +97,6 @@ public class Read {
 		}
 		return orgs;
 	}
-
 	public HashMap<String, TOrg> getDBTOrgs() {
 		HashMap<String, TOrg> torgs = new HashMap<String, TOrg>();
 		DBCollection collection = db.getCollection(OCOLLECTION);
@@ -122,9 +125,7 @@ public class Read {
 		}
 		return torgs;
 	}
-	//RETURN ORG USERS
 	public HashMap<String, OrgUser> getDBOrgUser(String idOrg) {
-		
 		HashMap<String, OrgUser> usersHM = new HashMap<String, OrgUser>();
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
@@ -133,7 +134,7 @@ public class Read {
 		for (int i =0;i<usersOrg.size();i++){
 			OrgUser orgUser = new OrgUser();
 			DBObject user = (BasicDBObject) usersOrg.get(i);
-			
+
 			String identifier = (String) user.get("identifier");
 			String name = (String) user.get("name");
 			String email = (String) user.get("email");
@@ -154,9 +155,7 @@ public class Read {
 		}
 		return usersHM;
 	}
-	//RETURN ALL USERS
 	public HashMap<String, OrgUser> getDBUsers() {
-
 		HashMap<String, OrgUser> usersHM = new HashMap<String, OrgUser>();
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		DBCursor cursor;
@@ -191,9 +190,43 @@ public class Read {
 		return usersHM;
 
 	}
+	public HashMap<String, OrgFlow> getDBOrgFlow(String idOrg) {
+		HashMap<String, OrgFlow> flowsHM = new HashMap<String, OrgFlow>();
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
+		DBObject org = collection.findOne(updateOrg);
+		BasicDBList flowsOrg = (BasicDBList) org.get("flows");
+		for (int i =0;i<flowsOrg.size();i++){
+			OrgFlow orgFlow = new OrgFlow();
+			DBObject flow = (BasicDBObject) flowsOrg.get(i);
 
+			String identifier = (String) flow.get("identifier");
+			String name = (String) flow.get("name");
+			String srcOTidentifier = (String) flow.get("srcOTidentifier");
+			String dstOTidentifier = (String) flow.get("dstOTidentifier");
+			int srcPort = (Integer) flow.get("srcPort");
+			int dstPort = (Integer) flow.get("dstPort");
+			int qos = (Integer) flow.get("qos");
+			double bandwidth = (Double) flow.get("bandwidth");
+			String protocol = (String) flow.get("protocol");
+			boolean active = (Boolean) flow.get("active");
+
+			orgFlow.setIdentifier(identifier);
+			orgFlow.setName(name);
+			orgFlow.setSrcOTidentifier(srcOTidentifier);
+			orgFlow.setDstOTidentifier(dstOTidentifier);
+			orgFlow.setSrcPort(srcPort);
+			orgFlow.setDstPort(dstPort);
+			orgFlow.setQos(qos);
+			orgFlow.setBandwidth(bandwidth);
+			orgFlow.setProtocol(protocol);
+			orgFlow.setActive(active);
+
+			flowsHM.put(identifier, orgFlow);
+		}
+		return flowsHM;
+	}
 	public HashMap<String, OrgFlow> getDBFlows() {
-
 		HashMap<String, OrgFlow> flowsHM = new HashMap<String, OrgFlow>();
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		DBCursor cursor;
@@ -211,7 +244,7 @@ public class Read {
 				String dstOTidentifier = (String) flow.get("dstOTidentifier");
 				int srcPort = (Integer) flow.get("srcPort");
 				int dstPort = (Integer) flow.get("dstPort");
-				int qos = (Integer) flow.get("gos");
+				int qos = (Integer) flow.get("qos");
 				double bandwidth = (Double) flow.get("bandwidth");
 				String protocol = (String) flow.get("protocol");
 				boolean active = (Boolean) flow.get("active");
@@ -232,9 +265,37 @@ public class Read {
 		}
 		return flowsHM;
 	}
+	public HashMap<String, OrgTerminal> getDBOrgTerminal(String idOrg) {
+		HashMap<String, OrgTerminal> terminalsHM = new HashMap<String, OrgTerminal>();
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
+		DBObject org = collection.findOne(updateOrg);
+		BasicDBList flowsOrg = (BasicDBList) org.get("terminals");
+		for (int i =0;i<flowsOrg.size();i++){
+			OrgTerminal orgTerminal = new OrgTerminal();
+			DBObject flow = (BasicDBObject) flowsOrg.get(i);
 
+			String identifier = (String) flow.get("identifier");
+			String hostName = (String) flow.get("hostName");
+			String ipAddress = (String) flow.get("ipAddress");
+			String mac = (String) flow.get("mac");
+			double ifaceSpeed = (Double) flow.get("ifaceSpeed");
+			String description = (String) flow.get("description");
+			boolean active = (Boolean) flow.get("active");
+
+			orgTerminal.setIdentifier(identifier);
+			orgTerminal.setHostName(hostName);
+			orgTerminal.setIpAddress(ipAddress);
+			orgTerminal.setMac(mac);
+			orgTerminal.setIfaceSpeed(ifaceSpeed);
+			orgTerminal.setDescription(description);
+			orgTerminal.setActive(active);
+
+			terminalsHM.put(identifier, orgTerminal);
+		}
+		return terminalsHM;
+	}
 	public HashMap<String, OrgTerminal> getDBTerminals() {
-
 		HashMap<String, OrgTerminal> terminalsHM = new HashMap<String, OrgTerminal>();
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		DBCursor cursor;
