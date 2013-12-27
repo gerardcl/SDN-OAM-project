@@ -232,9 +232,40 @@ public class Read {
 		}
 		return flowsHM;
 	}
-	
+
 	public HashMap<String, OrgTerminal> getDBTerminals() {
-		// TODO Auto-generated method stub
-		return null;
+
+		HashMap<String, OrgTerminal> terminalsHM = new HashMap<String, OrgTerminal>();
+		DBCollection collection = db.getCollection(OCOLLECTION);
+		DBCursor cursor;
+
+		cursor = collection.find();
+		while (cursor.hasNext()) {
+			BasicDBList terminals = (BasicDBList) cursor.next()
+					.get("terminals");
+			for (int i = 0; i < terminals.size(); i++) {
+				OrgTerminal orgTerminal = new OrgTerminal();
+				DBObject terminal = (BasicDBObject) terminals.get(i);
+
+				String identifier = (String) terminal.get("identifier");
+				String hostName = (String) terminal.get("hostName");
+				String ipAddress = (String) terminal.get("ipAddress");
+				String mac = (String) terminal.get("mac");
+				double ifaceSpeed = (Double) terminal.get("ifaceSpeed");
+				String description = (String) terminal.get("description");
+				boolean active = (Boolean) terminal.get("active");
+
+				orgTerminal.setIdentifier(identifier);
+				orgTerminal.setHostName(hostName);
+				orgTerminal.setIpAddress(ipAddress);
+				orgTerminal.setMac(mac);
+				orgTerminal.setIfaceSpeed(ifaceSpeed);
+				orgTerminal.setDescription(description);
+				orgTerminal.setActive(active);
+
+				terminalsHM.put(identifier, orgTerminal);
+			}
+		}
+		return terminalsHM;
 	}
 }
