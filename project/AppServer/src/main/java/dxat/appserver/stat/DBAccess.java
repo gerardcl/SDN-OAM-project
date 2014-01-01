@@ -45,7 +45,7 @@ public class DBAccess {
 
 	}
 
-	public RrdDef createRrdDefPuerto(String name, long start) {
+	public RrdDef createRrdDefPort(String name, long start) {
 		String path = rrdPath + name + ".rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
@@ -95,9 +95,28 @@ public class DBAccess {
 		rrdDef.addArchive(MIN, 0.5, 60, 1140);
 		rrdDef.addArchive(MIN, 0.5, 3600, 24);
 		return rrdDef;
-
 	}
 
+	public RrdDef createRrdDefFlow(String name, long start) {
+
+		String path = rrdPath + name + ".rrd";
+
+		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
+		rrdDef.setVersion(2);
+		rrdDef.addDatasource("packetCount", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("byteCount", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addArchive(AVERAGE, 0.5, 1, 60);
+		rrdDef.addArchive(AVERAGE, 0.5, 60, 1140);
+		rrdDef.addArchive(AVERAGE, 0.5, 3600, 24);
+		rrdDef.addArchive(MAX, 0.5, 1, 60);
+		rrdDef.addArchive(MAX, 0.5, 60, 1140);
+		rrdDef.addArchive(MAX, 0.5, 3600, 24);
+		rrdDef.addArchive(MIN, 0.5, 1, 60);
+		rrdDef.addArchive(MIN, 0.5, 60, 1140);
+		rrdDef.addArchive(MIN, 0.5, 3600, 24);
+		return rrdDef;
+	}
+	
 	public boolean rrdFileExists(String name) {
 
 		if (!(name == null)) {

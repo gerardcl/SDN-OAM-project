@@ -43,7 +43,6 @@ public class LoadConfig {
 		if (instance == null) {
 			instance = new LoadConfig();
 		}
-
 		return instance.getPrivProperty(key);
 	}
 

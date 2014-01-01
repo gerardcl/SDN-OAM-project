@@ -15,6 +15,7 @@ import org.apache.catalina.websocket.WsOutbound;
 
 import dxat.appserver.realtime.RealTimeManager;
 import dxat.appserver.realtime.interfaces.IRealTimeSuscriber;
+import dxat.appserver.realtime.pojos.Flow;
 
 public class RealTimeWebSocket extends WebSocketServlet {
 	private static final long serialVersionUID = 1L;
@@ -59,11 +60,16 @@ public class RealTimeWebSocket extends WebSocketServlet {
 		@Override
 		protected void onTextMessage(CharBuffer buffer) throws IOException {
 			String data = buffer.toString();
+			if (data.equals("PushDefaultFlow")){
+				RealTimeManager.getInstance().pushFlow(new Flow());
+			} else if (data.equals("DeleteDefaultFlow")){
+				RealTimeManager.getInstance().deleteFlow(new Flow());
+			} else if (data.equals("DeleteAllFlows")){
+				RealTimeManager.getInstance().deleteAllFlows();
+			}
 			System.out.println("Message recieved: " + data);
 			send(connection, data);
-			broadcast("broadcasted: " + data); // This is used for all client
-												// connecting to
-			// server
+			broadcast("broadcasted: " + data);
 		}
 
 		@Override

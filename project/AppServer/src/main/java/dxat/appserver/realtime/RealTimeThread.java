@@ -31,9 +31,6 @@ import dxat.appserver.topology.exceptions.TerminalNotFoundException;
 import dxat.appserver.stat.StatManager;
 import dxat.appserver.stat.pojos.StatCollection;
 
-import dxat.appserver.topology.pojos.Command;
-import dxat.appserver.topology.pojos.Flow;
-
 public class RealTimeThread implements Runnable {
 	private String serverAddr = "";
 	private int serverPort = -1;
@@ -68,13 +65,7 @@ public class RealTimeThread implements Runnable {
 		sendrequest(serverRequest);
 	}
 
-	public void pushFlow(Flow flow) {
-		Command cmd = new Command();
-		cmd.setEvent(Command.PUSH_FLOW);
-		cmd.setObject(new Gson().toJson(flow));
-	}
-
-	private void sendrequest(ServerRequest serverRequest) {
+	public void sendrequest(ServerRequest serverRequest) {
 		try {
 			writer.write(new Gson().toJson(serverRequest) + "\n");
 			writer.flush();
@@ -137,9 +128,18 @@ public class RealTimeThread implements Runnable {
 				System.out
 						.println("[EXCEPTION PUSHING STAT] " + e.getMessage());
 			}
-			//System.out.print(new Gson().toJson(statCollection));
-			/*RealTimeManager.getInstance()
-					.broadcast(controllerEvent.getObject());*/
+			// System.out.print(new Gson().toJson(statCollection));
+			/*
+			 * RealTimeManager.getInstance()
+			 * .broadcast(controllerEvent.getObject());
+			 */
+		}
+
+		if (controllerEvent.getEvent().startsWith("PUSH_FLOW")) {
+			String msg = "[" + controllerEvent.getEvent() + "] "
+					+ controllerEvent.getObject();
+			System.out.println(msg);
+			RealTimeManager.getInstance().broadcast(msg);
 		}
 	}
 

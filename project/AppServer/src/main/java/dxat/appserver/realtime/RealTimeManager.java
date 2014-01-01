@@ -3,24 +3,52 @@ package dxat.appserver.realtime;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+
 import dxat.appserver.config.LoadConfig;
 import dxat.appserver.realtime.interfaces.IRealTimeManager;
 import dxat.appserver.realtime.interfaces.IRealTimeSuscriber;
+import dxat.appserver.realtime.interfaces.IServerRequests;
+import dxat.appserver.realtime.pojos.Flow;
+import dxat.appserver.realtime.pojos.ServerRequest;
 
 public class RealTimeManager implements IRealTimeManager {
 	private static RealTimeManager instance = null;
 	private HashMap<String, IRealTimeSuscriber> suscribers = null;
+	private RealTimeThread realTimeThread = null;
 
 	private RealTimeManager() {
 		super();
 		suscribers = new HashMap<String, IRealTimeSuscriber>();
-		Thread rtThread = new Thread(new RealTimeThread(
+		realTimeThread = new RealTimeThread(
 				LoadConfig.getProperty("controller.ip"),
-				Integer.valueOf(LoadConfig.getProperty("controller.port"))),
+				Integer.valueOf(LoadConfig.getProperty("controller.port")));
+		Thread rtThread = new Thread(realTimeThread,
 				"DXAT AppServer Real Time Module");
 		rtThread.start();
 	}
 
+	public void pushFlow(Flow flow){
+		ServerRequest serverRequest = new ServerRequest();
+		serverRequest.setRequest(IServerRequests.PUSH_FLOW_REQUEST);
+		serverRequest.setObject(new Gson().toJson(flow));
+		realTimeThread.sendrequest(serverRequest);
+	}
+	
+	public void deleteAllFlows(){
+		ServerRequest serverRequest = new ServerRequest();
+		serverRequest.setRequest(IServerRequests.DELETE_ALL_FLOWS_REQUEST);
+		serverRequest.setObject("NONE");
+		realTimeThread.sendrequest(serverRequest);
+	}
+	
+	public void deleteFlow(Flow flow){
+		ServerRequest serverRequest = new ServerRequest();
+		serverRequest.setRequest(IServerRequests.DELETE_FLOW_REQUEST);
+		serverRequest.setObject(new Gson().toJson(flow));
+		realTimeThread.sendrequest(serverRequest);
+	}
+	
 	public static RealTimeManager getInstance() {
 		if (instance == null)
 			instance = new RealTimeManager();
