@@ -189,7 +189,8 @@ public class RealTimeThread implements Runnable {
 					 * processCommand(new Gson().fromJson(reader.readLine(),
 					 * Command.class));
 					 */
-					processEvent(new Gson().fromJson(reader.readLine(),
+					String line = new String(reader.readLine());
+					processEvent(new Gson().fromJson(line,
 							ControllerEvent.class));
 				} catch (IOException e) {
 					try {

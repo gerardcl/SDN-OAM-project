@@ -14,7 +14,7 @@
 		console.log(eventObject);
 
 		var message = "<br/> " + eventObject.data;
-		document.getElementById('log').innerHTML += message; //Add the message recieved from the server 
+		document.getElementById('log').innerHTML = message + document.getElementById('log').innerHTML; //Add the message recieved from the server 
 	}
 
 	function onClose(eventObject) {

@@ -54,6 +54,7 @@ public class LinkTopologyDB extends TopologyDB {
 
 		if (!dstPortId.equals(link.getDstPortId())) {
 			DbUpdate update = new DbUpdate();
+			update.setPropertyId("enabled");
 			update.setInventoryId(link.getLinkKey());
 			update.setLegacyValue(dstPortId);
 			update.setNewValue(link.getDstPortId());
@@ -63,6 +64,7 @@ public class LinkTopologyDB extends TopologyDB {
 
 		if (!srcPortId.equals(link.getSrcPortId())) {
 			DbUpdate update = new DbUpdate();
+			update.setPropertyId("enabled");
 			update.setInventoryId(link.getLinkKey());
 			update.setLegacyValue(srcPortId);
 			update.setNewValue(link.getSrcPortId());
@@ -72,6 +74,7 @@ public class LinkTopologyDB extends TopologyDB {
 
 		if (!enabled.equals(link.getEnabled())) {
 			DbUpdate update = new DbUpdate();
+			update.setPropertyId("enabled");
 			update.setInventoryId(link.getLinkKey());
 			update.setLegacyValue(enabled.toString());
 			update.setNewValue(link.getEnabled().toString());
