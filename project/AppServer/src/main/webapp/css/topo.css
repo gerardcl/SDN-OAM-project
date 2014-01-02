@@ -1,0 +1,33 @@
+.nodeRED {
+	stroke: #fff;
+	stroke-width: 1.5px;
+	fill: red;
+}
+
+.nodeYELLOW {
+	stroke: #fff;
+	stroke-width: 1.5px;
+	fill: yellow;
+}
+
+.nodeGREEN {
+	stroke: #fff;
+	stroke-width: 1.5px;
+	fill: green;
+}
+
+.nodeBLUE {
+	stroke: #fff;
+	stroke-width: 1.5px;
+	fill: blue;
+}
+
+.link {
+	stroke: #999;
+	stroke-opacity: .6;
+}
+/*
+.linkRED {
+  stroke: #F00;
+  stroke-opacity: .6;
+}*/
