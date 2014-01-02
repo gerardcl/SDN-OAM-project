@@ -203,36 +203,147 @@
   	<!-- GLOBAL VIEW -->
   	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
   	<script type="text/template" id="admin-overview-template">
-              <div class="row"> <!-- TOPOLOGY GRAPH ROM -->
-                <div class="col-lg-12">
+
+              <div class="row"> <!-- TOPOLOGY and CONTROLLER ROM -->
+
+                <!-- TOPOLOGY col -->
+                <div class="col-lg-9 col-md-9 col-sm-9">
 
                   <div class="panel panel-primary">
-                  
                     <div class="panel-heading">
                       <h3 class="panel-title"><i class="fa fa-cloud"></i> Network Topology Overview</h3>
                     </div>
-
                     <div class="panel-body">
-                  
                       <div id="GS-topo">
                         <p class="text-center">
                           <img src="http://placehold.it/600x300">
                         </p>
                       </div>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /TOPOLOGY col -->
+
+                <!-- CONTROLLER col -->
+                <div class="col-lg-3 col-md-3 col-sm-3">
+
+                  <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title"><i class="fa fa-dashboard"></i> Controller</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div id="GS-controller">
+
+
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /CONTROLLER col -->
+              </div><!-- /TOPOLOGY and CONTROLLER ROM -->
+
+              <div class="row"> <!-- STATISTICS ROW -->
+
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Statistics</h3>
+                  </div>
+                  <div class="panel-body">
+                    <div id="GS-stats">
+ 
+                      <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="panel panel-default">
+                          <div class="panel-body">
+                            <h4>Select an element from the graph above</h4>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="panel panel-default">
+                          <div class="panel-body">
+                            <div class="list-group">
+                              <a href="#" class="list-group-item">Port 1</a>
+                              <a href="#" class="list-group-item">Port 2</a>
+                              <a href="#" class="list-group-item">Port 3</a>
+                              <a href="#" class="list-group-item">Port 4</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="row">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <br>
+                              <br>
+                              <h3>Here the graph</h3>
+                              <br>
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                              Param
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a href="#">Receive</a></li>
+                              <li><a href="#">Transmitted</a></li>
+                              <li><a href="#">Dropped</a></li>
+                              <li><a href="#">Errors</a></li>
+                              <li><a href="#">Collisions</a></li>
+                            </ul>
+                          </div>
+
+                          <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                              Value type
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a href="#">Packets</a></li>
+                              <li><a href="#">Bytes</a></li>
+                              <li><a href="#">Flows</a></li>
+                            </ul>
+                          </div>
+
+                          <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                              Time interval
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a href="#">Last Minute</a></li>
+                              <li><a href="#">Last Hour</a></li>
+                              <li><a href="#">Last Day</a></li>
+                              <li><a href="#">Last Week</a></li>
+                              <li><a href="#">Last Month</a></li>
+                            </ul>
+                          </div>
+
+                        </div>
+                      </div>
 
                     </div>
-
                   </div>
-                </div>
-              </div><!-- /TOPOLOGY GRAPH ROM -->
+                </div>  
 
-              <div class="row"> <!-- Bottom row -->  
+              </div> <!-- /STATISTICS ROW -->
+
+
+              <div class="row"> <!-- ALERTS row -->  
                 <div class="col-lg-12">
                   <div class="panel">
                     <div class="tabbable">
                       <ul class="nav nav-pills nav-justified">
                         <li class="active"><a href="#alarms" data-toggle="tab"> <i class="fa fa-bell"></i> Alarms</a></li>
-                        <li class=""><a href="#statistics" data-toggle="tab"> <i class="fa fa-bar-chart-o"></i> Statistics</a></li>
+                        
                       </ul>
 
                       <div class="tab-content"><!-- tabs ALARMS and STATISTICS content -->
@@ -392,7 +503,7 @@
                     </div>
                   </div>
                 </div>
-              </div><!-- /Bottom row -->
+              </div><!-- /ALERTS row -->
     </script>
   	<!-- /GLOBAL VIEW TEMPLATE -->
   	<!-- /ADMIN OVERVIEW VIEW -->

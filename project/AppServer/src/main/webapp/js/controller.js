@@ -433,9 +433,15 @@
 		adminOverviewView.render();
 		//SlimScroll HEIGHTS
 		$('#GS-alerts').slimScroll({
-			height: '200px'
+			height: '100px'
 		});
 		$('#GS-topo').slimScroll({
+			height: '200px'
+		});
+		$('#GS-controller').slimScroll({
+			height: '200px'
+		});
+		$('#GS-stats').slimScroll({
 			height: '200px'
 		});
 	})
