@@ -9,6 +9,19 @@ function initStatusOverview(){
 	$("#statistics").hide();
 	createTopologyGraph();
 	initializeControllerStats();
+
+
+//	ANOTHER METHOD TO CALL PORT LIST WITH EVENTLISTENERS <<-- NOT USING IT NOW (see showPortStats() method)
+
+//	document.querySelector('body').addEventListener('click', function(event) {
+//	if (event.target.tagName.toLowerCase() === 'li') {
+//	// do your action on your 'li' or whatever it is you're listening for
+//	if(event.target.id == "port"){ 
+//	console.log("PORT CLICK!" );
+//	console.log($(event.target).text());
+//	}
+//	}
+//	});
 }
 
 //TOPOLOGY GRAPH
@@ -340,9 +353,9 @@ function createTopologyGraph(){
 		var switchInfo = "<h4> Switch info</h4>";
 		switchInfo += "<b>ID:</b>  "+d.swId+"<p>";
 		switchInfo += "<b>Manufacturer:</b>  "+d.manufacturer;
-		var portList ="<h4>Port list</h4>"; 
+		var portList ="<h4>Port list by id</h4>"; 
 		for (var i = d.ports.length-1 ; i >= 0 ; i--) {
-			portList += "<a href='HERE GOES THE CALL TO SHOW DEFAULT STATISTICS' class='list-group-item'>Port "+ d.ports[i].portId+"</a>";
+			portList += "<li class='list-group-item' id='port' onclick='showPortStats();'>"+ d.ports[i].portId+"</li>";
 		}
 		var packetCount = "45";
 		var byteCount = "1.2k";
@@ -352,8 +365,6 @@ function createTopologyGraph(){
 		$("#byteCount").html(byteCount);
 		$("#flowCount").html(flowCount);
 		$("#portList").html(portList);
-		
-		
 		$("#statistics").show();
 	});
 
@@ -361,6 +372,106 @@ function createTopologyGraph(){
 		console.log("terminal " + d.terminalId + " was clicked");
 	});
 }
+
+
+
+
+
+
+//STATISTIC'S GENERATION
+var selectedPort = "";
+var selectedParam = ""; 
+var selectedValueType = "";  
+var selectedTimeInterval = "";
+
+function loadDefaultStatValues(){
+	selectedPort = "";
+	selectedParam = "receiveBytes"; //default value
+	selectedValueType = "AVERAGE";  //devault value
+	selectedTimeInterval = "hour";  //devault value
+	$("#bparam").html('Received <span class="caret"></span>');
+	$("#bvaluetype").html('AVERAGE <span class="caret"></span>');
+	$("#btinterval").html('Last hour <span class="caret"></span>');
+}
+
+function printPortGraph(){
+	if(selectedPort != ""){
+		console.log("PORT STATS");
+		console.log("Port ID: ");
+		console.log(selectedPort);
+		console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
+		//HERE THE CODE BY ALEX
+
+
+
+	}else alert("Please, select a port from the list");
+}
+
+//GRAPH STATS CALL TO NEW STATISTIC'S GENERATION
+function showPortStats(){
+	if(event.target.id == "port") selectedPort = $(event.target).text();
+	if(event.target.id == "param"){
+		console.log("selected param: "+ $(event.target).text());	
+		switch ($(event.target).text()){
+			case "Received": 
+				selectedParam = "receiveBytes";
+				$("#bparam").html('Received <span class="caret"></span>');
+				break;
+			case "Transmitted": 
+				selectedParam = "transmitBytes";
+				$("#bparam").html('Transmitted <span class="caret"></span>');
+				break;
+			case "Drops": selectedParam = "receiveDropped";
+				$("#bparam").html('Drops <span class="caret"></span>');
+				break;
+			case "Errors": selectedParam = "receiveErrors";
+				$("#bparam").html('Errors <span class="caret"></span>');
+				break;
+			case "Collisions": selectedParam = "collisions";
+				$("#bparam").html('Collisions <span class="caret"></span>');
+				break;				
+			default:
+				break;
+		}
+	}
+	if(event.target.id == "valuetype"){
+		console.log("selected valuetype: "+$(event.target).text());
+		switch ($(event.target).text()){
+			case "MAX": selectedValueType = "MAX";
+				$("#bvaluetype").html('MAX <span class="caret"></span>');
+				break;
+			case "MIN": selectedValueType = "MIN";
+				$("#bvaluetype").html('MIN <span class="caret"></span>');
+				break;
+			case "AVERAGE": selectedValueType = "AVERAGE";
+				$("#bvaluetype").html('AVERAGE <span class="caret"></span>');
+				break;			
+			default:
+				break;
+		}
+	}
+	if(event.target.id == "tinterval"){
+		console.log("selected time interval: "+$(event.target).text());
+		switch ($(event.target).text()){
+			case "Last minute": selectedTimeInterval = "minute";
+				$("#btinterval").html('Last minute <span class="caret"></span>');
+				break;
+			case "Last hour": selectedTimeInterval = "hour";
+				$("#btinterval").html('Last hour <span class="caret"></span>');
+				break;
+			case "Per second": selectedTimeInterval = "second";
+				$("#btinterval").html('Per second <span class="caret"></span>');
+				break;			
+			default:
+				break;
+		}
+	}
+
+	printPortGraph();
+
+}
+
+
 
 
 

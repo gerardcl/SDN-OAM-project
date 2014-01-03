@@ -282,10 +282,10 @@
 
                       <div class="col-lg-3 col-md-3 col-sm-3">
                         <div class="panel panel-default">
-                          <div class="panel-body">
-                            <div class="list-group" id="portList">
+                          <div class="panel-body" id="listingPorts">
+                            <ul class="list-group" id="portList">
                               
-                            </div>
+                            </ul>
                           </div>
                         </div>
                       </div>
@@ -305,41 +305,41 @@
 
                         <div class="row">
 
-                          <div class="btn-group dropup">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                              Param
+                          Parameter <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="bparam">
+                              Received
                               <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a href="#">Received</a></li>
-                              <li><a href="#">Transmitted</a></li>
-                              <li><a href="#">Drops</a></li>
-                              <li><a href="#">Errors</a></li>
-                              <li><a href="#">Collisions</a></li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Received</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Transmitted</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Drops</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Errors</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Collisions</li>
                             </ul>
                           </div>
 
-                          <div class="btn-group dropup">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                              Value type
+                           |  Value type <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="bvaluetype">
+                              AVERAGE
                               <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a href="#">AVERAGE</a></li>
-                              <li><a href="#">MAX</a></li>
-                              <li><a href="#">MIN</a></li>
+                              <li class='list-group-item' id="valuetype" onclick="showPortStats();">AVERAGE</li>
+                              <li class='list-group-item' id="valuetype" onclick="showPortStats();">MAX</li>
+                              <li class='list-group-item' id="valuetype" onclick="showPortStats();">MIN</li>
                             </ul>
                           </div>
 
-                          <div class="btn-group dropup">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                              Time interval
+                           |  Time interval <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="btinterval">
+                              Last hour
                               <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a href="#">Last Minute</a></li>
-                              <li><a href="#">Last Hour</a></li>
-                              <li><a href="#">Per second</a></li>
+                              <li class='list-group-item' id="tinterval" onclick="showPortStats();">Last minute</li>
+                              <li class='list-group-item' id="tinterval" onclick="showPortStats();">Last hour</li>
+                              <li class='list-group-item' id="tinterval" onclick="showPortStats();">Per second</li>
                             </ul>
                           </div>
 

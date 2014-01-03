@@ -431,6 +431,7 @@
 		// render global view
 		adminSidebarView.render();
 		adminOverviewView.render();
+		loadDefaultStatValues();
 		initStatusOverview();
 		//SlimScroll HEIGHTS
 		$('#GS-alerts').slimScroll({
