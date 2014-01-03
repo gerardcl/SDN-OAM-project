@@ -365,6 +365,7 @@ function createTopologyGraph(){
 		$("#byteCount").html(byteCount);
 		$("#flowCount").html(flowCount);
 		$("#portList").html(portList);
+		loadDefaultStatValues();
 		$("#statistics").show();
 	});
 
