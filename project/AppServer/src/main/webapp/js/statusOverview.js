@@ -33,8 +33,25 @@ function createTopologyGraph(){
 	var force = d3.layout.force().charge(-1120).linkDistance(70).size(
 			[ width, height ]);
 
-	var svg = d3.select("#topo").append("svg").attr("width", width).attr(
-			"height", height);
+	var svg = d3.select("#topo")
+	.append("svg")
+	.attr({
+		"width": "100%",
+		"height": height
+	})
+	.attr("viewBox", "0 0 " + width + " " + height )
+	.attr("preserveAspectRatio", "xMidYMid meet")
+	.attr("pointer-events", "all")
+	.call(d3.behavior.zoom().on("zoom", redraw));
+
+	var pict = svg
+	.append('svg:g');
+
+	function redraw() {
+		pict.attr("transform",
+				"translate(" + d3.event.translate + ")"
+				+ " scale(" + d3.event.scale + ")");
+	}
 //	var RESTapi = "http://localhost:7474/db/data/node/1/traverse/node";
 //	var switchesURL = "http://147.83.113.109:8080/AppServer/webapi/topology/all/switches";
 	var nodes = [];
