@@ -433,7 +433,7 @@ function printPortGraph(){
 		//FINAL DATE PARSER
 
 
-
+		var j=0;
 		var count =0;
 		var iSegment =0;
 		var lastPos=0;
@@ -502,6 +502,7 @@ function printPortGraph(){
 		});
 
 		setInterval(function() {
+			console.log("refreshing stats graph");
 			refresh();  
 		},5000);
 
