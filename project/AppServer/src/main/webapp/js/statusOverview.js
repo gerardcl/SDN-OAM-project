@@ -505,18 +505,35 @@ function printPortGraph(){
 			refresh();  
 		},5000);
 
+//		function refresh() {
+//		//alert(newTimeS);
+//		var data2= nextData();
+//		var labelX2= minuteFormat(data2.timeAxxis);
+//		var chart = $('#statisticsGraph').highcharts();
+
+//		//alert(labelXaxis);
+//		chart.xAxis[0].setCategories(labelX2);
+//		chart.series[0].setData(data2.valueAxxis);
+
+//		}
 		function refresh() {
-			//alert(newTimeS);
-			var data2= nextData();
+			j++;
+			if((j % 2)==0){
+				var data2= nextData();
+
+			}else{
+				var data2= getData();
+
+			}
 			var labelX2= minuteFormat(data2.timeAxxis);
 			var chart = $('#statisticsGraph').highcharts();
 
-			//alert(labelXaxis);
 			chart.xAxis[0].setCategories(labelX2);
 			chart.series[0].setData(data2.valueAxxis);
 
-		}
 
+		}
+		
 		function minuteFormat(xAxis){
 			for (var i = 0; i<xAxis.length; i++) {
 				var date = new Date(parseInt(xAxis[i]*1000));
