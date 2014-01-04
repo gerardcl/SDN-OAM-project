@@ -401,6 +401,7 @@ var selectedPort = "";
 var selectedParam = ""; 
 var selectedValueType = "";  
 var selectedTimeInterval = "";
+var refreshIntervalId;
 
 function loadDefaultStatValues(){
 	$('#textgraph').show();
@@ -416,6 +417,7 @@ function loadDefaultStatValues(){
 
 function printPortGraph(){
 	if(selectedPort != ""){
+		clearInterval(refreshIntervalId);
 		$('#textgraph').hide();
 		$('#statisticsGraph').show();
 		console.log("PORT STATS");
@@ -505,7 +507,7 @@ function printPortGraph(){
 
 		});
 
-		setInterval(function() {
+		refreshIntervalId = setInterval(function() {
 			console.log("refreshing stats graph");
 			refresh();  
 		},5000);
