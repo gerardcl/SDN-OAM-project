@@ -42,8 +42,20 @@
 		        	$("#loading").hide();
 		        	$("#msg").show();
 		        }
-		    	else if(msg.msg == "1") location.href = "/AppServer/#/adminOverview";
-		    	else if(msg.msg == "2") location.href = "/AppServer/#/clientOverview";
+		    	else if(msg.msg == "1"){
+		    		location.href = "/AppServer/#/adminOverview";
+		    		loginUser = msg.userId;
+		        	loginOrg = msg.orgId;
+		        	console.log(loginOrg);
+		        	console.log(loginUser);
+		    	} 
+		    	else if(msg.msg == "2") {
+		    		location.href = "/AppServer/#/clientOverview";
+		    		loginUser = msg.userId;
+		        	loginOrg = msg.orgId;
+		        	console.log(loginOrg);
+		        	console.log(loginUser);
+		    	} 
 		    },
 		    error: function(xhr, msg) { 
 		    	console.log(msg + '\n' + xhr.responseText);

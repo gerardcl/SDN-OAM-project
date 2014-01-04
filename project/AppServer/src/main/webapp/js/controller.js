@@ -1,6 +1,9 @@
 //Backbone aaaa
 (function($){
 
+	var loginUser = '';
+	var loginOrg = '';
+
 	$.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
 		options.url = '/AppServer/webapp' + options.url;
 	});
@@ -22,7 +25,7 @@
 
 	//flow model  
 	var Flow = Backbone.Model.extend({
-		urlRoot:'/manager/flow/all?orgId=',
+		//urlRoot:'/manager/flow/all?orgId=',
 		defaults:{
 			identifier: "",
 			active: "",
@@ -39,7 +42,7 @@
 
 	//terminal model  
 	var Terminal = Backbone.Model.extend({
-		urlRoot:'/manager/terminal/all?orgId=',
+		//urlRoot:'/manager/terminal/all?orgId=',
 		defaults:{
 			identifier: "",
 			active: "",
@@ -200,21 +203,37 @@
 	var loginView = new LoginView();
 	// /LOGIN VIEW #login-template
 
-	//ADMIN SIDEBAR #login-template
+	//ADMIN SIDEBAR #admin-sidebar-template
 	var AdminSidebarView = Backbone.View.extend({
 		el: '.sidebar-container',
 		updateClass: function() {
 			this.$el.toggleClass('active');
 		},
-		render: function () {
+		render: function (options) {
 			var that = this;
-			var template = _.template($('#admin-sidebar-template').html());
+			var template = _.template($('#admin-sidebar-template').html(), {btnHL: options.btnHL});
 			that.$el.html(template);
 		}
 	});
 
 	var adminSidebarView = new AdminSidebarView();
-	// /ADMIN SIDEBAR #login-template
+	// /ADMIN SIDEBAR #admin-sidebar-template
+
+	//CLIENT SIDEBAR #client-sidebar-template
+	var ClientSidebarView = Backbone.View.extend({
+		el: '.sidebar-container',
+		updateClass: function() {
+			this.$el.toggleClass('active');
+		},
+		render: function (options) {
+			var that = this;
+			var template = _.template($('#client-sidebar-template').html(), {btnHL: options.btnHL});
+			that.$el.html(template);
+		}
+	});
+
+	var clientSidebarView = new ClientSidebarView();
+	// /CLIENT SIDEBAR #client-sidebar-template
 
 	//GLOBAL VIEW #admin-overview-template
 	var AdminOverviewView = Backbone.View.extend({
@@ -223,6 +242,19 @@
 			var that = this;
 			var template = _.template($('#admin-overview-template').html());
 			that.$el.html(template);
+			//SlimScroll HEIGHTS
+			$('#GS-alerts').slimScroll({
+				height: '100px'
+			});
+			$('#GS-topo').slimScroll({
+				height: '200px'
+			});
+			$('#GS-controller').slimScroll({
+				height: '200px'
+			});
+			$('#GS-stats').slimScroll({
+				height: '200px'
+			});
 		}
 	});
 
@@ -382,6 +414,7 @@
 		render: function () {
 			var that = this;
 			var flows = new Flows();
+			flows.url = '/manager/flow/all';
 			flows.fetch({
 				success: function (flows) {
 					var template = _.template($('#flows-template').html(), {flows: flows.models});
@@ -430,6 +463,10 @@
 			var that = this;
 			var template = _.template($('#traffic-template').html());
 			that.$el.html(template);
+			//SlimScroll HEIGHTS
+			$('#TA-matrix').slimScroll({
+				height: '520px'
+			});
 		}
 	});
 
@@ -440,16 +477,24 @@
 	var Router = Backbone.Router.extend({
 		routes: {
 			"": "login", 
+			//ADMIN ROUTES
 			"adminOverview" : "adminOverview",
 			"adminOrgs": "adminOrgs",
 			"adminOrgs/:identifier": "orgData",
 			"adminUsers/:identifier": "orgUsers",
-			"adminFlows": "flows", //all the flows
 			"adminFlows/:identifier": "orgFlows", //active flows of specipic org
 			"adminPrgFlows/:identifier": "orgPrgFlows",	//programmed flows of specific org	
-			"adminTerminals/:identifier": "orgTerminals", //terminals of specific org	
+			"adminTerminals/:identifier": "orgTerminals", //terminals of specific org
+			"adminFlows": "flows", //all the flows	
 			"adminTerminals": "terminals",//all the terminals
-			"adminTraffic": "traffic"
+			"adminTraffic": "traffic",
+			//CLIENT ROUTES
+			"clientOverview" : "clientOverview",
+			"clientOrgData": "clientOrgData",
+			"clientOrgUsers": "clientOrgUsers",
+			"clientFlows": "clientFlows",
+			"clientTerminals": "clientTerminals",
+			"clientTraffic": "clientTraffic"
 		}
 	});
 
@@ -457,84 +502,88 @@
 
 	//EVENTS FROM ROUTES
 
-	router.on('route:login', function() {
-		loginView.render();
-	})
+	//ADMIN
+		router.on('route:login', function() {
+			loginView.render();
+		})
 
-	router.on('route:adminOverview', function() {
-		// render global view
-		adminSidebarView.render();
-		adminOverviewView.render();
-		//SlimScroll HEIGHTS
-		$('#GS-alerts').slimScroll({
-			height: '100px'
-		});
-		$('#GS-topo').slimScroll({
-			height: '200px'
-		});
-		$('#GS-controller').slimScroll({
-			height: '200px'
-		});
-		$('#GS-stats').slimScroll({
-			height: '200px'
-		});
-	})
+		router.on('route:adminOverview', function() {
+			adminSidebarView.render({btnHL: 1});
+			adminOverviewView.render();
+		})
 
-	router.on('route:adminOrgs', function() {
-		// render organizations view
-		adminSidebarView.render();
-		orgsListBSView.render();  
-	})
+		router.on('route:adminOrgs', function() {
+			adminSidebarView.render({btnHL: 2});
+			orgsListBSView.render();  
+		})
 
-	router.on('route:orgData', function(identifier) {
-		adminSidebarView.render();
-		//orgsListBSView.render(); 
-		orgDataView.render({identifier: identifier});
-		//orgUsersView.render({identifier: identifier}); 
-	})
+		router.on('route:orgData', function(identifier) {
+			orgDataView.render({identifier: identifier});
+		})
 
-	router.on('route:orgUsers', function(identifier) {	
-		orgUsersView.render({identifier: identifier});
-	})
+		router.on('route:orgUsers', function(identifier) {	
+			orgUsersView.render({identifier: identifier});
+		})
 
-	router.on('route:orgFlows', function(identifier) {	
-		orgFlowsView.render({identifier: identifier, active: true});
-	})
+		router.on('route:orgFlows', function(identifier) {	
+			orgFlowsView.render({identifier: identifier, active: true});
+		})
 
-	router.on('route:orgPrgFlows', function(identifier) {	
-		orgFlowsView.render({identifier: identifier, active: false});
-	})
+		router.on('route:orgPrgFlows', function(identifier) {	
+			orgFlowsView.render({identifier: identifier, active: false});
+		})
 
-	router.on('route:orgTerminals', function(identifier) {
-		orgTerminalsView.render({identifier: identifier});
-	})
+		router.on('route:orgTerminals', function(identifier) {
+			orgTerminalsView.render({identifier: identifier});
+		})
 
-	router.on('route:flows', function() {
-		// render global view
-		adminSidebarView.render();
-		flowsView.render();
-	})
+		router.on('route:flows', function() {
+			adminSidebarView.render({btnHL: 3});
+			flowsView.render();
+		})
 
-	router.on('route:terminals', function() {
-		// render global view
-		adminSidebarView.render();
-		terminalsView.render();
-	})
+		router.on('route:terminals', function() {
+			adminSidebarView.render({btnHL: 4});
+			terminalsView.render();
+		})
 
 
-	router.on('route:traffic', function() {
-		// render global view
-		adminSidebarView.render();
-		trafficView.render();
+		router.on('route:traffic', function() {
+			adminSidebarView.render({btnHL: 5});
+			trafficView.render();
+		})
 
-		//SlimScroll HEIGHTS
-		$('#TA-matrix').slimScroll({
-			height: '520px'
-		});
-	})
+	//CLIENT
+		router.on('route:clientOverview', function() {
+			clientSidebarView.render({btnHL: 1});
+			//clientOverviewView.render();
+		})
 
+		router.on('route:clientOrgData', function() {
+			clientSidebarView.render({btnHL: 2});
+			//clientOverviewView.render();
+		})
 
+		router.on('route:clientOrgUsers', function() {
+			//clientOverviewView.render();
+		})
+
+		router.on('route:clientFlows', function() {
+			clientSidebarView.render({btnHL: 3});
+			//clientOverviewView.render();
+		})
+
+		router.on('route:clientTerminals', function() {
+			clientSidebarView.render({btnHL: 4});
+			//clientOverviewView.render();
+		})
+
+		router.on('route:clientTraffic', function() {
+			clientSidebarView.render({btnHL: 5});
+			//clientOverviewView.render();
+		})
 	Backbone.history.start();
 
+	
 
 })(jQuery);
