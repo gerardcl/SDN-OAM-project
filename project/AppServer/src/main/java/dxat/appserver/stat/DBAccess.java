@@ -16,7 +16,6 @@ import dxat.appserver.config.LoadConfig;
 public class DBAccess {
 
 	public static final int MAX_STEP = 1;
-	public static final String rrdPath = LoadConfig.getProperty("rrd4j.dir");
 
 	private RrdDbPool rrdDbPool = RrdDbPool.getInstance();
 
@@ -26,7 +25,7 @@ public class DBAccess {
 
 	public RrdDef createRrdDefController(String name, long start) {
 
-		String path = rrdPath + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
@@ -46,7 +45,7 @@ public class DBAccess {
 	}
 
 	public RrdDef createRrdDefPort(String name, long start) {
-		String path = rrdPath + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
@@ -78,7 +77,7 @@ public class DBAccess {
 
 	public RrdDef createRrdDefSwitch(String name, long start) {
 
-		String path = rrdPath + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
@@ -99,7 +98,7 @@ public class DBAccess {
 
 	public RrdDef createRrdDefFlow(String name, long start) {
 
-		String path = rrdPath + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);

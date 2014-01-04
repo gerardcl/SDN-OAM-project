@@ -64,6 +64,8 @@ public class LinkManager implements ITopoLinkManager {
 			try {
 				linkTopologyDB.opendb();
 				updates.addAll(linkTopologyDB.disableLink(link.getLinkKey()));
+			} catch (Exception e) {
+				e.printStackTrace();
 			} finally {
 				linkTopologyDB.closedb();
 			}

@@ -189,12 +189,14 @@ public class RealTimeThread implements Runnable {
 					 * processCommand(new Gson().fromJson(reader.readLine(),
 					 * Command.class));
 					 */
-					String line = new String(reader.readLine());
+					String line = "";
+					line = new String(reader.readLine());
 					processEvent(new Gson().fromJson(line,
 							ControllerEvent.class));
-				} catch (IOException e) {
+				} catch (Exception e) {
 					try {
-						System.out.println("[Exception Reading line]");
+						System.out.println("[Exception Reading line] "
+								+ e.getMessage());
 						socket.close();
 					} catch (IOException e1) {
 					}
