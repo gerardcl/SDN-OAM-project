@@ -34,10 +34,11 @@ public class LinkManager implements ITopoLinkManager {
 
 	public List<DbUpdate> processEvent(ControllerEvent controllerEvent)
 			throws JsonSyntaxException, PortNotFoundException,
-			LinkNotFoundException, CannotOpenDataBaseException, LinkKeyBadFormatException {
+			LinkNotFoundException, CannotOpenDataBaseException,
+			LinkKeyBadFormatException {
 		List<DbUpdate> updates = new ArrayList<DbUpdate>();
 		String eventStr = controllerEvent.getEvent();
-		
+
 		if (eventStr.equals(ILinkEvents.LINK_UPDATED)
 				|| eventStr.equals(ILinkEvents.SWITCH_UPDATED)
 				|| eventStr.equals(ILinkEvents.PORT_UP)
@@ -60,9 +61,12 @@ public class LinkManager implements ITopoLinkManager {
 				|| eventStr.equals(ILinkEvents.SWITCH_REMOVED)
 				|| eventStr.equals(ILinkEvents.TUNEL_PORT_REMOVED)) {
 			Link link = getLinkFromJSON(controllerEvent.getObject());
+			if (link.getLinkKey().equals("->"))
+				return updates;
 			LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
 			try {
 				linkTopologyDB.opendb();
+				System.out.println(new Gson().toJson(link));
 				updates.addAll(linkTopologyDB.disableLink(link.getLinkKey()));
 			} catch (Exception e) {
 				e.printStackTrace();

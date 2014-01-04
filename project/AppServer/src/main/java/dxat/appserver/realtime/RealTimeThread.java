@@ -114,9 +114,6 @@ public class RealTimeThread implements Runnable {
 					new Gson().toJson(realTimeEvent));
 		}
 
-		// ************************************************************
-		//
-		// ************************************************************
 		if (controllerEvent.getEvent().equals(IStatisticsEvent.PUSH_STATS)) {
 			StatManager statManager = StatManager.getInstance();
 
@@ -128,11 +125,6 @@ public class RealTimeThread implements Runnable {
 				System.out
 						.println("[EXCEPTION PUSHING STAT] " + e.getMessage());
 			}
-			// System.out.print(new Gson().toJson(statCollection));
-			/*
-			 * RealTimeManager.getInstance()
-			 * .broadcast(controllerEvent.getObject());
-			 */
 		}
 
 		if (controllerEvent.getEvent().startsWith("PUSH_FLOW")) {
@@ -191,6 +183,7 @@ public class RealTimeThread implements Runnable {
 					 */
 					String line = "";
 					line = new String(reader.readLine());
+					reader.ready();
 					processEvent(new Gson().fromJson(line,
 							ControllerEvent.class));
 				} catch (Exception e) {
