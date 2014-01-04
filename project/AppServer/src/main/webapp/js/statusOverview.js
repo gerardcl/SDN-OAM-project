@@ -372,7 +372,7 @@ function createTopologyGraph(){
 		switchInfo += "<b>Manufacturer:</b>  "+d.manufacturer;
 		var portList ="<h4>Port list by id</h4>"; 
 		for (var i = d.ports.length-1 ; i >= 0 ; i--) {
-			portList += "<li class='list-group-item' id='port' onclick='showPortStats();'>"+ d.ports[i].portId+"</li>";
+			portList += "<li class='list-group-item' id='port' onclick='showPortStats();' style='width: 100%; height: 42px; margin: 0 auto; font-size:100%;' >"+ d.ports[i].portId+"</li>";
 		}
 		var packetCount = "45";
 		var byteCount = "1.2k";
@@ -574,7 +574,7 @@ function printPortGraph(){
 
 
 
-
+	//NO PORT SPECIFIED!!!
 	}else alert("Please, select a port from the list");
 }
 
