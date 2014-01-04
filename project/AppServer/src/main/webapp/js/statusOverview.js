@@ -403,6 +403,8 @@ var selectedValueType = "";
 var selectedTimeInterval = "";
 
 function loadDefaultStatValues(){
+	$('#textgraph').show();
+	$('#statisticsGraph').hide();
 	selectedPort = "";
 	selectedParam = "receiveBytes"; //default value
 	selectedValueType = "AVERAGE";  //devault value
@@ -578,6 +580,8 @@ function printPortGraph(){
 
 //GRAPH STATS CALL TO NEW STATISTIC'S GENERATION
 function showPortStats(){
+	$('#textgraph').hide();
+	$('#statisticsGraph').show();
 	if(event.target.id == "port") selectedPort = $(event.target).text();
 	if(event.target.id == "param"){
 		console.log("selected param: "+ $(event.target).text());	
