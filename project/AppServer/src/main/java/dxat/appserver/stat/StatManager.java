@@ -17,6 +17,7 @@ import dxat.appserver.stat.pojos.StatCollection;
 import dxat.appserver.stat.pojos.StatResponse;
 import dxat.appserver.stat.pojos.SwitchStat;
 import dxat.appserver.stat.queries.QueryController;
+import dxat.appserver.stat.queries.QueryFlow;
 import dxat.appserver.stat.queries.QueryPort;
 import dxat.appserver.stat.queries.QuerySwitch;
 
@@ -43,9 +44,8 @@ public class StatManager {
 		// System.out.print(new Gson().toJson(statcollection));
 
 		if (!db.rrdFileExists(LoadConfig.getProperty("rrd4j.dir")
-				+ "floodLight.rrd")) {
-			RrdDef rrdDef = db.createRrdDefController("floodLight",
-					Util.getTime());
+				+ "controller.rrd")) {
+			RrdDef rrdDef = db.createRrdDefController(Util.getTime());
 			RrdDb rrdInit = new RrdDb(rrdDef);
 			rrdInit.close();
 		}
@@ -54,7 +54,7 @@ public class StatManager {
 		else {
 
 			RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(
-					LoadConfig.getProperty("rrd4j.dir") + "floodLight.rrd");
+					LoadConfig.getProperty("rrd4j.dir") + "controller.rrd");
 			if (rrdDb.getLastUpdateTime() == Util.getTime())
 				return;
 			Sample sample = rrdDb.createSample();
@@ -68,17 +68,17 @@ public class StatManager {
 
 		// Pushing Switch statitistcs
 		for (SwitchStat sw : statcollection.getSwitchStatCollection()) {
-			if (!db.rrdFileExists(LoadConfig.getProperty("rrd4j.dir")
-					+ db.convertId(sw.getSwitchId()) + ".rrd")) {
+			String resourcepath = LoadConfig.getProperty("rrd4j.dir")
+					+ db.convertId(sw.getSwitchId()) + ".switch.rrd";
+			if (!db.rrdFileExists(resourcepath)) {
 
 				RrdDef rrdDef = db.createRrdDefSwitch(
 						db.convertId(sw.getSwitchId()), Util.getTime());
 				RrdDb rrdInit = new RrdDb(rrdDef);
 				rrdInit.close();
 			} else {
-				RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(
-						LoadConfig.getProperty("rrd4j.dir")
-								+ db.convertId(sw.getSwitchId() + ".rrd"));
+				RrdDb rrdDb = db.getRrdDbPool()
+						.requestRrdDb(resourcepath);
 				if (rrdDb.getLastUpdateTime() == Util.getTime())
 					return;
 				Sample sample = rrdDb.createSample();
@@ -93,7 +93,7 @@ public class StatManager {
 		// Pushing port statistics
 		for (PortStat port : statcollection.getPortStatCollection()) {
 			if (!db.rrdFileExists(LoadConfig.getProperty("rrd4j.dir")
-					+ db.convertId(port.getPortId()) + ".rrd")) {
+					+ db.convertId(port.getPortId()) + ".port.rrd")) {
 				RrdDef rrdDef = db.createRrdDefPort(
 						db.convertId(port.getPortId()), Util.getTime());
 				RrdDb rrdInit = new RrdDb(rrdDef);
@@ -101,7 +101,7 @@ public class StatManager {
 			} else {
 				RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(
 						LoadConfig.getProperty("rrd4j.dir")
-								+ db.convertId(port.getPortId() + ".rrd"));
+								+ db.convertId(port.getPortId() + ".port.rrd"));
 				if (rrdDb.getLastUpdateTime() == Util.getTime())
 					return;
 				Sample sample = rrdDb.createSample();
@@ -127,18 +127,18 @@ public class StatManager {
 
 		// Pushing Flow statitistcs
 		for (FlowStat flowStat : statcollection.getFlowStatCollection()) {
-			String flowStatKey = "f" + flowStat.getName();
-			RealTimeManager.getInstance().broadcast("[STAT] " + (new Gson().toJson(flowStat)));
+			RealTimeManager.getInstance().broadcast(
+					"[STAT] " + (new Gson().toJson(flowStat)));
 			if (!db.rrdFileExists(LoadConfig.getProperty("rrd4j.dir")
-					+ db.convertId(flowStatKey) + ".rrd")) {
-				RrdDef rrdDef = db.createRrdDefSwitch(
-						db.convertId(flowStatKey), Util.getTime());
+					+ db.convertId(flowStat.getName()) + ".flow.rrd")) {
+				RrdDef rrdDef = db.createRrdDefFlow(
+						db.convertId(flowStat.getName()), Util.getTime());
 				RrdDb rrdInit = new RrdDb(rrdDef);
 				rrdInit.close();
 			} else {
 				RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(
 						LoadConfig.getProperty("rrd4j.dir")
-								+ db.convertId(flowStatKey + ".rrd"));
+								+ db.convertId(flowStat.getName() + ".flow.rrd"));
 				if (rrdDb.getLastUpdateTime() == Util.getTime())
 					return;
 				Sample sample = rrdDb.createSample();
@@ -151,10 +151,10 @@ public class StatManager {
 
 	}
 
-	public StatResponse getStat(String itemId, String statParameter,
+	public StatResponse getSwitchStat(String itemId, String statParameter,
 			String typeOfStat, String granularity) throws IOException {
 		String resourcePath = LoadConfig.getProperty("rrd4j.dir")
-				+ db.convertId(itemId) + ".rrd";
+				+ db.convertId(itemId) + ".switch.rrd";
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
 		long start = getTimeStampGran(granularity);
@@ -167,109 +167,151 @@ public class StatManager {
 		response.setTimeAxxis(QueryController.getTimevalues(rrdDb, start, end,
 				typeOfStat));
 
-		if (db.typeObject(itemId).equals("controller")) {
-
-			switch (statParameter) {
-			case "CpuAvg":
-				response.setValueAxxis(QueryController.getCPUAvg(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "MemoryPCT":
-				response.setValueAxxis(QueryController.getMemoryPct(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			}
-		} else if (db.typeObject(itemId).equals("sw")) {
-			switch (statParameter) {
-			case "packetCount":
-				response.setValueAxxis(QuerySwitch.getPacketCount(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "byteCount":
-				response.setValueAxxis(QuerySwitch.getByteCount(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "flowCount":
-				response.setValueAxxis(QuerySwitch.getFlowCount(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			}
-		} else if (db.typeObject(itemId).equals("port")) {
-
-			switch (statParameter) {
-			case "receivePackets":
-				response.setValueAxxis(QueryPort.getReceivePackets(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "transmitPackets":
-				response.setValueAxxis(QueryPort.getTransmitPackets(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "receiveBytes":
-				response.setValueAxxis(QueryPort.getReceiveBytes(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "transmitBytes":
-				response.setValueAxxis(QueryPort.getTransmitBytes(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "receiveDropped":
-				response.setValueAxxis(QueryPort.getReceiveDropped(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "transmitDropped":
-				response.setValueAxxis(QueryPort.getTransmitDropped(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "receiveErrors":
-				response.setValueAxxis(QueryPort.getReceiveErrors(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "transmitErrors":
-				response.setValueAxxis(QueryPort.getTransmitErrors(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "receiveFrameErrors":
-				response.setValueAxxis(QueryPort.getReceiveFrameErrors(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "receiveOverrunErrors":
-				response.setValueAxxis(QueryPort.getReceiveOverrunErrors(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "receiveCRCErrors":
-				response.setValueAxxis(QueryPort.getReceiveCRCErrors(rrdDb,
-						start, end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			case "collisions":
-				response.setValueAxxis(QueryPort.getCollisions(rrdDb, start,
-						end, typeOfStat));
-				db.getRrdDbPool().release(rrdDb);
-				break;
-			}
-		} else if (db.typeObject(itemId).equals("flow")) {
-			switch (statParameter) {
-
-			}
-
+		switch (statParameter) {
+		case "packetCount":
+			response.setValueAxxis(QuerySwitch.getPacketCount(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "byteCount":
+			response.setValueAxxis(QuerySwitch.getByteCount(rrdDb, start, end,
+					typeOfStat));
+			break;
+		case "flowCount":
+			response.setValueAxxis(QuerySwitch.getFlowCount(rrdDb, start, end,
+					typeOfStat));
+			break;
 		}
+		db.getRrdDbPool().release(rrdDb);
+		return response;
+	}
 
+	public StatResponse getFlowStat(String itemId, String statParameter,
+			String typeOfStat, String granularity) throws IOException {
+		String resourcePath = LoadConfig.getProperty("rrd4j.dir")
+				+ db.convertId(itemId) + ".flow.rrd";
+		StatResponse response = new StatResponse();
+		long actualTimeStamp = Util.getTime();
+		long start = getTimeStampGran(granularity);
+		long end = actualTimeStamp;
+
+		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
+
+		response.setIdObject(itemId);
+		response.setParameter(statParameter);
+		response.setTimeAxxis(QueryFlow.getTimevalues(rrdDb, start, end,
+				typeOfStat));
+
+		switch (statParameter) {
+		case "packetCount":
+			response.setValueAxxis(QueryFlow.getPacketCount(rrdDb, start, end,
+					typeOfStat));
+			break;
+		case "byteCount":
+			response.setValueAxxis(QueryFlow.getByteCount(rrdDb, start, end,
+					typeOfStat));
+			break;
+		}
+		db.getRrdDbPool().release(rrdDb);
+		return response;
+	}
+
+	public StatResponse getControllerStat(String statParameter,
+			String typeOfStat, String granularity) throws IOException {
+		String resourcePath = LoadConfig.getProperty("rrd4j.dir")
+				+"controller.rrd";
+		StatResponse response = new StatResponse();
+		long actualTimeStamp = Util.getTime();
+		long start = getTimeStampGran(granularity);
+		long end = actualTimeStamp;
+
+		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
+
+		response.setIdObject("Controller");
+		response.setParameter(statParameter);
+		response.setTimeAxxis(QueryController.getTimevalues(rrdDb, start, end,
+				typeOfStat));
+
+		switch (statParameter) {
+		case "CpuAvg":
+			response.setValueAxxis(QueryController.getCPUAvg(rrdDb, start, end,
+					typeOfStat));
+			break;
+		case "MemoryPCT":
+			response.setValueAxxis(QueryController.getMemoryPct(rrdDb, start,
+					end, typeOfStat));
+			break;
+		}
+		db.getRrdDbPool().release(rrdDb);
+		return response;
+	}
+
+	public StatResponse getPortStat(String itemId, String statParameter,
+			String typeOfStat, String granularity) throws IOException {
+		String resourcePath = LoadConfig.getProperty("rrd4j.dir")
+				+ db.convertId(itemId) + ".port.rrd";
+		StatResponse response = new StatResponse();
+		long actualTimeStamp = Util.getTime();
+		long start = getTimeStampGran(granularity);
+		long end = actualTimeStamp;
+
+		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
+
+		response.setIdObject(itemId);
+		response.setParameter(statParameter);
+		response.setTimeAxxis(QueryController.getTimevalues(rrdDb, start, end,
+				typeOfStat));
+
+		switch (statParameter) {
+		case "receivePackets":
+			response.setValueAxxis(QueryPort.getReceivePackets(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "transmitPackets":
+			response.setValueAxxis(QueryPort.getTransmitPackets(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "receiveBytes":
+			response.setValueAxxis(QueryPort.getReceiveBytes(rrdDb, start, end,
+					typeOfStat));
+			break;
+		case "transmitBytes":
+			response.setValueAxxis(QueryPort.getTransmitBytes(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "receiveDropped":
+			response.setValueAxxis(QueryPort.getReceiveDropped(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "transmitDropped":
+			response.setValueAxxis(QueryPort.getTransmitDropped(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "receiveErrors":
+			response.setValueAxxis(QueryPort.getReceiveErrors(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "transmitErrors":
+			response.setValueAxxis(QueryPort.getTransmitErrors(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "receiveFrameErrors":
+			response.setValueAxxis(QueryPort.getReceiveFrameErrors(rrdDb,
+					start, end, typeOfStat));
+			break;
+		case "receiveOverrunErrors":
+			response.setValueAxxis(QueryPort.getReceiveOverrunErrors(rrdDb,
+					start, end, typeOfStat));
+			break;
+		case "receiveCRCErrors":
+			response.setValueAxxis(QueryPort.getReceiveCRCErrors(rrdDb, start,
+					end, typeOfStat));
+			break;
+		case "collisions":
+			response.setValueAxxis(QueryPort.getCollisions(rrdDb, start, end,
+					typeOfStat));
+			break;
+		}
+		db.getRrdDbPool().release(rrdDb);
 		return response;
 	}
 
@@ -298,6 +340,5 @@ public class StatManager {
 			value = (long) 3600 * 24 * 30 * 365;
 		}
 		return value;
-
 	}
 }

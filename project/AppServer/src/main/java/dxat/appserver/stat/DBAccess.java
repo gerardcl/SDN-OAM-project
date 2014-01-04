@@ -23,9 +23,9 @@ public class DBAccess {
 		return rrdDbPool;
 	}
 
-	public RrdDef createRrdDefController(String name, long start) {
+	public RrdDef createRrdDefController(long start) {
 
-		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + "controller.rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
@@ -45,7 +45,7 @@ public class DBAccess {
 	}
 
 	public RrdDef createRrdDefPort(String name, long start) {
-		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".port.rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
@@ -77,7 +77,7 @@ public class DBAccess {
 
 	public RrdDef createRrdDefSwitch(String name, long start) {
 
-		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".switch.rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
@@ -98,7 +98,7 @@ public class DBAccess {
 
 	public RrdDef createRrdDefFlow(String name, long start) {
 
-		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".rrd";
+		String path = LoadConfig.getProperty("rrd4j.dir") + name + ".flow.rrd";
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);

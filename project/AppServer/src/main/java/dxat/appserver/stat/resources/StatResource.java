@@ -16,27 +16,65 @@ public class StatResource {
 	private StatManager statMngr = StatManager.getInstance();
 
 	/*
-	 * @param itemId switch identifier, port identifier, "floodlight" and flow identifier. 
-	 * @param statParameter	Controller: CpuAvg, MemoryPCT
-	 * 						    Switch: packetCount, byteCount, flowCount
-	 * 							  Port: receivePackets, transmitPackets, receiveBytes, 
-	 * 									transmitBytes, receiveDropped, transmitDropped,
-	 * 									receiveErrors, transmitErrors, receiveFrameErrors,
-	 * 									receiveOverrunErrors, receiveCRCErrors, collisions
-	 * 							  Flow: packetCount, byteCount
-	 * @param typeOfStat MIN, MAX, AVERAGE
-	 * @param second, minute, hour, day, week, year.
-	 * @return the image at the specified URL
+	 * @param itemId port identifier with format "XX:XX:XX:XX:XX:XX:XX:XX:X"
+	 * 
+	 * @param statParameter Statistic requested parameter, are allowed:
+	 * receivePackets, transmitPackets, receiveBytes, transmitBytes,
+	 * receiveDropped, transmitDropped, receiveErrors, transmitErrors,
+	 * receiveFrameErrors, receiveOverrunErrors, receiveCRCErrors, collisions
+	 * 
+	 * @param typeOfStat Type of the value: MIN, MAX, AVERAGE
+	 * 
+	 * @param granularity Defines the last item fraction that is requested, the
+	 * types allowed are: second, minute, hour, day, week, year.
+	 * 
+	 * @return the specific requested statistics of the desired port
 	 */
 	@GET
-	@Path("/{itemId}/{statParameter}/{typeOfStat}/{granularity}")
+	@Path("/port/{itemId}/{statParameter}/{typeOfStat}/{granularity}")
 	@Produces(MediaType.STATS)
-	public StatResponse getStat(@PathParam("itemId") String itemId,
+	public StatResponse getPortStat(@PathParam("itemId") String itemId,
 			@PathParam("statParameter") String statParameter,
 			@PathParam("typeOfStat") String typeOfStat,
 			@PathParam("granularity") String granularity) throws IOException {
 
-		return statMngr.getStat(itemId, statParameter, typeOfStat, granularity);
+		return statMngr.getPortStat(itemId, statParameter, typeOfStat,
+				granularity);
 	}
 
+	@GET
+	@Path("/switch/{itemId}/{statParameter}/{typeOfStat}/{granularity}")
+	@Produces(MediaType.STATS)
+	public StatResponse getSwitchStat(@PathParam("itemId") String itemId,
+			@PathParam("statParameter") String statParameter,
+			@PathParam("typeOfStat") String typeOfStat,
+			@PathParam("granularity") String granularity) throws IOException {
+
+		return statMngr.getSwitchStat(itemId, statParameter, typeOfStat,
+				granularity);
+	}
+
+	@GET
+	@Path("/flow/{itemId}/{statParameter}/{typeOfStat}/{granularity}")
+	@Produces(MediaType.STATS)
+	public StatResponse getFlowStat(@PathParam("itemId") String itemId,
+			@PathParam("statParameter") String statParameter,
+			@PathParam("typeOfStat") String typeOfStat,
+			@PathParam("granularity") String granularity) throws IOException {
+
+		return statMngr.getFlowStat(itemId, statParameter, typeOfStat,
+				granularity);
+	}
+
+	@GET
+	@Path("/controller/{statParameter}/{typeOfStat}/{granularity}")
+	@Produces(MediaType.STATS)
+	public StatResponse getFlowStat(
+			@PathParam("statParameter") String statParameter,
+			@PathParam("typeOfStat") String typeOfStat,
+			@PathParam("granularity") String granularity) throws IOException {
+
+		return statMngr.getControllerStat(statParameter, typeOfStat,
+				granularity);
+	}
 }
