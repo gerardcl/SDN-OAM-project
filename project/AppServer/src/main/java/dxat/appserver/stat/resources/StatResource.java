@@ -42,6 +42,20 @@ public class StatResource {
 				granularity);
 	}
 
+	/*
+	 * @param itemId switch identifier (dpId) with format
+	 * "XX:XX:XX:XX:XX:XX:XX:XX"
+	 * 
+	 * @param statParameter Statistic requested parameter, are allowed:
+	 * packetCount, byteCount, flowCount
+	 * 
+	 * @param typeOfStat Type of the value: MIN, MAX, AVERAGE
+	 * 
+	 * @param granularity Defines the last item fraction that is requested, the
+	 * types allowed are: second, minute, hour, day, week, year.
+	 * 
+	 * @return the specific requested statistics of the desired switch
+	 */
 	@GET
 	@Path("/switch/{itemId}/{statParameter}/{typeOfStat}/{granularity}")
 	@Produces(MediaType.STATS)
@@ -54,6 +68,20 @@ public class StatResource {
 				granularity);
 	}
 
+	/*
+	 * @param itemId flow name with format "flowName.direction" (the directions
+	 * can be forward and backward)
+	 * 
+	 * @param statParameter Statistic requested parameter, are allowed:
+	 * packetCount, byteCount
+	 * 
+	 * @param typeOfStat Type of the value: MIN, MAX, AVERAGE
+	 * 
+	 * @param granularity Defines the last item fraction that is requested, the
+	 * types allowed are: second, minute, hour, day, week, year.
+	 * 
+	 * @return the specific requested statistics of the desired flow
+	 */
 	@GET
 	@Path("/flow/{itemId}/{statParameter}/{typeOfStat}/{granularity}")
 	@Produces(MediaType.STATS)
@@ -66,6 +94,17 @@ public class StatResource {
 				granularity);
 	}
 
+	/*
+	 * @param statParameter Statistic requested parameter, are allowed:
+	 * CpuAvg, MemoryPCT
+	 * 
+	 * @param typeOfStat Type of the value: MIN, MAX, AVERAGE
+	 * 
+	 * @param granularity Defines the last item fraction that is requested, the
+	 * types allowed are: second, minute, hour, day, week, year.
+	 * 
+	 * @return the specific requested statistics of controller
+	 */
 	@GET
 	@Path("/controller/{statParameter}/{typeOfStat}/{granularity}")
 	@Produces(MediaType.STATS)
