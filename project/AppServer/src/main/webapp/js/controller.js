@@ -54,7 +54,7 @@
 	//user model 
 	var User = Backbone.Model.extend({
 		//urlRoot:'/user/all?orgId=',
-		urlRoot:'/manager/user/all?orgId=',
+		urlRoot:'/manager/user',
 		defaults:{
 			identifier: "",
 			name: "",
@@ -67,7 +67,7 @@
 	});
 
 //	COLLESCTIONS
-	//TOrg data COLLECTION
+	//TOrg COLLECTION
 	var Organizations = Backbone.Collection.extend({
 		model: Organization,
 		url:'/manager/org/all',
@@ -97,7 +97,6 @@
 	//Flows COLLECTION
 	var Flows = Backbone.Collection.extend({
 		model: Flow,
-		url:'/manager/flow/all',
 		parse:function (response) {
 			for ( var i = 0, length = response.orgFlows.length; i < length; i++) {
 				var currentValues = response.orgFlows[i];
@@ -124,7 +123,7 @@
 	//Terminals COLLECTION
 	var Terminals = Backbone.Collection.extend({
 		model: Terminal,
-		url:'/manager/terminal/all',
+		//url:'/manager/terminal/all',
 		parse:function (response) {
 			for ( var i = 0, length = response.orgTerminals.length; i < length; i++) {
 				var currentValues = response.orgTerminals[i];
@@ -147,7 +146,7 @@
 	//Users COLLECTION
 	var Users = Backbone.Collection.extend({
 		model: User,
-		url: function(orgId){
+		/*url: function(orgId){
 			if(orgId!=null){
 				var aux = orgId.orgId;
 				console.log('Entra a la funcio URL i treu com a uri:');
@@ -165,8 +164,7 @@
 			var uri = '/manager/user/all?orgId=' + aux;
 			console.log(uri);
 			return uri;
-		},
-
+		},*/
 		parse:function (response) {
 			for ( var i = 0, length = response.orgUsers.length; i < length; i++) {
 				var currentValues = response.orgUsers[i];
@@ -185,7 +183,6 @@
 		}
 	});
 
-	console.log('var users = new users()');
 	var users = new Users();
 
 //	VIEWS
@@ -265,26 +262,13 @@
 				that.organization = new Organization({id: options.identifier});
 				that.organization.fetch({
 					success: function (organization) {  
+						var activeOrgName = organization.get('name');
+						console.log(activeOrgName);
 						var template = _.template($('#organizations-data-template').html(), {organization: organization});
 						that.$el.html(template); 
 						//SlimScroll
 						$('#OM-data').slimScroll({
 							height: '190px'
-						});
-						$('#OM-topo').slimScroll({
-							height: '230px'
-						});
-						$('#OM-flows').slimScroll({
-							height: '135px'
-						});
-						$('#OM-prgFlows').slimScroll({
-							height: '135px'
-						});
-						$('#OM-users').slimScroll({
-							height: '135px'
-						});
-						$('#OM-ap').slimScroll({
-							height: '135px'
 						});
 					}
 				})
@@ -295,21 +279,6 @@
 				$('#OM-data').slimScroll({
 					height: '190px'
 				});       
-				$('#OM-topo').slimScroll({
-					height: '230px'
-				});
-				$('#OM-flows').slimScroll({
-					height: '135px'
-				});
-				$('#OM-prgFlows').slimScroll({
-					height: '135px'
-				});
-				$('#OM-users').slimScroll({
-					height: '135px'
-				});
-				$('#OM-ap').slimScroll({
-					height: '135px'
-				});
 			}
 		}
 	});
@@ -324,16 +293,20 @@
 			var that = this;
 			//if exists fetch details
 			if(options.identifier) {
-				that.user = new User({id: options.identifier});
-				that.user.fetch({
-					success: function (user) {  
-						var template = _.template($('#organizations-user-template').html(), {user: user});
+				that.users = new Users();
+				that.users.url = '/manager/user/'+options.identifier+'/all';
+				that.users.fetch({
+					success: function (users) {  
+						var template = _.template($('#organizations-users-template').html(), {users: users.models, orgId: options.identifier});
 						that.$el.html(template); 
 						//SlimScroll
+							$('#OM-users').slimScroll({
+								height: '135px'
+							});
 					}
-				})
+				});
 			} else {
-				var template = _.template($('#organizations-user-template').html(), {user: null});
+				var template = _.template($('#organizations-users-template').html(), {users: null});
 				that.$el.html(template);
 				//SlimScroll
 			}
@@ -341,6 +314,65 @@
 	});
 
 	var orgUsersView = new OrgUsersView();
+
+
+	//org TERMINAL
+	var OrgTerminalsView = Backbone.View.extend({
+		el: '.page',
+		render: function (options) { 
+			var that = this;
+			//if exists fetch details
+			if(options.identifier) {
+				that.terminals = new Terminals();
+				that.terminals.url = '/manager/terminal/'+options.identifier+'/all';
+				that.terminals.fetch({
+					success: function (terminals) {  
+						var template = _.template($('#organizations-terminals-template').html(), {terminals: terminals.models, orgId: options.identifier});
+						that.$el.html(template); 
+						//SlimScroll
+							$('#OM-ap').slimScroll({
+								height: '135px'
+							});
+					}
+				});
+			} else {
+				var template = _.template($('#organizations-terminals-template').html(), {terminals: null});
+				that.$el.html(template);
+				//SlimScroll
+			}
+		}
+	});
+
+	var orgTerminalsView = new OrgTerminalsView();
+
+	//Org FLOWS
+	var OrgFlowsView = Backbone.View.extend({
+		el: '.page',
+		render: function (options) { 
+			var that = this;
+			//if exists fetch details
+			if(options.identifier) {
+				that.activeFlows = new Flows();
+				that.activeFlows.url = '/manager/flow/'+options.identifier+'/all';
+				that.activeFlows.fetch({
+					success: function (flows) {  
+						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active});
+						that.$el.html(template); 
+						//SlimScroll
+							$('#FLW-prg').slimScroll({
+								height: '135px'
+							});
+					}
+				});
+			} else {
+				var template = _.template($('#organizations-flows-template').html(), {flows: null});
+				that.$el.html(template);
+				//SlimScroll
+			}
+		}
+	});
+
+	var orgFlowsView = new OrgFlowsView();
 
 	// /ORGANIZATIONS
 
@@ -375,6 +407,7 @@
 		render: function () {
 			var that = this;
 			var terminals = new Terminals();
+			terminals.url = '/manager/terminal/all',
 			terminals.fetch({
 				success: function (terminals) {
 					var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
@@ -411,10 +444,11 @@
 			"adminOrgs": "adminOrgs",
 			"adminOrgs/:identifier": "orgData",
 			"adminUsers/:identifier": "orgUsers",
-			"adminFlows": "flows",
-			"adminFlows/identifier": "orgFlows",
-			"adminTerminals": "terminals",
-			"adminTerminals/:identifier": "orgTerminals",
+			"adminFlows": "flows", //all the flows
+			"adminFlows/:identifier": "orgFlows", //active flows of specipic org
+			"adminPrgFlows/:identifier": "orgPrgFlows",	//programmed flows of specific org	
+			"adminTerminals/:identifier": "orgTerminals", //terminals of specific org	
+			"adminTerminals": "terminals",//all the terminals
 			"adminTraffic": "traffic"
 		}
 	});
@@ -456,16 +490,23 @@
 		adminSidebarView.render();
 		//orgsListBSView.render(); 
 		orgDataView.render({identifier: identifier});
-
 		//orgUsersView.render({identifier: identifier}); 
 	})
 
-	router.on('route:orgUsers', function(identifier) {
-		console.log('entra a orgUsers route');
-		adminSidebarView.render();
+	router.on('route:orgUsers', function(identifier) {	
 		orgUsersView.render({identifier: identifier});
+	})
 
-		//orgUsersView.render({identifier: identifier}); 
+	router.on('route:orgFlows', function(identifier) {	
+		orgFlowsView.render({identifier: identifier, active: true});
+	})
+
+	router.on('route:orgPrgFlows', function(identifier) {	
+		orgFlowsView.render({identifier: identifier, active: false});
+	})
+
+	router.on('route:orgTerminals', function(identifier) {
+		orgTerminalsView.render({identifier: identifier});
 	})
 
 	router.on('route:flows', function() {
@@ -479,6 +520,7 @@
 		adminSidebarView.render();
 		terminalsView.render();
 	})
+
 
 	router.on('route:traffic', function() {
 		// render global view
