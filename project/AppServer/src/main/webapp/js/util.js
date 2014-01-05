@@ -2,6 +2,7 @@
 	$(document).ready(function(){
 		$("#msg").hide();
 		$("#loading").hide();
+		$("#username").focus();
 	});
 
 	//$("#submit").click($("#msg").show());

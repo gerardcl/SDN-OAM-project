@@ -237,15 +237,15 @@
 			$('#GS-alerts').slimScroll({
 				height: '100px'
 			});
-			$('#GS-topo').slimScroll({
-				height: '200px'
-			});
-			$('#GS-controller').slimScroll({
-				height: '200px'
-			});
-			$('#GS-stats').slimScroll({
-				height: '200px'
-			});
+//			$('#GS-topo').slimScroll({
+//				height: '200px'
+//			});
+//			$('#GS-controller').slimScroll({
+//				height: '200px'
+//			});
+//			$('#GS-stats').slimScroll({
+//				height: '200px'
+//			});
 		}
 	});
 
@@ -590,7 +590,23 @@
 
 		router.on('route:adminOverview', function() {
 			adminSidebarView.render({btnHL: 1});
+			// render global view
 			adminOverviewView.render();
+			loadDefaultStatValues();
+			initStatusOverview();
+			//SlimScroll HEIGHTS
+			$('#GS-alerts').slimScroll({
+				height: '100px'
+			});
+//			$('#GS-topo').slimScroll({
+//				height: '200px'
+//			});
+//			$('#GS-controller').slimScroll({
+//				height: '200px'
+//			});
+//			$('#GS-stats').slimScroll({
+//				height: '200px'
+//			});
 		})
 
 		router.on('route:adminOrgs', function() {
@@ -674,6 +690,7 @@
 			clientSidebarView.render({btnHL: 5});
 			//clientTrafficView.render({identifier: id});
 		})
+
 	Backbone.history.start();
 
 	var loginUser = '';

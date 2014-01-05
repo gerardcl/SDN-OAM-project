@@ -14,6 +14,7 @@
 <!-- Custom CSSs -->
 <link href="css/style.css" rel="stylesheet">
 <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+<link href="css/topo.css" rel="stylesheet">
 </head>
 
 <body>
@@ -35,8 +36,8 @@
 
 	<!-- TEMPLATES -->
 
-  	<!-- LOGIN TEMPLATE -->
-  	<script type="text/template" id="login-template">
+	<!-- LOGIN TEMPLATE -->
+	<script type="text/template" id="login-template">
   		<!-- Sidebar -->
   		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   			<!-- Brand and toggle get grouped for better mobile display -->
@@ -109,9 +110,14 @@
   			<!-- /#page-wrapper -->
   		</div>
     </script>
-  	<!-- /LOGIN TEMPLATE -->
+	<!-- /LOGIN TEMPLATE -->
 
+<<<<<<< HEAD
   	<!-- SIDEBAR VIEW -->
+=======
+	<!-- SIDEBAR VIEW -->
+
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
     	<!-- SIDEBAR ADMIN-->
     	<script type="text/template" id="admin-sidebar-template">
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -239,17 +245,39 @@
       <!-- /SIDEBAR CLIENT-->
   	<!-- /SIDEBAR VIEW -->
 
+<<<<<<< HEAD
     <!--ADMIN TEMPLATES-->
+=======
+  	<!-- GLOBAL VIEW -->
+  	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
+  	<script type="text/template" id="admin-overview-template">
+
+              <div class="row"> <!-- TOPOLOGY and CONTROLLER ROM -->
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
     	<!-- GLOBAL VIEW -->
     	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
     	<script type="text/template" id="admin-overview-template">
 
+<<<<<<< HEAD
                 <div class="row"> <!-- TOPOLOGY and CONTROLLER ROM -->
+=======
+                  <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title"><i class="fa fa-cloud"></i> Network Topology Overview</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p class="text-center" id="topo"></p>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /TOPOLOGY col -->
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
                   <!-- TOPOLOGY col -->
                   <div class="col-lg-9 col-md-9 col-sm-9">
 
+<<<<<<< HEAD
                     <div class="panel panel-primary">
                       <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-cloud"></i> Network Topology Overview</h3>
@@ -271,12 +299,60 @@
                     <div class="panel panel-primary">
                       <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-dashboard"></i> Controller</h3>
+=======
+                  <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title"><i class="fa fa-dashboard"></i> Controller</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div id="GS-controller">
+						<br><center>
+						<span id="memoryGaugeContainer"></span>
+						<span id="cpuGaugeContainer"></span>
+						</center><br>
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
                       </div>
                       <div class="panel-body">
                         <div id="GS-controller">
 
+<<<<<<< HEAD
 
+=======
+              <div class="row" id="statistics"> <!-- STATISTICS ROW -->
+
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Statistics</h3>
+                  </div>
+                  <div class="panel-body">
+                    <div id="GS-stats">
+ 
+                      <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="panel panel-default">
+                          <div class="panel-body" id="switchInfo">
+                            <h4>Select an element from the graph above</h4>
+                          </div>
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
                         </div>
+
+						<div class="table-responsive">
+                      	<table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                          <tr>
+                            <th><center>packetCount</center></th>
+                            <th><center>byteCount</center></th>
+                            <th><center>flowCount</center></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><center id="packetCount"></center></td>
+                            <td><center id="byteCount"></center></td>
+                            <td><center id="flowCount"></center></td>
+                          </tr>
+                        </tbody>
+                      	</table>
+                    	</div>    
                       </div>
                     </div>  
                   </div>
@@ -285,6 +361,7 @@
 
                 <div class="row"> <!-- STATISTICS ROW -->
 
+<<<<<<< HEAD
                   <div class="panel panel-primary">
                     <div class="panel-heading">
                       <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Statistics</h3>
@@ -297,11 +374,20 @@
                             <div class="panel-body">
                               <h4>Select an element from the graph above</h4>
                             </div>
+=======
+                      <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="panel panel-default">
+                          <div class="panel-body" id="listingPorts">
+                            <ul class="list-group" id="portList">
+                              
+                            </ul>
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
                           </div>
                         </div>
 
                         <div class="col-lg-3 col-md-3 col-sm-3">
                           <div class="panel panel-default">
+<<<<<<< HEAD
                             <div class="panel-body">
                               <div class="list-group">
                                 <a href="#" class="list-group-item">Port 1</a>
@@ -309,10 +395,17 @@
                                 <a href="#" class="list-group-item">Port 3</a>
                                 <a href="#" class="list-group-item">Port 4</a>
                               </div>
+=======
+
+                            <div class="panel-body" style="width: 100%; margin: 0 auto">
+                              <div id="textgraph"><h3>Port statistics graph </h3> <h4>Select a port from the list</h4></div>
+							  <div class="statisticsGraph" id="statisticsGraph" style="width: 100%; height: 185px; margin: 0 auto"></div> 
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
                             </div>
                           </div>
                         </div>
 
+<<<<<<< HEAD
                         <div class="col-lg-6 col-md-6 col-sm-6">
                           <div class="row">
                             <div class="panel panel-default">
@@ -327,6 +420,47 @@
                           </div>
 
                           <div class="row">
+=======
+                        <div class="row">
+
+                          Parameter <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="bparam">
+                              Received
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Received</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Transmitted</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Drops</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Errors</li>
+                              <li class='list-group-item' id="param" onclick="showPortStats();">Collisions</li>
+                            </ul>
+                          </div>
+
+                           |  Value type <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="bvaluetype">
+                              AVERAGE
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li class='list-group-item' id="valuetype" onclick="showPortStats();">AVERAGE</li>
+                              <li class='list-group-item' id="valuetype" onclick="showPortStats();">MAX</li>
+                              <li class='list-group-item' id="valuetype" onclick="showPortStats();">MIN</li>
+                            </ul>
+                          </div>
+
+                           |  Time interval <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="btinterval">
+                              Last hour
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li class='list-group-item' id="tinterval" onclick="showPortStats();">Last minute</li>
+                              <li class='list-group-item' id="tinterval" onclick="showPortStats();">Last hour</li>
+                              <li class='list-group-item' id="tinterval" onclick="showPortStats();">Per second</li>
+                            </ul>
+                          </div>
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
                             <div class="btn-group dropup">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -544,10 +678,30 @@
                       </div>
                     </div>
                   </div>
+<<<<<<< HEAD
                 </div><!-- /ALERTS row -->
       </script>
     	<!-- /GLOBAL VIEW TEMPLATE -->
     	<!-- /ADMIN OVERVIEW VIEW -->
+=======
+                </div>
+              </div><!-- /ALERTS row -->
+    </script>
+	<!-- /GLOBAL VIEW TEMPLATE -->
+	<!-- /ADMIN OVERVIEW VIEW -->
+
+	<!-- ORGANIZATIONS VIEW -->
+	<!-- organizations-list-template -->
+	<script type="text/template" id="organizations-list-template">
+
+          <!-- Org LIST column -->
+          <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
+            <div class="row">
+              <p><center>
+                <button type="button" class="btn btn-lg btn-success"><i class="fa fa-pencil"></i>  Create new organization</button>
+              </p></center>    
+            </div>
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
     	<!-- ORGANIZATIONS VIEW -->
     	<!-- organizations-list-template -->
@@ -586,9 +740,20 @@
                 </div>
               </div>
             </div>
+<<<<<<< HEAD
             <!-- /Org LIST column -->     
       </script>
     	<!-- /organizations-list-template -->
+=======
+          </div>
+          <!-- /Org LIST column -->     
+    </script>
+	<!-- /organizations-list-template -->
+
+
+
+	<!-- ORGANIZATION DATA TEMPLATE -->
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
     	<!-- ORGANIZATION DATA TEMPLATE -->
         <!-- orgData View [TOrg] -->
@@ -747,6 +912,7 @@
               <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
                 <div class="panel panel-primary">
 
+<<<<<<< HEAD
                   <div class="panel-heading">
    
                     <div class="row"><!-- HEADER (orgname+buttons) -->
@@ -757,6 +923,10 @@
                           </button>
                         </a>
                       </div>
+=======
+      <!-- org USERS View -->
+      <script type="text/template" id="organizations-users-template">
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
                       <div class="col-md-4 col-sm-4">
                         <center> <h4> <%= orgName %> </center> </h4>
@@ -991,6 +1161,7 @@
 
                   </div>  <!-- /row-->
 
+<<<<<<< HEAD
                 </div>
               </div> <!-- /ORG TABS -->
 
@@ -1002,6 +1173,19 @@
                       <img src="http://placehold.it/500x200">
                     </p>
                   </div>
+=======
+              </div>
+            </div> <!-- /ORG TABS -->
+
+
+            <div class="row" id="OM-topo">
+              <div class"col-md-12">
+                <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
+                <div>
+                  <p class="text-center">
+                    <img src="http://placehold.it/500x200">
+                  </p>
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
                 </div>
               </div>
 
@@ -1183,6 +1367,14 @@
           <div class="padding-10-bot">
             <a href="#/newFlow"><button class="btn btn-success"> Create new FLOW</button></a>
           </div>
+<<<<<<< HEAD
+=======
+        </div><!-- /ORG INFO --> 
+      </script>
+      <!-- /org FLOWS -->
+      
+  	<!-- /ORGANIZATION DATA TEMPLATE -->
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
           <div class="row"><!-- Active FLOWS -->
             <div class="col-sm-12">
@@ -1240,6 +1432,7 @@
             </div>
           </div><!-- /Active FLOWS -->
 
+<<<<<<< HEAD
           <div class="row"><!-- Programmed FLOWS -->
             <div class="col-sm-12">
               <div class="panel panel-primary">    
@@ -1300,6 +1493,12 @@
     	<script type="text/template" id="terminals-template">
           <div class="row"><!-- Acccess Points -->
             <div class="col-sm-12">
+=======
+	<!-- /ORGANIZATIONS VIEW -->
+
+	<!-- FLOWS VIEW -->
+	<script type="text/template" id="flows-template">
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
               <div class="panel panel-primary">
               
@@ -1377,11 +1576,23 @@
 
               </div>
             </div>
+<<<<<<< HEAD
           </div><!-- /Traffic Matrix -->
       </script>
     	<!-- /TRAFFIC VIEW -->
 
     <!-- /ADMIN TEMPLATES -->
+=======
+          </div>
+        </div><!-- /Programmed FLOWS -->
+    </script>
+	<!-- /FLOWS VIEW -->
+
+	<!-- TERMINALS VIEW -->
+	<script type="text/template" id="terminals-template">
+        <div class="row"><!-- Acccess Points -->
+          <div class="col-sm-12">
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
     <!-- CLIENT TEMPLATES -->
       <!-- CLIENT OVERVIEW-->
@@ -1434,6 +1645,7 @@
       </script>
       <!-- /CLIENT OVERVIEW-->
 
+<<<<<<< HEAD
       <!-- CLIENT ORG DATA -->
       <script type="text/template" id="client-data-template">
         <div class="col-md-12 col-sm-12 slim-flows"> 
@@ -1444,6 +1656,17 @@
 
                   <div class="panel-body">
                     <div class="row padding-10">
+=======
+          </div>
+        </div><!-- /Access Points -->
+    </script>
+	<!-- /TERMINALS VIEW -->
+
+	<!-- TRAFFIC VIEW -->
+	<script type="text/template" id="traffic-template">
+        <div class="row"> <!-- Traffic Matrix -->
+          <div class="col-lg-12">
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
                       <div class="row"> <!-- ROW Org.Data + Org.Users -->  
                         <div class="col-lg-12">
@@ -1562,6 +1785,7 @@
                   <div class="panel-body">
                     <div class="row padding-10">
 
+<<<<<<< HEAD
                       <div class="row"> <!-- ROW Org.Data + Org.Users -->  
                         <div class="col-lg-12">
                           <div class="panel">
@@ -1642,6 +1866,13 @@
         </div>
       </script>
       <!-- /CLIENT USERS DATA -->
+=======
+            </div>
+          </div>
+        </div><!-- /Traffic Matrix -->
+    </script>
+	<!-- /TRAFFIC VIEW -->
+>>>>>>> 0656b8ec1c7d9f0a8cdd79280a4b1d313c707490
 
     <!-- /CLIENT TEMPLATES -->
 	<!-- /TEMPLATES -->
@@ -1651,7 +1882,11 @@
 
 	<!-- JavaScript -->
 	<!-- Page Specific Plugins -->
+	<script type="text/javascript" src="js/ajax.js"></script>
 	<script src="js/jquery-1.10.2.js"></script>
+	<script src="js/date.format.1.2.3.min.js"></script>
+	<script src="js/highcharts.js"></script>
+	<script src="js/exporting.js"></script>
 	<script type="text/javascript" src="js/jquery.slimscroll.min.js"></script>
 	<script src="js/underscore-min.js"></script>
 	<script src="js/bootstrap.js"></script>
@@ -1659,8 +1894,13 @@
 	<script src="js/tablesorter/jquery.tablesorter.js"></script>
 	<script src="js/tablesorter/tables.js"></script>
 	<!-- CONTROLLER -->
+		<!--<script src="js/d3.v2.js"></script>-->
+	<script src="js/d3.v3.min.js"></script>
+	<script src="js/gauge.js"></script>
+	<script src="js/statusOverview.js"></script>
 	<script type="text/javascript" src="js/controller.js"></script>
 	<script type="text/javascript" src="js/util.js"></script>
+
 
 </body>
 </html>
