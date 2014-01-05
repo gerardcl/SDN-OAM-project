@@ -1,8 +1,9 @@
 //Backbone aaaa
 (function($){
-
-	var loginUser = '';
-	var loginOrg = '';
+	
+	var cntActiveFlows = 0;
+	var cntPrgFlows = 0;
+	var cntActiveTerms = 0;
 
 	$.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
 		options.url = '/AppServer/webapp' + options.url;
@@ -101,11 +102,14 @@
 	var Flows = Backbone.Collection.extend({
 		model: Flow,
 		parse:function (response) {
+		
 			for ( var i = 0, length = response.orgFlows.length; i < length; i++) {
 				var currentValues = response.orgFlows[i];
 				var flowObject = {};
 				flowObject.identifier = currentValues.identifier;
 				flowObject.active = currentValues.active;
+				if(currentValues.active) cntActiveFlows++;
+				if(!currentValues.active) cntPrgFlows++;
 				flowObject.bandwidth = currentValues.bandwidth;
 				flowObject.dstOTidentifier = currentValues.dstOTidentifier;
 				flowObject.dstPort = currentValues.dstPort;
@@ -119,6 +123,7 @@
 			console.log(this.toJSON());
 			return this.models;
 		}
+
 	});
 
 	var flows = new Flows();
@@ -133,6 +138,7 @@
 				var terminalObject = {};
 				terminalObject.identifier = currentValues.identifier;
 				terminalObject.active = currentValues.active;
+				if(currentValues.active) cntActiveTerms++;
 				terminalObject.hostName = currentValues.hostName;
 				terminalObject.ifaceSpeed = currentValues.ifaceSpeed;
 				terminalObject.ipAddress = currentValues.ipAddress;
@@ -190,6 +196,7 @@
 
 //	VIEWS
 
+// ADMIN VIEWS
 	//LOGIN VIEW #login-template
 	var LoginView = Backbone.View.extend({
 		el: '.sidebar-container',
@@ -218,22 +225,6 @@
 
 	var adminSidebarView = new AdminSidebarView();
 	// /ADMIN SIDEBAR #admin-sidebar-template
-
-	//CLIENT SIDEBAR #client-sidebar-template
-	var ClientSidebarView = Backbone.View.extend({
-		el: '.sidebar-container',
-		updateClass: function() {
-			this.$el.toggleClass('active');
-		},
-		render: function (options) {
-			var that = this;
-			var template = _.template($('#client-sidebar-template').html(), {btnHL: options.btnHL});
-			that.$el.html(template);
-		}
-	});
-
-	var clientSidebarView = new ClientSidebarView();
-	// /CLIENT SIDEBAR #client-sidebar-template
 
 	//GLOBAL VIEW #admin-overview-template
 	var AdminOverviewView = Backbone.View.extend({
@@ -294,7 +285,7 @@
 				that.organization = new Organization({id: options.identifier});
 				that.organization.fetch({
 					success: function (organization) {  
-						var activeOrgName = organization.get('name');
+						activeOrgName = organization.get('name');
 						console.log(activeOrgName);
 						var template = _.template($('#organizations-data-template').html(), {organization: organization});
 						that.$el.html(template); 
@@ -323,25 +314,19 @@
 		el: '.page',
 		render: function (options) { 
 			var that = this;
-			//if exists fetch details
-			if(options.identifier) {
-				that.users = new Users();
-				that.users.url = '/manager/user/'+options.identifier+'/all';
-				that.users.fetch({
-					success: function (users) {  
-						var template = _.template($('#organizations-users-template').html(), {users: users.models, orgId: options.identifier});
-						that.$el.html(template); 
-						//SlimScroll
-							$('#OM-users').slimScroll({
-								height: '135px'
-							});
-					}
-				});
-			} else {
-				var template = _.template($('#organizations-users-template').html(), {users: null});
-				that.$el.html(template);
-				//SlimScroll
-			}
+			that.users = new Users();
+			that.users.url = '/manager/user/'+options.identifier+'/all';
+			that.users.fetch({
+				success: function (users) {  
+					var template = _.template($('#organizations-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
+					that.$el.html(template); 
+					//SlimScroll
+						$('#OM-users').slimScroll({
+							height: '135px'
+						});
+				}
+			});
+			
 		}
 	});
 
@@ -359,7 +344,7 @@
 				that.terminals.url = '/manager/terminal/'+options.identifier+'/all';
 				that.terminals.fetch({
 					success: function (terminals) {  
-						var template = _.template($('#organizations-terminals-template').html(), {terminals: terminals.models, orgId: options.identifier});
+						var template = _.template($('#organizations-terminals-template').html(), {terminals: terminals.models, orgId: options.identifier, orgName: activeOrgName});
 						that.$el.html(template); 
 						//SlimScroll
 							$('#OM-ap').slimScroll({
@@ -388,7 +373,7 @@
 				that.activeFlows.url = '/manager/flow/'+options.identifier+'/all';
 				that.activeFlows.fetch({
 					success: function (flows) {  
-						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active});
+						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active, orgName: activeOrgName});
 						that.$el.html(template); 
 						//SlimScroll
 							$('#FLW-prg').slimScroll({
@@ -411,10 +396,11 @@
 	//FLOWS VIEW #flows-template
 	var FlowsView = Backbone.View.extend({
 		el: '.page',
-		render: function () {
+		render: function (options) {
 			var that = this;
 			var flows = new Flows();
-			flows.url = '/manager/flow/all';
+			if(options.all==true){flows.url = '/manager/flow/all';}
+			if(options.all==false){flows.url = '/manager/flow/'+options.identifier+'/all';}			
 			flows.fetch({
 				success: function (flows) {
 					var template = _.template($('#flows-template').html(), {flows: flows.models});
@@ -437,10 +423,11 @@
 	//TERMINALS VIEW #terminals-template
 	var TerminalsView = Backbone.View.extend({
 		el: '.page',
-		render: function () {
+		render: function (options) {
 			var that = this;
 			var terminals = new Terminals();
-			terminals.url = '/manager/terminal/all',
+			if(options.all==true){terminals.url = '/manager/terminal/all';}
+			if(options.all==false){terminals.url = '/manager/terminal/'+options.identifier+'/all';}
 			terminals.fetch({
 				success: function (terminals) {
 					var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
@@ -473,15 +460,109 @@
 	var trafficView = new TrafficView();
 	// /TRAFFIC VIEW #traffic-template
 
+//CLIENT VIEWS
+	//CLIENT SIDEBAR #client-sidebar-template
+	var ClientSidebarView = Backbone.View.extend({
+		el: '.sidebar-container',
+		updateClass: function() {
+			this.$el.toggleClass('active');
+		},
+		render: function (options) {
+			var that = this;
+			var template = _.template($('#client-sidebar-template').html(), {btnHL: options.btnHL});
+			that.$el.html(template);
+		}
+	});
+
+	var clientSidebarView = new ClientSidebarView();
+	// /CLIENT SIDEBAR #client-sidebar-template
+
+	//CLIENT OVERVIEW #client-overview-template
+	var ClientOverviewView = Backbone.View.extend({
+		el: '.page',
+		render: function (options) {
+			var that = this;
+			that.organization = new Organization({id: options.identifier});
+			that.organization.fetch({
+				success: function (organization) {  
+					activeOrgName = organization.get('name');
+					loginOrg = options.identifier;
+					console.log('success fetch organization');
+					console.log(loginOrg);
+					console.log(activeOrgName);
+					console.log(cntActiveFlows);
+					console.log(cntPrgFlows);
+					var template = _.template($('#client-overview-template').html(), {organization: organization, cntActiveFlows: cntActiveFlows, cntPrgFlows: cntPrgFlows, cntActiveTerms: cntActiveTerms});
+					that.$el.html(template); 
+
+					//SlimScroll
+					$('#client-OV').slimScroll({
+				height: '500px'
+			});
+				}
+			})
+		}
+	});
+
+	var clientOverviewView = new ClientOverviewView();
+	// /GLOBAL VIEW #admin-overview-template
+
+	//CLIENT ORG DATA VIEW
+	var ClientOrgDataView = Backbone.View.extend({
+		el: '.page',
+		render: function (options) { 
+			var that = this;
+			that.organization = new Organization({id: options.identifier});
+			that.organization.fetch({
+				success: function (organization) {
+						var template = _.template($('#client-data-template').html(), {organization: organization, activeOrgName: activeOrgName});
+						that.$el.html(template); 
+						//SlimScroll
+						$('#client-data').slimScroll({
+				            height: '380px'
+				        });
+				  
+				    
+				}
+			})
+		}
+	});
+
+	var clientOrgDataView = new ClientOrgDataView();
+	// /CLIENT ORG DATA VIEW
+
+	//ClientUsersView View
+	var ClientUsersView = Backbone.View.extend({
+		el: '.page',
+		render: function (options) { 
+			var that = this;
+			that.users = new Users();
+			that.users.url = '/manager/user/'+options.identifier+'/all';
+			that.users.fetch({
+				success: function (users) {  
+					var template = _.template($('#client-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
+					that.$el.html(template); 
+					//SlimScroll
+						$('#client-users').slimScroll({
+				            height: '380px',
+				        });
+				}
+			});
+			
+		}
+	});
+
+	var clientUsersView = new ClientUsersView();
+
 //	ROUTES 
 	var Router = Backbone.Router.extend({
 		routes: {
-			"": "login", 
+			"": "login", //LOGIN view
 			//ADMIN ROUTES
-			"adminOverview" : "adminOverview",
-			"adminOrgs": "adminOrgs",
-			"adminOrgs/:identifier": "orgData",
-			"adminUsers/:identifier": "orgUsers",
+			"adminOverview" : "adminOverview", //Admin First View
+			"adminOrgs": "adminOrgs", //Organizations list
+			"adminOrgs/:identifier": "orgData", //Org informtion
+			"adminUsers/:identifier": "orgUsers", //Org users
 			"adminFlows/:identifier": "orgFlows", //active flows of specipic org
 			"adminPrgFlows/:identifier": "orgPrgFlows",	//programmed flows of specific org	
 			"adminTerminals/:identifier": "orgTerminals", //terminals of specific org
@@ -489,12 +570,12 @@
 			"adminTerminals": "terminals",//all the terminals
 			"adminTraffic": "traffic",
 			//CLIENT ROUTES
-			"clientOverview" : "clientOverview",
-			"clientOrgData": "clientOrgData",
-			"clientOrgUsers": "clientOrgUsers",
-			"clientFlows": "clientFlows",
-			"clientTerminals": "clientTerminals",
-			"clientTraffic": "clientTraffic"
+			"clientOverview/:identifier" : "clientOverview", //Client First View
+			"clientOrgData/:identifier": "clientOrgData", 
+			"clientOrgUsers/:identifier": "clientOrgUsers",
+			"clientFlows/:identifier": "clientFlows",
+			"clientTerminals/:identifier": "clientTerminals",
+			"clientTraffic/:identifier": "clientTraffic"
 		}
 	});
 
@@ -517,34 +598,34 @@
 			orgsListBSView.render();  
 		})
 
-		router.on('route:orgData', function(identifier) {
-			orgDataView.render({identifier: identifier});
+		router.on('route:orgData', function(id) {
+			orgDataView.render({identifier: id});
 		})
 
-		router.on('route:orgUsers', function(identifier) {	
-			orgUsersView.render({identifier: identifier});
+		router.on('route:orgUsers', function(id) {	
+			orgUsersView.render({identifier: id});
 		})
 
-		router.on('route:orgFlows', function(identifier) {	
-			orgFlowsView.render({identifier: identifier, active: true});
+		router.on('route:orgFlows', function(id) {	
+			orgFlowsView.render({identifier: id, active: true});
 		})
 
-		router.on('route:orgPrgFlows', function(identifier) {	
-			orgFlowsView.render({identifier: identifier, active: false});
+		router.on('route:orgPrgFlows', function(id) {	
+			orgFlowsView.render({identifier: id, active: false});
 		})
 
-		router.on('route:orgTerminals', function(identifier) {
-			orgTerminalsView.render({identifier: identifier});
+		router.on('route:orgTerminals', function(id) {
+			orgTerminalsView.render({identifier: id});
 		})
 
 		router.on('route:flows', function() {
 			adminSidebarView.render({btnHL: 3});
-			flowsView.render();
+			flowsView.render({all: true});
 		})
 
 		router.on('route:terminals', function() {
 			adminSidebarView.render({btnHL: 4});
-			terminalsView.render();
+			terminalsView.render({all: true});
 		})
 
 
@@ -554,35 +635,50 @@
 		})
 
 	//CLIENT
-		router.on('route:clientOverview', function() {
+		router.on('route:clientOverview', function(id) {
 			clientSidebarView.render({btnHL: 1});
-			//clientOverviewView.render();
+			flows = new Flows();
+			flows.url = '/manager/flow/'+id+'/all';
+			flows.fetch({});
+			terminals = new Terminals();
+			terminals.url = '/manager/terminal/'+id+'/all';
+			terminals.fetch({});
+			//console.log(cntActiveFlows);
+			clientOverviewView.render({identifier: id});
+			cntPrgFlows=0;
+			cntActiveFlows=0;
+			cntActiveTerms=0;
 		})
 
-		router.on('route:clientOrgData', function() {
+		router.on('route:clientOrgData', function(id) {
 			clientSidebarView.render({btnHL: 2});
-			//clientOverviewView.render();
+			clientOrgDataView.render({identifier: id});
 		})
 
-		router.on('route:clientOrgUsers', function() {
-			//clientOverviewView.render();
+		router.on('route:clientOrgUsers', function(id) {
+			clientUsersView.render({identifier: id});
 		})
 
-		router.on('route:clientFlows', function() {
+		router.on('route:clientFlows', function(id) {
 			clientSidebarView.render({btnHL: 3});
-			//clientOverviewView.render();
+			//we call the same view as ADMIN but giving orgId which will change the collection url
+			flowsView.render({all: false, identifier: id});
 		})
 
-		router.on('route:clientTerminals', function() {
+		router.on('route:clientTerminals', function(id) {
 			clientSidebarView.render({btnHL: 4});
-			//clientOverviewView.render();
+			terminalsView.render({all: false, identifier: id});
 		})
 
-		router.on('route:clientTraffic', function() {
+		router.on('route:clientTraffic', function(id) {
 			clientSidebarView.render({btnHL: 5});
-			//clientOverviewView.render();
+			//clientTrafficView.render({identifier: id});
 		})
 	Backbone.history.start();
+
+	var loginUser = '';
+	var loginOrg = '';
+	var activeOrgName = '';
 
 	
 

@@ -50,7 +50,7 @@
 		        	console.log(loginUser);
 		    	} 
 		    	else if(msg.msg == "2") {
-		    		location.href = "/AppServer/#/clientOverview";
+		    		location.href = "/AppServer/#/clientOverview/"+msg.orgId;
 		    		loginUser = msg.userId;
 		        	loginOrg = msg.orgId;
 		        	console.log(loginOrg);

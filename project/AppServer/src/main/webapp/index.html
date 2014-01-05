@@ -112,7 +112,6 @@
   	<!-- /LOGIN TEMPLATE -->
 
   	<!-- SIDEBAR VIEW -->
-
     	<!-- SIDEBAR ADMIN-->
     	<script type="text/template" id="admin-sidebar-template">
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -210,17 +209,17 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="userMain.html"><i class="fa fa-gears"></i> SDN [ <%= loginOrg %> ]</a>
+            <a class="navbar-brand" href="#/clientOverview/<%= loginOrg %>"><i class="fa fa-gears"></i> SDN [ <%= loginOrg %> ]</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
-              <li class="<% if(btnHL==1){%> active <%}%>"><a href="#/clientOverview"><i class="fa fa-globe"></i> Global State</a></li>
-              <li class="<% if(btnHL==2){%> active <%}%>"><a href="#/clientOrgData"><i class="fa fa-briefcase"></i> Org. Data</a></li>
-              <li class="<% if(btnHL==3){%> active <%}%>"><a href="#/clientFlows"><i class="fa fa-link"></i> Flows</a></li>
-              <li class="<% if(btnHL==4){%> active <%}%>"><a href="#/clientTerminals"><i class="fa fa-desktop"></i> Access points</a></li>
-              <li class="<% if(btnHL==5){%> active <%}%>"><a href="#/clientTraffic"><i class="fa fa-th"></i> Traffic Analysis</a></li>
+              <li class="<% if(btnHL==1){%> active <%}%>"><a href="#/clientOverview/<%= loginOrg %>"><i class="fa fa-globe"></i> Global State</a></li>
+              <li class="<% if(btnHL==2){%> active <%}%>"><a href="#/clientOrgData/<%= loginOrg %>"><i class="fa fa-briefcase"></i> Org. Data</a></li>
+              <li class="<% if(btnHL==3){%> active <%}%>"><a href="#/clientFlows/<%= loginOrg %>"><i class="fa fa-link"></i> Flows</a></li>
+              <li class="<% if(btnHL==4){%> active <%}%>"><a href="#/clientTerminals/<%= loginOrg %>"><i class="fa fa-desktop"></i> Access points</a></li>
+              <li class="<% if(btnHL==5){%> active <%}%>"><a href="#/clientTraffic/<%= loginOrg %>"><i class="fa fa-th"></i> Traffic Analysis</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right navbar-user">
@@ -240,553 +239,1336 @@
       <!-- /SIDEBAR CLIENT-->
   	<!-- /SIDEBAR VIEW -->
 
-  	<!-- GLOBAL VIEW -->
-  	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
-  	<script type="text/template" id="admin-overview-template">
+    <!--ADMIN TEMPLATES-->
 
-              <div class="row"> <!-- TOPOLOGY and CONTROLLER ROM -->
+    	<!-- GLOBAL VIEW -->
+    	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
+    	<script type="text/template" id="admin-overview-template">
 
-                <!-- TOPOLOGY col -->
-                <div class="col-lg-9 col-md-9 col-sm-9">
+                <div class="row"> <!-- TOPOLOGY and CONTROLLER ROM -->
+
+                  <!-- TOPOLOGY col -->
+                  <div class="col-lg-9 col-md-9 col-sm-9">
+
+                    <div class="panel panel-primary">
+                      <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-cloud"></i> Network Topology Overview</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div id="GS-topo">
+                          <p class="text-center">
+                            <img src="http://placehold.it/600x300">
+                          </p>
+                        </div>
+                      </div>
+                    </div>  
+                  </div>
+                  <!-- /TOPOLOGY col -->
+
+                  <!-- CONTROLLER col -->
+                  <div class="col-lg-3 col-md-3 col-sm-3">
+
+                    <div class="panel panel-primary">
+                      <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-dashboard"></i> Controller</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div id="GS-controller">
+
+
+                        </div>
+                      </div>
+                    </div>  
+                  </div>
+                  <!-- /CONTROLLER col -->
+                </div><!-- /TOPOLOGY and CONTROLLER ROM -->
+
+                <div class="row"> <!-- STATISTICS ROW -->
 
                   <div class="panel panel-primary">
                     <div class="panel-heading">
-                      <h3 class="panel-title"><i class="fa fa-cloud"></i> Network Topology Overview</h3>
+                      <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Statistics</h3>
                     </div>
                     <div class="panel-body">
-                      <div id="GS-topo">
+                      <div id="GS-stats">
+   
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <h4>Select an element from the graph above</h4>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <div class="list-group">
+                                <a href="#" class="list-group-item">Port 1</a>
+                                <a href="#" class="list-group-item">Port 2</a>
+                                <a href="#" class="list-group-item">Port 3</a>
+                                <a href="#" class="list-group-item">Port 4</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                          <div class="row">
+                            <div class="panel panel-default">
+                              <div class="panel-body">
+                                <br>
+                                <br>
+                                <h3>Here the graph</h3>
+                                <br>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row">
+
+                            <div class="btn-group dropup">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Param
+                                <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href="#">Receive</a></li>
+                                <li><a href="#">Transmitted</a></li>
+                                <li><a href="#">Dropped</a></li>
+                                <li><a href="#">Errors</a></li>
+                                <li><a href="#">Collisions</a></li>
+                              </ul>
+                            </div>
+
+                            <div class="btn-group dropup">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Value type
+                                <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href="#">Packets</a></li>
+                                <li><a href="#">Bytes</a></li>
+                                <li><a href="#">Flows</a></li>
+                              </ul>
+                            </div>
+
+                            <div class="btn-group dropup">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Time interval
+                                <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href="#">Last Minute</a></li>
+                                <li><a href="#">Last Hour</a></li>
+                                <li><a href="#">Last Day</a></li>
+                                <li><a href="#">Last Week</a></li>
+                                <li><a href="#">Last Month</a></li>
+                              </ul>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>  
+
+                </div> <!-- /STATISTICS ROW -->
+
+
+                <div class="row"> <!-- ALERTS row -->  
+                  <div class="col-lg-12">
+                    <div class="panel">
+                      <div class="tabbable">
+                        <ul class="nav nav-pills nav-justified">
+                          <li class="active"><a href="#alarms" data-toggle="tab"> <i class="fa fa-bell"></i> Alarms</a></li>
+                          
+                        </ul>
+
+                        <div class="tab-content"><!-- tabs ALARMS and STATISTICS content -->
+
+                          <div class="tab-pane active" id="alarms"><!-- tab ALARMS content -->
+                            <div class="row">
+                              <div class="col-lg-12 col-md-12 col-sm-12">
+                                
+                                <div class="panel panel-primary">
+                                  <div class="panel-body">
+                                    <div id="GS-alerts">
+                                      <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                          <thead>
+                                            <tr>
+                                              <th>Alert <i class="fa fa-sort"></i></th>
+                                              <th>Date <i class="fa fa-sort"></i></th>
+                                              <th>Time <i class="fa fa-sort"></i></th>
+                                              <th>Status <i class="fa fa-sort"></i></th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              <td><span class="label label-success">Flow succeeded</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>3:29 PM</td>
+                                              <td>DONE</td>
+                                            </tr>
+                                            <tr>
+                                              <td><span class="label label-warning">Host unreachable</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>3:20 PM</td>
+                                              <td>DOWN</td>
+                                            </tr>
+                                            <tr>
+                                              <td><span class="label label-info">New host connected</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>3:03 PM</td>
+                                              <td>DONE</td>
+                                            </tr>
+                                            <tr>
+                                              <td><span class="label label-success">Flow succeeded</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>3:00 PM</td>
+                                              <td>DONE</td>
+                                            </tr>
+                                            <tr>
+                                              <td><span class="label label-danger">Link down!</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>2:49 PM</td>
+                                              <td>FIXED</td>
+                                            </tr>
+                                            <tr>
+                                              <td><span class="label label-danger">Link down!</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>2:23 PM</td>
+                                              <td>DOWN</td>
+                                            </tr>
+                                            <tr>
+                                              <td><span class="label label-success">Flow succeeded</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>2:15 PM</td>
+                                              <td>DONE</td>
+                                            </tr>
+                                            <tr>
+                                              <td><span class="label label-warning">Host unreachable</span></td>
+                                              <td>11/21/2013</td>
+                                              <td>2:13 PM</td>
+                                              <td>DOWN</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                    <div class="text-right">
+                                      <a href="#">View All Alarms <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>      
+          
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div><!-- /tab ALARMS content -->
+
+                          <div class="tab-pane" id="statistics"><!-- tab STATISTICS content -->      
+                            <div class="row">
+
+                              <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="panel panel-primary">
+                                  <div class="panel-body">
+
+                                    <div class="col-lg-3 col-md-3 col-sm-6">
+                                      <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                          <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 1</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                          <div>
+                                            <p class="text-center">
+                                              <img src="http://placehold.it/150x150">
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-6">
+                                      <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                          <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 2</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                          <div>
+                                            <p class="text-center">
+                                              <img src="http://placehold.it/150x150">
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-6">
+                                      <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                          <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 3</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                          <div>
+                                            <p class="text-center">
+                                              <img src="http://placehold.it/150x150">
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-6">
+                                      <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                          <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 4</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                          <div>
+                                            <p class="text-center">
+                                              <img src="http://placehold.it/150x150">
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div><!-- /.row -->
+                          </div><!-- /tab STATISTICS content -->
+                        </div><!-- tabs ALARMS and STATISTICS content -->
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /ALERTS row -->
+      </script>
+    	<!-- /GLOBAL VIEW TEMPLATE -->
+    	<!-- /ADMIN OVERVIEW VIEW -->
+
+    	<!-- ORGANIZATIONS VIEW -->
+    	<!-- organizations-list-template -->
+    	<script type="text/template" id="organizations-list-template">
+
+            <!-- Org LIST column -->
+            <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
+              <div class="row">
+                <p><center>
+                  <button type="button" class="btn btn-lg btn-success"><i class="fa fa-pencil"></i>  Create new organization</button>
+                </p></center>    
+              </div>
+
+              <div class="row">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-briefcase"></i> Organizations</h3>
+                  </div>
+
+                  <div class="panel-body">
+                  
+                    <div id="OM-orgColumn">
+
+                      <div class="list-group">
+
+                        <!--ORGANIZATIONS LIST-->
+                        <% _.each(organizations, function(organization) { %>
+
+                          <a href="#/adminOrgs/<%= organization.get('identifier') %>" class="list-group-item"><span class="badge"><%= organization.get('identifier') %></span> <%= organization.get('name') %> </a>
+
+                        <% }); %>
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /Org LIST column -->     
+      </script>
+    	<!-- /organizations-list-template -->
+
+    	<!-- ORGANIZATION DATA TEMPLATE -->
+        <!-- orgData View [TOrg] -->
+      	<script type="text/template" id="organizations-data-template">
+          <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <div class="row">
+
+                  <div class="col-md-4 col-sm-4">
+                    <a href="#/adminOrgs">
+                      <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
+                      </button>
+                    </a>
+                  </div>
+
+                  <div class="col-md-4 col-sm-4">
+                    <center> <h4> <%= organization ? organization.get('name') : 'Fill the fields below' %> </center> </h4>
+                  </div>
+
+                  <div class="col-md-4 col-sm-4">
+                    <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="padding-15"><!-- ORG TABS -->
+                <div class="panel-body padding-0-bot">
+                  <div class="row">
+
+                    <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
+                      <div class="col-lg-12">
+                        <div class="panel margin-0-bot">
+                          <div class="tabbable">
+                            <ul class="nav nav-pills nav-justified">
+                              <li class="active"><a href="#/adminOrgs/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
+
+                              <li class=""><a href="#/adminUsers/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-group"></i> Org. Users</a></li>
+                              
+                              <li class=""><a href="#/adminTerminals/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
+                              <li class=""><a href="#/adminFlows/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
+                              <li class=""><a href="#/adminPrgFlows/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
+                            </ul>
+                                          
+                            <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+
+                              <div class="tab-pane active" id="orgData"><!-- ROW Org.Data --> 
+                                <div class="row">
+                                  <div class="col-lg-12 col-md-12 col-sm-12">
+                                    
+                                    <div class="panel panel-primary">
+                                      <div class="panel-body">
+
+                                        <div id="OM-data">
+
+                                          <form class="form-horizontal" role="form">
+
+                                            <div class="row">
+                                              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                                <div class="form-group">
+                                                  <label for="orgID" class="col-sm-4 control-label">ID</label>
+                                                  <div class="col-sm-8">
+                                                    <input type="text" class="form-control" id="orgID" value="<%= organization ? organization.get('identifier') : '' %>" placeholder="orgID" disabled>
+                                                  </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                  <label for="orgName" class="col-sm-4 control-label">Name</label>
+                                                  <div class="col-sm-8">
+                                                    <input type="text" class="form-control" id="orgName" value="<%= organization ? organization.get('name') : '' %>" placeholder="Ikea" disabled>
+                                                  </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                  <label for="orgBankAccount" class="col-sm-4 control-label">Bank Account</label>
+                                                  <div class="col-sm-8">
+                                                    <input type="text" class="form-control" id="orgBankAccount" value="<%= organization ? organization.get('bankAccount') : '' %>" placeholder="46475956605938294" disabled>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                                <div class="form-group">
+                                                  <label for="orgCif" class="col-sm-4 control-label">CIF</label>
+                                                  <div class="col-sm-8">
+                                                    <input type="text" class="form-control" id="orgCif" value="<%= organization ? organization.get('NIF') : '' %>" placeholder="34957684" disabled>
+                                                  </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                  <label for="orgPassword" class="col-sm-4 control-label">Password</label>
+                                                  <div class="col-sm-8">
+                                                    <input type="password" class="form-control" id="orgPassword" placeholder="*********" disabled>
+                                                  </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                  <label for="orgIsOam" class="col-sm-4 control-label">is OAM?</label>
+                                                  <div class="col-sm-8">
+                                                    <input type="checkbox" class="form-control" id="orgIsOam" checked="<%= organization.get('OAM') %>" disabled>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <div class="row">    
+                                              <div class="col-lg-12 col-md-12 col-sm-12">
+                                                <div class="form-group">
+                                                  <center><button type="submit" class="btn btn-warning btn-lg">Save changes</button></center>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </form>  
+
+                                        </div>
+              
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div><!-- /ROW Org.Data --> 
+
+                            </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
+
+                  </div>  <!-- /row-->
+
+                </div>
+              </div> <!-- /ORG TABS -->
+
+              <div class="row" id="OM-topo">
+                <div class"col-md-12">
+                  <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
+                  <div>
+                    <p class="text-center">
+                      <img src="http://placehold.it/500x200">
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div><!-- /ORG INFO --> 
+        </script>
+        <!-- /TOrg View -->
+
+        <!-- org USERS View -->
+        <script type="text/template" id="organizations-users-template">
+
+              <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
+                <div class="panel panel-primary">
+
+                  <div class="panel-heading">
+   
+                    <div class="row"><!-- HEADER (orgname+buttons) -->
+
+                      <div class="col-md-4 col-sm-4">
+                        <a href="#/adminOrgs">
+                          <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
+                          </button>
+                        </a>
+                      </div>
+
+                      <div class="col-md-4 col-sm-4">
+                        <center> <h4> <%= orgName %> </center> </h4>
+                      </div>
+
+                      <div class="col-md-4 col-sm-4">
+                        <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
+                      </div>
+                    </div><!-- /HEADER (orgname+buttons) -->
+                  </div>
+
+                  <div class="padding-15"><!-- ORG TABS -->
+                    <div class="panel-body padding-0-bot">
+                      <div class="row">
+
+                        <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
+                          <div class="col-lg-12">
+                            <div class="panel margin-0-bot">
+                              <div class="tabbable">
+
+                                <ul class="nav nav-pills nav-justified">
+                                  <li class=""><a href="#/adminOrgs/<%= orgId %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
+
+                                  <li class="active"><a href="#/adminUsers/<%= orgId %>" data-toggle="tab"> <i class="fa fa-group"></i> Org. Users</a></li>
+                                  
+                                  <li class=""><a href="#/adminTerminals/<%= orgId %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
+                                  <li class=""><a href="#/adminFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
+                                  <li class=""><a href="#/adminPrgFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
+                                </ul>
+                                              
+                                <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+
+                                  <div class="tab-pane active" id="users"><!-- Org.Users -->       
+                                    <div class="row">
+                                      <div class="col-lg-12 col-md-12 col-sm-12">
+                                        
+                                        <div class="panel panel-primary">
+                                          <div class="panel-body">
+
+                                            <div class="padding-10-bot">
+                                              <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
+                                            </div>
+
+
+                                            <div id="OM-users">
+
+                                              <div class="table-responsive">
+                                                  <table class="table table-bordered table-hover table-striped tablesorter">
+                                                    <thead>
+                                                      <tr>
+                                                        <th>ID <i class="fa fa-sort"></i></th>
+                                                        <th>Name <i class="fa fa-sort"></i></th>
+                                                        <th>e-mail <i class="fa fa-sort"></i></th>
+                                                        <th>Admin? <i class="fa fa-sort"></i></th>
+                                                        <th>Telephone <i class="fa fa-sort"></i></th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody >
+
+                                                      <% _.each(users, function(user) { 
+                                                        if(user.get('active')==true){ %>
+                                                       
+
+                                                       <tr>
+                                                        <td><%= user.get('identifier') %></td>                
+                                                        <td><%= user.get('name') %></td>
+                                                        <td><%= user.get('email') %></td>
+                                                        <td><%= user.get('admin') %></td>
+                                                        <td><%= user.get('telephone') %></td>
+                                                      </tr>
+
+                                                    
+                                                      <%  }
+                                                        }); %>
+                                                        
+
+                                                    </tbody>
+
+                                                  </table>
+                                              </div>
+                                      
+                                            </div>
+                  
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div><!-- /Org.Users -->  
+
+                                </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                              </div>
+                            </div>
+                          </div>
+                        </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
+
+                      </div>  <!-- /row-->
+
+                    </div>
+                  </div> <!-- /ORG TABS -->
+
+                  <div class="row" id="OM-topo">
+                    <div class"col-md-12">
+                      <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
+                      <div>
                         <p class="text-center">
-                          <img src="http://placehold.it/600x300">
+                          <img src="http://placehold.it/500x200">
                         </p>
                       </div>
                     </div>
-                  </div>  
-                </div>
-                <!-- /TOPOLOGY col -->
-
-                <!-- CONTROLLER col -->
-                <div class="col-lg-3 col-md-3 col-sm-3">
-
-                  <div class="panel panel-primary">
-                    <div class="panel-heading">
-                      <h3 class="panel-title"><i class="fa fa-dashboard"></i> Controller</h3>
-                    </div>
-                    <div class="panel-body">
-                      <div id="GS-controller">
-
-
-                      </div>
-                    </div>
-                  </div>  
-                </div>
-                <!-- /CONTROLLER col -->
-              </div><!-- /TOPOLOGY and CONTROLLER ROM -->
-
-              <div class="row"> <!-- STATISTICS ROW -->
-
-                <div class="panel panel-primary">
-                  <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Statistics</h3>
                   </div>
-                  <div class="panel-body">
-                    <div id="GS-stats">
- 
-                      <div class="col-lg-3 col-md-3 col-sm-3">
-                        <div class="panel panel-default">
-                          <div class="panel-body">
-                            <h4>Select an element from the graph above</h4>
-                          </div>
-                        </div>
+
+
+                </div>
+              </div><!-- /ORG INFO --> 
+        </script>
+        <!-- /org USERS View -->
+
+        <!-- org TERMINALS -->
+        <script type="text/template" id="organizations-terminals-template">
+
+          <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
+            <div class="panel panel-primary">
+
+              <div class="panel-heading">
+   
+                    <div class="row"><!-- HEADER (orgname+buttons) -->
+
+                      <div class="col-md-4 col-sm-4">
+                        <a href="#/adminOrgs">
+                          <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
+                          </button>
+                        </a>
                       </div>
 
-                      <div class="col-lg-3 col-md-3 col-sm-3">
-                        <div class="panel panel-default">
-                          <div class="panel-body">
-                            <div class="list-group">
-                              <a href="#" class="list-group-item">Port 1</a>
-                              <a href="#" class="list-group-item">Port 2</a>
-                              <a href="#" class="list-group-item">Port 3</a>
-                              <a href="#" class="list-group-item">Port 4</a>
-                            </div>
-                          </div>
-                        </div>
+                      <div class="col-md-4 col-sm-4">
+                        <center> <h4> <%= orgName %> </center> </h4>
                       </div>
 
-                      <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="row">
-                          <div class="panel panel-default">
-                            <div class="panel-body">
-                              <br>
-                              <br>
-                              <h3>Here the graph</h3>
-                              <br>
-                            </div>
-                          </div>
-
-                        </div>
-
-                        <div class="row">
-
-                          <div class="btn-group dropup">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                              Param
-                              <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a href="#">Receive</a></li>
-                              <li><a href="#">Transmitted</a></li>
-                              <li><a href="#">Dropped</a></li>
-                              <li><a href="#">Errors</a></li>
-                              <li><a href="#">Collisions</a></li>
-                            </ul>
-                          </div>
-
-                          <div class="btn-group dropup">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                              Value type
-                              <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a href="#">Packets</a></li>
-                              <li><a href="#">Bytes</a></li>
-                              <li><a href="#">Flows</a></li>
-                            </ul>
-                          </div>
-
-                          <div class="btn-group dropup">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                              Time interval
-                              <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a href="#">Last Minute</a></li>
-                              <li><a href="#">Last Hour</a></li>
-                              <li><a href="#">Last Day</a></li>
-                              <li><a href="#">Last Week</a></li>
-                              <li><a href="#">Last Month</a></li>
-                            </ul>
-                          </div>
-
-                        </div>
+                      <div class="col-md-4 col-sm-4">
+                        <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
                       </div>
-
-                    </div>
+                    </div><!-- /HEADER (orgname+buttons) -->
                   </div>
-                </div>  
 
-              </div> <!-- /STATISTICS ROW -->
+              <div class="padding-15"><!-- ORG TABS -->
+                <div class="panel-body padding-0-bot">
+                  <div class="row">
 
+                    <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
+                      <div class="col-lg-12">
+                        <div class="panel margin-0-bot">
+                          <div class="tabbable">
 
-              <div class="row"> <!-- ALERTS row -->  
-                <div class="col-lg-12">
-                  <div class="panel">
-                    <div class="tabbable">
-                      <ul class="nav nav-pills nav-justified">
-                        <li class="active"><a href="#alarms" data-toggle="tab"> <i class="fa fa-bell"></i> Alarms</a></li>
-                        
-                      </ul>
+                            <ul class="nav nav-pills nav-justified">
+                                  <li class=""><a href="#/adminOrgs/<%= orgId %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
 
-                      <div class="tab-content"><!-- tabs ALARMS and STATISTICS content -->
+                                  <li class=""><a href="#/adminUsers/<%= orgId %>" data-toggle=""> <i class="fa fa-group"></i> Org. Users</a></li>
+                                  
+                                  <li class="active"><a href="#/adminTerminals/<%= orgId %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
+                                  <li class=""><a href="#/adminFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
+                                  <li class=""><a href="#/adminPrgFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
+                                </ul>
+                                          
+                            <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
 
-                        <div class="tab-pane active" id="alarms"><!-- tab ALARMS content -->
-                          <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
+                              <div class="tab-pane active" id="aPoints"><!-- Access Points -->       
+                                <div class="row">
+                                  <div class="col-lg-12 col-md-12 col-sm-12">
+                                    
+                                    <div class="panel panel-primary">
+                                      <div class="panel-body">
+
+                                        <div class="padding-10-bot">
+                                          <button type="button" class="btn btn-success btn-lg"><i class="fa fa-laptop"></i> ADD Node</button>
+                                        </div>
+
+                                        <div id="OM-ap">
+                                          <div class="table-responsive">
+                                            <table class="table table-bordered table-hover table-striped tablesorter">
+                                             
+                                       <thead>
+                                        <tr>
+                                          <th>Host name <i class="fa fa-sort"></i></th>
+                                          <th>ID <i class="fa fa-sort"></i></th>
+                                          <th>Description <i class="fa fa-sort"></i></th>
+                                          <th>IP <i class="fa fa-sort"></i></th>
+                                          <th>Interface <i class="fa fa-sort"></i></th>
+                                          <th>MAC <i class="fa fa-sort"></i></th>
+                                          <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                                          <th><center><i class="fa fa-edit"></i></center></th>
+                                          <th><center><i class="fa fa-eraser"></i></center></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+
+                                        <% _.each(terminals, function(terminal) { 
+                                          if(terminal.get('active')==true){ %>
+
+                                          <tr>
+                                            <td><%= terminal.get('hostName') %></td>
+                                            <td><%= terminal.get('identifier') %></td>
+                                            <td><%= terminal.get('description') %></td>
+                                            <td><%= terminal.get('ipAddress') %></td>
+                                            <td><%= terminal.get('ifaceSpeed') %></td>
+                                            <td><%= terminal.get('mac') %></td>
+                                            <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                                            <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                                            <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                                          </tr>
+
+                                        <%  }
+                                        }); %>
+                                      </tbody>
+
+                                            </table>
+                                          </div>
+                                        </div>
+              
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div><!-- /Access Points --> 
                               
-                              <div class="panel panel-primary">
-                                <div class="panel-body">
-                                  <div id="GS-alerts">
-                                    <div class="table-responsive">
-                                      <table class="table table-bordered table-hover table-striped tablesorter">
-                                        <thead>
-                                          <tr>
-                                            <th>Alert <i class="fa fa-sort"></i></th>
-                                            <th>Date <i class="fa fa-sort"></i></th>
-                                            <th>Time <i class="fa fa-sort"></i></th>
-                                            <th>Status <i class="fa fa-sort"></i></th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr>
-                                            <td><span class="label label-success">Flow succeeded</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>3:29 PM</td>
-                                            <td>DONE</td>
-                                          </tr>
-                                          <tr>
-                                            <td><span class="label label-warning">Host unreachable</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>3:20 PM</td>
-                                            <td>DOWN</td>
-                                          </tr>
-                                          <tr>
-                                            <td><span class="label label-info">New host connected</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>3:03 PM</td>
-                                            <td>DONE</td>
-                                          </tr>
-                                          <tr>
-                                            <td><span class="label label-success">Flow succeeded</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>3:00 PM</td>
-                                            <td>DONE</td>
-                                          </tr>
-                                          <tr>
-                                            <td><span class="label label-danger">Link down!</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>2:49 PM</td>
-                                            <td>FIXED</td>
-                                          </tr>
-                                          <tr>
-                                            <td><span class="label label-danger">Link down!</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>2:23 PM</td>
-                                            <td>DOWN</td>
-                                          </tr>
-                                          <tr>
-                                            <td><span class="label label-success">Flow succeeded</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>2:15 PM</td>
-                                            <td>DONE</td>
-                                          </tr>
-                                          <tr>
-                                            <td><span class="label label-warning">Host unreachable</span></td>
-                                            <td>11/21/2013</td>
-                                            <td>2:13 PM</td>
-                                            <td>DOWN</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                  <div class="text-right">
-                                    <a href="#">View All Alarms <i class="fa fa-arrow-circle-right"></i></a>
-                                  </div>      
-        
-                                </div>
-                              </div>
 
-                            </div>
+
+                            </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
                           </div>
-                        </div><!-- /tab ALARMS content -->
+                        </div>
+                      </div>
+                    </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
 
-                        <div class="tab-pane" id="statistics"><!-- tab STATISTICS content -->      
-                          <div class="row">
+                  </div>  <!-- /row-->
 
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                              <div class="panel panel-primary">
-                                <div class="panel-body">
+                </div>
+              </div> <!-- /ORG TABS -->
 
-                                  <div class="col-lg-3 col-md-3 col-sm-6">
-                                    <div class="panel panel-primary">
-                                      <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 1</h3>
-                                      </div>
-                                      <div class="panel-body">
-                                        <div>
-                                          <p class="text-center">
-                                            <img src="http://placehold.it/150x150">
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-lg-3 col-md-3 col-sm-6">
-                                    <div class="panel panel-primary">
-                                      <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 2</h3>
-                                      </div>
-                                      <div class="panel-body">
-                                        <div>
-                                          <p class="text-center">
-                                            <img src="http://placehold.it/150x150">
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-lg-3 col-md-3 col-sm-6">
-                                    <div class="panel panel-primary">
-                                      <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 3</h3>
-                                      </div>
-                                      <div class="panel-body">
-                                        <div>
-                                          <p class="text-center">
-                                            <img src="http://placehold.it/150x150">
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-lg-3 col-md-3 col-sm-6">
-                                    <div class="panel panel-primary">
-                                      <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Interface 4</h3>
-                                      </div>
-                                      <div class="panel-body">
-                                        <div>
-                                          <p class="text-center">
-                                            <img src="http://placehold.it/150x150">
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                </div>
-                              </div>
-                            </div>
-
-                          </div><!-- /.row -->
-                        </div><!-- /tab STATISTICS content -->
-                      </div><!-- tabs ALARMS and STATISTICS content -->
-                    </div>
+              <div class="row" id="OM-topo">
+                <div class"col-md-12">
+                  <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
+                  <div>
+                    <p class="text-center">
+                      <img src="http://placehold.it/500x200">
+                    </p>
                   </div>
                 </div>
-              </div><!-- /ALERTS row -->
-    </script>
-  	<!-- /GLOBAL VIEW TEMPLATE -->
-  	<!-- /ADMIN OVERVIEW VIEW -->
+              </div>
 
-  	<!-- ORGANIZATIONS VIEW -->
-  	<!-- organizations-list-template -->
-  	<script type="text/template" id="organizations-list-template">
 
-          <!-- Org LIST column -->
-          <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
-            <div class="row">
-              <p><center>
-                <button type="button" class="btn btn-lg btn-success"><i class="fa fa-pencil"></i>  Create new organization</button>
-              </p></center>    
             </div>
+          </div><!-- /ORG INFO --> 
 
-            <div class="row">
-              <div class="panel panel-primary">
+        </script>
+        <!-- /org TERMINALS -->
+
+        <!-- org FLOWS -->
+        <script type="text/template" id="organizations-flows-template">
+
+          <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
+            <div class="panel panel-primary">
+
+              <div class="panel-heading">
+   
+                    <div class="row"><!-- HEADER (orgname+buttons) -->
+
+                      <div class="col-md-4 col-sm-4">
+                        <a href="#/adminOrgs">
+                          <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
+                          </button>
+                        </a>
+                      </div>
+
+                      <div class="col-md-4 col-sm-4">
+                        <center> <h4> <%= orgName %> </center> </h4>
+                      </div>
+
+                      <div class="col-md-4 col-sm-4">
+                        <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
+                      </div>
+                    </div><!-- /HEADER (orgname+buttons) -->
+                  </div>
+
+              <div class="padding-15"><!-- ORG TABS -->
+                <div class="panel-body padding-0-bot">
+                  <div class="row">
+
+                    <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
+                      <div class="col-lg-12">
+                        <div class="panel margin-0-bot">
+                          <div class="tabbable">
+
+                            <ul class="nav nav-pills nav-justified">
+                                  <li class=""><a href="#/adminOrgs/<%= orgId %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
+
+                                  <li class=""><a href="#/adminUsers/<%= orgId %>" data-toggle=""> <i class="fa fa-group"></i> Org. Users</a></li>
+                                  
+                                  <li class=""><a href="#/adminTerminals/<%= orgId %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
+                                  <li class="<% if(active==true){%> active <%}%>"><a href="#/adminFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
+                                  <li class="<% if(active==false){%> active <%}%>"><a href="#/adminPrgFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
+                                </ul>
+                                          
+                            <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+
+
+                              <div class="tab-pane active" id="activeFlows"><!-- ACTIVE Flows -->       
+                                <div class="row">
+                                  <div class="col-lg-12 col-md-12 col-sm-12">
+                                    
+                                    <div class="panel panel-primary">
+                                      <div class="panel-body">
+
+                                        <div class="padding-10-bot">
+                                          <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW</button>
+                                        </div>
+
+
+
+                                        <div id="FLW-prg">
+                                          <div class="table-responsive">
+                                            <table class="table table-bordered table-hover table-striped tablesorter">
+                                              <thead>
+                                                <tr>
+                                                  <th>Flow ID <i class="fa fa-sort"></i></th>
+                                                  <th>Name <i class="fa fa-sort"></i></th>
+                                                  <th>From <i class="fa fa-sort"></i></th>
+                                                  <th>To <i class="fa fa-sort"></i></th>
+                                                  <th>Bandwidth <i class="fa fa-sort"></i></th>
+                                                  <th>SRC Port <i class="fa fa-sort"></i></th>
+                                                  <th>DST Port <i class="fa fa-sort"></i></th>
+                                                  <th>Protocol <i class="fa fa-sort"></i></th>
+                                                  <th>QoS <i class="fa fa-sort"></i></th>
+                                                  <th><center><i class="fa fa-edit"></i></center></th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+
+                                                <% if(active == true){ 
+                                                      _.each(flows, function(flow) { 
+                                                        if(flow.get('active')==true){ %>
+
+                                                  <tr>
+                                                    <td><%= flow.get('identifier') %></td>                
+                                                    <td><%= flow.get('name') %></td>
+                                                    <td><%= flow.get('srcOTidentifier') %></td>
+                                                    <td><%= flow.get('dstOTidentifier') %></td>
+                                                    <td><%= flow.get('bandwidth') %></td>
+                                                    <td><%= flow.get('srcPort') %></td>
+                                                    <td><%= flow.get('dstPort') %></td>
+                                                    <td><%= flow.get('protocol') %></td>
+                                                    <td><%= flow.get('qos') %></td>
+                                                    <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                                                  </tr>
+
+                                                <%      }
+                                                      
+                                                      }); 
+                                                    }else{
+                                                      _.each(flows, function(flow) { 
+                                                        if(flow.get('active')==false){ %>
+
+                                                          <tr>
+                                                            <td><%= flow.get('identifier') %></td>                
+                                                            <td><%= flow.get('name') %></td>
+                                                            <td><%= flow.get('srcOTidentifier') %></td>
+                                                            <td><%= flow.get('dstOTidentifier') %></td>
+                                                            <td><%= flow.get('bandwidth') %></td>
+                                                            <td><%= flow.get('srcPort') %></td>
+                                                            <td><%= flow.get('dstPort') %></td>
+                                                            <td><%= flow.get('protocol') %></td>
+                                                            <td><%= flow.get('qos') %></td>
+                                                            <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                                                          </tr>
+
+                                                      <% }
+                                                      });
+                                                    }%>
+
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+              
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div><!-- /ACTIVE Flows -->  
+
+
+                            </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
+
+                  </div>  <!-- /row-->
+
+                </div>
+              </div> <!-- /ORG TABS -->
+
+              <div class="row" id="OM-topo">
+                <div class"col-md-12">
+                  <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
+                  <div>
+                    <p class="text-center">
+                      <img src="http://placehold.it/500x200">
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div><!-- /ORG INFO --> 
+        </script>
+        <!-- /org FLOWS -->
+        
+    	<!-- /ORGANIZATION DATA TEMPLATE -->
+    	<!-- /ORGANIZATIONS VIEW -->
+
+    	<!-- FLOWS VIEW -->
+    	<script type="text/template" id="flows-template">
+
+          <div class="padding-10-bot">
+            <a href="#/newFlow"><button class="btn btn-success"> Create new FLOW</button></a>
+          </div>
+
+          <div class="row"><!-- Active FLOWS -->
+            <div class="col-sm-12">
+              <div class="panel panel-success">    
                 <div class="panel-heading">
-                  <h3 class="panel-title"><i class="fa fa-briefcase"></i> Organizations</h3>
+                  <h3 class="panel-title"><i class="fa fa-bolt"></i> Active flows</h3>
+                </div>
+                <div class="panel-body">
+                  <div id="FLW-active">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                          <tr>
+                            <th>Flow ID <i class="fa fa-sort"></i></th>
+                            <th>Name <i class="fa fa-sort"></i></th>
+                            <th>From <i class="fa fa-sort"></i></th>
+                            <th>To <i class="fa fa-sort"></i></th>
+                            <th>Bandwidth <i class="fa fa-sort"></i></th>
+                            <th>SRC Port <i class="fa fa-sort"></i></th>
+                            <th>DST Port <i class="fa fa-sort"></i></th>
+                            <th>Protocol <i class="fa fa-sort"></i></th>
+                            <th>QoS <i class="fa fa-sort"></i></th>
+                            <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                            <th><center><i class="fa fa-edit"></i></center></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                          <% _.each(flows, function(flow) { 
+                              if(flow.get('active')==true){ %>
+                          
+                            <tr>
+                              <td><%= flow.get('identifier') %></td>                
+                              <td><%= flow.get('name') %></td>
+                              <td><%= flow.get('srcOTidentifier') %></td>
+                              <td><%= flow.get('dstOTidentifier') %></td>
+                              <td><%= flow.get('bandwidth') %></td>
+                              <td><%= flow.get('srcPort') %></td>
+                              <td><%= flow.get('dstPort') %></td>
+                              <td><%= flow.get('protocol') %></td>
+                              <td><%= flow.get('qos') %></td>
+                              <td><center><a href="#"><button class="btn btn-info btn-sm" >Statistics</button></a></center></td>
+                              <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                            </tr>
+
+                          <%  }
+                            }); %>
+                        
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>             
+              </div>
+            </div>
+          </div><!-- /Active FLOWS -->
+
+          <div class="row"><!-- Programmed FLOWS -->
+            <div class="col-sm-12">
+              <div class="panel panel-primary">    
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-calendar"></i> Programmed flows</h3>
+                </div>
+                <div class="panel-body">
+                  <div id="FLW-prg">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                          <tr>
+                            <th>Flow ID <i class="fa fa-sort"></i></th>
+                            <th>Name <i class="fa fa-sort"></i></th>
+                            <th>From <i class="fa fa-sort"></i></th>
+                            <th>To <i class="fa fa-sort"></i></th>
+                            <th>Bandwidth <i class="fa fa-sort"></i></th>
+                            <th>SRC Port <i class="fa fa-sort"></i></th>
+                            <th>DST Port <i class="fa fa-sort"></i></th>
+                            <th>Protocol <i class="fa fa-sort"></i></th>
+                            <th>QoS <i class="fa fa-sort"></i></th>
+                            <th><center><i class="fa fa-edit"></i></center></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                          <% _.each(flows, function(flow) { 
+                              if(flow.get('active')==false){ %>
+
+                            <tr>
+                              <td><%= flow.get('identifier') %></td>                
+                              <td><%= flow.get('name') %></td>
+                              <td><%= flow.get('srcOTidentifier') %></td>
+                              <td><%= flow.get('dstOTidentifier') %></td>
+                              <td><%= flow.get('bandwidth') %></td>
+                              <td><%= flow.get('srcPort') %></td>
+                              <td><%= flow.get('dstPort') %></td>
+                              <td><%= flow.get('protocol') %></td>
+                              <td><%= flow.get('qos') %></td>
+                              <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                            </tr>
+
+                          <%  }
+                            }); %>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>             
+              </div>
+            </div>
+          </div><!-- /Programmed FLOWS -->
+      </script>
+    	<!-- /FLOWS VIEW -->
+
+    	<!-- TERMINALS VIEW -->
+    	<script type="text/template" id="terminals-template">
+          <div class="row"><!-- Acccess Points -->
+            <div class="col-sm-12">
+
+              <div class="panel panel-primary">
+              
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-desktop"></i> Access Points</h3>
                 </div>
 
                 <div class="panel-body">
+                  <div class="table-responsive" id="AP">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                      <thead>
+                        <tr>
+                          <th>Host name <i class="fa fa-sort"></i></th>
+                          <th>ID <i class="fa fa-sort"></i></th>
+                          <th>Description <i class="fa fa-sort"></i></th>
+                          <th>IP <i class="fa fa-sort"></i></th>
+                          <th>Interface <i class="fa fa-sort"></i></th>
+                          <th>MAC <i class="fa fa-sort"></i></th>
+                          <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                          <th><center><i class="fa fa-edit"></i></center></th>
+                          <th><center><i class="fa fa-eraser"></i></center></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <% _.each(terminals, function(terminal) { 
+                          if(terminal.get('active')==true){ %>
+
+                          <tr>
+                            <td><%= terminal.get('hostName') %></td>
+                            <td><%= terminal.get('identifier') %></td>
+                            <td><%= terminal.get('description') %></td>
+                            <td><%= terminal.get('ipAddress') %></td>
+                            <td><%= terminal.get('ifaceSpeed') %></td>
+                            <td><%= terminal.get('mac') %></td>
+                            <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                            <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                            <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                          </tr>
+
+                        <%  }
+                        }); %>
+                      </tbody>
+                    </table>
+                  </div>              
+                </div>
                 
-                  <div id="OM-orgColumn">
+              </div>
 
-                    <div class="list-group">
+            </div>
+          </div><!-- /Access Points -->
+      </script>
+    	<!-- /TERMINALS VIEW -->
 
-                      <!--ORGANIZATIONS LIST-->
-                      <% _.each(organizations, function(organization) { %>
+    	<!-- TRAFFIC VIEW -->
+    	<script type="text/template" id="traffic-template">
+          <div class="row"> <!-- Traffic Matrix -->
+            <div class="col-lg-12">
 
-                        <a href="#/adminOrgs/<%= organization.get('identifier') %>" class="list-group-item"><span class="badge"><%= organization.get('identifier') %></span> <%= organization.get('name') %> </a>
+              <div class="panel panel-primary">
+              
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-th"></i> Traffic Matrix</h3>
+                </div>
 
-                      <% }); %>
-                    </div>
-                  
+                <div class="panel-body">
+              
+                  <div id="TA-matrix">
+                    <p class="text-center">
+                      <img src="http://placehold.it/600x600">
+                    </p>
                   </div>
+
                 </div>
+
               </div>
             </div>
-          </div>
-          <!-- /Org LIST column -->     
-    </script>
-  	<!-- /organizations-list-template -->
+          </div><!-- /Traffic Matrix -->
+      </script>
+    	<!-- /TRAFFIC VIEW -->
 
+    <!-- /ADMIN TEMPLATES -->
 
-
-  	<!-- ORGANIZATION DATA TEMPLATE -->
-
-      <!-- orgData View [TOrg] -->
-    	<script type="text/template" id="organizations-data-template">
-        <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <div class="row">
-
-                <div class="col-md-4 col-sm-4">
-                  <a href="#/adminOrgs">
-                    <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
-                    </button>
-                  </a>
-                </div>
-
-                <div class="col-md-4 col-sm-4">
-                  <center> <h4> <%= organization ? organization.get('name') : 'Fill the fields below' %> </center> </h4>
-                </div>
-
-                <div class="col-md-4 col-sm-4">
-                  <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
-                </div>
+    <!-- CLIENT TEMPLATES -->
+      <!-- CLIENT OVERVIEW-->
+      <script type="text/template" id="client-overview-template">
+        <div class="col-md-12 col-sm-12 slim-flows"> 
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title"> <center> <%= organization ? organization.get('name') : 'Fill the fields below' %> </center> </h3>
               </div>
-            </div>
 
-            <div class="padding-15"><!-- ORG TABS -->
-              <div class="panel-body padding-0-bot">
-                <div class="row">
+                <div class="panel-body">
 
-                  <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
-                    <div class="col-lg-12">
-                      <div class="panel margin-0-bot">
-                        <div class="tabbable">
-                          <ul class="nav nav-pills nav-justified">
-                            <li class="active"><a href="#/adminOrgs/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
-
-                            <li class=""><a href="#/adminUsers/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-group"></i> Org. Users</a></li>
-                            
-                            <li class=""><a href="#/adminTerminals/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
-                            <li class=""><a href="#/adminFlows/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
-                            <li class=""><a href="#/adminPrgFlows/<%= organization.get('identifier') %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
-                          </ul>
-                                        
-                          <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
-
-                            <div class="tab-pane active" id="orgData"><!-- ROW Org.Data --> 
-                              <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                  
-                                  <div class="panel panel-primary">
-                                    <div class="panel-body">
-
-                                      <div id="OM-data">
-
-                                        <form class="form-horizontal" role="form">
-
-                                          <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-12">
-
-                                              <div class="form-group">
-                                                <label for="orgID" class="col-sm-4 control-label">ID</label>
-                                                <div class="col-sm-8">
-                                                  <input type="text" class="form-control" id="orgID" value="<%= organization ? organization.get('identifier') : '' %>" placeholder="orgID" disabled>
-                                                </div>
-                                              </div>
-
-                                              <div class="form-group">
-                                                <label for="orgName" class="col-sm-4 control-label">Name</label>
-                                                <div class="col-sm-8">
-                                                  <input type="text" class="form-control" id="orgName" value="<%= organization ? organization.get('name') : '' %>" placeholder="Ikea" disabled>
-                                                </div>
-                                              </div>
-
-                                              <div class="form-group">
-                                                <label for="orgBankAccount" class="col-sm-4 control-label">Bank Account</label>
-                                                <div class="col-sm-8">
-                                                  <input type="text" class="form-control" id="orgBankAccount" value="<%= organization ? organization.get('bankAccount') : '' %>" placeholder="46475956605938294" disabled>
-                                                </div>
-                                              </div>
-                                            </div>
-
-                                            <div class="col-lg-6 col-md-6 col-sm-12">
-
-                                              <div class="form-group">
-                                                <label for="orgCif" class="col-sm-4 control-label">CIF</label>
-                                                <div class="col-sm-8">
-                                                  <input type="text" class="form-control" id="orgCif" value="<%= organization ? organization.get('NIF') : '' %>" placeholder="34957684" disabled>
-                                                </div>
-                                              </div>
-
-                                              <div class="form-group">
-                                                <label for="orgPassword" class="col-sm-4 control-label">Password</label>
-                                                <div class="col-sm-8">
-                                                  <input type="password" class="form-control" id="orgPassword" placeholder="*********" disabled>
-                                                </div>
-                                              </div>
-
-                                              <div class="form-group">
-                                                <label for="orgIsOam" class="col-sm-4 control-label">is OAM?</label>
-                                                <div class="col-sm-8">
-                                                  <input type="checkbox" class="form-control" id="orgIsOam" checked="<%= organization.get('OAM') %>" disabled>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-
-                                          <div class="row">    
-                                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                              <div class="form-group">
-                                                <center><button type="submit" class="btn btn-warning btn-lg">Save changes</button></center>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </form>  
-
-                                      </div>
-            
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div><!-- /ROW Org.Data --> 
-
-                          </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                  <div id="client-OV">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                          <tr>
+                            <th><center><h3>Active nodes</h3></center>    </i></th>
+                            <th><center><h3>Active flows</h3></center>    </i></th>
+                            <th><center><h3>Programmed flows</h3></center></i></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><center><h3> <%= cntActiveTerms %>  </h3></center></td>
+                            <td><center><h3> <%= cntActiveFlows %>  </h3></center></td>
+                            <td><center><h3> <%= cntPrgFlows %>  </h3></center></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>                                    
+                  
+                    <div class="row">
+                      <div class"col-md-12">
+                        <h3> <center>Logical Topology</center>  </h3>
+                        <div>
+                          <p class="text-center">
+                            <img src="http://placehold.it/500x300">
+                          </p>
                         </div>
                       </div>
                     </div>
-                  </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
 
-                </div>  <!-- /row-->
+                  </div>
 
-              </div>
-            </div> <!-- /ORG TABS -->
-
-            <div class="row" id="OM-topo">
-              <div class"col-md-12">
-                <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                <div>
-                  <p class="text-center">
-                    <img src="http://placehold.it/500x200">
-                  </p>
                 </div>
-              </div>
+              
             </div>
-
-
-          </div>
-        </div><!-- /ORG INFO --> 
+        </div>
       </script>
-      <!-- /TOrg View -->
+      <!-- /CLIENT OVERVIEW-->
 
-      <!-- org USERS View -->
-      <script type="text/template" id="organizations-users-template">
-
-            <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
+      <!-- CLIENT ORG DATA -->
+      <script type="text/template" id="client-data-template">
+        <div class="col-md-12 col-sm-12 slim-flows"> 
               <div class="panel panel-primary">
-
                 <div class="panel-heading">
- 
-                  <div class="row"><!-- HEADER (orgname+buttons) -->
-
-                    <div class="col-md-4 col-sm-4">
-                      <a href="#/adminOrgs">
-                        <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
-                        </button>
-                      </a>
-                    </div>
-
-                    <div class="col-md-4 col-sm-4">
-                      <center> <h4> <%= orgId %> </center> </h4>
-                    </div>
-
-                    <div class="col-md-4 col-sm-4">
-                      <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
-                    </div>
-                  </div><!-- /HEADER (orgname+buttons) -->
+                  <h3 class="panel-title"> <center> <%= activeOrgName %> </center> </h3>
                 </div>
 
-                <div class="padding-15"><!-- ORG TABS -->
-                  <div class="panel-body padding-0-bot">
-                    <div class="row">
+                  <div class="panel-body">
+                    <div class="row padding-10">
 
-                      <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
+                      <div class="row"> <!-- ROW Org.Data + Org.Users -->  
                         <div class="col-lg-12">
-                          <div class="panel margin-0-bot">
+                          <div class="panel">
                             <div class="tabbable">
-
                               <ul class="nav nav-pills nav-justified">
-                                <li class=""><a href="#/adminOrgs/<%= orgId %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
+                                <li class="active"><a href="#/clientOrgData/<%= loginOrg %>" data-toggle=""> <i class="fa fa-briefcase"></i> Organization Data</a></li>
+                                <li class=""><a href="#/clientOrgUsers/<%= loginOrg %>" data-toggle=""> <i class="fa fa-group"></i> Organization Users</a></li>
+                              </ul>
+                                            
+                              <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
 
-                                <li class="active"><a href="#/adminUsers/<%= orgId %>" data-toggle="tab"> <i class="fa fa-group"></i> Org. Users</a></li>
-                                
-                                <li class=""><a href="#/adminTerminals/<%= orgId %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
-                                <li class=""><a href="#/adminFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
-                                <li class=""><a href="#/adminPrgFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
+                                <div class="tab-pane active" id="orgData"><!-- ROW Org.Data --> 
+                                  <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                      
+                                      <div class="panel panel-primary">
+                                        <div class="panel-body">
+
+                                          <div id="client-data">
+
+                                            <form class="form-horizontal" role="form">
+
+                                              <div class="row">
+                                                <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                                  <div class="form-group">
+                                                    <label for="orgID" class="col-sm-4 control-label">ID</label>
+                                                    <div class="col-sm-8">
+                                                      <input type="text" class="form-control" id="orgID" value="<%= organization ? organization.get('identifier') : '' %>" placeholder="orgID" disabled>
+                                                    </div>
+                                                  </div>
+
+                                                  <div class="form-group">
+                                                    <label for="orgName" class="col-sm-4 control-label">Name</label>
+                                                    <div class="col-sm-8">
+                                                      <input type="text" class="form-control" id="orgName" value="<%= organization ? organization.get('name') : '' %>" placeholder="Ikea" disabled>
+                                                    </div>
+                                                  </div>
+
+                                                  <div class="form-group">
+                                                    <label for="orgBankAccount" class="col-sm-4 control-label">Bank Account</label>
+                                                    <div class="col-sm-8">
+                                                      <input type="text" class="form-control" id="orgBankAccount" value="<%= organization ? organization.get('bankAccount') : '' %>" placeholder="46475956605938294" disabled>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                                <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                                  <div class="form-group">
+                                                    <label for="orgCif" class="col-sm-4 control-label">CIF</label>
+                                                    <div class="col-sm-8">
+                                                      <input type="text" class="form-control" id="orgCif" value="<%= organization ? organization.get('NIF') : '' %>" placeholder="34957684" disabled>
+                                                    </div>
+                                                  </div>
+
+                                                  <div class="form-group">
+                                                    <label for="orgPassword" class="col-sm-4 control-label">Password</label>
+                                                    <div class="col-sm-8">
+                                                      <input type="password" class="form-control" id="orgPassword" placeholder="*********" disabled>
+                                                    </div>
+                                                  </div>
+
+                                                  <div class="form-group">
+                                                    <label for="orgIsOam" class="col-sm-4 control-label">is OAM?</label>
+                                                    <div class="col-sm-8">
+                                                      <input type="checkbox" class="form-control" id="orgIsOam" checked="<%= organization.get('OAM') %>" disabled>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="row">    
+                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                  <div class="form-group">
+                                                    <center><button type="submit" class="btn btn-warning btn-lg">Edit Data</button></center>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </form>  
+
+                                          </div>
+                
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!-- /ROW Org.Data --> 
+
+
+
+                              </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                            
+                            </div>
+                          </div>
+                        </div>
+                      </div><!-- /ROW Org.Data + Org.Users -->
+
+                    </div>  <!-- /row-->
+                  </div>
+                
+              </div>
+        </div>
+      </script>
+      <!-- /CLIENT ORG DATA -->
+
+      <!-- CLIENT USERS DATA -->
+      <script type="text/template" id="client-users-template">
+        <div class="col-md-12 col-sm-12 slim-flows"> 
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title"> <center> <%= orgName %> </center></h3>
+                </div>
+
+                  <div class="panel-body">
+                    <div class="row padding-10">
+
+                      <div class="row"> <!-- ROW Org.Data + Org.Users -->  
+                        <div class="col-lg-12">
+                          <div class="panel">
+                            <div class="tabbable">
+                              <ul class="nav nav-pills nav-justified">
+                                <li class=""><a href="#/clientOrgData/<%= loginOrg %>" data-toggle=""> <i class="fa fa-briefcase"></i> Organization Data</a></li>
+                                <li class="active"><a href="#/clientOrgUsers/<%= loginOrg %>" data-toggle=""> <i class="fa fa-group"></i> Organization Users</a></li>
                               </ul>
                                             
                               <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
@@ -797,16 +1579,15 @@
                                       
                                       <div class="panel panel-primary">
                                         <div class="panel-body">
+                                          <div id="client-users">
+                                            <div>
+                                              <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
+                                              <br>
+                                              <br>
+                                            </div>
 
-                                          <div class="padding-10-bot">
-                                            <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
-                                          </div>
-
-
-                                          <div id="OM-users">
-
-                                             <div class="table-responsive">
-                                                <table class="table table-bordered table-hover table-striped tablesorter">
+                                            <div class="table-responsive">
+                                              <table class="table table-bordered table-hover table-striped tablesorter">
                                                   <thead>
                                                     <tr>
                                                       <th>ID <i class="fa fa-sort"></i></th>
@@ -837,554 +1618,32 @@
 
                                                   </tbody>
 
-                                                </table>
-                                              </div>
-                                    
+                                              </table>
+                                            </div>
+
                                           </div>
-                
-                                        </div>
+                                        </div>                                      
                                       </div>
                                     </div>
                                   </div>
                                 </div><!-- /Org.Users -->  
 
                               </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
+                            
                             </div>
                           </div>
                         </div>
-                      </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
+                      </div><!-- /ROW Org.Data + Org.Users -->
 
                     </div>  <!-- /row-->
-
                   </div>
-                </div> <!-- /ORG TABS -->
-
-                <div class="row" id="OM-topo">
-                  <div class"col-md-12">
-                    <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                    <div>
-                      <p class="text-center">
-                        <img src="http://placehold.it/500x200">
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-
+                
               </div>
-            </div><!-- /ORG INFO --> 
-      </script>
-      <!-- /org USERS View -->
-
-      <!-- org TERMINALS -->
-      <script type="text/template" id="organizations-terminals-template">
-
-        <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
-          <div class="panel panel-primary">
-
-            <div class="panel-heading">
- 
-                  <div class="row"><!-- HEADER (orgname+buttons) -->
-
-                    <div class="col-md-4 col-sm-4">
-                      <a href="#/adminOrgs">
-                        <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
-                        </button>
-                      </a>
-                    </div>
-
-                    <div class="col-md-4 col-sm-4">
-                      <center> <h4> <%= orgId %> </center> </h4>
-                    </div>
-
-                    <div class="col-md-4 col-sm-4">
-                      <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
-                    </div>
-                  </div><!-- /HEADER (orgname+buttons) -->
-                </div>
-
-            <div class="padding-15"><!-- ORG TABS -->
-              <div class="panel-body padding-0-bot">
-                <div class="row">
-
-                  <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
-                    <div class="col-lg-12">
-                      <div class="panel margin-0-bot">
-                        <div class="tabbable">
-
-                          <ul class="nav nav-pills nav-justified">
-                                <li class=""><a href="#/adminOrgs/<%= orgId %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
-
-                                <li class=""><a href="#/adminUsers/<%= orgId %>" data-toggle=""> <i class="fa fa-group"></i> Org. Users</a></li>
-                                
-                                <li class="active"><a href="#/adminTerminals/<%= orgId %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
-                                <li class=""><a href="#/adminFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
-                                <li class=""><a href="#/adminPrgFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
-                              </ul>
-                                        
-                          <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
-
-                            <div class="tab-pane active" id="aPoints"><!-- Access Points -->       
-                              <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                  
-                                  <div class="panel panel-primary">
-                                    <div class="panel-body">
-
-                                      <div class="padding-10-bot">
-                                        <button type="button" class="btn btn-success btn-lg"><i class="fa fa-laptop"></i> ADD Node</button>
-                                      </div>
-
-                                      <div id="OM-ap">
-                                        <div class="table-responsive">
-                                          <table class="table table-bordered table-hover table-striped tablesorter">
-                                           
-                                     <thead>
-                                      <tr>
-                                        <th>Host name <i class="fa fa-sort"></i></th>
-                                        <th>ID <i class="fa fa-sort"></i></th>
-                                        <th>Description <i class="fa fa-sort"></i></th>
-                                        <th>IP <i class="fa fa-sort"></i></th>
-                                        <th>Interface <i class="fa fa-sort"></i></th>
-                                        <th>MAC <i class="fa fa-sort"></i></th>
-                                        <th><center><i class="fa fa-bar-chart-o"></i></center></th>
-                                        <th><center><i class="fa fa-edit"></i></center></th>
-                                        <th><center><i class="fa fa-eraser"></i></center></th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-
-                                      <% _.each(terminals, function(terminal) { 
-                                        if(terminal.get('active')==true){ %>
-
-                                        <tr>
-                                          <td><%= terminal.get('hostName') %></td>
-                                          <td><%= terminal.get('identifier') %></td>
-                                          <td><%= terminal.get('description') %></td>
-                                          <td><%= terminal.get('ipAddress') %></td>
-                                          <td><%= terminal.get('ifaceSpeed') %></td>
-                                          <td><%= terminal.get('mac') %></td>
-                                          <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
-                                          <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
-                                          <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
-                                        </tr>
-
-                                      <%  }
-                                      }); %>
-                                    </tbody>
-
-                                          </table>
-                                        </div>
-                                      </div>
-            
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div><!-- /Access Points --> 
-                            
-
-
-                          </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
-                        </div>
-                      </div>
-                    </div>
-                  </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
-
-                </div>  <!-- /row-->
-
-              </div>
-            </div> <!-- /ORG TABS -->
-
-            <div class="row" id="OM-topo">
-              <div class"col-md-12">
-                <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                <div>
-                  <p class="text-center">
-                    <img src="http://placehold.it/500x200">
-                  </p>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-        </div><!-- /ORG INFO --> 
-
-      </script>
-      <!-- /org TERMINALS -->
-
-      <!-- org FLOWS -->
-      <script type="text/template" id="organizations-flows-template">
-
-        <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
-          <div class="panel panel-primary">
-
-            <div class="panel-heading">
- 
-                  <div class="row"><!-- HEADER (orgname+buttons) -->
-
-                    <div class="col-md-4 col-sm-4">
-                      <a href="#/adminOrgs">
-                        <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Select organization
-                        </button>
-                      </a>
-                    </div>
-
-                    <div class="col-md-4 col-sm-4">
-                      <center> <h4> <%= orgId %> </center> </h4>
-                    </div>
-
-                    <div class="col-md-4 col-sm-4">
-                      <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
-                    </div>
-                  </div><!-- /HEADER (orgname+buttons) -->
-                </div>
-
-            <div class="padding-15"><!-- ORG TABS -->
-              <div class="panel-body padding-0-bot">
-                <div class="row">
-
-                  <div class="row"> <!-- ROW Org.Data + Org.Users + Access Points + Active flows -->  
-                    <div class="col-lg-12">
-                      <div class="panel margin-0-bot">
-                        <div class="tabbable">
-
-                          <ul class="nav nav-pills nav-justified">
-                                <li class=""><a href="#/adminOrgs/<%= orgId %>" data-toggle=""> <i class="fa fa-edit"></i> Org. Data</a></li>
-
-                                <li class=""><a href="#/adminUsers/<%= orgId %>" data-toggle=""> <i class="fa fa-group"></i> Org. Users</a></li>
-                                
-                                <li class=""><a href="#/adminTerminals/<%= orgId %>" data-toggle=""> <i class="fa fa-desktop"></i> Access Points</a></li>
-                                <li class="<% if(active==true){%> active <%}%>"><a href="#/adminFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-bolt"></i> Active flows</a></li>
-                                <li class="<% if(active==false){%> active <%}%>"><a href="#/adminPrgFlows/<%= orgId %>" data-toggle=""> <i class="fa fa-calendar"></i> Programmed flows</a></li>
-                              </ul>
-                                        
-                          <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
-
-
-                            <div class="tab-pane active" id="activeFlows"><!-- ACTIVE Flows -->       
-                              <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                  
-                                  <div class="panel panel-primary">
-                                    <div class="panel-body">
-
-                                      <div class="padding-10-bot">
-                                        <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW</button>
-                                      </div>
-
-
-
-                                      <div id="FLW-prg">
-                                        <div class="table-responsive">
-                                          <table class="table table-bordered table-hover table-striped tablesorter">
-                                            <thead>
-                                              <tr>
-                                                <th>Flow ID <i class="fa fa-sort"></i></th>
-                                                <th>Name <i class="fa fa-sort"></i></th>
-                                                <th>From <i class="fa fa-sort"></i></th>
-                                                <th>To <i class="fa fa-sort"></i></th>
-                                                <th>Bandwidth <i class="fa fa-sort"></i></th>
-                                                <th>SRC Port <i class="fa fa-sort"></i></th>
-                                                <th>DST Port <i class="fa fa-sort"></i></th>
-                                                <th>Protocol <i class="fa fa-sort"></i></th>
-                                                <th>QoS <i class="fa fa-sort"></i></th>
-                                                <th><center><i class="fa fa-edit"></i></center></th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-
-                                              <% if(active == true){ 
-                                                    _.each(flows, function(flow) { 
-                                                      if(flow.get('active')==true){ %>
-
-                                                <tr>
-                                                  <td><%= flow.get('identifier') %></td>                
-                                                  <td><%= flow.get('name') %></td>
-                                                  <td><%= flow.get('srcOTidentifier') %></td>
-                                                  <td><%= flow.get('dstOTidentifier') %></td>
-                                                  <td><%= flow.get('bandwidth') %></td>
-                                                  <td><%= flow.get('srcPort') %></td>
-                                                  <td><%= flow.get('dstPort') %></td>
-                                                  <td><%= flow.get('protocol') %></td>
-                                                  <td><%= flow.get('qos') %></td>
-                                                  <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
-                                                </tr>
-
-                                              <%      }
-                                                    
-                                                    }); 
-                                                  }else{
-                                                    _.each(flows, function(flow) { 
-                                                      if(flow.get('active')==false){ %>
-
-                                                        <tr>
-                                                          <td><%= flow.get('identifier') %></td>                
-                                                          <td><%= flow.get('name') %></td>
-                                                          <td><%= flow.get('srcOTidentifier') %></td>
-                                                          <td><%= flow.get('dstOTidentifier') %></td>
-                                                          <td><%= flow.get('bandwidth') %></td>
-                                                          <td><%= flow.get('srcPort') %></td>
-                                                          <td><%= flow.get('dstPort') %></td>
-                                                          <td><%= flow.get('protocol') %></td>
-                                                          <td><%= flow.get('qos') %></td>
-                                                          <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
-                                                        </tr>
-
-                                                    <% }
-                                                    });
-                                                  }%>
-
-                                            </tbody>
-                                          </table>
-                                        </div>
-                                      </div>
-            
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div><!-- /ACTIVE Flows -->  
-
-
-                          </div><!-- /tabs ROW Org.Data + Org.Users + Access Points + Active flows content -->
-                        </div>
-                      </div>
-                    </div>
-                  </div><!-- /ROW Org.Data + Org.Users + Access Points row -->
-
-                </div>  <!-- /row-->
-
-              </div>
-            </div> <!-- /ORG TABS -->
-
-            <div class="row" id="OM-topo">
-              <div class"col-md-12">
-                <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                <div>
-                  <p class="text-center">
-                    <img src="http://placehold.it/500x200">
-                  </p>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-        </div><!-- /ORG INFO --> 
-      </script>
-      <!-- /org FLOWS -->
-      
-  	<!-- /ORGANIZATION DATA TEMPLATE -->
-
-
-  	<!-- /ORGANIZATIONS VIEW -->
-
-  	<!-- FLOWS VIEW -->
-  	<script type="text/template" id="flows-template">
-
-        <div class="padding-10-bot">
-          <a href="#/newFlow"><button class="btn btn-success"> Create new FLOW</button></a>
         </div>
+      </script>
+      <!-- /CLIENT USERS DATA -->
 
-        <div class="row"><!-- Active FLOWS -->
-          <div class="col-sm-12">
-            <div class="panel panel-success">    
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-bolt"></i> Active flows</h3>
-              </div>
-              <div class="panel-body">
-                <div id="FLW-active">
-                  <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped tablesorter">
-                      <thead>
-                        <tr>
-                          <th>Flow ID <i class="fa fa-sort"></i></th>
-                          <th>Name <i class="fa fa-sort"></i></th>
-                          <th>From <i class="fa fa-sort"></i></th>
-                          <th>To <i class="fa fa-sort"></i></th>
-                          <th>Bandwidth <i class="fa fa-sort"></i></th>
-                          <th>SRC Port <i class="fa fa-sort"></i></th>
-                          <th>DST Port <i class="fa fa-sort"></i></th>
-                          <th>Protocol <i class="fa fa-sort"></i></th>
-                          <th>QoS <i class="fa fa-sort"></i></th>
-                          <th><center><i class="fa fa-bar-chart-o"></i></center></th>
-                          <th><center><i class="fa fa-edit"></i></center></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-
-                        <% _.each(flows, function(flow) { 
-                            if(flow.get('active')==true){ %>
-                        
-                          <tr>
-                            <td><%= flow.get('identifier') %></td>                
-                            <td><%= flow.get('name') %></td>
-                            <td><%= flow.get('srcOTidentifier') %></td>
-                            <td><%= flow.get('dstOTidentifier') %></td>
-                            <td><%= flow.get('bandwidth') %></td>
-                            <td><%= flow.get('srcPort') %></td>
-                            <td><%= flow.get('dstPort') %></td>
-                            <td><%= flow.get('protocol') %></td>
-                            <td><%= flow.get('qos') %></td>
-                            <td><center><a href="#"><button class="btn btn-info btn-sm" >Statistics</button></a></center></td>
-                            <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
-                          </tr>
-
-                        <%  }
-                          }); %>
-                      
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>             
-            </div>
-          </div>
-        </div><!-- /Active FLOWS -->
-
-        <div class="row"><!-- Programmed FLOWS -->
-          <div class="col-sm-12">
-            <div class="panel panel-primary">    
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-calendar"></i> Programmed flows</h3>
-              </div>
-              <div class="panel-body">
-                <div id="FLW-prg">
-                  <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped tablesorter">
-                      <thead>
-                        <tr>
-                          <th>Flow ID <i class="fa fa-sort"></i></th>
-                          <th>Name <i class="fa fa-sort"></i></th>
-                          <th>From <i class="fa fa-sort"></i></th>
-                          <th>To <i class="fa fa-sort"></i></th>
-                          <th>Bandwidth <i class="fa fa-sort"></i></th>
-                          <th>SRC Port <i class="fa fa-sort"></i></th>
-                          <th>DST Port <i class="fa fa-sort"></i></th>
-                          <th>Protocol <i class="fa fa-sort"></i></th>
-                          <th>QoS <i class="fa fa-sort"></i></th>
-                          <th><center><i class="fa fa-edit"></i></center></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-
-                        <% _.each(flows, function(flow) { 
-                            if(flow.get('active')==false){ %>
-
-                          <tr>
-                            <td><%= flow.get('identifier') %></td>                
-                            <td><%= flow.get('name') %></td>
-                            <td><%= flow.get('srcOTidentifier') %></td>
-                            <td><%= flow.get('dstOTidentifier') %></td>
-                            <td><%= flow.get('bandwidth') %></td>
-                            <td><%= flow.get('srcPort') %></td>
-                            <td><%= flow.get('dstPort') %></td>
-                            <td><%= flow.get('protocol') %></td>
-                            <td><%= flow.get('qos') %></td>
-                            <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
-                          </tr>
-
-                        <%  }
-                          }); %>
-
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>             
-            </div>
-          </div>
-        </div><!-- /Programmed FLOWS -->
-    </script>
-  	<!-- /FLOWS VIEW -->
-
-  	<!-- TERMINALS VIEW -->
-  	<script type="text/template" id="terminals-template">
-        <div class="row"><!-- Acccess Points -->
-          <div class="col-sm-12">
-
-            <div class="panel panel-primary">
-            
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-desktop"></i> Access Points</h3>
-              </div>
-
-              <div class="panel-body">
-                <div class="table-responsive" id="AP">
-                  <table class="table table-bordered table-hover table-striped tablesorter">
-                    <thead>
-                      <tr>
-                        <th>Host name <i class="fa fa-sort"></i></th>
-                        <th>ID <i class="fa fa-sort"></i></th>
-                        <th>Description <i class="fa fa-sort"></i></th>
-                        <th>IP <i class="fa fa-sort"></i></th>
-                        <th>Interface <i class="fa fa-sort"></i></th>
-                        <th>MAC <i class="fa fa-sort"></i></th>
-                        <th><center><i class="fa fa-bar-chart-o"></i></center></th>
-                        <th><center><i class="fa fa-edit"></i></center></th>
-                        <th><center><i class="fa fa-eraser"></i></center></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                      <% _.each(terminals, function(terminal) { 
-                        if(terminal.get('active')==true){ %>
-
-                        <tr>
-                          <td><%= terminal.get('hostName') %></td>
-                          <td><%= terminal.get('identifier') %></td>
-                          <td><%= terminal.get('description') %></td>
-                          <td><%= terminal.get('ipAddress') %></td>
-                          <td><%= terminal.get('ifaceSpeed') %></td>
-                          <td><%= terminal.get('mac') %></td>
-                          <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
-                          <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
-                          <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
-                        </tr>
-
-                      <%  }
-                      }); %>
-                    </tbody>
-                  </table>
-                </div>              
-              </div>
-              
-            </div>
-
-          </div>
-        </div><!-- /Access Points -->
-    </script>
-  	<!-- /TERMINALS VIEW -->
-
-  	<!-- TRAFFIC VIEW -->
-  	<script type="text/template" id="traffic-template">
-        <div class="row"> <!-- Traffic Matrix -->
-          <div class="col-lg-12">
-
-            <div class="panel panel-primary">
-            
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-th"></i> Traffic Matrix</h3>
-              </div>
-
-              <div class="panel-body">
-            
-                <div id="TA-matrix">
-                  <p class="text-center">
-                    <img src="http://placehold.it/600x600">
-                  </p>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-        </div><!-- /Traffic Matrix -->
-    </script>
-  	<!-- /TRAFFIC VIEW -->
-
+    <!-- /CLIENT TEMPLATES -->
 	<!-- /TEMPLATES -->
 
 
