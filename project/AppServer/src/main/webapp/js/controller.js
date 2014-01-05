@@ -237,15 +237,15 @@
 			$('#GS-alerts').slimScroll({
 				height: '100px'
 			});
-			$('#GS-topo').slimScroll({
-				height: '200px'
-			});
-			$('#GS-controller').slimScroll({
-				height: '200px'
-			});
-			$('#GS-stats').slimScroll({
-				height: '200px'
-			});
+//			$('#GS-topo').slimScroll({
+//				height: '200px'
+//			});
+//			$('#GS-controller').slimScroll({
+//				height: '200px'
+//			});
+//			$('#GS-stats').slimScroll({
+//				height: '200px'
+//			});
 		}
 	});
 

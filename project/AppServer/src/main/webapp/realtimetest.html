@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script type="text/javascript">
+	var webSocket = null;
+
+	function onOpen(eventObject) {
+		console.log("open");
+	}
+
+	function onMessage(eventObject) {
+		console.log("message");
+		console.log(eventObject);
+
+		var message = "<br/> " + eventObject.data;
+		document.getElementById('log').innerHTML = message + document.getElementById('log').innerHTML; //Add the message recieved from the server 
+	}
+
+	function onClose(eventObject) {
+		console.log("close");
+		console.log(eventObject);
+	}
+
+	function onError(eventObject) {
+		console.log("error");
+		console.log(eventObject);
+	}
+
+	webSocket = new WebSocket("ws://" + window.location.host
+			+ "/AppServer/realtimewebsocket");
+	webSocket.onopen = onOpen;
+	webSocket.onmessage = onMessage;
+	webSocket.onclose = onClose;
+	webSocket.onerror = onError;
+
+	function sendCustomMessage(message) {
+		if (webSocket != null) {
+			webSocket.send(message);
+		}
+	}
+
+	function sendMessage() {
+		if (webSocket != null) {
+			var message = document.getElementById('message').value;
+			webSocket.send(message);
+		}
+	}
+</script>
+</head>
+
+<body>
+	<h1>Example Websocket</h1>
+
+	<input id="message" name="message" type="text" placeholder="message" />
+	<button onclick="sendMessage()">Send Message</button>
+	<button onclick="sendCustomMessage('PushDefaultFlow')">Push
+		Default Flow</button>
+	<button onclick="sendCustomMessage('DeleteDefaultFlow')">Delete
+		Default Flow</button>
+	<button onclick="sendCustomMessage('DeleteAllFlows')">Delete
+		All Flows</button>
+	<div id="log"></div>
+</body>
+
+</html>

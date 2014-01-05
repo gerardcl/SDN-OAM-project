@@ -395,12 +395,317 @@ function createTopologyGraph(){
 
 
 
-
 //STATISTIC'S GENERATION
 var selectedPort = "";
 var selectedParam = ""; 
 var selectedValueType = "";  
 var selectedTimeInterval = "";
+var refreshIntervalIdS,refreshIntervalIdM,refreshIntervalIdH;
+
+function byMinuteGraph(){
+	//Petició REST de les dades inicials
+	var data = getData();
+	//DATE PARSER
+	var labelXaxis = minuteFormat(data.timeAxxis);
+
+	/*for (var i = 0; i<result.timeAxxis.length; i++) {
+		result.timeAxxis[i]=result.timeAxxis[i]*1000;
+	}*/
+	//FINAL DATE PARSER
+	var j=0;
+	var count =0;
+	var iSegment =0;
+	var lastPos=0;
+	var finish =false;
+	var segmentX=[];
+	var segmentY=[];
+
+	$('#statisticsGraph').highcharts({
+		chart: {
+			type: 'areaspline',
+			animation: false,
+		},
+		title: {
+			text: data.parameter+' on port: ' +data.idObject
+		},
+		legend: {
+			x: 0,
+			y: 300,
+		},
+		xAxis: {
+			/*type: 'datetime',
+        	dateTimeLabelFormats: {
+                //milisecond: '%H:%M:%S'
+				OPTIONS
+                {
+                	millisecond: '%H:%M:%S.%L',
+                	second: '%H:%M:%S',
+                	minute: '%H:%M',
+                	hour: '%H:%M',
+                	day: '%e. %b',
+                	week: '%e. %b',
+                	month: '%b \'%y',
+                	year: '%Y'
+                }                        
+            },*/
+			tickPixelInterval: 1500,
+			categories: labelXaxis,
+		},
+		yAxis: {
+			title: {
+				text: data.parameter
+			}
+		},
+		tooltip: {
+			shared: true,
+			valueSuffix: ' Bytes/s',
+			crosshairs: [true, true]
+		},
+		credits: {
+			enabled: false
+		},
+		plotOptions: {
+			areaspline: {
+				fillOpacity: 0.5
+			},
+			/*series: {
+               pointStart: result.timeAxxis[0],
+               pointInterval: 1 // one day
+            }*/
+		},
+		series: [{
+			name: data.parameter,
+			data: data.valueAxxis
+		}]
+
+	});
+
+	refreshIntervalIdM = setInterval(function() {
+		console.log("refreshing stats graph");
+		refresh();  
+	},5000);
+
+//	function refresh() {
+//	//alert(newTimeS);
+//	var data2= nextData();
+//	var labelX2= minuteFormat(data2.timeAxxis);
+//	var chart = $('#statisticsGraph').highcharts();
+
+//	//alert(labelXaxis);
+//	chart.xAxis[0].setCategories(labelX2);
+//	chart.series[0].setData(data2.valueAxxis);
+
+//	}
+	function refresh() {
+		j++;
+		if((j % 2)==0){
+			var data2= nextData();
+
+		}else{
+			var data2= getData();
+
+		}
+		var labelX2= minuteFormat(data2.timeAxxis);
+		var chart = $('#statisticsGraph').highcharts();
+
+		chart.xAxis[0].setCategories(labelX2);
+		chart.series[0].setData(data2.valueAxxis);
+
+
+	}
+	
+	function minuteFormat(xAxis){
+		for (var i = 0; i<xAxis.length; i++) {
+			var date = new Date(parseInt(xAxis[i]*1000));
+			// using the excellent dateFormat code from Steve Levithan
+			//axisItems[i].attr("text", dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
+
+			if ((i==0) || (i==(xAxis.length-1))){
+				xAxis[i] = (dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
+			}
+			else{
+				xAxis[i] = (dateFormat(date, "ss"));//"dd/mm, htt"
+			}
+		}
+
+		return xAxis;
+	}
+	/*funció de petició (no passa)REST. Per ara es static*/
+	function getData(){
+		var result ={
+				"idObject":"00:01:d4:ca:6d:d4:4f:6b:3",
+				"parameter":"receiveBytes",
+				"timeAxxis":[1388686905,1388686906,1388686907,1388686908,1388686909,1388686910,1388686911,1388686912,1388686913,1388686914,1388686915,1388686916,1388686917,1388686918,1388686919,1388686920,1388686921,1388686922,1388686923,1388686924,1388686925,1388686926,1388686927,1388686928,1388686929,1388686930,1388686931,1388686932,1388686933,1388686934,1388686935,1388686936,1388686937,1388686938,1388686939,1388686940,1388686941,1388686942,1388686943,1388686944,1388686945,1388686946,1388686947,1388686948,1388686949,1388686950,1388686951,1388686952,1388686953,1388686954,1388686955,1388686956,1388686957,1388686958,1388686959,1388686960,1388686961,1388686962,1388686963,1388686964,1388686965],
+				"valueAxxis":[61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,462.0,60.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,1500.0]
+		};
+		return result;
+	}
+	/*funció de segona petició REST (ESBORRABLE) quan les peticions rest estiguin operatives*/
+	function nextData(){
+		var result ={
+				"timeAxxis":[1388686965,1388686966,1388686967,1388686968,1388686969,1388686970,1388686971,1388686972,1388686973,1388686974,1388686975,1388686976,1388686977,1388686978,1388686979,1388686980,1388686981,1388686982,1388686983,1388686984,1388686985,1388686986,1388686987,1388686988,1388686989,1388686990,1388686991,1388686992,1388686993,1388686994,1388686995,1388686996,1388686997,1388686998,1388686999,1388687000,1388687001,1388687002,1388687003,1388687004,1388687005,1388687006,1388687007,1388687008,1388687009,1388687010,1388687011,1388687012,1388687013,1388687014,1388687015,1388687016,1388687017,1388687018,1388687019,1388687020,1388687021,1388687022,1388687023,1388687024,1388687025],
+				"valueAxxis":[561.0,254.0,1100.0,0.0,10.0,50.0,5.0,700.0,462.0,160.0,10.0,20.0,30.0,40.0,0.0,61.0,120.0,1500.0,120.0,10.0,0.0,0.0,0.0,0.0,60.0,0.0,1540.0,120.0,0.0,61.0,10.0,20.0,90.0,0.0,2440.0,0.0,9900.0,0.0,0.0,60.0,0.0,10.0,0.0,250.0,61.0,0.0,0.0,0.0,0.0,2530.0,0.0,1250.0,0.0,0.0,60.0,0.0,250.0,0.0,0.0,61.0,1500.0]
+		};
+		return result;		
+	}
+}
+
+function bySecondGraph(){
+	//Petició REST de les dades inicials
+	var data = getData();
+	var timeData=[];
+	valueData=[];
+	timeData.push(data.timeAxxis[0]);
+	valueData.push(data.valueAxxis[0]);
+	
+	for (var i=1; i<60; i++){
+		timeData.push(timeData[0]+i);
+		valueData.push(0);
+	}
+	//alert(timeData[0]);
+	//alert(timeData[59]);
+	
+	//DATE PARSER
+	var labelXaxis = minuteFormat(timeData);	
+	//alert(labelXaxis[0]);
+	//alert(labelXaxis[59]);
+
+	/*for (var i = 0; i<result.timeAxxis.length; i++) {
+		result.timeAxxis[i]=result.timeAxxis[i]*1000;
+	}*/
+	//FINAL DATE PARSER
+
+	$('#statisticsGraph').highcharts({
+        chart: {
+            type: 'areaspline',
+            animation: false,
+        },
+        title: {
+            text: data.parameter+' on port: ' +data.idObject
+        },
+       	legend: {
+            x: 0,
+            y: 300,
+        },
+        xAxis: {
+        	/*type: 'datetime',
+        	dateTimeLabelFormats: {
+                //milisecond: '%H:%M:%S'
+				OPTIONS
+                {
+                	millisecond: '%H:%M:%S.%L',
+                	second: '%H:%M:%S',
+                	minute: '%H:%M',
+                	hour: '%H:%M',
+                	day: '%e. %b',
+                	week: '%e. %b',
+                	month: '%b \'%y',
+                	year: '%Y'
+                }                        
+            },*/
+        	tickPixelInterval: 1500,
+            categories: labelXaxis,
+        },
+        yAxis: {
+            title: {
+                text: data.parameter
+            }
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' Bytes/s',
+            crosshairs: [true, true]
+        },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            areaspline: {
+                fillOpacity: 0.5
+            },
+           /* series: {
+               pointStart: data.timeAxxis[0],
+               pointInterval: 1 // one day
+            }*/
+        },
+        series: [{
+            name: data.parameter,
+            data: valueData
+        }]
+		      
+    });
+    
+	var j=0;
+	var l=0;
+	refreshIntervalIdS = setInterval(function() {
+	    refresh();  
+	},500);
+	
+	
+	function refresh() {
+		l++;
+		var data2 = nextData();
+		var k;
+		if (j%2==0){
+			k=0;
+		}else{
+			k=1;
+		}
+		
+		//var labelX2= minuteFormat(data2.timeAxxis);
+		var chart = $('#statisticsGraph').highcharts();
+		if (l==chart.series[0].data.length){
+			alert("S'HA DE REFRESCAR! I'm working on it");
+		}
+		//chart.xAxis[0].setCategories(labelX2);
+		chart.series[0].data[l].update(data2.valueAxxis[k]);
+		
+
+	}
+	
+	function minuteFormat(xAxis){
+		for (var i = 0; i<xAxis.length; i++) {
+			var date = new Date(parseInt(xAxis[i]*1000));
+			// using the excellent dateFormat code from Steve Levithan
+			//axisItems[i].attr("text", dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
+			
+			if ((i==0) || (i==(xAxis.length-1))){
+				xAxis[i] = (dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
+			}
+			else{
+				xAxis[i] = (dateFormat(date, "ss"));//"dd/mm, htt"
+			}
+		}
+		
+		return xAxis;
+	}
+	/*funció de petició (no passa)REST. Per ara es static*/
+
+	function getData(){
+		var result ={
+				"idObject":"00:01:d4:ca:6d:d4:4f:6b:3",
+				"parameter":"receiveBytes",
+				//"timeAxxis":[1388686905,1388686906,1388686907,1388686908,1388686909,1388686910,1388686911,1388686912,1388686913,1388686914,1388686915,1388686916,1388686917,1388686918,1388686919,1388686920,1388686921,1388686922,1388686923,1388686924,1388686925,1388686926,1388686927,1388686928,1388686929,1388686930,1388686931,1388686932,1388686933,1388686934,1388686935,1388686936,1388686937,1388686938,1388686939,1388686940,1388686941,1388686942,1388686943,1388686944,1388686945,1388686946,1388686947,1388686948,1388686949,1388686950,1388686951,1388686952,1388686953,1388686954,1388686955,1388686956,1388686957,1388686958,1388686959,1388686960,1388686961,1388686962,1388686963,1388686964,1388686965],
+				//"value2Axxis":[61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,462.0,60.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,1500.0],
+				"timeAxxis":[1388686905,1388686906],
+				"valueAxxis":[61.0,199.0]
+				};
+		
+		return result;
+	}
+	/*funció de segona petició REST (ESBORRABLE) quan les peticions rest estiguin operatives*/
+	function nextData(){
+		var num1,num2;
+		num1= Math.random()*1000;
+		num2= Math.random()*2000;
+		
+		var result ={
+			//"timeAxxis":[1388686965,1388686966],
+			"valueAxxis":[num1,num2]
+			};
+		return result;		
+	}
+}
 
 function loadDefaultStatValues(){
 	$('#textgraph').show();
@@ -415,162 +720,23 @@ function loadDefaultStatValues(){
 }
 
 function printPortGraph(){
+	clearInterval(refreshIntervalIdS);
+	clearInterval(refreshIntervalIdM);
+	clearInterval(refreshIntervalIdH);
+
 	if(selectedPort != ""){
+		$('#textgraph').hide();
+		$('#statisticsGraph').show();
 		console.log("PORT STATS");
 		console.log("Port ID: ");
 		console.log(selectedPort);
 		console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
-		//HERE THE CODE BY ALEX
-		//Petició REST de les dades inicials
-		var data = getData();
-		//DATE PARSER
-		var labelXaxis = minuteFormat(data.timeAxxis);
-
-
-
-
-		/*for (var i = 0; i<result.timeAxxis.length; i++) {
-			result.timeAxxis[i]=result.timeAxxis[i]*1000;
-		}*/
-		//FINAL DATE PARSER
-
-
-		var j=0;
-		var count =0;
-		var iSegment =0;
-		var lastPos=0;
-		var finish =false;
-		var segmentX=[];
-		var segmentY=[];
-
-		$('#statisticsGraph').highcharts({
-			chart: {
-				type: 'areaspline',
-				animation: false,
-			},
-			title: {
-				text: data.parameter+' on port: ' +data.idObject
-			},
-			legend: {
-				x: 0,
-				y: 300,
-			},
-			xAxis: {
-				/*type: 'datetime',
-            	dateTimeLabelFormats: {
-                    //milisecond: '%H:%M:%S'
-					OPTIONS
-                    {
-                    	millisecond: '%H:%M:%S.%L',
-                    	second: '%H:%M:%S',
-                    	minute: '%H:%M',
-                    	hour: '%H:%M',
-                    	day: '%e. %b',
-                    	week: '%e. %b',
-                    	month: '%b \'%y',
-                    	year: '%Y'
-                    }                        
-                },*/
-				tickPixelInterval: 1500,
-				categories: labelXaxis,
-			},
-			yAxis: {
-				title: {
-					text: data.parameter
-				}
-			},
-			tooltip: {
-				shared: true,
-				valueSuffix: ' Bytes/s',
-				crosshairs: [true, true]
-			},
-			credits: {
-				enabled: false
-			},
-			plotOptions: {
-				areaspline: {
-					fillOpacity: 0.5
-				},
-				/*series: {
-                   pointStart: result.timeAxxis[0],
-                   pointInterval: 1 // one day
-                }*/
-			},
-			series: [{
-				name: data.parameter,
-				data: data.valueAxxis
-			}]
-
-		});
-
-		setInterval(function() {
-			console.log("refreshing stats graph");
-			refresh();  
-		},5000);
-
-//		function refresh() {
-//		//alert(newTimeS);
-//		var data2= nextData();
-//		var labelX2= minuteFormat(data2.timeAxxis);
-//		var chart = $('#statisticsGraph').highcharts();
-
-//		//alert(labelXaxis);
-//		chart.xAxis[0].setCategories(labelX2);
-//		chart.series[0].setData(data2.valueAxxis);
-
-//		}
-		function refresh() {
-			j++;
-			if((j % 2)==0){
-				var data2= nextData();
-
-			}else{
-				var data2= getData();
-
-			}
-			var labelX2= minuteFormat(data2.timeAxxis);
-			var chart = $('#statisticsGraph').highcharts();
-
-			chart.xAxis[0].setCategories(labelX2);
-			chart.series[0].setData(data2.valueAxxis);
-
-
-		}
 		
-		function minuteFormat(xAxis){
-			for (var i = 0; i<xAxis.length; i++) {
-				var date = new Date(parseInt(xAxis[i]*1000));
-				// using the excellent dateFormat code from Steve Levithan
-				//axisItems[i].attr("text", dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
-
-				if ((i==0) || (i==(xAxis.length-1))){
-					xAxis[i] = (dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
-				}
-				else{
-					xAxis[i] = (dateFormat(date, "ss"));//"dd/mm, htt"
-				}
-			}
-
-			return xAxis;
-		}
-		/*funció de petició (no passa)REST. Per ara es static*/
-		function getData(){
-			var result ={
-					"idObject":"00:01:d4:ca:6d:d4:4f:6b:3",
-					"parameter":"receiveBytes",
-					"timeAxxis":[1388686905,1388686906,1388686907,1388686908,1388686909,1388686910,1388686911,1388686912,1388686913,1388686914,1388686915,1388686916,1388686917,1388686918,1388686919,1388686920,1388686921,1388686922,1388686923,1388686924,1388686925,1388686926,1388686927,1388686928,1388686929,1388686930,1388686931,1388686932,1388686933,1388686934,1388686935,1388686936,1388686937,1388686938,1388686939,1388686940,1388686941,1388686942,1388686943,1388686944,1388686945,1388686946,1388686947,1388686948,1388686949,1388686950,1388686951,1388686952,1388686953,1388686954,1388686955,1388686956,1388686957,1388686958,1388686959,1388686960,1388686961,1388686962,1388686963,1388686964,1388686965],
-					"valueAxxis":[61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,462.0,60.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,1500.0]
-			};
-			return result;
-		}
-		/*funció de segona petició REST (ESBORRABLE) quan les peticions rest estiguin operatives*/
-		function nextData(){
-			var result ={
-					"timeAxxis":[1388686965,1388686966,1388686967,1388686968,1388686969,1388686970,1388686971,1388686972,1388686973,1388686974,1388686975,1388686976,1388686977,1388686978,1388686979,1388686980,1388686981,1388686982,1388686983,1388686984,1388686985,1388686986,1388686987,1388686988,1388686989,1388686990,1388686991,1388686992,1388686993,1388686994,1388686995,1388686996,1388686997,1388686998,1388686999,1388687000,1388687001,1388687002,1388687003,1388687004,1388687005,1388687006,1388687007,1388687008,1388687009,1388687010,1388687011,1388687012,1388687013,1388687014,1388687015,1388687016,1388687017,1388687018,1388687019,1388687020,1388687021,1388687022,1388687023,1388687024,1388687025],
-					"valueAxxis":[561.0,254.0,1100.0,0.0,10.0,50.0,5.0,700.0,462.0,160.0,10.0,20.0,30.0,40.0,0.0,61.0,120.0,1500.0,120.0,10.0,0.0,0.0,0.0,0.0,60.0,0.0,1540.0,120.0,0.0,61.0,10.0,20.0,90.0,0.0,2440.0,0.0,9900.0,0.0,0.0,60.0,0.0,10.0,0.0,250.0,61.0,0.0,0.0,0.0,0.0,2530.0,0.0,1250.0,0.0,0.0,60.0,0.0,250.0,0.0,0.0,61.0,1500.0]
-			};
-			return result;		
-		}
+		if(selectedTimeInterval == "hour") byMinuteGraph();
+		if(selectedTimeInterval == "minute") byMinuteGraph();
+		if(selectedTimeInterval == "second") bySecondGraph();
+		
+		
 
 
 
@@ -580,8 +746,6 @@ function printPortGraph(){
 
 //GRAPH STATS CALL TO NEW STATISTIC'S GENERATION
 function showPortStats(){
-	$('#textgraph').hide();
-	$('#statisticsGraph').show();
 	if(event.target.id == "port") selectedPort = $(event.target).text();
 	if(event.target.id == "param"){
 		console.log("selected param: "+ $(event.target).text());	

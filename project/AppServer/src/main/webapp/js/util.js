@@ -65,7 +65,7 @@
 		        	$("#msg").show();
 		        }
 		    	else if(xhr.responseText.msg == "1") location.href = "/AppServer/#/adminOverview";
-		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/#/clientOverview";
+		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/#/clientOverview/"+msg.orgId;
 		    }
 		});
 	});
