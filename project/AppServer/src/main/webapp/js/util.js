@@ -51,7 +51,7 @@
 		        	console.log(loginUser);
 		    	} 
 		    	else if(msg.msg == "2") {
-		    		location.href = "/AppServer/#/clientOverview";
+		    		location.href = "/AppServer/#/clientOverview/"+msg.orgId;
 		    		loginUser = msg.userId;
 		        	loginOrg = msg.orgId;
 		        	console.log(loginOrg);
@@ -65,7 +65,7 @@
 		        	$("#msg").show();
 		        }
 		    	else if(xhr.responseText.msg == "1") location.href = "/AppServer/#/adminOverview";
-		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/#/clientOverview";
+		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/#/clientOverview/"+msg.orgId;
 		    }
 		});
 	});
