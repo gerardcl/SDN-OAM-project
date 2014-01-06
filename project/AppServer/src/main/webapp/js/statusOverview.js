@@ -562,6 +562,7 @@ function bySecondGraph(){
 		timeData.push(timeData[0]+i);
 		valueData.push(0);
 	}
+	var lastTime =timeData[59];
 	//alert(timeData[0]);
 	//alert(timeData[59]);
 	
@@ -637,7 +638,7 @@ function bySecondGraph(){
     
 	var j=0;
 	var l=0;
-	refreshIntervalIdS = setInterval(function() {
+	setInterval(function() {
 	    refresh();  
 	},500);
 	
@@ -655,7 +656,25 @@ function bySecondGraph(){
 		//var labelX2= minuteFormat(data2.timeAxxis);
 		var chart = $('#statisticsGraph').highcharts();
 		if (l==chart.series[0].data.length){
-			alert("S'HA DE REFRESCAR! I'm working on it");
+			//alert("S'HA DE REFRESCAR! I'm working on it");
+			l=0;
+			var timeData2=[];
+			timeData2.push(lastTime);
+			//alert(timeData2[0]);
+			for (var i=1; i<60; i++){
+				timeData2.push(lastTime+i);	
+				//alert(timeData2[i]);
+				chart.series[0].data[i].update(0);
+			}
+			lastTime=timeData2[59];
+			//alert(timeData2[0]);
+			//alert(timeData2[59]);
+			labelXaxis = minuteFormat(timeData2);
+			//alert(labelXaxis[0]);
+			//alert(labelXaxis[59]);
+			chart.xAxis[0].setCategories(labelXaxis);
+			//chart.series[0].data[l].update(data2.valueAxxis[k]);
+			
 		}
 		//chart.xAxis[0].setCategories(labelX2);
 		chart.series[0].data[l].update(data2.valueAxxis[k]);
