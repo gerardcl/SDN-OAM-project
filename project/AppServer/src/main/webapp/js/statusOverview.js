@@ -400,7 +400,7 @@ var selectedPort = "";
 var selectedParam = ""; 
 var selectedValueType = "";  
 var selectedTimeInterval = "";
-var refreshIntervalIdS,refreshIntervalIdM,refreshIntervalIdH;
+var refreshIntervalId;
 
 function byMinuteGraph(){
 	//Petició REST de les dades inicials
@@ -480,7 +480,7 @@ function byMinuteGraph(){
 
 	});
 
-	refreshIntervalIdM = setInterval(function() {
+	refreshIntervalId = setInterval(function() {
 		console.log("refreshing stats graph");
 		refresh();  
 	},5000);
@@ -638,7 +638,7 @@ function bySecondGraph(){
     
 	var j=0;
 	var l=0;
-	setInterval(function() {
+	refreshIntervalId = setInterval(function() {
 	    refresh();  
 	},500);
 	
@@ -739,9 +739,7 @@ function loadDefaultStatValues(){
 }
 
 function printPortGraph(){
-	clearInterval(refreshIntervalIdS);
-	clearInterval(refreshIntervalIdM);
-	clearInterval(refreshIntervalIdH);
+	clearInterval(refreshIntervalId);
 
 	if(selectedPort != ""){
 		$('#textgraph').hide();
