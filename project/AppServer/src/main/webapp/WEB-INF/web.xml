@@ -8,37 +8,9 @@
 		<init-param> <param-name>jersey.config.server.provider.packages</param-name> 
 		<param-value>dxat.appserver</param-value> </init-param> <load-on-startup>1</load-on-startup> 
 		</servlet> <servlet-mapping> <servlet-name>Jersey Web Application</servlet-name> 
-		<url-pattern>/webapi/*</url-pattern> </servlet-mapping> -->
+		<url-pattern>/webapp/*</url-pattern> </servlet-mapping> -->
 	<!-- BEGIN TOPOLOGY SERVER -->
-	<servlet>
-		<servlet-name>DXAT Topology Service</servlet-name>
-		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>dxat.appserver.topology.resources</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>DXAT Topology Service</servlet-name>
-		<url-pattern>/webapi/topology/*</url-pattern>
-	</servlet-mapping>
-	<!-- END TOPOLOGY SERVER -->
-	<!-- BEGIN STATISTICS SERVER -->
-	<servlet>
-		<servlet-name>DXAT Statistics Service</servlet-name>
-		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>dxat.appserver.stat.resources</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>DXAT Statistics Service</servlet-name>
-		<url-pattern>/webapi/statistics/*</url-pattern>
-	</servlet-mapping>
-	<!-- END STATISTICS SERVER -->
+
 	<!-- BEGIN REALTIME WEBSOCKET -->
 	<servlet>
 		<servlet-name>Real Time Web Socket</servlet-name>

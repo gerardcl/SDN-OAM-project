@@ -5,15 +5,15 @@
 	var cntPrgFlows = 0;
 	var cntActiveTerms = 0;
 
-	$.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-		options.url = '/AppServer/webapp' + options.url;
-	});
+//	$.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+//		options.url = '/AppServer/webapp' + options.url;
+//	});
 
 
 //	Models
 	//TOrg data model  
 	var Organization = Backbone.Model.extend({
-		urlRoot:'/manager/org',
+		urlRoot:'/AppServer/webapp/manager/org',
 		defaults:{
 			name: "",
 			NIF: "",
@@ -26,7 +26,7 @@
 
 	//flow model  
 	var Flow = Backbone.Model.extend({
-		//urlRoot:'/manager/flow/all?orgId=',
+		//urlRoot:'/AppServer/webapp/manager/flow/all?orgId=',
 		defaults:{
 			identifier: "",
 			active: "",
@@ -43,7 +43,7 @@
 
 	//terminal model  
 	var Terminal = Backbone.Model.extend({
-		//urlRoot:'/manager/terminal/all?orgId=',
+		//urlRoot:'/AppServer/webapp/manager/terminal/all?orgId=',
 		defaults:{
 			identifier: "",
 			active: "",
@@ -58,7 +58,7 @@
 	//user model 
 	var User = Backbone.Model.extend({
 		//urlRoot:'/user/all?orgId=',
-		urlRoot:'/manager/user',
+		urlRoot:'/AppServer/webapp/manager/user',
 		defaults:{
 			identifier: "",
 			name: "",
@@ -74,7 +74,7 @@
 	//TOrg COLLECTION
 	var Organizations = Backbone.Collection.extend({
 		model: Organization,
-		url:'/manager/org/all',
+		url:'/AppServer/webapp/manager/org/all',
 		parse:function (response) {
 			// Parse the response and construct models
 			for ( var i = 0, length = response.torgs.length; i < length; i++) {
@@ -131,7 +131,7 @@
 	//Terminals COLLECTION
 	var Terminals = Backbone.Collection.extend({
 		model: Terminal,
-		//url:'/manager/terminal/all',
+		//url:'/AppServer/webapp/manager/terminal/all',
 		parse:function (response) {
 			for ( var i = 0, length = response.orgTerminals.length; i < length; i++) {
 				var currentValues = response.orgTerminals[i];
@@ -170,7 +170,7 @@
 
 			var aux = JSON.stringify(orgId)
 			console.log(aux);
-			var uri = '/manager/user/all?orgId=' + aux;
+			var uri = '/AppServer/webapp/manager/user/all?orgId=' + aux;
 			console.log(uri);
 			return uri;
 		},*/
@@ -315,7 +315,7 @@
 		render: function (options) { 
 			var that = this;
 			that.users = new Users();
-			that.users.url = '/manager/user/'+options.identifier+'/all';
+			that.users.url = '/AppServer/webapp/manager/user/'+options.identifier+'/all';
 			that.users.fetch({
 				success: function (users) {  
 					var template = _.template($('#organizations-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
@@ -341,7 +341,7 @@
 			//if exists fetch details
 			if(options.identifier) {
 				that.terminals = new Terminals();
-				that.terminals.url = '/manager/terminal/'+options.identifier+'/all';
+				that.terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';
 				that.terminals.fetch({
 					success: function (terminals) {  
 						var template = _.template($('#organizations-terminals-template').html(), {terminals: terminals.models, orgId: options.identifier, orgName: activeOrgName});
@@ -370,7 +370,7 @@
 			//if exists fetch details
 			if(options.identifier) {
 				that.activeFlows = new Flows();
-				that.activeFlows.url = '/manager/flow/'+options.identifier+'/all';
+				that.activeFlows.url = '/AppServer/webapp/manager/flow/'+options.identifier+'/all';
 				that.activeFlows.fetch({
 					success: function (flows) {  
 						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active, orgName: activeOrgName});
@@ -399,8 +399,8 @@
 		render: function (options) {
 			var that = this;
 			var flows = new Flows();
-			if(options.all==true){flows.url = '/manager/flow/all';}
-			if(options.all==false){flows.url = '/manager/flow/'+options.identifier+'/all';}			
+			if(options.all==true){flows.url = '/AppServer/webapp/manager/flow/all';}
+			if(options.all==false){flows.url = '/AppServer/webapp/manager/flow/'+options.identifier+'/all';}			
 			flows.fetch({
 				success: function (flows) {
 					var template = _.template($('#flows-template').html(), {flows: flows.models});
@@ -426,8 +426,8 @@
 		render: function (options) {
 			var that = this;
 			var terminals = new Terminals();
-			if(options.all==true){terminals.url = '/manager/terminal/all';}
-			if(options.all==false){terminals.url = '/manager/terminal/'+options.identifier+'/all';}
+			if(options.all==true){terminals.url = '/AppServer/webapp/manager/terminal/all';}
+			if(options.all==false){terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';}
 			terminals.fetch({
 				success: function (terminals) {
 					var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
@@ -537,7 +537,7 @@
 		render: function (options) { 
 			var that = this;
 			that.users = new Users();
-			that.users.url = '/manager/user/'+options.identifier+'/all';
+			that.users.url = '/AppServer/webapp/manager/user/'+options.identifier+'/all';
 			that.users.fetch({
 				success: function (users) {  
 					var template = _.template($('#client-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
@@ -654,10 +654,10 @@
 		router.on('route:clientOverview', function(id) {
 			clientSidebarView.render({btnHL: 1});
 			flows = new Flows();
-			flows.url = '/manager/flow/'+id+'/all';
+			flows.url = '/AppServer/webapp/manager/flow/'+id+'/all';
 			flows.fetch({});
 			terminals = new Terminals();
-			terminals.url = '/manager/terminal/'+id+'/all';
+			terminals.url = '/AppServer/webapp/manager/terminal/'+id+'/all';
 			terminals.fetch({});
 			//console.log(cntActiveFlows);
 			clientOverviewView.render({identifier: id});

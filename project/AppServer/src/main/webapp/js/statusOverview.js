@@ -9,19 +9,6 @@ function initStatusOverview(){
 	$("#statistics").hide();
 	createTopologyGraph();
 	initializeControllerStats();
-
-
-//	ANOTHER METHOD TO CALL PORT LIST WITH EVENTLISTENERS <<-- NOT USING IT NOW (see showPortStats() method)
-
-//	document.querySelector('body').addEventListener('click', function(event) {
-//	if (event.target.tagName.toLowerCase() === 'li') {
-//	// do your action on your 'li' or whatever it is you're listening for
-//	if(event.target.id == "port"){ 
-//	console.log("PORT CLICK!" );
-//	console.log($(event.target).text());
-//	}
-//	}
-//	});
 }
 
 //TOPOLOGY GRAPH
@@ -52,8 +39,10 @@ function createTopologyGraph(){
 				"translate(" + d3.event.translate + ")"
 				+ " scale(" + d3.event.scale + ")");
 	}
-//	var RESTapi = "http://localhost:7474/db/data/node/1/traverse/node";
-//	var switchesURL = "http://147.83.113.109:8080/AppServer/webapi/topology/all/switches";
+
+	var switchesURL = "/topology/switches";
+	var terminalsURL = "/topology/terminals";
+	var linksURL = "/topology/links";
 	var nodes = [];
 	var links = [];
 
@@ -61,177 +50,49 @@ function createTopologyGraph(){
 		async : false
 	}); //execute synchronously
 
-	/*$.ajax({
-			type: "GET",
-			url: switchesURL,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-		    headers: { 		
-		        Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"				
-		    },	
-		    success : function(result) {
-		    	//EL CODE TINDRIA QUE ANAR AQUI
-		    }
-		});*/
-//	Dummy petició postman http://147.83.113.109:8080/AppServer/webapi/topology/switches
-	var dataSwitches = {
-			"switches" : [ {
-				"enabled" : true,
-				"hardware" : "",
-				"manufacturer" : "MikroTik",
-				"ports" : [ {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:d4:be:a5",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:d4:be:a1:3"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:d4:be:a4",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:d4:be:a1:2"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:d4:be:a3",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:d4:be:a1:1"
-				} ],
-				"software" : "",
-				"swId" : "00:01:d4:ca:6d:d4:be:a1"
-			}, {
-				"enabled" : true,
-				"hardware" : "",
-				"manufacturer" : "MikroTik",
-				"ports" : [ {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:d4:4f:6f",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:d4:4f:6b:3"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:d4:4f:6e",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:d4:4f:6b:2"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:d4:4f:6d",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:d4:4f:6b:1"
-				} ],
-				"software" : "",
-				"swId" : "00:01:d4:ca:6d:d4:4f:6b"
-			}, {
-				"enabled" : true,
-				"hardware" : "",
-				"manufacturer" : "MikroTik",
-				"ports" : [ {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:b5:f4:13",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:b5:f4:0f:7"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:b5:f4:12",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:b5:f4:0f:6"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:b5:f4:11",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:b5:f4:0f:5"
-				} ],
-				"software" : "",
-				"swId" : "00:01:d4:ca:6d:b5:f4:0f"
-			}, {
-				"enabled" : true,
-				"hardware" : "",
-				"manufacturer" : "MikroTik",
-				"ports" : [ {
-					"enabled" : false,
-					"mac" : "d4:ca:6d:c4:44:22",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:c4:44:1e:3"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:c4:44:21",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:c4:44:1e:2"
-				}, {
-					"enabled" : true,
-					"mac" : "d4:ca:6d:c4:44:20",
-					"name" : "",
-					"portId" : "00:01:d4:ca:6d:c4:44:1e:1"
-				} ],
-				"software" : "",
-				"swId" : "00:01:d4:ca:6d:c4:44:1e"
-			} ]
-	};
-//	Petició de tots els links amb postman http://147.83.113.109:8080/AppServer/webapi/topology/links
-	var dataLinks = {
-			"links" : [ {
-				"dstPortId" : "00:01:d4:ca:6d:d4:be:a1:1",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:b5:f4:0f:5"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:d4:4f:6b:3",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:c4:44:1e:2"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:d4:4f:6b:1",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:d4:be:a1:2"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:c4:44:1e:2",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:d4:4f:6b:3"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:d4:be:a1:2",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:d4:4f:6b:1"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:c4:44:1e:1",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:b5:f4:0f:7"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:b5:f4:0f:6",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:d4:4f:6b:2"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:b5:f4:0f:5",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:d4:be:a1:1"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:b5:f4:0f:7",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:c4:44:1e:1"
-			}, {
-				"dstPortId" : "00:01:d4:ca:6d:d4:4f:6b:2",
-				"enabled" : true,
-				"srcPortId" : "00:01:d4:ca:6d:b5:f4:0f:6"
-			} ]
-	};
-//	Petició Postman de teminals http://147.83.113.109:8080/AppServer/webapi/topology/terminals
-	var dataTerminals = {
-			"terminals" : [ {
-				"enabled" : true,
-				"ipv4" : "192.168.0.66",
-				"mac" : "b8:27:eb:ce:9b:33",
-				"portAPId" : "00:01:d4:ca:6d:d4:be:a1:3",
-				"terminalId" : "T-1"
-			}, {
-				"enabled" : true,
-				"ipv4" : "0.0.0.0",
-				"mac" : "00:13:49:19:31:33",
-				"portAPId" : "00:01:d4:ca:6d:d4:be:a1:3",
-				"terminalId" : "T-0"
-			} ]
-	};
-	var terminals = dataTerminals.terminals;
+	$.ajax({
+		type: "GET",
+		url: switchesURL,
+		//contentType: 'application/json',
+		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+//		headers: { 		
+//		Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"				
+//		},	
+		success : function(result) {
+			dataSwitches = result;
+		}
+	});
+	$.ajax({
+		type: "GET",
+		url: terminalsURL,
+		//contentType: 'application/json',
+		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+//		headers: { 		
+//		Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"				
+//		},	
+		success : function(result) {
+			dataTerminals = result;
+		}
+	});
+	$.ajax({
+		type: "GET",
+		url: linksURL,
+		//contentType: 'application/json',
+		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+//		headers: { 		
+//		Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"				
+//		},	
+		success : function(result) {
+			dataLinks = result;
+		}
+	});
+	
 
 //	Tractament de dades obtingudes
 	$.ajaxSetup({
 		async : true
 	}); //execute asynchronously
-
+	var terminals = dataTerminals.terminals;
 	nodes = dataSwitches.switches;
 	var rawLinks = dataLinks.links;
 	var src, trg;
@@ -513,7 +374,7 @@ function byMinuteGraph(){
 
 
 	}
-	
+
 	function minuteFormat(xAxis){
 		for (var i = 0; i<xAxis.length; i++) {
 			var date = new Date(parseInt(xAxis[i]*1000));
@@ -557,7 +418,7 @@ function bySecondGraph(){
 	valueData=[];
 	timeData.push(data.timeAxxis[0]);
 	valueData.push(data.valueAxxis[0]);
-	
+
 	for (var i=1; i<60; i++){
 		timeData.push(timeData[0]+i);
 		valueData.push(0);
@@ -565,7 +426,7 @@ function bySecondGraph(){
 	var lastTime =timeData[59];
 	//alert(timeData[0]);
 	//alert(timeData[59]);
-	
+
 	//DATE PARSER
 	var labelXaxis = minuteFormat(timeData);	
 	//alert(labelXaxis[0]);
@@ -577,19 +438,19 @@ function bySecondGraph(){
 	//FINAL DATE PARSER
 
 	$('#statisticsGraph').highcharts({
-        chart: {
-            type: 'areaspline',
-            animation: false,
-        },
-        title: {
-            text: data.parameter+' on port: ' +data.idObject
-        },
-       	legend: {
-            x: 0,
-            y: 300,
-        },
-        xAxis: {
-        	/*type: 'datetime',
+		chart: {
+			type: 'areaspline',
+			animation: false,
+		},
+		title: {
+			text: data.parameter+' on port: ' +data.idObject
+		},
+		legend: {
+			x: 0,
+			y: 300,
+		},
+		xAxis: {
+			/*type: 'datetime',
         	dateTimeLabelFormats: {
                 //milisecond: '%H:%M:%S'
 				OPTIONS
@@ -604,45 +465,45 @@ function bySecondGraph(){
                 	year: '%Y'
                 }                        
             },*/
-        	tickPixelInterval: 1500,
-            categories: labelXaxis,
-        },
-        yAxis: {
-            title: {
-                text: data.parameter
-            }
-        },
-        tooltip: {
-            shared: true,
-            valueSuffix: ' Bytes/s',
-            crosshairs: [true, true]
-        },
-        credits: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.5
-            },
-           /* series: {
+			tickPixelInterval: 1500,
+			categories: labelXaxis,
+		},
+		yAxis: {
+			title: {
+				text: data.parameter
+			}
+		},
+		tooltip: {
+			shared: true,
+			valueSuffix: ' Bytes/s',
+			crosshairs: [true, true]
+		},
+		credits: {
+			enabled: false
+		},
+		plotOptions: {
+			areaspline: {
+				fillOpacity: 0.5
+			},
+			/* series: {
                pointStart: data.timeAxxis[0],
                pointInterval: 1 // one day
             }*/
-        },
-        series: [{
-            name: data.parameter,
-            data: valueData
-        }]
-		      
-    });
-    
+		},
+		series: [{
+			name: data.parameter,
+			data: valueData
+		}]
+
+	});
+
 	var j=0;
 	var l=0;
 	refreshIntervalId = setInterval(function() {
-	    refresh();  
+		refresh();  
 	},500);
-	
-	
+
+
 	function refresh() {
 		l++;
 		var data2 = nextData();
@@ -652,7 +513,7 @@ function bySecondGraph(){
 		}else{
 			k=1;
 		}
-		
+
 		//var labelX2= minuteFormat(data2.timeAxxis);
 		var chart = $('#statisticsGraph').highcharts();
 		if (l==chart.series[0].data.length){
@@ -674,20 +535,20 @@ function bySecondGraph(){
 			//alert(labelXaxis[59]);
 			chart.xAxis[0].setCategories(labelXaxis);
 			//chart.series[0].data[l].update(data2.valueAxxis[k]);
-			
+
 		}
 		//chart.xAxis[0].setCategories(labelX2);
 		chart.series[0].data[l].update(data2.valueAxxis[k]);
-		
+
 
 	}
-	
+
 	function minuteFormat(xAxis){
 		for (var i = 0; i<xAxis.length; i++) {
 			var date = new Date(parseInt(xAxis[i]*1000));
 			// using the excellent dateFormat code from Steve Levithan
 			//axisItems[i].attr("text", dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
-			
+
 			if ((i==0) || (i==(xAxis.length-1))){
 				xAxis[i] = (dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
 			}
@@ -695,7 +556,7 @@ function bySecondGraph(){
 				xAxis[i] = (dateFormat(date, "ss"));//"dd/mm, htt"
 			}
 		}
-		
+
 		return xAxis;
 	}
 	/*funció de petició (no passa)REST. Per ara es static*/
@@ -708,8 +569,8 @@ function bySecondGraph(){
 				//"value2Axxis":[61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,462.0,60.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,1500.0],
 				"timeAxxis":[1388686905,1388686906],
 				"valueAxxis":[61.0,199.0]
-				};
-		
+		};
+
 		return result;
 	}
 	/*funció de segona petició REST (ESBORRABLE) quan les peticions rest estiguin operatives*/
@@ -717,11 +578,11 @@ function bySecondGraph(){
 		var num1,num2;
 		num1= Math.random()*1000;
 		num2= Math.random()*2000;
-		
+
 		var result ={
-			//"timeAxxis":[1388686965,1388686966],
-			"valueAxxis":[num1,num2]
-			};
+				//"timeAxxis":[1388686965,1388686966],
+				"valueAxxis":[num1,num2]
+		};
 		return result;		
 	}
 }
@@ -748,16 +609,16 @@ function printPortGraph(){
 		console.log("Port ID: ");
 		console.log(selectedPort);
 		console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
-		
+
 		if(selectedTimeInterval == "hour") byMinuteGraph();
 		if(selectedTimeInterval == "minute") byMinuteGraph();
 		if(selectedTimeInterval == "second") bySecondGraph();
-		
-		
 
 
 
-	//NO PORT SPECIFIED!!!
+
+
+		//NO PORT SPECIFIED!!!
 	}else alert("Please, select a port from the list");
 }
 
