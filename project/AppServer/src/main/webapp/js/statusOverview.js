@@ -40,9 +40,9 @@ function createTopologyGraph(){
 				+ " scale(" + d3.event.scale + ")");
 	}
 
-	var switchesURL = "/topology/switches";
-	var terminalsURL = "/topology/terminals";
-	var linksURL = "/topology/links";
+	var switchesURL = "http://147.83.113.109:8080/AppServer/webapp/topology/switches";
+	var terminalsURL = "http://147.83.113.109:8080/AppServer/webapp/topology/terminals";
+	var linksURL = "http://147.83.113.109:8080/AppServer/webapp/topology/links";
 	var nodes = [];
 	var links = [];
 
@@ -86,7 +86,7 @@ function createTopologyGraph(){
 			dataLinks = result;
 		}
 	});
-	
+
 
 //	Tractament de dades obtingudes
 	$.ajaxSetup({
