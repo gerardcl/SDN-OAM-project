@@ -1,7 +1,7 @@
 package dxat.appserver.realtime.interfaces;
 
-public interface IRealTimeSuscriber {
-	public String getSuscriberKey();
+public interface IRealTimeSubscriber {
+	public String getSubscriberKey();
 
 	public void sendEventMsg(String eventStr);
 }

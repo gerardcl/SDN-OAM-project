@@ -1,9 +1,9 @@
 package dxat.appserver.realtime.interfaces;
 
 public interface IRealTimeManager {
-	public void suscribe(IRealTimeSuscriber suscriber);
+	public void subscribe(IRealTimeSubscriber subscriber);
 
-	public void unsuscribe(IRealTimeSuscriber suscriber);
+	public void unsubscribe(IRealTimeSubscriber subscriber);
 
 	public void broadcast(String message);
 }

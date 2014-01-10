@@ -1,15 +1,14 @@
 package dxat.appserver.topology.pojos;
 
 public class Flow {
-	private String flowId = "";
-	private String srcTerminalId = "";
-	private String dstTerminalId = "";
-	private int srcPort = -1;
-	private int dstPort = -1;
+	private String flowId = "DefaultFlow";
+	private String srcIpAddr = "10.0.0.1";
+	private String dstIpAddr = "10.0.0.4";
+	private int srcPort = 0;
+	private int dstPort = 0;
 	private int qos = -1;
 	private Double bandwidth = 0.0;
-	private String protocol = "";
-	private Boolean enabled = false;
+	private String protocol = "0";
 
 	public String getFlowId() {
 		return flowId;
@@ -19,20 +18,20 @@ public class Flow {
 		this.flowId = flowId;
 	}
 
-	public String getSrcTerminalId() {
-		return srcTerminalId;
+	public String getSrcIpAddr() {
+		return srcIpAddr;
 	}
 
-	public void setSrcTerminalId(String srcTerminalId) {
-		this.srcTerminalId = srcTerminalId;
+	public void setSrcIpAddr(String srcIpAddr) {
+		this.srcIpAddr = srcIpAddr;
 	}
 
-	public String getDstTerminalId() {
-		return dstTerminalId;
+	public String getDstIpAddr() {
+		return dstIpAddr;
 	}
 
-	public void setDstTerminalId(String dstTerminalId) {
-		this.dstTerminalId = dstTerminalId;
+	public void setDstIpAddr(String dstIpAddr) {
+		this.dstIpAddr = dstIpAddr;
 	}
 
 	public int getSrcPort() {
@@ -73,14 +72,6 @@ public class Flow {
 
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
 	}
 
 }

@@ -1,10 +1,10 @@
 package dxat.appserver.topology.interfaces;
 
-import dxat.appserver.topology.pojos.Flow;
-import dxat.appserver.topology.pojos.FlowCollection;
+import dxat.appserver.topology.pojos.DeployedFlow;
+import dxat.appserver.topology.pojos.DeployedFlowCollection;
 
 public interface ITopoFlowManager {
-	public FlowCollection getFlows();
+	public DeployedFlowCollection getFlows();
 
-	public Flow getFlow(String flowId);
+	public DeployedFlow getFlow(String flowId);
 }

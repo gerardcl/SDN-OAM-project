@@ -1,12 +1,12 @@
 package dxat.appserver.realtime.interfaces;
 
 import dxat.appserver.topology.exceptions.FlowNotFoundException;
-import dxat.appserver.topology.pojos.Flow;
+import dxat.appserver.topology.pojos.DeployedFlow;
 
 public interface IRTFlowManager {
-	public void addFlow(Flow flow);
+	public void addFlow(DeployedFlow flow);
 
-	public void updateFlow(Flow flow) throws FlowNotFoundException;
+	public void updateFlow(DeployedFlow flow) throws FlowNotFoundException;
 
 	public void disableFlow(String flowId) throws FlowNotFoundException;
 

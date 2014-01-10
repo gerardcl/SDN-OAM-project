@@ -14,8 +14,8 @@ import org.apache.catalina.websocket.WebSocketServlet;
 import org.apache.catalina.websocket.WsOutbound; 
 
 import dxat.appserver.realtime.RealTimeManager;
-import dxat.appserver.realtime.interfaces.IRealTimeSuscriber;
-import dxat.appserver.realtime.pojos.Flow;
+import dxat.appserver.realtime.interfaces.IRealTimeSubscriber;
+import dxat.appserver.topology.pojos.Flow;
 
 public class RealTimeWebSocket extends WebSocketServlet {
 	private static final long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ public class RealTimeWebSocket extends WebSocketServlet {
 						// is an outsider using your websocket
 	}
 
-	private class DefaultWebSocket extends MessageInbound implements IRealTimeSuscriber{
+	private class DefaultWebSocket extends MessageInbound implements IRealTimeSubscriber{
 		private WsOutbound connection;
 
 		public DefaultWebSocket() {
@@ -52,7 +52,7 @@ public class RealTimeWebSocket extends WebSocketServlet {
 		public void onOpen(WsOutbound connection) {
 			this.connection = connection;
 			connections.add(connection);
-			RealTimeManager.getInstance().suscribe(this);
+			RealTimeManager.getInstance().subscribe(this);
 			System.out.println("Open connection; total connections: "
 					+ connections.size());
 		}
@@ -80,13 +80,13 @@ public class RealTimeWebSocket extends WebSocketServlet {
 		@Override
 		protected void onClose(int status) {
 			connections.remove(connection);
-			RealTimeManager.getInstance().unsuscribe(this);
+			RealTimeManager.getInstance().unsubscribe(this);
 			System.out.println("Close connection; total connections: "
 					+ connections.size());
 		}
 
 		@Override
-		public String getSuscriberKey() {
+		public String getSubscriberKey() {
 			return "HASHCODE_"+connection.hashCode();
 		}
 

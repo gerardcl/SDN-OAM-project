@@ -127,8 +127,7 @@ public class StatManager {
 
 		// Pushing Flow statitistcs
 		for (FlowStat flowStat : statcollection.getFlowStatCollection()) {
-			RealTimeManager.getInstance().broadcast(
-					"[STAT] " + (new Gson().toJson(flowStat)));
+			//RealTimeManager.getInstance().broadcast("[STAT] " + (new Gson().toJson(flowStat)));
 			if (!db.rrdFileExists(LoadConfig.getProperty("rrd4j.dir")
 					+ db.convertId(flowStat.getName()) + ".flow.rrd")) {
 				RrdDef rrdDef = db.createRrdDefFlow(

@@ -1,15 +1,26 @@
-package dxat.appserver.realtime.pojos;
+package dxat.appserver.topology.pojos;
 
-public class Flow {
-	private String flowId = "DefaultFlow";
-	private String srcIpAddr = "10.0.0.1";
-	private String dstIpAddr = "10.0.0.4";
-	private int srcPort = 0;
-	private int dstPort = 0;
+import java.util.List;
+
+public class DeployedFlow {
+	private String flowId = "";
+	private String srcTerminalId = "";
+	private String dstTerminalId = "";
+	private int srcPort = -1;
+	private int dstPort = -1;
 	private int qos = -1;
 	private Double bandwidth = 0.0;
-	private String protocol = "0";
+	private String protocol = "";
 	private Boolean enabled = false;
+	private List<String> route;
+
+	public List<String> getRoute() {
+		return route;
+	}
+
+	public void setRoute(List<String> route) {
+		this.route = route;
+	}
 
 	public String getFlowId() {
 		return flowId;
@@ -19,20 +30,20 @@ public class Flow {
 		this.flowId = flowId;
 	}
 
-	public String getSrcIpAddr() {
-		return srcIpAddr;
+	public String getSrcTerminalId() {
+		return srcTerminalId;
 	}
 
-	public void setSrcIpAddr(String srcIpAddr) {
-		this.srcIpAddr = srcIpAddr;
+	public void setSrcTerminalId(String srcTerminalId) {
+		this.srcTerminalId = srcTerminalId;
 	}
 
-	public String getDstIpAddr() {
-		return dstIpAddr;
+	public String getDstTerminalId() {
+		return dstTerminalId;
 	}
 
-	public void setDstIpAddr(String dstIpAddr) {
-		this.dstIpAddr = dstIpAddr;
+	public void setDstTerminalId(String dstTerminalId) {
+		this.dstTerminalId = dstTerminalId;
 	}
 
 	public int getSrcPort() {

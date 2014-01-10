@@ -16,8 +16,8 @@ import dxat.appserver.topology.interfaces.ITopoFlowManager;
 import dxat.appserver.topology.interfaces.ITopoLinkManager;
 import dxat.appserver.topology.interfaces.ITopoSwitchManager;
 import dxat.appserver.topology.interfaces.ITopoTerminalManager;
-import dxat.appserver.topology.pojos.Flow;
-import dxat.appserver.topology.pojos.FlowCollection;
+import dxat.appserver.topology.pojos.DeployedFlow;
+import dxat.appserver.topology.pojos.DeployedFlowCollection;
 import dxat.appserver.topology.pojos.Link;
 import dxat.appserver.topology.pojos.LinkCollection;
 import dxat.appserver.topology.pojos.Switch;
@@ -138,20 +138,20 @@ public class TopologyResource {
 	@GET
 	@Path("/all/flows/")
 	@Produces(MediaType.FLOW)
-	public FlowCollection getAllFlows() {
+	public DeployedFlowCollection getAllFlows() {
 		return flowManager.getFlows();
 	}
 
 	@GET
 	@Path("/flows/")
 	@Produces(MediaType.FLOWS_COLLECTION)
-	public FlowCollection getEnabledFlows() {
+	public DeployedFlowCollection getEnabledFlows() {
 		// ITopoSwitchManager switchManager = SwitchManager.getInstance();
-		List<Flow> allFlows = flowManager.getFlows().getFlows();
-		List<Flow> enabledFlows = new ArrayList<Flow>();
-		FlowCollection flowCollection = new FlowCollection();
+		List<DeployedFlow> allFlows = flowManager.getFlows().getFlows();
+		List<DeployedFlow> enabledFlows = new ArrayList<DeployedFlow>();
+		DeployedFlowCollection flowCollection = new DeployedFlowCollection();
 
-		for (Flow flow : allFlows) {
+		for (DeployedFlow flow : allFlows) {
 			if (flow.getEnabled())
 				enabledFlows.add(flow);
 		}
@@ -162,7 +162,7 @@ public class TopologyResource {
 	@GET
 	@Path("/flows/{flowId}")
 	@Produces(MediaType.TERMINAL)
-	public Flow getFlow(@PathParam("flowId") String flowId) {
+	public DeployedFlow getFlow(@PathParam("flowId") String flowId) {
 		return flowManager.getFlow(flowId);
 	}
 }
