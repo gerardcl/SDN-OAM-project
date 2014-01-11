@@ -139,8 +139,9 @@ public class RealTimeThread implements Runnable {
 		// Try connect while is not connected
 		while (socket == null) {
 			try {
+				System.out.println(this.serverAddr);
 				System.out
-						.println("Trying to connect to the OF Controller ...");
+						.println("Trying to connect to the OF Controller at "+this.serverAddr+" on port "+this.serverPort);
 
 				// Try create the soccket
 				this.socket = new Socket(this.serverAddr, this.serverPort);
