@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import dxat.appserver.realtime.interfaces.ILinkEvents;
+import dxat.appserver.realtime.interfaces.Events.ILinkEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.db.LinkTopologyDB;

@@ -6,7 +6,7 @@ import dxat.appserver.realtime.interfaces.IRealTimeManager;
 import dxat.appserver.realtime.interfaces.IRealTimeSubscriber;
 import dxat.appserver.realtime.interfaces.IServerRequests;
 import dxat.appserver.realtime.pojos.ServerRequest;
-import dxat.appserver.topology.pojos.Flow;
+import dxat.appserver.flows.pojos.Flow;
 
 import java.util.Collection;
 import java.util.HashMap;

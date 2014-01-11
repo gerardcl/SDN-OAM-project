@@ -49,4 +49,19 @@
 		<url-pattern>/realtimewebsocket</url-pattern>
 	</servlet-mapping>
 	<!-- END REALTIME WEBSOCKET -->
+    <!-- BEGIN TOPOLOGY SERVER -->
+    <servlet>
+        <servlet-name>DXAT Flow Service</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>dxat.appserver.flows.resources</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DXAT Flow Service</servlet-name>
+        <url-pattern>/webapi/flows/*</url-pattern>
+    </servlet-mapping>
+    <!-- END TOPOLOGY SERVER -->
 </web-app>

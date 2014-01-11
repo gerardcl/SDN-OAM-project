@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import dxat.appserver.realtime.interfaces.ISwitchEvents;
+import dxat.appserver.realtime.interfaces.Events.ISwitchEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.db.SwitchTopologyDB;

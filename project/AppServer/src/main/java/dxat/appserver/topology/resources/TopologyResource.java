@@ -8,16 +8,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import dxat.appserver.topology.FlowManager;
+import dxat.appserver.flows.FlowManager;
 import dxat.appserver.topology.LinkManager;
 import dxat.appserver.topology.SwitchManager;
 import dxat.appserver.topology.TerminalManager;
-import dxat.appserver.topology.interfaces.ITopoFlowManager;
-import dxat.appserver.topology.interfaces.ITopoLinkManager;
-import dxat.appserver.topology.interfaces.ITopoSwitchManager;
-import dxat.appserver.topology.interfaces.ITopoTerminalManager;
-import dxat.appserver.topology.pojos.DeployedFlow;
-import dxat.appserver.topology.pojos.DeployedFlowCollection;
+import dxat.appserver.flows.pojos.DeployedFlow;
+import dxat.appserver.flows.pojos.DeployedFlowCollection;
 import dxat.appserver.topology.pojos.Link;
 import dxat.appserver.topology.pojos.LinkCollection;
 import dxat.appserver.topology.pojos.Switch;
@@ -27,14 +23,15 @@ import dxat.appserver.topology.pojos.TerminalCollection;
 
 @Path("/")
 public class TopologyResource {
-	private ITopoSwitchManager switchManager = SwitchManager.getInstance();
-	private ITopoLinkManager linkManager = LinkManager.getInstance();
-	private ITopoTerminalManager terminalManager = TerminalManager
-			.getInstance();
-	private ITopoFlowManager flowManager = FlowManager.getInstance();
+	private SwitchManager switchManager = SwitchManager.getInstance();
+	private LinkManager linkManager = LinkManager.getInstance();
+	private TerminalManager terminalManager = TerminalManager.getInstance();
+	private FlowManager flowManager = FlowManager.getInstance();
 
-	/*
-	 * Get All the switches (enabled and disabled)
+	/**
+     * Returns the collection of all the switches (enabled and disabled)
+     *
+     * @return The collection of all switches (enabled and disabled)
 	 */
 	@GET
 	@Path("/all/switches/")
@@ -47,7 +44,6 @@ public class TopologyResource {
 	@Path("/switches/")
 	@Produces(MediaType.SWITCHES_COLLECTION)
 	public SwitchCollection getEnabledSwitches() {
-		// ITopoSwitchManager switchManager = SwitchManager.getInstance();
 		List<Switch> allSwitches = switchManager.getSwitches().getSwitches();
 		List<Switch> enabledSwitches = new ArrayList<Switch>();
 		SwitchCollection switchCollection = new SwitchCollection();
@@ -114,7 +110,6 @@ public class TopologyResource {
 	@Path("/terminals/")
 	@Produces(MediaType.TERMINALS_COLLECTION)
 	public TerminalCollection getEnabledTerminals() {
-		// ITopoSwitchManager switchManager = SwitchManager.getInstance();
 		List<Terminal> allTerminals = terminalManager.getTerminals()
 				.getTerminals();
 		List<Terminal> enabledTerminals = new ArrayList<Terminal>();
@@ -146,7 +141,6 @@ public class TopologyResource {
 	@Path("/flows/")
 	@Produces(MediaType.FLOWS_COLLECTION)
 	public DeployedFlowCollection getEnabledFlows() {
-		// ITopoSwitchManager switchManager = SwitchManager.getInstance();
 		List<DeployedFlow> allFlows = flowManager.getFlows().getFlows();
 		List<DeployedFlow> enabledFlows = new ArrayList<DeployedFlow>();
 		DeployedFlowCollection flowCollection = new DeployedFlowCollection();
@@ -161,7 +155,7 @@ public class TopologyResource {
 
 	@GET
 	@Path("/flows/{flowId}")
-	@Produces(MediaType.TERMINAL)
+	@Produces(MediaType.FLOW)
 	public DeployedFlow getFlow(@PathParam("flowId") String flowId) {
 		return flowManager.getFlow(flowId);
 	}

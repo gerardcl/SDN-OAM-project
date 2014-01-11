@@ -15,7 +15,7 @@ import org.apache.catalina.websocket.WsOutbound;
 
 import dxat.appserver.realtime.RealTimeManager;
 import dxat.appserver.realtime.interfaces.IRealTimeSubscriber;
-import dxat.appserver.topology.pojos.Flow;
+import dxat.appserver.flows.pojos.Flow;
 
 public class RealTimeWebSocket extends WebSocketServlet {
 	private static final long serialVersionUID = 1L;
