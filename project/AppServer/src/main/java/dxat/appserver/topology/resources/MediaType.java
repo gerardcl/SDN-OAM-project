@@ -10,7 +10,4 @@ public interface MediaType {
 	// Terminals
 	public final static String TERMINAL = "application/vmd.dxat.appserver.topology.terminal+json";
 	public final static String TERMINALS_COLLECTION = "application/vmd.dxat.appserver.topology.terminals.collection+json";
-	// Flows
-	public final static String FLOW = "application/vmd.dxat.appserver.topology.flow+json";
-	public final static String FLOWS_COLLECTION = "application/vmd.dxat.appserver.topology.flows.collection+json";
 }

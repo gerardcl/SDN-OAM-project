@@ -1,32 +1,53 @@
 package dxat.appserver.flows;
 
 import com.google.gson.Gson;
-import dxat.appserver.flows.exceptions.FlowNotFoundException;
-import dxat.appserver.realtime.events.IFlowEvents;
-import dxat.appserver.realtime.pojos.ControllerEvent;
-import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.flows.pojos.DeployedFlow;
 import dxat.appserver.flows.pojos.DeployedFlowCollection;
+import dxat.appserver.realtime.events.IFlowEvents;
+import dxat.appserver.realtime.pojos.ControllerEvent;
+import dxat.appserver.realtime.pojos.DbUpdate;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ *
+ */
 public class FlowManager {
+    /**
+     *
+     */
     private static FlowManager instance = null;
+
+    /**
+     * 
+     */
     private HashMap<String, DeployedFlow> flows = null;
 
+    /**
+     *
+     */
     private FlowManager() {
         flows = new HashMap<String, DeployedFlow>();
     }
 
+    /**
+     *
+     * @return
+     */
     public static FlowManager getInstance() {
         if (instance == null)
             instance = new FlowManager();
         return instance;
     }
 
+    /**
+     *
+     * @param controllerEvent
+     * @return
+     */
     public List<DbUpdate> processEvent(ControllerEvent controllerEvent) {
         String eventStr = controllerEvent.getEvent();
         List<DbUpdate> updateList = new ArrayList<DbUpdate>();
@@ -54,21 +75,40 @@ public class FlowManager {
                 update.setPropertyId("enabled");
                 flows.remove(deployedFlow.getFlowId());
             }
-        } else if (eventStr.equals(IFlowEvents.PUSH_FLOW_DENIED)||eventStr.equals(IFlowEvents.DELETE_FLOW_FAILED)) {
-            DeployedFlow deployedFlow = new Gson().fromJson(controllerEvent.getObject(),
-                    DeployedFlow.class);
-            if (flows.containsKey(deployedFlow.getFlowId())) {
-                DbUpdate update = new DbUpdate();
-                updateList.add(update);
-                update.setInventoryId(deployedFlow.getFlowId());
-                update.setLegacyValue("false");
-                update.setNewValue("false");
-                update.setPropertyId("enabled");
-                flows.remove(deployedFlow.getFlowId());
-            }
-        } else if (eventStr.equals(IFlowEvents.ALL_FLOWS_DELETED)){
+        } else if (eventStr.equals(IFlowEvents.PUSH_FLOW_DST_TERMINAL_NOT_FOUND) ||
+                eventStr.equals(IFlowEvents.PUSH_FLOW_FLOW_ALREADY_EXIST) ||
+                eventStr.equals(IFlowEvents.PUSH_FLOW_ILLEGAL_FLOW_ENTRY) ||
+                eventStr.equals(IFlowEvents.PUSH_FLOW_SRC_TERMINAL_NOT_FOUND) ||
+                eventStr.equals(IFlowEvents.PUSH_FLOW_UNREACHABLE_TERMINALS) ||
+                eventStr.equals(IFlowEvents.DELETE_FLOW_FAILED) ||
+                eventStr.equals(IFlowEvents.REROUTE_FLOW_DST_TERMINAL_NOT_FOUND) ||
+                eventStr.equals(IFlowEvents.REROUTE_FLOW_FLOW_ALREADY_EXIST) ||
+                eventStr.equals(IFlowEvents.REROUTE_FLOW_ILLEGAL_FLOW_ENTRY) ||
+                eventStr.equals(IFlowEvents.REROUTE_FLOW_SRC_TERMINAL_NOT_FOUND) ||
+                eventStr.equals(IFlowEvents.REROUTE_FLOW_UNREACHABLE_TERMINALS)) {
+
+            // Set only the message of the update
+            DbUpdate update = new DbUpdate();
+            updateList.add(update);
+            update.setMessage(controllerEvent.getObject());
+        } else if (eventStr.equals(IFlowEvents.REROUTE_FLOW_SUCCESS)) {
+            // Get deployed flows
+            DeployedFlow newDeployedFlow = new Gson().fromJson(controllerEvent.getObject(), DeployedFlow.class);
+            DeployedFlow deployedFlow = flows.get(newDeployedFlow.getFlowId());
+
+            // Set update with the new route
+            DbUpdate update = new DbUpdate();
+            updateList.add(update);
+            update.setInventoryId(deployedFlow.getFlowId());
+            update.setLegacyValue(new Gson().toJson(deployedFlow.getRoute()));
+            update.setNewValue(new Gson().toJson(newDeployedFlow.getRoute()));
+            update.setPropertyId("route");
+
+            // Update route
+            deployedFlow.setRoute(newDeployedFlow.getRoute());
+        } else if (eventStr.equals(IFlowEvents.ALL_FLOWS_DELETED)) {
             Collection<DeployedFlow> flowCollection = flows.values();
-            for(DeployedFlow deployedFlow:flowCollection){
+            for (DeployedFlow deployedFlow : flowCollection) {
                 DbUpdate update = new DbUpdate();
                 updateList.add(update);
                 update.setInventoryId(deployedFlow.getFlowId());
@@ -82,46 +122,10 @@ public class FlowManager {
         return updateList;
     }
 
-    public void addFlow(DeployedFlow flow) {
-        try {
-            this.updateFlow(flow);
-        } catch (FlowNotFoundException e) {
-            flows.put(flow.getFlowId(), flow);
-        }
-
-    }
-
-    public void updateFlow(DeployedFlow updateFlow) throws FlowNotFoundException {
-        if (!flows.containsKey(updateFlow.getFlowId()))
-            throw new FlowNotFoundException("The flow with id '"
-                    + updateFlow.getFlowId() + "' not found");
-        DeployedFlow flow = flows.get(updateFlow.getFlowId());
-        flow.setBandwidth(updateFlow.getBandwidth());
-        flow.setDstPort(updateFlow.getDstPort());
-        flow.setDstTerminalId(updateFlow.getDstTerminalId());
-        flow.setEnabled(updateFlow.getEnabled());
-        flow.setProtocol(updateFlow.getProtocol());
-        flow.setQos(updateFlow.getQos());
-        flow.setSrcPort(updateFlow.getSrcPort());
-        flow.setSrcTerminalId(updateFlow.getSrcTerminalId());
-
-    }
-
-    public void disableFlow(String flowId) throws FlowNotFoundException {
-        if (!flows.containsKey(flowId))
-            throw new FlowNotFoundException("Flow with id '" + flowId
-                    + "' not found");
-        flows.get(flowId).setEnabled(true);
-
-    }
-
-    public void enableFlow(String flowId) throws FlowNotFoundException {
-        if (!flows.containsKey(flowId))
-            throw new FlowNotFoundException("Flow with id '" + flowId
-                    + "' not found");
-        flows.get(flowId).setEnabled(false);
-    }
-
+    /**
+     *
+     * @return
+     */
     public DeployedFlowCollection getFlows() {
         List<DeployedFlow> flowList = new ArrayList<DeployedFlow>(flows.values());
         DeployedFlowCollection flowCollection = new DeployedFlowCollection();
@@ -129,6 +133,11 @@ public class FlowManager {
         return flowCollection;
     }
 
+    /**
+     *
+     * @param flowId
+     * @return
+     */
     public DeployedFlow getFlow(String flowId) {
         return flows.get(flowId);
     }

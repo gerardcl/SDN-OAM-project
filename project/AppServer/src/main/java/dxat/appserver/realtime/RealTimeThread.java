@@ -13,7 +13,7 @@ import dxat.appserver.flows.FlowManager;
 import dxat.appserver.topology.LinkManager;
 import dxat.appserver.topology.SwitchManager;
 import dxat.appserver.topology.TerminalManager;
-import dxat.appserver.topology.db.DbUpdate;
+import dxat.appserver.realtime.pojos.DbUpdate;
 import dxat.appserver.topology.exceptions.*;
 
 import java.io.*;
@@ -158,10 +158,6 @@ public class RealTimeThread implements Runnable {
             // Reader
             while (!socket.isClosed()) {
                 try {
-                    /*
-                     * processCommand(new Gson().fromJson(reader.readLine(),
-					 * Command.class));
-					 */
                     String line = "";
                     line = new String(reader.readLine());
                     reader.ready();

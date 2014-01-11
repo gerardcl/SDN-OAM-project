@@ -3,7 +3,7 @@ package dxat.appserver.topology;
 import com.google.gson.Gson;
 import dxat.appserver.realtime.events.ITerminalEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
-import dxat.appserver.topology.db.DbUpdate;
+import dxat.appserver.realtime.pojos.DbUpdate;
 import dxat.appserver.topology.db.TerminalTopologyDB;
 import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
 import dxat.appserver.topology.exceptions.PortNotFoundException;

@@ -1,4 +1,4 @@
-package dxat.appserver.topology.resources;
+package dxat.appserver.flows.resources;
 
 import dxat.appserver.flows.FlowManager;
 import dxat.appserver.flows.pojos.DeployedFlow;
@@ -12,14 +12,14 @@ import javax.ws.rs.Produces;
 @Path("/")
 public class FlowResource {
     @GET
-    @Path("/flows/")
+    @Path("/")
     @Produces(MediaType.FLOWS_COLLECTION)
     public DeployedFlowCollection getEnabledFlows() {
         return FlowManager.getInstance().getFlows();
     }
 
     @GET
-    @Path("/flows/{flowId}")
+    @Path("/{flowId}")
     @Produces(MediaType.FLOW)
     public DeployedFlow getFlow(@PathParam("flowId") String flowId) {
         return FlowManager.getInstance().getFlow(flowId);

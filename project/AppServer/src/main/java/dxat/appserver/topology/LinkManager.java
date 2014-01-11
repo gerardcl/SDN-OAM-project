@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import dxat.appserver.realtime.events.ILinkEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
-import dxat.appserver.topology.db.DbUpdate;
+import dxat.appserver.realtime.pojos.DbUpdate;
 import dxat.appserver.topology.db.LinkTopologyDB;
 import dxat.appserver.topology.exceptions.*;
 import dxat.appserver.topology.pojos.Link;

@@ -3,8 +3,6 @@ package dxat.appserver.realtime.pojos;
 import java.util.ArrayList;
 import java.util.List;
 
-import dxat.appserver.topology.db.DbUpdate;
-
 public class RealTimeEvent {
 	private Long timestamp;
 	private String event = "";

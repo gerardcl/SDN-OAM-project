@@ -1,5 +1,6 @@
 package dxat.appserver.topology.db;
 
+import dxat.appserver.realtime.pojos.DbUpdate;
 import dxat.appserver.topology.exceptions.*;
 import dxat.appserver.topology.pojos.Link;
 import dxat.appserver.topology.pojos.LinkCollection;
