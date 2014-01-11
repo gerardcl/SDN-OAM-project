@@ -7,4 +7,5 @@ public interface IServerRequests {
 	public final static String PUSH_FLOW_REQUEST = "PUSH_FLOW_REQUEST";
 	public final static String DELETE_FLOW_REQUEST = "DELETE_FLOW_REQUEST";
 	public final static String DELETE_ALL_FLOWS_REQUEST = "DELETE_ALL_FLOWS_REQUEST";
+    public final static String FLOWS_REQUEST = "FLOWS_REQUEST";
 }

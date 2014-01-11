@@ -47,6 +47,13 @@ public class RealTimeThread implements Runnable {
         sendrequest(serverRequest);
     }
 
+    public void getFlows() {
+        ServerRequest serverRequest = new ServerRequest();
+        serverRequest.setRequest(IServerRequests.FLOWS_REQUEST);
+        serverRequest.setObject(IServerRequests.FLOWS_REQUEST);
+        sendrequest(serverRequest);
+    }
+
     public void getLinks() {
         ServerRequest serverRequest = new ServerRequest();
         serverRequest.setRequest(IServerRequests.LINKS_REQUEST);
@@ -154,6 +161,7 @@ public class RealTimeThread implements Runnable {
             getSwitches();
             getLinks();
             getTerminals();
+            getFlows();
 
             // Reader
             while (!socket.isClosed()) {

@@ -22,7 +22,7 @@ public class FlowManager {
     private static FlowManager instance = null;
 
     /**
-     * 
+     *
      */
     private HashMap<String, DeployedFlow> flows = null;
 
@@ -34,7 +34,6 @@ public class FlowManager {
     }
 
     /**
-     *
      * @return
      */
     public static FlowManager getInstance() {
@@ -44,7 +43,6 @@ public class FlowManager {
     }
 
     /**
-     *
      * @param controllerEvent
      * @return
      */
@@ -61,6 +59,8 @@ public class FlowManager {
                 update.setLegacyValue("false");
                 update.setNewValue("true");
                 update.setPropertyId("enabled");
+                update.setMessage("The flow with id '" + deployedFlow.getFlowId() +
+                        "' has been deployed successfully.");
                 flows.put(deployedFlow.getFlowId(), deployedFlow);
             }
         } else if (eventStr.equals(IFlowEvents.DELETE_FLOW_SUCCESS)) {
@@ -73,6 +73,7 @@ public class FlowManager {
                 update.setLegacyValue("true");
                 update.setNewValue("false");
                 update.setPropertyId("enabled");
+                update.setMessage("Flow with id '" + deployedFlow.getFlowId() + "' has been removed form the forwarding tables.");
                 flows.remove(deployedFlow.getFlowId());
             }
         } else if (eventStr.equals(IFlowEvents.PUSH_FLOW_DST_TERMINAL_NOT_FOUND) ||
@@ -103,6 +104,8 @@ public class FlowManager {
             update.setLegacyValue(new Gson().toJson(deployedFlow.getRoute()));
             update.setNewValue(new Gson().toJson(newDeployedFlow.getRoute()));
             update.setPropertyId("route");
+            update.setMessage("The flow with id '" + deployedFlow.getFlowId() +
+                    "' has been rerouted successfully after the fall of a port.");
 
             // Update route
             deployedFlow.setRoute(newDeployedFlow.getRoute());
@@ -115,15 +118,33 @@ public class FlowManager {
                 update.setLegacyValue("true");
                 update.setNewValue("false");
                 update.setPropertyId("enabled");
+                update.setMessage("The flow with id '" + deployedFlow.getFlowId() + "' has been deleted successfully.");
                 flows.remove(deployedFlow.getFlowId());
             }
             flows.clear();
+        } else if (eventStr.equals(IFlowEvents.FLOW_COLLECTION)) {
+            DeployedFlowCollection deployedFlowCollection = new Gson().fromJson(controllerEvent.getObject(),
+                    DeployedFlowCollection.class);
+            List<DeployedFlow> deployedFlowList = deployedFlowCollection.getFlows();
+            flows.clear();
+            for (DeployedFlow deployedFlow : deployedFlowList) {
+                // Put flow in the database
+                flows.put(deployedFlow.getFlowId(), deployedFlow);
+
+                // Set update
+                DbUpdate update = new DbUpdate();
+                update.setNewValue("true");
+                update.setLegacyValue("false");
+                update.setInventoryId(deployedFlow.getFlowId());
+                update.setPropertyId("enabled");
+                update.setMessage("The flow with ID '" + deployedFlow.getFlowId() + "' is deployed in the network.");
+                updateList.add(update);
+            }
         }
         return updateList;
     }
 
     /**
-     *
      * @return
      */
     public DeployedFlowCollection getFlows() {
@@ -134,7 +155,6 @@ public class FlowManager {
     }
 
     /**
-     *
      * @param flowId
      * @return
      */
