@@ -272,69 +272,69 @@
                     </div>
                     <div class="panel-body">
                       <div id="GS-controller">
-						<br><center>
-						<span id="memoryGaugeContainer"></span>
-						<span id="cpuGaugeContainer"></span>
-						</center><br>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /CONTROLLER col -->
-              </div><!-- /TOPOLOGY and CONTROLLER ROM -->
+            						<br><center>
+            						<span id="memoryGaugeContainer"></span>
+            						<span id="cpuGaugeContainer"></span>
+            						</center><br>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- /CONTROLLER col -->
+                          </div><!-- /TOPOLOGY and CONTROLLER ROM -->
 
-              <div class="row" id="statistics"> <!-- STATISTICS ROW -->
+                          <div class="row" id="statistics"> <!-- STATISTICS ROW -->
 
-                <div class="panel panel-primary">
-                  <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Statistics</h3>
-                  </div>
-                  <div class="panel-body">
-                    <div id="GS-stats">
+                            <div class="panel panel-primary">
+                              <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Statistics</h3>
+                              </div>
+                              <div class="panel-body">
+                                <div id="GS-stats">
 
-                      <div class="col-lg-3 col-md-6 col-sm-6" style="min-width: 280px; max-width: 100%; margin: 0">
-                        <div class="panel panel-default">
-                          <div class="panel-body" id="switchInfo">
-                            <h4>Select an element from the graph above</h4>
-                          </div>
-                        </div>
+                                  <div class="col-lg-3 col-md-6 col-sm-6" style="min-width: 280px; max-width: 100%; margin: 0">
+                                    <div class="panel panel-default">
+                                      <div class="panel-body" id="switchInfo">
+                                        <h4>Select an element from the graph above</h4>
+                                      </div>
+                                    </div>
 
-						<div class="table-responsive">
-                      	<table class="table table-bordered table-hover table-striped tablesorter">
-                        <thead>
-                          <tr>
-                            <th><center>packetCount</center></th>
-                            <th><center>byteCount</center></th>
-                            <th><center>flowCount</center></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><center id="packetCount"></center></td>
-                            <td><center id="byteCount"></center></td>
-                            <td><center id="flowCount"></center></td>
-                          </tr>
-                        </tbody>
-                      	</table>
-                    	</div>
-                      </div>
+            						<div class="table-responsive">
+                                  	<table class="table table-bordered table-hover table-striped tablesorter">
+                                    <thead>
+                                      <tr>
+                                        <th><center>packetCount</center></th>
+                                        <th><center>byteCount</center></th>
+                                        <th><center>flowCount</center></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td><center id="packetCount"></center></td>
+                                        <td><center id="byteCount"></center></td>
+                                        <td><center id="flowCount"></center></td>
+                                      </tr>
+                                    </tbody>
+                                  	</table>
+                                	</div>
+                                  </div>
 
-                      <div class="col-lg-3 col-md-6 col-sm-6" style="min-width: 250px; max-width: 100%">
-                        <div class="panel panel-default">
-                          <div class="panel-body" id="listingPorts">
-                            <ul class="list-group" id="portList">
+                                  <div class="col-lg-3 col-md-6 col-sm-6" style="min-width: 250px; max-width: 100%">
+                                    <div class="panel panel-default">
+                                      <div class="panel-body" id="listingPorts">
+                                        <ul class="list-group" id="portList">
 
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
 
-                      <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="row">
-                          <div class="panel panel-default">
-                            <div class="panel-body" style="max-width: 100%; height: 225px; margin: 0 auto">
-                              <div id="textgraph"><h3>Port statistics graph </h3> <h4>Select a port from the list</h4></div>
-							  <div class="statisticsGraph" id="statisticsGraph" style="width: 100%; height: 185px; margin: 0 auto"></div>
+                                  <div class="col-lg-6 col-md-12 col-sm-12">
+                                    <div class="row">
+                                      <div class="panel panel-default">
+                                        <div class="panel-body" style="max-width: 100%; height: 225px; margin: 0 auto">
+                                          <div id="textgraph"><h3>Port statistics graph </h3> <h4>Select a port from the list</h4></div>
+            							  <div class="statisticsGraph" id="statisticsGraph" style="width: 100%; height: 185px; margin: 0 auto"></div>
                             </div>
                           </div>
 
@@ -568,9 +568,9 @@
             <!-- Org LIST column -->
             <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
               <div class="row">
-                <p><center>
+                <p><center><a href="#/newOrg">
                   <button type="button" class="btn btn-lg btn-success"><i class="fa fa-pencil"></i>  Create new organization</button>
-                </p></center>    
+                </a></center></p>  
               </div>
 
               <div class="row">
@@ -1048,7 +1048,9 @@
                       </div>
 
                       <div class="col-md-4 col-sm-4">
-                        <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
+                        <a href="#/">
+                          <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button>
+                        </a
                       </div>
                     </div><!-- /HEADER (orgname+buttons) -->
                   </div>
@@ -1195,7 +1197,7 @@
 	<script type="text/template" id="flows-template">
 
           <div class="padding-10-bot">
-            <a href="#/newFlow"><button class="btn btn-success"> Create new FLOW</button></a>
+            <a href="#/newFlow/<%= loginOrg %>"><button class="btn btn-success"> Create new FLOW [<%= loginOrg %>]</button></a>
           </div>
 
           <div class="row"><!-- Active FLOWS -->
@@ -1658,6 +1660,129 @@
 	<!-- /CLIENT USERS DATA -->
 
 	<!-- /CLIENT TEMPLATES -->
+
+  <!-- SHARED TEMPLATES -->
+    <!-- NEW FLOW TEMPLATE -->
+    <script type="text/template" id="new-flow-template">
+      <div class="col-md-12 col-sm-12 slim-flows"> 
+            <div class="panel panel-danger">
+              <div class="panel-heading">
+                <h3 class="panel-title"> <center> CREATE NEW FLOW </center></h3>
+              </div>
+
+                <div class="panel-body">
+
+                  <form class="new-flow-form">
+                    
+                    
+
+                      <label>Source</label>
+
+                      <li class="dropdown user-dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-desktop"></i> SELCECT SOURCE <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                          <% _.each(terminals, function(terminal) { 
+                            if(terminal.get('active')==true){ %>
+
+                          <li><a href="#"> <%= terminal.get('hostName') %> </a></li>
+                              
+                          <%  }
+                            }); %>
+
+                        </ul>
+                      </li>
+
+                    
+                      <input name="src" type="text">
+                      <label>Destination</label>
+                      <input name="dst" type="text">
+                      <input type="" name="orgId" value="<%= orgId %>" />
+                      <hr />
+                     <center><button type="submit" class="btn btn-lg btn-success">CREATE</button></center>
+
+                  </form>
+
+                </div>
+              
+            </div>
+      </div>
+    </script>
+
+    <!-- EDIT ORG TEMPLATE -->
+    <script type="text/template" id="edit-org-template">
+
+      <div class="panel <%= organization ? 'panel-danger' : 'panel-success' %>">
+        <div class="panel-heading">
+          <h3 class="panel-title"> <center> <%= organization ? 'Edit' : 'New' %> Organization </center></h3>
+        </div>
+
+        <div class="panel-body">
+          <form class="form-horizontal edit-org-form" role="form">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="orgID" class="col-sm-4 control-label">ID</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" id="orgID" value="<%= organization ? organization.get('identifier') : '' %>"  >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="name" class="col-sm-4 control-label">Name</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="name" value="<%= organization ? organization.get('name') : '' %>" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="bankAccount" class="col-sm-4 control-label">Bank Account</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="bankAccount" value="<%= organization ? organization.get('bankAccount') : '' %>"  >
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="NIF" class="col-sm-4 control-label">CIF</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="NIF" value="<%= organization ? organization.get('NIF') : '' %>"  >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="orgPassword" class="col-sm-4 control-label">Password</label>
+                  <div class="col-sm-8">
+                    <input type="password" class="form-control" name="orgPassword"  >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="orgIsOam" class="col-sm-4 control-label">is OAM?</label>
+                  <div class="col-sm-8">
+                    <input type="checkbox" class="form-control" id="orgIsOam" checked="<%= organization ? organization.get('OAM') : '' %>" >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">    
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group">
+                  <center><button type="submit" class="btn btn-warning btn-lg">Save changes</button></center>
+                </div>
+              </div>
+            </div>
+          </form>  
+        </div>
+      </div>
+
+    </script>
+  <!-- /SHARED TEMPLATES -->
+
 	<!-- /TEMPLATES -->
 
 

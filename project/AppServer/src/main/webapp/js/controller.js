@@ -9,6 +9,22 @@
 		options.url = '/AppServer/webapp' + options.url;
 	});
 
+	//call serializeObject to convert to convert the form inputs to an object 
+	$.fn.serializeObject = function() {
+	  var o = {};
+	  var a = this.serializeArray();
+	  $.each(a, function() {
+	      if (o[this.name] !== undefined) {
+	          if (!o[this.name].push) {
+	              o[this.name] = [o[this.name]];
+	          }
+	          o[this.name].push(this.value || '');
+	      } else {
+	          o[this.name] = this.value || '';
+	      }
+	  });
+	  return o;
+	};
 
 //	Models
 	//TOrg data model  
@@ -26,7 +42,7 @@
 
 	//flow model  
 	var Flow = Backbone.Model.extend({
-		//urlRoot:'/manager/flow/all?orgId=',
+		urlRoot:'/manager/flow/',
 		defaults:{
 			identifier: "",
 			active: "",
@@ -237,15 +253,6 @@
 			$('#GS-alerts').slimScroll({
 				height: '100px'
 			});
-//			$('#GS-topo').slimScroll({
-//				height: '200px'
-//			});
-//			$('#GS-controller').slimScroll({
-//				height: '200px'
-//			});
-//			$('#GS-stats').slimScroll({
-//				height: '200px'
-//			});
 		}
 	});
 
@@ -275,6 +282,52 @@
 	var orgsListBSView = new OrgsListBSView();
 	// /Orgs List Bootstrap View
 
+
+	var NewOrgView = Backbone.View.extend({
+		el: '.page',
+		events: {
+			'submit .edit-org-form': 'saveOrg',
+			'click .delete': 'deleteOrg'
+		},
+		saveOrg: function (ev){
+			var orgDetails = $(ev.currentTarget).serializeObject();
+			console.log(orgDetails);
+			var org = new Organization();
+			org.urlRoot = '/manager/org/new';
+			org.save(orgDetails, {
+				success: function (org) {
+					router.navigate('adminOrgs/'+ev.orgId, {trigger: true});
+				}
+			});
+			return false;
+		},
+		deleteOrg: function (ev){
+			this.org.destroy({
+				success: function () {
+					router.navigate('adminOrgs',{triggq: true})
+				}
+			});
+			return false;
+		},
+		render: function (options) {
+			var that = this;
+			if(options.orgId){
+				that.org = new Organization({orgId: options.orgId});
+				that.org.fetch({
+					success: function (org){
+						var template = _.template($('#edit-org-template').html(), {organization: org});
+          				that.$el.html(template);
+					}
+				})
+			} else {
+	          var template = _.template($('#edit-org-template').html(), {organization: null});
+	          that.$el.html(template);
+	        } 
+
+		}
+	});
+
+	var newOrgView = new NewOrgView();
 	//OrgData View
 	var OrgDataView = Backbone.View.extend({
 		el: '.page',
@@ -460,7 +513,7 @@
 	var trafficView = new TrafficView();
 	// /TRAFFIC VIEW #traffic-template
 
-//CLIENT VIEWS
+// CLIENT VIEWS
 	//CLIENT SIDEBAR #client-sidebar-template
 	var ClientSidebarView = Backbone.View.extend({
 		el: '.sidebar-container',
@@ -554,6 +607,44 @@
 
 	var clientUsersView = new ClientUsersView();
 
+// SHARED VIEWS
+	var NewFlowView = Backbone.View.extend({
+		el: '.page',
+		render: function (options) {
+			var that = this;
+			var terminals = new Terminals ();
+			terminals.url = '/manager/terminal/all';
+			terminals.fetch({
+				success: function (terminals){
+					var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier});
+					that.$el.html(template);
+					$('#list-sele-terminals').slimScroll({
+					height: '100px'
+					});
+				}
+			});
+			
+		},
+		events: {
+			//'clickButton': 'doAction'
+			'submit .new-flow-form': 'createFlow'
+		},
+		createFlow: function (ev) { //event object to have access to the event just happened 
+			var flowDetails = $(ev.currentTarget).serializeObject();
+			var flow = new Flow();
+			flow.urlRoot = '/manager/flow/'+flowDetails.orgId+'/';
+			flow.save(flowDetails), { //SEND object to the server
+				success: function (flow) {
+					console.log(flow);
+					return false;
+				}
+			}
+			return false; //Avoid refresh after submit
+		}
+	});
+
+	var newFlowView = new NewFlowView();
+
 //	ROUTES 
 	var Router = Backbone.Router.extend({
 		routes: {
@@ -562,11 +653,13 @@
 			"adminOverview" : "adminOverview", //Admin First View
 			"adminOrgs": "adminOrgs", //Organizations list
 			"adminOrgs/:identifier": "orgData", //Org informtion
+			"newOrg": "editOrg",
 			"adminUsers/:identifier": "orgUsers", //Org users
 			"adminFlows/:identifier": "orgFlows", //active flows of specipic org
 			"adminPrgFlows/:identifier": "orgPrgFlows",	//programmed flows of specific org	
 			"adminTerminals/:identifier": "orgTerminals", //terminals of specific org
-			"adminFlows": "flows", //all the flows	
+			"adminFlows": "flows", //all the flows				
+			"adminFlows/:identifier": "flows", //all the flows	
 			"adminTerminals": "terminals",//all the terminals
 			"adminTraffic": "traffic",
 			//CLIENT ROUTES
@@ -575,7 +668,9 @@
 			"clientOrgUsers/:identifier": "clientOrgUsers",
 			"clientFlows/:identifier": "clientFlows",
 			"clientTerminals/:identifier": "clientTerminals",
-			"clientTraffic/:identifier": "clientTraffic"
+			"clientTraffic/:identifier": "clientTraffic",
+			//SHARED ROUTES
+			"newFlow/:identifier": "newFlow"
 		}
 	});
 
@@ -598,20 +693,15 @@
 			$('#GS-alerts').slimScroll({
 				height: '100px'
 			});
-//			$('#GS-topo').slimScroll({
-//				height: '200px'
-//			});
-//			$('#GS-controller').slimScroll({
-//				height: '200px'
-//			});
-//			$('#GS-stats').slimScroll({
-//				height: '200px'
-//			});
 		})
 
 		router.on('route:adminOrgs', function() {
 			adminSidebarView.render({btnHL: 2});
 			orgsListBSView.render();  
+		})
+
+		router.on('route:editOrg', function (id){
+			newOrgView.render({identifier: id});
 		})
 
 		router.on('route:orgData', function(id) {
@@ -634,9 +724,9 @@
 			orgTerminalsView.render({identifier: id});
 		})
 
-		router.on('route:flows', function() {
+		router.on('route:flows', function(id) {
 			adminSidebarView.render({btnHL: 3});
-			flowsView.render({all: true});
+			flowsView.render({identifier: id, all: true});
 		})
 
 		router.on('route:terminals', function() {
@@ -689,6 +779,12 @@
 		router.on('route:clientTraffic', function(id) {
 			clientSidebarView.render({btnHL: 5});
 			//clientTrafficView.render({identifier: id});
+		})
+
+	//SHARED
+		router.on('route:newFlow', function(id) {
+			newFlowView.render({identifier: id});
+			
 		})
 
 	Backbone.history.start();
