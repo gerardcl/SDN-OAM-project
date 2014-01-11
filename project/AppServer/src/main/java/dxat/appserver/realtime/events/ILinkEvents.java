@@ -1,4 +1,4 @@
-package dxat.appserver.realtime.interfaces;
+package dxat.appserver.realtime.events;
 
 public interface ILinkEvents {
 	public final static String LINK_UPDATED = "LINK_UPDATED";

@@ -1,25 +1,19 @@
 package dxat.appserver.topology;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
-import dxat.appserver.realtime.interfaces.Events.ILinkEvents;
+import dxat.appserver.realtime.events.ILinkEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.db.LinkTopologyDB;
-import dxat.appserver.topology.exceptions.CannotOpenDataBaseException;
-import dxat.appserver.topology.exceptions.LinkExistsException;
-import dxat.appserver.topology.exceptions.LinkKeyBadFormatException;
-import dxat.appserver.topology.exceptions.LinkNotFoundException;
-import dxat.appserver.topology.exceptions.PortNotFoundException;
-import dxat.appserver.topology.interfaces.ITopoLinkManager;
+import dxat.appserver.topology.exceptions.*;
 import dxat.appserver.topology.pojos.Link;
 import dxat.appserver.topology.pojos.LinkCollection;
 
-public class LinkManager implements ITopoLinkManager {
+import java.util.ArrayList;
+import java.util.List;
+
+public class LinkManager {
 	private static LinkManager instance = null;
 
 	public static LinkManager getInstance() {
@@ -84,7 +78,6 @@ public class LinkManager implements ITopoLinkManager {
 		return updates;
 	}
 
-	@Override
 	public LinkCollection getLinks() {
 		LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
 		LinkCollection linkCollection = null;
@@ -99,7 +92,6 @@ public class LinkManager implements ITopoLinkManager {
 		return linkCollection;
 	}
 
-	@Override
 	public Link getLink(String srcPortId, String dstPortId) {
 		LinkTopologyDB linkTopologyDB = new LinkTopologyDB();
 		Link link = null;

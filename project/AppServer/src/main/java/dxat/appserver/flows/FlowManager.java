@@ -2,7 +2,7 @@ package dxat.appserver.flows;
 
 import com.google.gson.Gson;
 import dxat.appserver.flows.exceptions.FlowNotFoundException;
-import dxat.appserver.realtime.interfaces.Events.IFlowEvents;
+import dxat.appserver.realtime.events.IFlowEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.flows.pojos.DeployedFlow;

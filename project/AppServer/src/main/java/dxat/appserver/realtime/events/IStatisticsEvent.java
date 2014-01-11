@@ -1,4 +1,4 @@
-package dxat.appserver.realtime.interfaces;
+package dxat.appserver.realtime.events;
 
 public interface IStatisticsEvent {
 	public final static String PUSH_STATS = "PUSH_STATS";

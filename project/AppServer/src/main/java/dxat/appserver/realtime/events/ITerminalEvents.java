@@ -1,4 +1,4 @@
-package dxat.appserver.realtime.interfaces.Events;
+package dxat.appserver.realtime.events;
 
 public interface ITerminalEvents {
 	public final static String TERMINAL_ADDED = "TERMINAL_ADDED";

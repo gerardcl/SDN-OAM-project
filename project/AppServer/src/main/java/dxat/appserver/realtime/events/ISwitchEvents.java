@@ -1,4 +1,4 @@
-package dxat.appserver.realtime.interfaces.Events;
+package dxat.appserver.realtime.events;
 
 public interface ISwitchEvents {
 	public final static String SWITCH_ADDED = "SWITCH_ADDED";

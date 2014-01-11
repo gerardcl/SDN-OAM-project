@@ -1,12 +1,10 @@
 package dxat.appserver.topology;
 
 import com.google.gson.Gson;
-import dxat.appserver.realtime.interfaces.IFlowEvents;
-import dxat.appserver.realtime.interfaces.IRTFlowManager;
+import dxat.appserver.realtime.events.IFlowEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.topology.db.DbUpdate;
 import dxat.appserver.topology.exceptions.FlowNotFoundException;
-import dxat.appserver.topology.interfaces.ITopoFlowManager;
 import dxat.appserver.topology.pojos.DeployedFlow;
 import dxat.appserver.topology.pojos.DeployedFlowCollection;
 
@@ -14,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FlowManager implements ITopoFlowManager, IRTFlowManager {
+public class FlowManager {
     private static FlowManager instance = null;
     private HashMap<String, DeployedFlow> flows = null;
 
@@ -55,7 +53,7 @@ public class FlowManager implements ITopoFlowManager, IRTFlowManager {
                 update.setPropertyId("enabled");
                 flows.remove(deployedFlow.getFlowId());
             }
-        } else if (eventStr.equals(IFlowEvents.PUSH_FLOW_DENIED)||eventStr.equals(IFlowEvents.DELETE_FLOW_FAILED)) {
+        } else if (eventStr.equals(IFlowEvents.PUSH_FLOW_DENIED) || eventStr.equals(IFlowEvents.DELETE_FLOW_FAILED)) {
             DeployedFlow deployedFlow = new Gson().fromJson(controllerEvent.getObject(),
                     DeployedFlow.class);
             if (flows.containsKey(deployedFlow.getFlowId())) {
@@ -71,7 +69,6 @@ public class FlowManager implements ITopoFlowManager, IRTFlowManager {
         return updateList;
     }
 
-    @Override
     public void addFlow(DeployedFlow flow) {
         try {
             this.updateFlow(flow);
@@ -81,7 +78,6 @@ public class FlowManager implements ITopoFlowManager, IRTFlowManager {
 
     }
 
-    @Override
     public void updateFlow(DeployedFlow updateFlow) throws FlowNotFoundException {
         if (!flows.containsKey(updateFlow.getFlowId()))
             throw new FlowNotFoundException("The flow with id '"
@@ -98,7 +94,6 @@ public class FlowManager implements ITopoFlowManager, IRTFlowManager {
 
     }
 
-    @Override
     public void disableFlow(String flowId) throws FlowNotFoundException {
         if (!flows.containsKey(flowId))
             throw new FlowNotFoundException("Flow with id '" + flowId
@@ -107,7 +102,6 @@ public class FlowManager implements ITopoFlowManager, IRTFlowManager {
 
     }
 
-    @Override
     public void enableFlow(String flowId) throws FlowNotFoundException {
         if (!flows.containsKey(flowId))
             throw new FlowNotFoundException("Flow with id '" + flowId
@@ -115,7 +109,6 @@ public class FlowManager implements ITopoFlowManager, IRTFlowManager {
         flows.get(flowId).setEnabled(false);
     }
 
-    @Override
     public DeployedFlowCollection getFlows() {
         List<DeployedFlow> flowList = new ArrayList<DeployedFlow>(flows.values());
         DeployedFlowCollection flowCollection = new DeployedFlowCollection();
@@ -123,7 +116,6 @@ public class FlowManager implements ITopoFlowManager, IRTFlowManager {
         return flowCollection;
     }
 
-    @Override
     public DeployedFlow getFlow(String flowId) {
         return flows.get(flowId);
     }

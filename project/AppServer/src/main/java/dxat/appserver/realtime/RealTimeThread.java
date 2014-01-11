@@ -3,7 +3,7 @@ package dxat.appserver.realtime;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import dxat.appserver.realtime.interfaces.IServerRequests;
-import dxat.appserver.realtime.interfaces.Events.IStatisticsEvent;
+import dxat.appserver.realtime.events.IStatisticsEvent;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.realtime.pojos.RealTimeEvent;
 import dxat.appserver.realtime.pojos.ServerRequest;
