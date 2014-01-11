@@ -101,10 +101,40 @@ public class OrgManager {
 		//Quering Org from database
 		return null;
 	}
-	public void addOrg(TOrg id){
-		//Adding TOrg in database
+	public TOrg addTOrg(TOrg torg){
+		dbcreate = new Create();
+		TOrg newtorg = new TOrg();
+		newtorg.setBankAccount(torg.getBankAccount());
+		newtorg.setName(torg.getName());
+		newtorg.setNIF(torg.getNIF());
+		newtorg.setOAM(torg.isOAM());
+		newtorg.setTelephone(torg.getTelephone());
+		newtorg.setIdentifier(Integer.toString(torg.getName().hashCode()));
+		try {
+			dbcreate.createOrg(newtorg);
+			torgs.put(newtorg.getIdentifier(), newtorg);
+			addOrg(newtorg);
+			System.out.println("new org created with id "+newtorg.getIdentifier()+" and name "+newtorg.getName());
+			return newtorg;
+		} catch (OrgAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
-	public TOrg delete(String id){
+	public void addOrg(TOrg torg){
+		Org neworg = new Org();
+		neworg.setBankAccount(torg.getBankAccount());
+		neworg.setName(torg.getName());
+		neworg.setIdentifier(torg.getIdentifier());
+		neworg.setNIF(torg.getNIF());
+		neworg.setOAM(torg.isOAM());
+		neworg.setTelephone(torg.getTelephone());
+		neworg.setTorg(torg);
+		orgs.put(neworg.getIdentifier(), neworg);
+	}
+	
+	public TOrg deleteOrg(String id){
 		//Deleting TOrg from database
 		return null;
 	}
@@ -117,8 +147,13 @@ public class OrgManager {
 		//TODO
 		return org;
 	}
-	public boolean existOrg(OrgTerminal orgT){
-		//TODO
+	public boolean existOrg(TOrg org){
+		for (Entry<String, TOrg> entry1 : torgs.entrySet()) {
+			TOrg torg = entry1.getValue();
+			System.out.println("searching if org "+org.getName()+" exists");
+			if(org.getName().equals(torg.getName())) return true;
+		}
+		System.out.println("this org does not exists");
 		return false;
 	}
 	private String getOrgIdFromUserId(String userId){
@@ -157,6 +192,8 @@ public class OrgManager {
 		return null;
 	}
 	
+	
+	//INIT MANAGER
 	private void initOrgManager(){
 		if(dbExists){	//CREATE ORGS FROM EXISTING DB
 			dbread = new Read();
