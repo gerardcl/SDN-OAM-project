@@ -293,7 +293,7 @@
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			console.log(orgDetails);
 			var org = new Organization();
-			org.urlRoot = '/manager/org/new';
+			org.urlRoot = '/manager/org';
 			org.save(orgDetails, {
 				success: function (org) {
 					router.navigate('adminOrgs/'+ev.orgId, {trigger: true});
