@@ -7,3 +7,4 @@
 *.war
 *.ear
 .DS_Store
+project/AppServer/.idea
