@@ -264,6 +264,7 @@ var selectedPort = "";
 var selectedParam = "";
 var selectedValueType = "";
 var selectedTimeInterval = "";
+var valueSuffix = " Bytes/s";
 var refreshIntervalId;
 
 function replaceOneChar(s,c,n){
@@ -302,7 +303,7 @@ function byHourGraph(){
 		},
 		tooltip: {
 			shared: true,
-			valueSuffix: ' Bytes/s',
+			valueSuffix: valueSuffix,
 			crosshairs: [true, true]
 		},
 		credits: {
@@ -416,7 +417,7 @@ function byMinuteGraph(){
 		},
 		tooltip: {
 			shared: true,
-			valueSuffix: ' Bytes/s',
+			valueSuffix: valueSuffix,
 			crosshairs: [true, true]
 		},
 		credits: {
@@ -431,7 +432,7 @@ function byMinuteGraph(){
 		series: [{
 			name: data.parameter,
 			data: data.valueAxxis,
-                      	color: '#AA0000'
+            color: '#AA0000'
 		}]
 
 	});
@@ -548,7 +549,7 @@ function bySecondGraph(){
 		},
 		tooltip: {
 			shared: true,
-			valueSuffix: ' Bytes/s',
+			valueSuffix: valueSuffix,
 			crosshairs: [true, true],
 			valueDecimals: 2
 		},
@@ -563,7 +564,7 @@ function bySecondGraph(){
 		series: [{
 			name: data.parameter,
 			data: valueData,
-                        color: '#0000AA'
+            color: '#0000AA'
 		}]
 
 	});
@@ -648,6 +649,7 @@ function loadDefaultStatValues(){
 	selectedParam = "receiveBytes"; //default value
 	selectedValueType = "AVERAGE";  //devault value
 	selectedTimeInterval = "hour";  //devault value
+	valueSuffix = " Bytes/s";
 	$("#bparam").html('receiveBytes <span class="caret"></span>');
 	$("#bvaluetype").html('AVERAGE <span class="caret"></span>');
 	$("#btinterval").html('Last hour <span class="caret"></span>');
@@ -663,6 +665,34 @@ function printPortGraph(){
 		console.log("Port ID: ");
 		console.log(selectedPort);
 		console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
+		switch(selectedParam){
+			case "receivePackets": valueSuffix = " Packets/s";
+				break;
+			case "transmitPackets": valueSuffix = " Packets/s";
+				break;
+			case "receiveBytes": valueSuffix = " Bytes/s";
+				break;
+			case "transmitBytes": valueSuffix = " Bytes/s";
+				break;
+			case "receiveDropped": valueSuffix = " Packets/s";
+				break;
+			case "transmitDropped": valueSuffix = " Packets/s";
+				break;
+			case "receiveErrors": valueSuffix = " Packets/s";
+				break;
+			case "transmitErrors": valueSuffix = " Packets/s";
+				break;
+			case "receiveFrameErrors": valueSuffix = " Packets/s";
+				break;
+			case "receiveOverrunErrors": valueSuffix = " Packets/s";
+				break;
+			case "receiveCRCErrors": valueSuffix = " Packets/s";
+				break;
+			case "collisions": valueSuffix = " Packets/s";
+				break;
+			default : valueSuffix = " Bytes/s";
+				break;
+		}
 
 		if(selectedTimeInterval == "hour") byHourGraph();
 		if(selectedTimeInterval == "minute") byMinuteGraph();
