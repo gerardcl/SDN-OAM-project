@@ -291,7 +291,8 @@
 				type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.org.collection+json",
 				success: function (ev) {
-					router.navigate('adminOrgs/'+ev.orgId, {trigger: true});
+					if(ev.attributes.identifier == "") alert("this org already exists");
+					else router.navigate('adminOrgs/'+ev.attributes.identifier, {trigger: true});
 				}
 			});
 			return false;
@@ -306,8 +307,9 @@
 		},
 		render: function (options) {
 			var that = this;
-			if(options.orgId){
-				that.org = new Organization({orgId: options.orgId});
+			if(options.identifier){
+				// "id" is what backbone takes to GET REST path
+				that.org = new Organization({id: options.identifier});
 				that.org.fetch({
 					success: function (org){
 						var template = _.template($('#edit-org-template').html(), {organization: org});
@@ -323,6 +325,7 @@
 	});
 
 	var newOrgView = new NewOrgView();
+
 	//OrgData View
 	var OrgDataView = Backbone.View.extend({
 		el: '.page',
@@ -338,10 +341,10 @@
 						var template = _.template($('#organizations-data-template').html(), {organization: organization});
 						that.$el.html(template); 
 						//SlimScroll
-						$('#OM-data').slimScroll({
+/*						$('#OM-data').slimScroll({
 							height: '190px'
 						});
-					}
+*/					}
 				});
 			} else {
 				var template = _.template($('#organizations-data-template').html(), {organization: null});
@@ -613,9 +616,6 @@
 				success: function (terminals){
 					var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier});
 					that.$el.html(template);
-					$('#list-sele-terminals').slimScroll({
-					height: '100px'
-					});
 				}
 			});
 			
@@ -648,13 +648,13 @@
 			"adminOverview" : "adminOverview", //Admin First View
 			"adminOrgs": "adminOrgs", //Organizations list
 			"adminOrgs/:identifier": "orgData", //Org informtion
-			"newOrg": "editOrg",
+			"newOrg": "editOrg", // CREATE Org
+			"editOrg/:identifier": "editOrg", //EDIT Org template (same as CREATE)
 			"adminUsers/:identifier": "orgUsers", //Org users
 			"adminFlows/:identifier": "orgFlows", //active flows of specipic org
+			"adminFlows": "flows", //active flows of specipic org
 			"adminPrgFlows/:identifier": "orgPrgFlows",	//programmed flows of specific org	
 			"adminTerminals/:identifier": "orgTerminals", //terminals of specific org
-			"adminFlows": "flows", //all the flows				
-			"adminFlows/:identifier": "flows", //all the flows	
 			"adminTerminals": "terminals",//all the terminals
 			"adminTraffic": "traffic",
 			//CLIENT ROUTES
@@ -695,7 +695,7 @@
 			orgsListBSView.render();  
 		});
 
-		router.on('route:editOrg', function (id){
+		router.on('route:editOrg', function(id) {
 			newOrgView.render({identifier: id});
 		});
 
