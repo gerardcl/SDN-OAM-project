@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import scala.util.parsing.json.JSON;
 import dxat.appserver.manager.OrgManager;
 import dxat.appserver.manager.pojos.Org;
 import dxat.appserver.manager.pojos.OrgCollection;
@@ -61,6 +62,7 @@ public class OrgResource {
 	@Produces(AppServerMediaType.ORG_COLLECTION)
 	public TOrg insertTOrg(TOrg torg){
 		System.out.println("trying to insert new org");
+		
 		if(orgManager.existOrg(torg))return null;
 		return orgManager.addTOrg(torg);
 	}

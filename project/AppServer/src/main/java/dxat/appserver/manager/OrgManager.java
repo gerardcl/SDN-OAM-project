@@ -119,8 +119,8 @@ public class OrgManager {
 		} catch (OrgAlreadyExistsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 	public void addOrg(TOrg torg){
 		Org neworg = new Org();
