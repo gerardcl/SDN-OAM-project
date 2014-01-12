@@ -266,6 +266,13 @@ var selectedValueType = "";
 var selectedTimeInterval = "";
 var refreshIntervalId;
 
+function replaceOneChar(s,c,n){
+	console.log("replacing char ( "+ c+") of string:");
+	console.log(s);
+	var re = new RegExp('^(.{'+ --n +'}).(.*)$','');
+	return s.replace(re,'$1'+c+'$2');
+};
+
 function byHourGraph(){
 	//Petició REST de les dades inicials
 	var data = getData();
@@ -318,8 +325,8 @@ function byHourGraph(){
 	//j es podra esborrar
 	var j=0;
 	refreshIntervalId = setInterval(function() {
-		refresh();  
-	},90000);
+		refresh();
+	},62000);
 
 	function refresh() {
 		//PART A: Aquesta part es podra esborrar en integrarse completament
@@ -335,13 +342,13 @@ function byHourGraph(){
 		var chart = $('#statisticsGraph').highcharts();
 		timeAxis=getXAxis(data2.timeAxxis);
 		chart.xAxis[0].setCategories(timeAxis);
-		chart.series[0].setData(data2.valueAxxis);		
+		chart.series[0].setData(data2.valueAxxis);
 	}
 
 	/*funció de petició (no passa)REST. Per ara es static*/
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/MAX/hour";
+		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/AVERAGE/hour";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -363,14 +370,17 @@ function byHourGraph(){
 			error: function(xhr, msg) {
 				console.log("PARSING ERROR MSG");
 				console.log(xhr.responseText);
-				datastats = JSON.parse(xhr.responseText);
+				var ds = replaceOneChar(xhr.responseText,'0',xhr.responseText.length-4);
+				ds = replaceOneChar(ds,'.',ds.length-3);
+				ds = replaceOneChar(ds,'0',ds.length-2);
+				datastats = JSON.parse(ds);
 				//console.log(msg + '\n' + xhr.responseText);
 				console.log("RX DATA STATS");
 				console.log(datastats);
 				if(!datastats){
 					console.log("getting stats!!");
 					//datastats = $.parseJSON(xhr.responseText);
-				}
+				}else console.log("not !!!!!!getting stats!!");
 			}
 		});
 		//		Tractament de dades obtingudes
@@ -400,73 +410,73 @@ function byMinuteGraph(){
 	timeAxis=getXAxis(data.timeAxxis);
 
 	$('#statisticsGraph').highcharts({
-        chart: {
-            type: 'areaspline',
-            animation: false,
-        },
-        title: {
-            text: data.parameter+' on port: ' +data.idObject
-        },
-       	legend: {
-            x: 0,
-            y: 300,
-        },
-        xAxis: {
-        	tickPixelInterval: 1500,
-            categories: timeAxis,
-        },
-        yAxis: {
-            title: {
-                text: data.parameter
-            }
-        },
-        tooltip: {
-            shared: true,
-            valueSuffix: ' Bytes/s',
-            crosshairs: [true, true]
-        },
-        credits: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.5
-            },
+		chart: {
+			type: 'areaspline',
+			animation: false,
+		},
+		title: {
+			text: data.parameter+' on port: ' +data.idObject
+		},
+		legend: {
+			x: 0,
+			y: 300,
+		},
+		xAxis: {
+			tickPixelInterval: 1500,
+			categories: timeAxis,
+		},
+		yAxis: {
+			title: {
+				text: data.parameter
+			}
+		},
+		tooltip: {
+			shared: true,
+			valueSuffix: ' Bytes/s',
+			crosshairs: [true, true]
+		},
+		credits: {
+			enabled: false
+		},
+		plotOptions: {
+			areaspline: {
+				fillOpacity: 0.5
+			},
 
-        },
-        series: [{
-            name: data.parameter,
-            data: data.valueAxxis
-        }]
-		      
-    });
-    //j es podra esborrar
+		},
+		series: [{
+			name: data.parameter,
+			data: data.valueAxxis
+		}]
+
+	});
+	//j es podra esborrar
 	var j=0;
 	refreshIntervalId = setInterval(function() {
-	    refresh();  
-	},5000);
+		refresh();
+	},62000);
 
 	function refresh() {
 		//PART A: Aquesta part es podra esborrar en integrarse completament
 		j++;
 		if((j % 2)==0){
 			var data2= getData();
-			
+
 		}else{
-		//FINAL PART A
+			//FINAL PART A
 			var data2= getData();
-			
+
 		}
 		var chart = $('#statisticsGraph').highcharts();
 		timeAxis=getXAxis(data2.timeAxxis);
 		chart.xAxis[0].setCategories(timeAxis);
-		chart.series[0].setData(data2.valueAxxis);		
+		chart.series[0].setData(data2.valueAxxis);
 	}
-	
+
 	/*funció de petició (no passa)REST. Per ara es static*/
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/MAX/minute";
+		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/AVERAGE/minute";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -488,7 +498,10 @@ function byMinuteGraph(){
 			error: function(xhr, msg) {
 				console.log("PARSING ERROR MSG");
 				console.log(xhr.responseText);
-				datastats = JSON.parse(xhr.responseText);
+                                var ds = replaceOneChar(xhr.responseText,'0',xhr.responseText.length-4);
+                                ds = replaceOneChar(ds,'.',ds.length-3);
+                                ds = replaceOneChar(ds,'0',ds.length-2);
+                                datastats = JSON.parse(ds);
 				//console.log(msg + '\n' + xhr.responseText);
 				console.log("RX DATA STATS");
 				console.log(datastats);
@@ -588,11 +601,11 @@ function bySecondGraph(){
 	var RefreshChart = 60;
 	lastTime=data.timeAxxis[0];
 	refreshIntervalId = setInterval(function() {
-		refresh();  
+		refresh();
 	},1000);
 
 
-	function refresh() {			
+	function refresh() {
 		//PART A: PART QUAN ESTIGUI INTEGRAT ES ESBORRABLE
 		var data2 = getData();
 		lastTime = data2.timeAxxis[0];
@@ -627,7 +640,7 @@ function bySecondGraph(){
 
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/MAX/second";
+		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/AVERAGE/second";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
