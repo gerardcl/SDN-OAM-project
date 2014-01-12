@@ -244,7 +244,7 @@
 			that.$el.html(template);
 			//SlimScroll HEIGHTS
 			$('#GS-alerts').slimScroll({
-				height: '100px'
+				height: '180px'
 			});
 		}
 	});
@@ -690,7 +690,7 @@
 			initStatusOverview();
 			//SlimScroll HEIGHTS
 			$('#GS-alerts').slimScroll({
-				height: '100px'
+				height: '180px'
 			});
 		});
 

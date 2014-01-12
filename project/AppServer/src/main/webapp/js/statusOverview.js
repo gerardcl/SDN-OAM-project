@@ -238,9 +238,9 @@ function createTopologyGraph(){
 		for (var i = d.ports.length-1 ; i >= 0 ; i--) {
 			portList += "<li class='list-group-item' id='port' onclick='showPortStats();' style='width: 100%; height: 42px; margin: 0 auto; font-size:100%;' >"+ d.ports[i].portId+"</li>";
 		}
-		var packetCount = "45";
-		var byteCount = "1.2k";
-		var flowCount = "2";
+		var packetCount = "loading...";
+		var byteCount = "loading...";
+		var flowCount = "loading...";
 		$("#switchInfo").html(switchInfo);
 		$("#packetCount").html(packetCount);
 		$("#byteCount").html(byteCount);
@@ -248,6 +248,7 @@ function createTopologyGraph(){
 		$("#portList").html(portList);
 		loadDefaultStatValues();
 		$("#statistics").show();
+		InitSwitchStats(d.swId);
 	});
 
 	term.on("click", function(d) {
@@ -265,14 +266,112 @@ var selectedParam = "";
 var selectedValueType = "";
 var selectedTimeInterval = "";
 var valueSuffix = " Bytes/s";
-var refreshIntervalId;
+var refreshIntervalIdPort;
+var refreshIntervalIdSwitch;
 
-function replaceOneChar(s,c,n){
-	console.log("replacing char ( "+ c+") of string:");
-	console.log(s);
-	var re = new RegExp('^(.{'+ --n +'}).(.*)$','');
-	return s.replace(re,'$1'+c+'$2');
-};
+function InitSwitchStats(idSwitch){
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/packetCount/MAX/second
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/byteCount/MAX/second
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/flowCount/MAX/second
+	var sitchTimeIntervalUpdate = 5000; //1 second per update
+	refreshIntervalIdSwitch = setInterval(function() {
+		$("#packetCount").html(getpacketCountData());
+		$("#byteCount").html(getbyteCountData());
+		$("#flowCount").html(getflowCountData());
+	},sitchTimeIntervalUpdate);
+	
+	function getpacketCountData(){
+		var datastats = {};
+		var datastatsuri = "/AppServer/webapp/statistics/switch/"+idSwitch+"/packetCount/MAX/second";
+		$.ajaxSetup({
+			async : false
+		}); //execute synchronously
+
+		console.log("GETTING STATS");
+		$.ajax({
+			type: "GET",
+			url: datastatsuri,
+			//contentType: 'json',
+			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+			//headers: {
+			//	Accept : "application/vmd.dxat.appserver.stats+json"
+			//},
+			success : function(result) {
+				datastats = result;
+			},
+			error: function(xhr, msg) {
+				var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+				datastats = JSON.parse(rplcd);
+			}
+		});
+		//		Tractament de dades obtingudes
+		$.ajaxSetup({
+			async : true
+		}); //execute asynchronously
+		return datastats.valueAxxis[0];
+	}
+	function getbyteCountData(){
+		var datastats = {};
+		var datastatsuri = "/AppServer/webapp/statistics/switch/"+idSwitch+"/byteCount/MAX/second";
+		$.ajaxSetup({
+			async : false
+		}); //execute synchronously
+
+		console.log("GETTING STATS");
+		$.ajax({
+			type: "GET",
+			url: datastatsuri,
+			//contentType: 'json',
+			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+			//headers: {
+			//	Accept : "application/vmd.dxat.appserver.stats+json"
+			//},
+			success : function(result) {
+				datastats = result;
+			},
+			error: function(xhr, msg) {
+				var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+				datastats = JSON.parse(rplcd);
+			}
+		});
+		//		Tractament de dades obtingudes
+		$.ajaxSetup({
+			async : true
+		}); //execute asynchronously
+		return datastats.valueAxxis[0];
+	}
+	function getflowCountData(){
+		var datastats = {};
+		var datastatsuri = "/AppServer/webapp/statistics/switch/"+idSwitch+"/flowCount/MAX/second";
+		$.ajaxSetup({
+			async : false
+		}); //execute synchronously
+
+		console.log("GETTING STATS");
+		$.ajax({
+			type: "GET",
+			url: datastatsuri,
+			//contentType: 'json',
+			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+			//headers: {
+			//	Accept : "application/vmd.dxat.appserver.stats+json"
+			//},
+			success : function(result) {
+				datastats = result;
+			},
+			error: function(xhr, msg) {
+				var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+				datastats = JSON.parse(rplcd);
+			}
+		});
+		//		Tractament de dades obtingudes
+		$.ajaxSetup({
+			async : true
+		}); //execute asynchronously
+		return datastats.valueAxxis[0];
+	}
+	
+}
 
 function byHourGraph(){
 	//Petició REST de les dades inicials
@@ -293,7 +392,7 @@ function byHourGraph(){
 			y: 300,
 		},
 		xAxis: {
-			tickPixelInterval: 1500,
+			tickPixelInterval: 1920,
 			categories: timeAxis,
 		},
 		yAxis: {
@@ -324,7 +423,7 @@ function byHourGraph(){
 	});
 	//j es podra esborrar
 	var j=0;
-	refreshIntervalId = setInterval(function() {
+	refreshIntervalIdPort = setInterval(function() {
 		refresh();
 	},62000);
 
@@ -407,7 +506,7 @@ function byMinuteGraph(){
 			y: 300,
 		},
 		xAxis: {
-			tickPixelInterval: 1500,
+			tickPixelInterval: 1920,
 			categories: timeAxis,
 		},
 		yAxis: {
@@ -438,7 +537,7 @@ function byMinuteGraph(){
 	});
 	//j es podra esborrar
 	var j=0;
-	refreshIntervalId = setInterval(function() {
+	refreshIntervalIdPort = setInterval(function() {
 		refresh();
 	},62000);
 
@@ -572,7 +671,7 @@ function bySecondGraph(){
 	var j=0;
 	var RefreshChart = 60;
 	lastTime=data.timeAxxis[0];
-	refreshIntervalId = setInterval(function() {
+	refreshIntervalIdPort = setInterval(function() {
 		refresh();
 	},1000);
 
@@ -642,7 +741,9 @@ function bySecondGraph(){
 }
 
 function loadDefaultStatValues(){
-	clearInterval(refreshIntervalId);
+	clearInterval(refreshIntervalIdPort);
+	clearInterval(refreshIntervalIdSwitch);
+
 	$('#textgraph').show();
 	$('#statisticsGraph').hide();
 	selectedPort = "";
@@ -656,7 +757,8 @@ function loadDefaultStatValues(){
 }
 
 function printPortGraph(){
-	clearInterval(refreshIntervalId);
+	clearInterval(refreshIntervalIdPort);
+	clearInterval(refreshIntervalIdSwitch);
 
 	if(selectedPort != ""){
 		$('#textgraph').hide();
