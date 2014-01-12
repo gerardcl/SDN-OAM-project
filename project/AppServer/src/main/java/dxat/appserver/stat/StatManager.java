@@ -58,9 +58,9 @@ public class StatManager {
 			if (rrdDb.getLastUpdateTime() == Util.getTime())
 				return;
 			Sample sample = rrdDb.createSample();
-			sample.setValue("CpuAvg", statcollection.getControllerStat()
+			sample.setValue("CpuAvg!", statcollection.getControllerStat()
 					.getCpuAvg());
-			sample.setValue("MemoryPCT", statcollection.getControllerStat()
+			sample.setValue("MemoryPCT!", statcollection.getControllerStat()
 					.getMemoryPct());
 			sample.update();
 			db.getRrdDbPool().release(rrdDb);
@@ -82,9 +82,9 @@ public class StatManager {
 				if (rrdDb.getLastUpdateTime() == Util.getTime())
 					return;
 				Sample sample = rrdDb.createSample();
-				sample.setValue("packetCount", sw.getPacketCount());
-				sample.setValue("byteCount", sw.getByteCount());
-				sample.setValue("flowCount", sw.getFlowCount());
+				sample.setValue("packetCount!", sw.getPacketCount());
+				sample.setValue("byteCount!", sw.getByteCount());
+				sample.setValue("flowCount!", sw.getFlowCount());
 				sample.update();
 				db.getRrdDbPool().release(rrdDb);
 			}
@@ -105,20 +105,20 @@ public class StatManager {
 				if (rrdDb.getLastUpdateTime() == Util.getTime())
 					return;
 				Sample sample = rrdDb.createSample();
-				sample.setValue("receivePackets", port.getReceivePackets());
-				sample.setValue("transmitPackets", port.getTransmitPackets());
-				sample.setValue("receiveBytes", port.getReceiveBytes());
-				sample.setValue("transmitBytes", port.getTransmitBytes());
-				sample.setValue("receiveDropped", port.getReceiveDropped());
-				sample.setValue("transmitDropped", port.getTransmitDropped());
-				sample.setValue("receiveErrors", port.getReceiveErrors());
-				sample.setValue("transmitErrors", port.getTransmitErrors());
-				sample.setValue("receiveFrameErrors",
+				sample.setValue("receivePackets!", port.getReceivePackets());
+				sample.setValue("transmitPackets!", port.getTransmitPackets());
+				sample.setValue("receiveBytes!", port.getReceiveBytes());
+				sample.setValue("transmitBytes!", port.getTransmitBytes());
+				sample.setValue("receiveDropped!", port.getReceiveDropped());
+				sample.setValue("transmitDropped!", port.getTransmitDropped());
+				sample.setValue("receiveErrors!", port.getReceiveErrors());
+				sample.setValue("transmitErrors!", port.getTransmitErrors());
+				sample.setValue("receiveFrameErrors!",
 						port.getReceiveFrameErrors());
-				sample.setValue("receiveOverrunErrors",
+				sample.setValue("receiveOverrunError!",
 						port.getReceiveOverrunErrors());
-				sample.setValue("receiveCRCErrors", port.getReceiveCRCErrors());
-				sample.setValue("collisions", port.getCollisions());
+				sample.setValue("receiveCRCErrors!", port.getReceiveCRCErrors());
+				sample.setValue("collisions!", port.getCollisions());
 				sample.update();
 				db.getRrdDbPool().release(rrdDb);
 			}
@@ -141,8 +141,8 @@ public class StatManager {
 				if (rrdDb.getLastUpdateTime() == Util.getTime())
 					return;
 				Sample sample = rrdDb.createSample();
-				sample.setValue("packetCount", flowStat.getPacketCount());
-				sample.setValue("byteCount", flowStat.getByteCount());
+				sample.setValue("packetCount!", flowStat.getPacketCount());
+				sample.setValue("byteCount!", flowStat.getByteCount());
 				sample.update();
 				db.getRrdDbPool().release(rrdDb);
 			}
@@ -156,8 +156,8 @@ public class StatManager {
 				+ db.convertId(itemId) + ".switch.rrd";
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
-		long start = getTimeStampGran(granularity);
-		long end = actualTimeStamp;
+		long start = getTimeStampGran(granularity)-1;
+		long end = actualTimeStamp-1;
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 
@@ -190,8 +190,8 @@ public class StatManager {
 				+ db.convertId(itemId) + ".flow.rrd";
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
-		long start = getTimeStampGran(granularity);
-		long end = actualTimeStamp;
+		long start = getTimeStampGran(granularity)-1;
+		long end = actualTimeStamp-1;
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 
@@ -220,8 +220,8 @@ public class StatManager {
 				+"controller.rrd";
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
-		long start = getTimeStampGran(granularity);
-		long end = actualTimeStamp;
+		long start = getTimeStampGran(granularity)-1;
+		long end = actualTimeStamp-1;
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 
@@ -250,8 +250,8 @@ public class StatManager {
 				+ db.convertId(itemId) + ".port.rrd";
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
-		long start = getTimeStampGran(granularity);
-		long end = actualTimeStamp;
+		long start = getTimeStampGran(granularity)-1;
+		long end = actualTimeStamp-1;
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 

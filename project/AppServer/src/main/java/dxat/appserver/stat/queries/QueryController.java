@@ -25,9 +25,9 @@ public class QueryController {
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-        request.setFilter("CpuAvg");
+        request.setFilter("CpuAvg!");
         FetchData fetchData = request.fetchData();
-		return fetchData.getValues("CpuAvg");
+		return fetchData.getValues("CpuAvg!");
 	}
 	
 	public static double[] getMemoryPct(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
@@ -35,10 +35,10 @@ public class QueryController {
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("MemoryPCT");
+		request.setFilter("MemoryPCT!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("MemoryPCT");
+		return fetchData.getValues("MemoryPCT!");
 		
 	}
 

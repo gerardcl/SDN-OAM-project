@@ -29,8 +29,8 @@ public class DBAccess {
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
-		rrdDef.addDatasource("CpuAvg", GAUGE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("MemoryPCT", GAUGE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("CpuAvg!", GAUGE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("MemoryPCT!", GAUGE, 600, 0, Double.NaN);
 		rrdDef.addArchive(AVERAGE, 0.5, 1, 60);
 		rrdDef.addArchive(AVERAGE, 0.5, 60, 1140);
 		rrdDef.addArchive(AVERAGE, 0.5, 3600, 24);
@@ -49,18 +49,18 @@ public class DBAccess {
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
-		rrdDef.addDatasource("receivePackets", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("transmitPackets", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("receiveBytes", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("transmitBytes", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("receiveDropped", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("transmitDropped", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("receiveErrors", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("transmitErrors", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("receiveFrameErrors", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("receiveOverrunErrors", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("receiveCRCErrors", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("collisions", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("receivePackets!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("transmitPackets!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("receiveBytes!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("transmitBytes!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("receiveDropped!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("transmitDropped!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("receiveErrors!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("transmitErrors!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("receiveFrameErrors!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("receiveOverrunError!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("receiveCRCErrors!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("collisions!", DERIVE, 600, 0, Double.NaN);
 
 		rrdDef.addArchive(AVERAGE, 0.5, 1, 60);
 		rrdDef.addArchive(AVERAGE, 0.5, 60, 1140);
@@ -81,9 +81,9 @@ public class DBAccess {
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
-		rrdDef.addDatasource("packetCount", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("byteCount", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("flowCount", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("packetCount!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("byteCount!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("flowCount!", DERIVE, 600, 0, Double.NaN);
 		rrdDef.addArchive(AVERAGE, 0.5, 1, 60);
 		rrdDef.addArchive(AVERAGE, 0.5, 60, 1140);
 		rrdDef.addArchive(AVERAGE, 0.5, 3600, 24);
@@ -102,8 +102,8 @@ public class DBAccess {
 
 		RrdDef rrdDef = new RrdDef(path, start - 1, 1);
 		rrdDef.setVersion(2);
-		rrdDef.addDatasource("packetCount", DERIVE, 600, 0, Double.NaN);
-		rrdDef.addDatasource("byteCount", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("packetCount!", DERIVE, 600, 0, Double.NaN);
+		rrdDef.addDatasource("byteCount!", DERIVE, 600, 0, Double.NaN);
 		rrdDef.addArchive(AVERAGE, 0.5, 1, 60);
 		rrdDef.addArchive(AVERAGE, 0.5, 60, 1140);
 		rrdDef.addArchive(AVERAGE, 0.5, 3600, 24);
