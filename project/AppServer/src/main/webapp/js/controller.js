@@ -687,6 +687,7 @@
 			// render global view
 			adminOverviewView.render();
 			loadDefaultStatValues();
+			StopSwitchStats();
 			initStatusOverview();
 			//SlimScroll HEIGHTS
 			$('#GS-alerts').slimScroll({
@@ -696,48 +697,57 @@
 
 		router.on('route:adminOrgs', function() {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			adminSidebarView.render({btnHL: 2});
 			orgsListBSView.render();  
 		});
 
 		router.on('route:editOrg', function(id) {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			newOrgView.render({identifier: id});
 		});
 
 		router.on('route:orgData', function(id) {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			orgDataView.render({identifier: id});
 		});
 
 		router.on('route:orgUsers', function(id) {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			orgUsersView.render({identifier: id});
 		});
 
 		router.on('route:orgFlows', function(id) {	
 			loadDefaultStatValues();
+			StopSwitchStats();
 			orgFlowsView.render({identifier: id, active: true});
 		});
 
 		router.on('route:orgPrgFlows', function(id) {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			orgFlowsView.render({identifier: id, active: false});
 		});
 
 		router.on('route:orgTerminals', function(id) {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			orgTerminalsView.render({identifier: id});
 		});
 
 		router.on('route:flows', function(id) {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			adminSidebarView.render({btnHL: 3});
 			flowsView.render({identifier: id, all: true});
 		});
 
 		router.on('route:terminals', function() {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			adminSidebarView.render({btnHL: 4});
 			terminalsView.render({all: true});
 		});
@@ -745,6 +755,7 @@
 
 		router.on('route:traffic', function() {
 			loadDefaultStatValues();
+			StopSwitchStats();
 			adminSidebarView.render({btnHL: 5});
 			trafficView.render();
 		});

@@ -230,6 +230,8 @@ function createTopologyGraph(){
 	});
 
 	node.on("click", function(d) {
+		StopSwitchStats();
+		
 		console.log("node " + d.swId + " was clicked");
 		var switchInfo = "<h4> Switch info</h4>";
 		switchInfo += "<b>ID:</b>  "+d.swId+"<p>";
@@ -268,17 +270,29 @@ var selectedTimeInterval = "";
 var valueSuffix = " Bytes/s";
 var refreshIntervalIdPort;
 var refreshIntervalIdSwitch;
+var refreshLoadingSSTATS;
 
+function StopSwitchStats(){
+	clearInterval(refreshIntervalIdSwitch);
+	clearInterval(refreshLoadingSSTATS);
+}
 function InitSwitchStats(idSwitch){
 	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/packetCount/MAX/second
 	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/byteCount/MAX/second
 	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/flowCount/MAX/second
 	var sitchTimeIntervalUpdate = 5000; //1 second per update
 	refreshIntervalIdSwitch = setInterval(function() {
+		clearInterval(refreshLoadingSSTATS);
 		$("#packetCount").html(getpacketCountData());
 		$("#byteCount").html(getbyteCountData());
 		$("#flowCount").html(getflowCountData());
+		refreshLoadingSSTATS = setInterval(function() {
+			$("#packetCount").html("loading...");
+			$("#byteCount").html("loading...");
+			$("#flowCount").html("loading...");
+		},sitchTimeIntervalUpdate-1000);
 	},sitchTimeIntervalUpdate);
+	
 	
 	function getpacketCountData(){
 		var datastats = {};
@@ -742,7 +756,6 @@ function bySecondGraph(){
 
 function loadDefaultStatValues(){
 	clearInterval(refreshIntervalIdPort);
-	clearInterval(refreshIntervalIdSwitch);
 
 	$('#textgraph').show();
 	$('#statisticsGraph').hide();
@@ -758,7 +771,6 @@ function loadDefaultStatValues(){
 
 function printPortGraph(){
 	clearInterval(refreshIntervalIdPort);
-	clearInterval(refreshIntervalIdSwitch);
 
 	if(selectedPort != ""){
 		$('#textgraph').hide();
