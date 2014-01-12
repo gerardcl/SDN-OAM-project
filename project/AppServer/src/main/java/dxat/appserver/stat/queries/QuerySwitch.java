@@ -21,30 +21,30 @@ public class QuerySwitch {
 
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("packetCount");
+		request.setFilter("packetCount!");
 		FetchData fetchData = request.fetchData();
 
-		return fetchData.getValues("packetCount");
+		return fetchData.getValues("packetCount!");
 	}
 	
 	public static double[] getByteCount(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("byteCount");
+		request.setFilter("byteCount!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("byteCount");
+		return fetchData.getValues("byteCount!");
 	}
 	
 	public static double[] getFlowCount(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("flowCount");
+		request.setFilter("flowCount!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("flowCount");
+		return fetchData.getValues("flowCount!");
 	}
 
 }

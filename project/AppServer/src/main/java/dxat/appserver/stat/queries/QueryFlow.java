@@ -25,9 +25,9 @@ public class QueryFlow {
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 
 		FetchRequest request = rrdDb.createFetchRequest(type, end - start, end);
-		request.setFilter("packetCount");
+		request.setFilter("packetCount!");
 		FetchData fetchData = request.fetchData();
-		return fetchData.getValues("packetCount");
+		return fetchData.getValues("packetCount!");
 	}
 
 	public static double[] getByteCount(RrdDb rrdDb, long start, long end,
@@ -36,9 +36,9 @@ public class QueryFlow {
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 
 		FetchRequest request = rrdDb.createFetchRequest(type, end - start, end);
-		request.setFilter("byteCount");
+		request.setFilter("byteCount!");
 		FetchData fetchData = request.fetchData();
-		return fetchData.getValues("byteCount");
+		return fetchData.getValues("byteCount!");
 	}
 
 }

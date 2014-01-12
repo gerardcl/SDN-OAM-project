@@ -21,118 +21,118 @@ public class QueryPort {
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("receivePackets");
+		request.setFilter("receivePackets!");
 		FetchData fetchData = request.fetchData();
-		return fetchData.getValues("receivePackets");
+		return fetchData.getValues("receivePackets!");
 	}
 	
 	public static double[] getTransmitPackets(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("transmitPackets");
+		request.setFilter("transmitPackets!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("transmitPackets");
+		return fetchData.getValues("transmitPackets!");
 	}
 	
 	public static double[] getReceiveBytes(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("receiveBytes");
+		request.setFilter("receiveBytes!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("receiveBytes");
+		return fetchData.getValues("receiveBytes!");
 	}
 	
 	public static double[] getTransmitBytes(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("transmitBytes");
+		request.setFilter("transmitBytes!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("transmitBytes");
+		return fetchData.getValues("transmitBytes!");
 	}
 	
 	public static double[] getReceiveDropped(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("receiveDropped");
+		request.setFilter("receiveDropped!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("receiveDropped");
+		return fetchData.getValues("receiveDropped!");
 	}
 	
 	public static double[] getTransmitDropped(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("transmitDropped");
+		request.setFilter("transmitDropped!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("transmitDropped");
+		return fetchData.getValues("transmitDropped!");
 	}
 	
 	public static double[] getReceiveErrors(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("receiveErrors");
+		request.setFilter("receiveErrors!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("receiveErrors");
+		return fetchData.getValues("receiveErrors!");
 	}
 
 	public static double[] getTransmitErrors(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("transmitErrors");
+		request.setFilter("transmitErrors!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("transmitErrors");
+		return fetchData.getValues("transmitErrors!");
 	}
 	
 	public static double[] getReceiveFrameErrors(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("receiveFrameErrors");
+		request.setFilter("receiveFrameErrors!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("receiveFrameErrors");
+		return fetchData.getValues("receiveFrameErrors!");
 	}	
 
 	public static double[] getReceiveOverrunErrors(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("receiveOverrunErrors");
+		request.setFilter("receiveOverrunError!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("receiveOverrunErrors");
+		return fetchData.getValues("receiveOverrunError!");
 	}	
 
 	public static double[] getReceiveCRCErrors(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("receiveCRCErrors");
+		request.setFilter("receiveCRCErrors!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("receiveCRCErrors");
+		return fetchData.getValues("receiveCRCErrors!");
 	}
 
 	public static double[] getCollisions(RrdDb rrdDb, long start, long end, String typeOfStat) throws IOException{
 		
 		ConsolFun type = ConsolFun.valueOf(typeOfStat);
 		FetchRequest request = rrdDb.createFetchRequest(type, end-start, end);
-		request.setFilter("collisions");
+		request.setFilter("collisions!");
 		FetchData fetchData = request.fetchData();
 		
-		return fetchData.getValues("collisions");
+		return fetchData.getValues("collisions!");
 	}	
 
 }
