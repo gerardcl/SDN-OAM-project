@@ -648,7 +648,7 @@ function loadDefaultStatValues(){
 	selectedParam = "receiveBytes"; //default value
 	selectedValueType = "AVERAGE";  //devault value
 	selectedTimeInterval = "hour";  //devault value
-	$("#bparam").html('receivePackets <span class="caret"></span>');
+	$("#bparam").html('receiveBytes <span class="caret"></span>');
 	$("#bvaluetype").html('AVERAGE <span class="caret"></span>');
 	$("#btinterval").html('Last hour <span class="caret"></span>');
 }
