@@ -768,9 +768,11 @@
                         <center> <h4> <%= orgName %> </center> </h4>
                       </div>
 
+
                       <div class="col-md-4 col-sm-4"><a href="#/newOrg">
                         <button type="button" class="btn btn-success pull-right"><i class="fa fa-pencil"></i>  Create new organization</button></a>
                       </div>
+
                     </div><!-- /HEADER (orgname+buttons) -->
                   </div>
 
@@ -802,9 +804,11 @@
                                         <div class="panel panel-primary">
                                           <div class="panel-body">
 
-                                            <div class="padding-10-bot">
-                                              <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
-                                            </div>
+                                            <a href="#/newUser">
+                                              <div class="padding-10-bot">
+                                                <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
+                                              </div>
+                                            </a>
 
 
                                             <div id="OM-users">
@@ -818,6 +822,7 @@
                                                         <th>e-mail <i class="fa fa-sort"></i></th>
                                                         <th>Admin? <i class="fa fa-sort"></i></th>
                                                         <th>Telephone <i class="fa fa-sort"></i></th>
+                                                        <th>Edit <i class="fa fa-edit"></i></th>
                                                       </tr>
                                                     </thead>
                                                     <tbody >
@@ -832,6 +837,12 @@
                                                         <td><%= user.get('email') %></td>
                                                         <td><%= user.get('admin') %></td>
                                                         <td><%= user.get('telephone') %></td>
+                                                        <td>
+                                                          <a href="#/editUser/<%= user.get('identifier') %>">
+                                                            <button type="button" class="btn btn-warning ">Edit
+                                                            </button>
+                                                          </a>
+                                                        </td>
                                                       </tr>
 
                                                     
@@ -1701,6 +1712,7 @@
             </div>
       </div>
     </script>
+    <!-- /NEW FLOW TEMPLATE -->
 
     <!-- EDIT-CREATE ORG TEMPLATE  -->
     <script type="text/template" id="edit-org-template">
@@ -1745,6 +1757,16 @@
                     <input type="text" class="form-control" name="bankAccount" value="<%= organization ? organization.get('bankAccount') : '' %>"  >
                   </div>
                 </div>
+
+              
+
+                <div class="form-group">
+                  <label for="telephone" class="col-sm-4 control-label">Telephone</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="telephone" value="<%= organization ? organization.get('telephone') : '' %>"  >
+                  </div>
+                </div>
+
               </div>
 
               <div class="col-lg-6 col-md-6 col-sm-12">
@@ -1778,8 +1800,98 @@
           </form>  
         </div>
       </div>
-
     </script>
+    <!-- /EDIT-CREATE ORG TEMPLATE  -->
+
+    <!-- EDIT-CREATE USER TEMPLATE -->
+    <script type="text/template" id="edit-user-template">
+
+      <div class="panel <%= user ? 'panel-danger' : 'panel-success' %>">
+        <div class="panel-heading">
+
+          <div class="row">
+
+            <div class="col-md-4 col-sm-4">
+              <a href="#/adminUsers/<%= loginOrg %>">
+                <button type="button" class="btn btn-danger margin-10-left"><i class="fa fa-trash-o"></i>   Discard changes
+                </button>
+              </a>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+              <h2 class="panel-title"> <center> <%= user ? 'Edit User: '+user.get('name') : 'Create User' %> </center> </h2>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="panel-body">
+          <form class="form-horizontal edit-org-form well" role="form">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="name" class="col-sm-4 control-label">Name</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="name" value="<%= user ? user.get('name') : '' %>" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="col-sm-4 control-label">Email</label>
+                  <div class="col-sm-8">
+                    <input type="email" class="form-control" name="email" value="<%= user ? user.get('email') : '' %>"  >
+                  </div>
+                </div>
+
+              
+
+                <div class="form-group">
+                  <label for="telephone" class="col-sm-4 control-label">Telephone</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="telephone" value="<%= user ? user.get('telephone') : '' %>"  >
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="password" class="col-sm-4 control-label">Password</label>
+                  <div class="col-sm-8">
+                    <input type="password" class="form-control" name="password" value="<%= user ? user.get('password') : '' %>"  >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="admin" class="col-sm-4 control-label">is admin?</label>
+                  <div class="col-sm-8">
+                    <input type="checkbox" class="form-control" id="admin" "
+                      <% if(user){
+                          if(user.get('admin')) %> checked
+                      <%} %>" >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">    
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group">
+                  <center><button type="submit" class="btn btn-lg <%= user ? 'btn-warning' : 'btn-success' %> "><%= user ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create User'%></button></center>
+                </div>
+              </div>
+            </div>
+          </form>  
+        </div>
+      </div>
+    </script>
+    <!-- /EDIT-CREATE USER TEMPLATE -->
+
   <!-- /SHARED TEMPLATES -->
 
 	<!-- /TEMPLATES -->
