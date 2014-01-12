@@ -157,7 +157,7 @@ public class StatManager {
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
 		long start = getTimeStampGran(granularity)-1;
-		long end = actualTimeStamp-1;
+		long end = getEndTimeNormalized(granularity, actualTimeStamp);
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 
@@ -191,7 +191,7 @@ public class StatManager {
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
 		long start = getTimeStampGran(granularity)-1;
-		long end = actualTimeStamp-1;
+		long end = getEndTimeNormalized(granularity, actualTimeStamp);
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 
@@ -221,7 +221,7 @@ public class StatManager {
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
 		long start = getTimeStampGran(granularity)-1;
-		long end = actualTimeStamp-1;
+		long end = getEndTimeNormalized(granularity, actualTimeStamp);
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 
@@ -251,7 +251,7 @@ public class StatManager {
 		StatResponse response = new StatResponse();
 		long actualTimeStamp = Util.getTime();
 		long start = getTimeStampGran(granularity)-1;
-		long end = actualTimeStamp-1;
+		long end = getEndTimeNormalized(granularity, actualTimeStamp);
 
 		RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(resourcePath);
 
@@ -337,6 +337,33 @@ public class StatManager {
 			break;
 		case "year":
 			value = (long) 3600 * 24 * 30 * 365;
+		}
+		return value;
+	}
+	private long getEndTimeNormalized(String granularity, long time){
+		long value = 0;
+		switch (granularity){
+		case "second":
+			value = (long) (time-1);
+			break;
+		case "minute":
+			value = (long) (time-1);
+			break;
+		case "hour":
+			value = (long) (time-60);
+			break;
+		case "day":
+			value = (long) (time-3600);
+			break;
+		case "week":
+			value = (long) (time-(3600*24));
+			break;
+		case "month":
+			value = (long) (time-(3600*24*7));
+			break;
+		case "year":
+			value = (long) (time-(3600*24*7*30));
+			break;
 		}
 		return value;
 	}
