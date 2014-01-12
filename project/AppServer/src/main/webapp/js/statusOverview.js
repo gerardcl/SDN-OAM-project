@@ -586,10 +586,10 @@ function bySecondGraph(){
 
 	var j=0;
 	var RefreshChart = 60;
-	lastTime=data.timeAxxis[1];
+	lastTime=data.timeAxxis[0];
 	refreshIntervalId = setInterval(function() {
 		refresh();  
-	},2000);
+	},1000);
 
 
 	function refresh() {			
@@ -604,9 +604,9 @@ function bySecondGraph(){
 			timeData.reverse();
 			valueData.reverse();
 			timeData.pop();
-			timeData.pop();
+			//timeData.pop();
 			valueData.pop();
-			valueData.pop();
+			//valueData.pop();
 			timeData.reverse();
 			valueData.reverse();
 		}
