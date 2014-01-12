@@ -670,6 +670,7 @@ function bySecondGraph(){
 }
 
 function loadDefaultStatValues(){
+	clearInterval(refreshIntervalId);
 	$('#textgraph').show();
 	$('#statisticsGraph').hide();
 	selectedPort = "";
