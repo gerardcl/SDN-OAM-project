@@ -43,6 +43,9 @@ function createTopologyGraph(){
 	var switchesURL = "/AppServer/webapp/topology/switches";
 	var terminalsURL = "/AppServer/webapp/topology/terminals";
 	var linksURL = "/AppServer/webapp/topology/links";
+	var dataSwitches;
+	var dataTerminals;
+	var dataLinks;
 	var nodes = [];
 	var links = [];
 
