@@ -317,7 +317,6 @@ function byHourGraph(){
 		series: [{
 			name: data.parameter,
 			data: data.valueAxxis,
-			//Et poso aqui la posibilitat de colors
 			color: '#00AA00'
 		}]
 
@@ -348,7 +347,7 @@ function byHourGraph(){
 	/*funció de petició (no passa)REST. Per ara es static*/
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/AVERAGE/hour";
+		var datastatsuri = "/AppServer/webapp/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/hour";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -363,32 +362,17 @@ function byHourGraph(){
 			//	Accept : "application/vmd.dxat.appserver.stats+json"
 			//},
 			success : function(result) {
-				console.log("AND THE WINNER IS....");
-				console.log(result);
 				datastats = result;
 			},
 			error: function(xhr, msg) {
-				console.log("PARSING ERROR MSG");
-				console.log(xhr.responseText);
-				var ds = replaceOneChar(xhr.responseText,'0',xhr.responseText.length-4);
-				ds = replaceOneChar(ds,'.',ds.length-3);
-				ds = replaceOneChar(ds,'0',ds.length-2);
-				datastats = JSON.parse(ds);
-				//console.log(msg + '\n' + xhr.responseText);
-				console.log("RX DATA STATS");
-				console.log(datastats);
-				if(!datastats){
-					console.log("getting stats!!");
-					//datastats = $.parseJSON(xhr.responseText);
-				}else console.log("not !!!!!!getting stats!!");
+				var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+				datastats = JSON.parse(rplcd);
 			}
 		});
 		//		Tractament de dades obtingudes
 		$.ajaxSetup({
 			async : true
 		}); //execute asynchronously
-
-		console.log(datastats);
 		return datastats;
 	}
 
@@ -446,7 +430,8 @@ function byMinuteGraph(){
 		},
 		series: [{
 			name: data.parameter,
-			data: data.valueAxxis
+			data: data.valueAxxis,
+                      	color: '#AA0000'
 		}]
 
 	});
@@ -476,7 +461,7 @@ function byMinuteGraph(){
 	/*funció de petició (no passa)REST. Per ara es static*/
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/AVERAGE/minute";
+		var datastatsuri = "/AppServer/webapp/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/minute";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -491,32 +476,17 @@ function byMinuteGraph(){
 			//	Accept : "application/vmd.dxat.appserver.stats+json"
 			//},
 			success : function(result) {
-				console.log("AND THE WINNER IS....");
-				console.log(result);
-				datastats = result;
-			},
-			error: function(xhr, msg) {
-				console.log("PARSING ERROR MSG");
-				console.log(xhr.responseText);
-                                var ds = replaceOneChar(xhr.responseText,'0',xhr.responseText.length-4);
-                                ds = replaceOneChar(ds,'.',ds.length-3);
-                                ds = replaceOneChar(ds,'0',ds.length-2);
-                                datastats = JSON.parse(ds);
-				//console.log(msg + '\n' + xhr.responseText);
-				console.log("RX DATA STATS");
-				console.log(datastats);
-				if(!datastats){
-					console.log("getting stats!!");
-					//datastats = $.parseJSON(xhr.responseText);
-				}
-			}
+                                datastats = result;
+                        },
+                        error: function(xhr, msg) {
+                                var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+                                datastats = JSON.parse(rplcd);
+                        }
 		});
 		//		Tractament de dades obtingudes
 		$.ajaxSetup({
 			async : true
 		}); //execute asynchronously
-
-		console.log(datastats);
 		return datastats;
 	}
 
@@ -592,7 +562,8 @@ function bySecondGraph(){
 		},
 		series: [{
 			name: data.parameter,
-			data: valueData
+			data: valueData,
+                        color: '#0000AA'
 		}]
 
 	});
@@ -640,7 +611,7 @@ function bySecondGraph(){
 
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapp/statistics/port/00:01:d4:ca:6d:c4:44:1e:1/receiveBytes/AVERAGE/second";
+		var datastatsuri = "/AppServer/webapp/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/second";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -655,29 +626,16 @@ function bySecondGraph(){
 			//	Accept : "application/vmd.dxat.appserver.stats+json"
 			//},
 			success : function(result) {
-				console.log("AND THE WINNER IS....");
-				console.log(result);
-				datastats = result;
-			},
-			error: function(xhr, msg) {
-				console.log("PARSING ERROR MSG");
-				console.log(xhr.responseText);
-				datastats = JSON.parse(xhr.responseText);
-				//console.log(msg + '\n' + xhr.responseText);
-				console.log("RX DATA STATS");
-				console.log(datastats);
-				if(!datastats){
-					console.log("getting stats!!");
-					//datastats = $.parseJSON(xhr.responseText);
-				}
-			}
+                                datastats = result;
+                        },
+                        error: function(xhr, msg) {
+                                var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+                                datastats = JSON.parse(rplcd);
+                        }
 		});
-		//		Tractament de dades obtingudes
 		$.ajaxSetup({
 			async : true
 		}); //execute asynchronously
-
-		console.log(datastats);
 		return datastats;
 	}
 }
@@ -690,7 +648,7 @@ function loadDefaultStatValues(){
 	selectedParam = "receiveBytes"; //default value
 	selectedValueType = "AVERAGE";  //devault value
 	selectedTimeInterval = "hour";  //devault value
-	$("#bparam").html('Received <span class="caret"></span>');
+	$("#bparam").html('receivePackets <span class="caret"></span>');
 	$("#bvaluetype").html('AVERAGE <span class="caret"></span>');
 	$("#btinterval").html('Last hour <span class="caret"></span>');
 }
@@ -711,9 +669,6 @@ function printPortGraph(){
 		if(selectedTimeInterval == "second") bySecondGraph();
 
 
-
-
-
 		//NO PORT SPECIFIED!!!
 	}else alert("Please, select a port from the list");
 }
@@ -723,58 +678,28 @@ function showPortStats(){
 	if(event.target.id == "port") selectedPort = $(event.target).text();
 	if(event.target.id == "param"){
 		console.log("selected param: "+ $(event.target).text());
-		switch ($(event.target).text()){
-		case "Received":
-			selectedParam = "receiveBytes";
-			$("#bparam").html('Received <span class="caret"></span>');
-			break;
-		case "Transmitted":
-			selectedParam = "transmitBytes";
-			$("#bparam").html('Transmitted <span class="caret"></span>');
-			break;
-		case "Drops": selectedParam = "receiveDropped";
-		$("#bparam").html('Drops <span class="caret"></span>');
-		break;
-		case "Errors": selectedParam = "receiveErrors";
-		$("#bparam").html('Errors <span class="caret"></span>');
-		break;
-		case "Collisions": selectedParam = "collisions";
-		$("#bparam").html('Collisions <span class="caret"></span>');
-		break;
-		default:
-			break;
-		}
+		selectedParam = $(event.target).text();
+		$("#bparam").html($(event.target).text()+' <span class="caret"></span>');
 	}
 	if(event.target.id == "valuetype"){
 		console.log("selected valuetype: "+$(event.target).text());
-		switch ($(event.target).text()){
-		case "MAX": selectedValueType = "MAX";
-		$("#bvaluetype").html('MAX <span class="caret"></span>');
-		break;
-		case "MIN": selectedValueType = "MIN";
-		$("#bvaluetype").html('MIN <span class="caret"></span>');
-		break;
-		case "AVERAGE": selectedValueType = "AVERAGE";
-		$("#bvaluetype").html('AVERAGE <span class="caret"></span>');
-		break;
-		default:
-			break;
-		}
+		selectedValueType = $(event.target).text();
+		$("#bvaluetype").html($(event.target).text()+' <span class="caret"></span>');
 	}
 	if(event.target.id == "tinterval"){
 		console.log("selected time interval: "+$(event.target).text());
 		switch ($(event.target).text()){
-		case "Last minute": selectedTimeInterval = "minute";
-		$("#btinterval").html('Last minute <span class="caret"></span>');
-		break;
-		case "Last hour": selectedTimeInterval = "hour";
-		$("#btinterval").html('Last hour <span class="caret"></span>');
-		break;
-		case "Per second": selectedTimeInterval = "second";
-		$("#btinterval").html('Per second <span class="caret"></span>');
-		break;
-		default:
-			break;
+			case "Per minute": selectedTimeInterval = "minute";
+				$("#btinterval").html('Per minute <span class="caret"></span>');
+				break;
+			case "Per hour": selectedTimeInterval = "hour";
+				$("#btinterval").html('Per hour <span class="caret"></span>');
+				break;
+			case "Per second": selectedTimeInterval = "second";
+				$("#btinterval").html('Per second <span class="caret"></span>');
+				break;
+			default:
+				break;
 		}
 	}
 
