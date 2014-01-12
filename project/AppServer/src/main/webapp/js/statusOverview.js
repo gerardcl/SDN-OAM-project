@@ -263,12 +263,12 @@ var selectedValueType = "";
 var selectedTimeInterval = "";
 var refreshIntervalId;
 
-function byMinuteGraph(){
+function byHourGraph(){
 	//Petició REST de les dades inicials
 	var data = getData();
-	//DATE PARSER
-	var labelXaxis = minuteFormat(data.timeAxxis);
-	//FINAL DATE PARSER
+	var timeAxis=[];
+	timeAxis=getXAxis(data.timeAxxis);
+
 	$('#statisticsGraph').highcharts({
 		chart: {
 			type: 'areaspline',
@@ -283,7 +283,7 @@ function byMinuteGraph(){
 		},
 		xAxis: {
 			tickPixelInterval: 1500,
-			categories: labelXaxis,
+			categories: timeAxis,
 		},
 		yAxis: {
 			title: {
@@ -302,50 +302,137 @@ function byMinuteGraph(){
 			areaspline: {
 				fillOpacity: 0.5
 			},
+
 		},
 		series: [{
 			name: data.parameter,
-			data: data.valueAxxis
+			data: data.valueAxxis,
+			//Et poso aqui la posibilitat de colors
+			color: '#00AA00'
 		}]
 
 	});
-
+	//j es podra esborrar
+	var j=0;
 	refreshIntervalId = setInterval(function() {
-		console.log("refreshing stats graph");
-		refresh();
-	},5000);
+		refresh();  
+	},90000);
 
 	function refresh() {
+		//PART A: Aquesta part es podra esborrar en integrarse completament
 		j++;
 		if((j % 2)==0){
 			var data2= nextData();
 
 		}else{
+			//FINAL PART A
 			var data2= getData();
 
 		}
-		var labelX2= minuteFormat(data2.timeAxxis);
 		var chart = $('#statisticsGraph').highcharts();
-
-		chart.xAxis[0].setCategories(labelX2);
-		chart.series[0].setData(data2.valueAxxis);
-
-
+		timeAxis=getXAxis(data2.timeAxxis);
+		chart.xAxis[0].setCategories(timeAxis);
+		chart.series[0].setData(data2.valueAxxis);		
 	}
 
-	function minuteFormat(xAxis){
-		for (var i = 0; i<xAxis.length; i++) {
-			var date = new Date(parseInt(xAxis[i]*1000));
-			if ((i==0) || (i==(xAxis.length-1))){
-				xAxis[i] = (dateFormat(date, "h:MM:ss"));//"dd/mm, htt"
-			}
-			else{
-				xAxis[i] = (dateFormat(date, "ss"));//"dd/mm, htt"
-			}
+	/*funció de petició (no passa)REST. Per ara es static*/
+	function getData(){
+		var result ={"idObject":"00:01:d4:ca:6d:c4:44:1e:1","parameter":"receiveBytes","timeAxxis":[1389478620,1389478680,1389478740,1389478800,1389478860,1389478920,1389478980,1389479040,1389479100,1389479160,1389479220,1389479280,1389479340,1389479400,1389479460,1389479520,1389479580,1389479640,1389479700,1389479760,1389479820,1389479880,1389479940,1389480000,1389480060,1389480120,1389480180,1389480240,1389480300,1389480360,1389480420,1389480480,1389480540,1389480600,1389480660,1389480720,1389480780,1389480840,1389480900,1389480960,1389481020,1389481080,1389481140,1389481200,1389481260,1389481320,1389481380,1389481440,1389481500,1389481560,1389481620,1389481680,1389481740,1389481800,1389481860,1389481920,1389481980,1389482040,1389482100,1389482160,1389482220,1389482280],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,695.0,695.0,695.0,695.0,695.0,695.0,695.0,0]}
+		return result;
+	}
+
+	function getXAxis(axis){
+		var timeUTC=[];
+		var timeAxis=[];
+		for (var i=0; i<axis.length;i++){
+			timeUTC.push(new Date(axis[i]*1000));
+			timeAxis[i]= timeUTC[i].getHours()+":"+timeUTC[i].getMinutes()+":"+timeUTC[i].getSeconds();
 		}
-
-		return xAxis;
+		return timeAxis;
 	}
+	/*funció de segona petició REST (ESBORRABLE) quan les peticions rest estiguin operatives*/
+	function nextData(){
+		var result ={
+				"idObject":"00:01:d4:ca:6d:c4:44:1e:1",
+				"parameter":"receiveBytes",
+				"timeAxxis":[1389482281,1389482282,1389482283,1389482284,1389482285,1389482286,1389482287,1389482288,1389482289,1389482290,1389482291,1389482292,1389482293,1389482294,1389482295,1389482296,1389482297,1389482298,1389482299,1389482300,1389482301,1389482302,1389482303,1389482304,1389482305,1389482306,1389482307,1389482308,1389482309,1389482310,1389482311,1389482312,1389482313,1389482314,1389482315,1389482316,1389482317,1389482318,1389482319,1389482320,1389482321,1389482322,1389482323,1389482324,1389482325,1389482326,1389482327,1389482328,1389482329,1389482330,1389482331,1389482332,1389482333,1389482334,1389482335,1389482336,1389482337,1389482338,1389482339,1389482340,1389482341,1389482342],
+				"valueAxxis":[20.0,52.0,340.0,456.0,42.0,789.3,50.4,553.3,251.3,123.4,20.0,52.0,340.0,456.0,42.0,789.3,50.4,553.3,251.3,123.4,20.0,52.0,340.0,456.0,42.0,789.3,50.4,553.3,251.3,123.4,20.0,52.0,340.0,456.0,42.0,789.3,50.4,553.3,251.3,123.4,20.0,52.0,340.0,456.0,42.0,789.3,50.4,553.3,251.3,123.4,589.2,25.4,789.2,695.0,695.0,695.0,695.0,695.0,695.0,695.0,695.0,2000.2]
+		};
+
+		return result;		
+	}
+}
+
+function byMinuteGraph(){
+	//Petició REST de les dades inicials
+	var data = getData();
+	var timeAxis=[];
+	timeAxis=getXAxis(data.timeAxxis);
+
+	$('#statisticsGraph').highcharts({
+        chart: {
+            type: 'areaspline',
+            animation: false,
+        },
+        title: {
+            text: data.parameter+' on port: ' +data.idObject
+        },
+       	legend: {
+            x: 0,
+            y: 300,
+        },
+        xAxis: {
+        	tickPixelInterval: 1500,
+            categories: timeAxis,
+        },
+        yAxis: {
+            title: {
+                text: data.parameter
+            }
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' Bytes/s',
+            crosshairs: [true, true]
+        },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            areaspline: {
+                fillOpacity: 0.5
+            },
+
+        },
+        series: [{
+            name: data.parameter,
+            data: data.valueAxxis
+        }]
+		      
+    });
+    //j es podra esborrar
+	var j=0;
+	refreshIntervalId = setInterval(function() {
+	    refresh();  
+	},5000);
+
+	function refresh() {
+		//PART A: Aquesta part es podra esborrar en integrarse completament
+		j++;
+		if((j % 2)==0){
+			var data2= nextData();
+			
+		}else{
+		//FINAL PART A
+			var data2= getData();
+			
+		}
+		var chart = $('#statisticsGraph').highcharts();
+		timeAxis=getXAxis(data2.timeAxxis);
+		chart.xAxis[0].setCategories(timeAxis);
+		chart.series[0].setData(data2.valueAxxis);		
+	}
+	
 	/*funció de petició (no passa)REST. Per ara es static*/
 	function getData(){
 		var result ={
@@ -353,16 +440,26 @@ function byMinuteGraph(){
 				"parameter":"receiveBytes",
 				"timeAxxis":[1388686905,1388686906,1388686907,1388686908,1388686909,1388686910,1388686911,1388686912,1388686913,1388686914,1388686915,1388686916,1388686917,1388686918,1388686919,1388686920,1388686921,1388686922,1388686923,1388686924,1388686925,1388686926,1388686927,1388686928,1388686929,1388686930,1388686931,1388686932,1388686933,1388686934,1388686935,1388686936,1388686937,1388686938,1388686939,1388686940,1388686941,1388686942,1388686943,1388686944,1388686945,1388686946,1388686947,1388686948,1388686949,1388686950,1388686951,1388686952,1388686953,1388686954,1388686955,1388686956,1388686957,1388686958,1388686959,1388686960,1388686961,1388686962,1388686963,1388686964,1388686965],
 				"valueAxxis":[61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,462.0,60.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,60.0,0.0,0.0,0.0,0.0,61.0,1500.0]
-		};
+				};
 		return result;
+	}
+
+	function getXAxis(axis){
+		var timeUTC=[];
+		var timeAxis=[];
+		for (var i=0; i<axis.length;i++){
+			timeUTC.push(new Date(axis[i]*1000));
+			timeAxis[i]= timeUTC[i].getHours()+":"+timeUTC[i].getMinutes()+":"+timeUTC[i].getSeconds();
+		}
+		return timeAxis;
 	}
 	/*funció de segona petició REST (ESBORRABLE) quan les peticions rest estiguin operatives*/
 	function nextData(){
 		var result ={
-				"timeAxxis":[1388686965,1388686966,1388686967,1388686968,1388686969,1388686970,1388686971,1388686972,1388686973,1388686974,1388686975,1388686976,1388686977,1388686978,1388686979,1388686980,1388686981,1388686982,1388686983,1388686984,1388686985,1388686986,1388686987,1388686988,1388686989,1388686990,1388686991,1388686992,1388686993,1388686994,1388686995,1388686996,1388686997,1388686998,1388686999,1388687000,1388687001,1388687002,1388687003,1388687004,1388687005,1388687006,1388687007,1388687008,1388687009,1388687010,1388687011,1388687012,1388687013,1388687014,1388687015,1388687016,1388687017,1388687018,1388687019,1388687020,1388687021,1388687022,1388687023,1388687024,1388687025],
-				"valueAxxis":[561.0,254.0,1100.0,0.0,10.0,50.0,5.0,700.0,462.0,160.0,10.0,20.0,30.0,40.0,0.0,61.0,120.0,1500.0,120.0,10.0,0.0,0.0,0.0,0.0,60.0,0.0,1540.0,120.0,0.0,61.0,10.0,20.0,90.0,0.0,2440.0,0.0,9900.0,0.0,0.0,60.0,0.0,10.0,0.0,250.0,61.0,0.0,0.0,0.0,0.0,2530.0,0.0,1250.0,0.0,0.0,60.0,0.0,250.0,0.0,0.0,61.0,1500.0]
-		};
-		return result;
+			"timeAxxis":[1388686965,1388686966,1388686967,1388686968,1388686969,1388686970,1388686971,1388686972,1388686973,1388686974,1388686975,1388686976,1388686977,1388686978,1388686979,1388686980,1388686981,1388686982,1388686983,1388686984,1388686985,1388686986,1388686987,1388686988,1388686989,1388686990,1388686991,1388686992,1388686993,1388686994,1388686995,1388686996,1388686997,1388686998,1388686999,1388687000,1388687001,1388687002,1388687003,1388687004,1388687005,1388687006,1388687007,1388687008,1388687009,1388687010,1388687011,1388687012,1388687013,1388687014,1388687015,1388687016,1388687017,1388687018,1388687019,1388687020,1388687021,1388687022,1388687023,1388687024,1388687025],
+			"valueAxxis":[561.0,254.0,1100.0,0.0,10.0,50.0,5.0,700.0,462.0,160.0,10.0,20.0,30.0,40.0,0.0,61.0,120.0,1500.0,120.0,10.0,0.0,0.0,0.0,0.0,60.0,0.0,1540.0,120.0,0.0,61.0,10.0,20.0,90.0,0.0,2440.0,0.0,9900.0,0.0,0.0,60.0,0.0,10.0,0.0,250.0,61.0,0.0,0.0,0.0,0.0,2530.0,0.0,1250.0,0.0,0.0,60.0,0.0,250.0,0.0,0.0,61.0,1500.0]
+			};
+		return result;		
 	}
 }
 
@@ -381,68 +478,70 @@ function bySecondGraph(){
 	for (var i=0;i<timeData.length;i++){
 		timeUTC[i] = new Date(timeData[i]);
 		timeAxis[i]= timeUTC[i].getHours()+":"+timeUTC[i].getMinutes()+":"+timeUTC[i].getSeconds();
+		//alert(timeAxis[i]);
 	}
 
 	var lastTime = timeData[(timeData.length-1)*1000];
 
 	$('#statisticsGraph').highcharts({
-        chart: {
-            type: 'areaspline',
-            animation: false,
-        },
-        title: {
-            text: data.parameter+' on port: ' +data.idObject
-        },
-       	legend: {
-            x: 0,
-            y: 300,
-        },
-        xAxis: {
-        	type: 'datetime',
-        	dateTimeLabelFormats: {
+		chart: {
+			type: 'areaspline',
+			animation: false,
+		},
+		title: {
+			text: data.parameter+' on port: ' +data.idObject
+		},
+		legend: {
+			x: 0,
+			y: 300,
+		},
+		xAxis: {
+			type: 'datetime',
+			dateTimeLabelFormats: {
 
-            },
-            tickPixelInterval: 1920,
-            categories: timeAxis,
-        },
-        yAxis: {
-            title: {
-                text: data.parameter
-            }
-        },
-        tooltip: {
-            shared: true,
-            valueSuffix: ' Bytes/s',
-            crosshairs: [true, true],
-            valueDecimals: 2
-        },
-        credits: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.5
-            },
-        },
-        series: [{
-            name: data.parameter,
-            data: valueData
-        }]
+			},
+			tickPixelInterval: 1920,
+			categories: timeAxis,
+		},
+		yAxis: {
+			title: {
+				text: data.parameter
+			}
+		},
+		tooltip: {
+			shared: true,
+			valueSuffix: ' Bytes/s',
+			crosshairs: [true, true],
+			valueDecimals: 2
+		},
+		credits: {
+			enabled: false
+		},
+		plotOptions: {
+			areaspline: {
+				fillOpacity: 0.5
+			},
+		},
+		series: [{
+			name: data.parameter,
+			data: valueData
+		}]
 
-    });
+	});
 
+	var j=0;
 	var RefreshChart = 60;
-	lastTime=data.timeAxxis[1];
-	refreshIntervalId = setInterval(function() {
-	    refresh();
+	lastTime=data.timeAxxis[1]
+	setInterval(function() {
+		refresh();  
 	},2000);
 
 
-	function refresh() {
-		//NUEVA PETICION REST FUNCIO NEXTDATA ESBORRABLE
-		var data2 = getData(lastTime);
+	function refresh() {			
+		//PART A: PART QUAN ESTIGUI INTEGRAT ES ESBORRABLE
+		var data2 = getData();
 		lastTime = data2.timeAxxis[1];
-		//alert(lastTime);
+		//FINAL PART A
 
 		var chart = $('#statisticsGraph').highcharts();
 
@@ -458,14 +557,9 @@ function bySecondGraph(){
 		}
 
 		for (var i=0; i<data2.timeAxxis.length;i++){
-
 			timeData.push((data2.timeAxxis[i]*1000));
 			valueData.push(data2.valueAxxis[i]);
-
 		}
-		/*for (var i=0; i<timeData.length;i++){
-			alert(timeData[i]);
-		}*/
 
 		for (var i=0;i<timeData.length;i++){
 			timeUTC[i] = new Date(timeData[i]);
@@ -474,9 +568,7 @@ function bySecondGraph(){
 		}
 		chart.series[0].setData(valueData);
 		chart.xAxis[0].setCategories(timeAxis);
-		//chart.series[0].data[l].update(data2.valueAxxis[k]);
 	}
-
 
 	function getData(){
 		var datastats = {};
@@ -503,7 +595,7 @@ function bySecondGraph(){
 				console.log("PARSING ERROR MSG");
 				console.log(xhr.responseText);
 				datastats = JSON.parse(xhr.responseText);
-		    		//console.log(msg + '\n' + xhr.responseText);
+				//console.log(msg + '\n' + xhr.responseText);
 				console.log("RX DATA STATS");
 				console.log(datastats);
 				if(!datastats){
@@ -512,7 +604,7 @@ function bySecondGraph(){
 				}
 			}
 		});
-//		Tractament de dades obtingudes
+		//		Tractament de dades obtingudes
 		$.ajaxSetup({
 			async : true
 		}); //execute asynchronously
@@ -527,10 +619,10 @@ function bySecondGraph(){
 		num2= Math.random()*2000;
 
 		var result ={
-			"timeAxxis":[timeData+1,timeData+2],
-			"valueAxxis":[num1,num2]
-			};
-		return result;
+				"timeAxxis":[timeData+1,timeData+2],
+				"valueAxxis":[num1,num2]
+		};
+		return result;		
 	}
 }
 
@@ -557,7 +649,7 @@ function printPortGraph(){
 		console.log(selectedPort);
 		console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
 
-		if(selectedTimeInterval == "hour") byMinuteGraph();
+		if(selectedTimeInterval == "hour") byHourGraph();
 		if(selectedTimeInterval == "minute") byMinuteGraph();
 		if(selectedTimeInterval == "second") bySecondGraph();
 
