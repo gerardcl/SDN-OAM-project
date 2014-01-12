@@ -131,6 +131,12 @@ public class OrgManager {
 		neworg.setOAM(torg.isOAM());
 		neworg.setTelephone(torg.getTelephone());
 		neworg.setTorg(torg);
+		HashMap<String, OrgFlow> oflows = new HashMap<>();
+		HashMap<String, OrgUser> ousers = new HashMap<>();
+		HashMap<String, OrgTerminal> oterminals = new HashMap<>();
+		neworg.setFlows(oflows);
+		neworg.setUsers(ousers);
+		neworg.setTerminals(oterminals);
 		orgs.put(neworg.getIdentifier(), neworg);
 	}
 	

@@ -291,6 +291,7 @@
 				type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.org.collection+json",
 				success: function (ev) {
+					console.log(ev);
 					if(ev.attributes.identifier == "") alert("this org already exists");
 					else router.navigate('adminOrgs/'+ev.attributes.identifier, {trigger: true});
 				},
