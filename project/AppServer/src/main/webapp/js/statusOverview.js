@@ -270,6 +270,7 @@ var selectedTimeInterval = "";
 var valueSuffix = " Bytes/s";
 var refreshIntervalIdPort;
 var refreshIntervalIdSwitch;
+var refreshIntervalController;
 var refreshLoadingSSTATS;
 
 function StopSwitchStats(){
@@ -756,6 +757,7 @@ function bySecondGraph(){
 
 function loadDefaultStatValues(){
 	clearInterval(refreshIntervalIdPort);
+	clearInterval(refreshIntervalController);
 
 	$('#textgraph').show();
 	$('#statisticsGraph').hide();
@@ -771,6 +773,7 @@ function loadDefaultStatValues(){
 
 function printPortGraph(){
 	clearInterval(refreshIntervalIdPort);
+	clearInterval(refreshIntervalController);
 
 	if(selectedPort != ""){
 		$('#textgraph').hide();
@@ -939,5 +942,5 @@ function getControllerData(key){
 function initializeControllerStats()
 {
 	createGauges();
-	setInterval(updateGauges, 3000);
+	refreshIntervalController = setInterval(updateGauges, 3000);
 }
