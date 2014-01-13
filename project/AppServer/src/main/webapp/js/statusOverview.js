@@ -95,7 +95,12 @@ function createTopologyGraph(){
 	$.ajaxSetup({
 		async : true
 	}); //execute asynchronously
-	var terminals = dataTerminals.terminals;
+	var terminals = [];
+	for (var i=0; i < dataTerminals.terminals.length; i++){
+		if ((dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0")&&(dataTerminals.terminals[i].ipv4!="0.0.0.0")){
+			terminals.push(dataTerminals.terminals[i]);
+		}
+	}
 	nodes = dataSwitches.switches;
 	var rawLinks = dataLinks.links;
 	var src, trg;
