@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>OAM SDN Manager</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css">
+  </head>
+
+  <body>
+
+    <div id="wrapper">
+
+      <!-- Sidebar -->
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"><i class="fa fa-gamepad"></i> OAM SDN Admin</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav side-nav">
+            <li><a href="index.html"><i class="fa fa-globe"></i> Global State</a></li>
+            <li><a href="orgManager.html"><i class="fa fa-briefcase"></i> Organizations</a></li>
+            <li class="active"><a href="flows.html"><i class="fa fa-link"></i> Flows</a></li>
+            <li><a href="accessPoints.html"><i class="fa fa-desktop"></i> Access points</a></li>
+            
+            <li><a href="trafficAnalysis.html"><i class="fa fa-th"></i> Traffic Analysis</a></li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right navbar-user">
+            <li class="dropdown messages-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> Flow requests <span class="badge">3</span> <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header">3 New Flow Requests</li>
+                <li class="message-preview">
+                  <a href="#">
+                    <span class="avatar"><img src="http://placehold.it/50x50"></span>
+                    <span class="name">Zara</span>
+                    <span class="message"><p>From: A To: B</p><p>1 Gbps</p></span>
+                    <span class="time"><i class="fa fa-clock-o"></i> 4:34 PM</span>
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li class="message-preview">
+                  <a href="#">
+                    <span class="avatar"><img src="http://placehold.it/50x50"></span>
+                    <span class="name">Ikea</span>
+                    <span class="message"><p>From: Node 3 To: Node 12</p><p>100 Mbps</p></span>
+                    <span class="time"><i class="fa fa-clock-o"></i> 2:34 PM</span>
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li class="message-preview">
+                  <a href="#">
+                    <span class="avatar"><img src="http://placehold.it/50x50"></span>
+                    <span class="name">Carrefour</span>
+                    <span class="message"><p>From: WS-8 To: WS-3</p><p>10 Gbps</p></span>
+                    <span class="time"><i class="fa fa-clock-o"></i> 00:34 PM</span>
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li><a href="#">View Inbox <span class="badge">3</span></a></li>
+              </ul>
+            </li>
+            <li class="dropdown alerts-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> Alerts <span class="badge">3</span> <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Success process <span class="label label-success">Flow succeeded</span></a></li>
+                <li><a href="#">Just some information <span class="label label-info">New host connected</span></a></li>
+                <li><a href="#">Something could be a problem <span class="label label-warning">Host unreachable</span></a></li>
+                <li><a href="#">Something Really wrong <span class="label label-danger">Link down!</span></a></li>
+                <li class="divider"></li>
+                <li><a href="#">View All</a></li>
+              </ul>
+            </li>
+            <li class="dropdown user-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> ADMINISTRATOR <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">3</span></a></li>
+                <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+                <li class="divider"></li>
+                <li><a href="#"><i class="fa fa-power-off"></i> Log Out</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </nav>
+
+      <div id="page-wrapper">
+
+        <div class="padding-10-bot">
+          <button class="btn btn-success" data-toggle="modal" data-target="#newFlow"> Create new FLOW</button>
+        </div>
+
+        <div class="row"><!-- Active FLOWS -->
+          <div class="col-sm-12">
+            <div class="panel panel-success">    
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-bolt"></i> Active flows</h3>
+              </div>
+              <div class="panel-body">
+                <div id="FLW-active">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                      <thead>
+                        <tr>
+                          <th>Flow ID <i class="fa fa-sort"></i></th>
+                          <th>From <i class="fa fa-sort"></i></th>
+                          <th>To <i class="fa fa-sort"></i></th>
+                          <th>Speed <i class="fa fa-sort"></i></th>
+                          <th>Progress</th>
+                          <th>Date <i class="fa fa-sort"></i></th>
+                          <th>Time start <i class="fa fa-sort"></i></th>
+                          <th>Duration  <i class="fa fa-sort"></i></th>
+                          <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                          <th><center><i class="fa fa-edit"></i></center></th>
+                          <th><center><i class="fa fa-eraser"></i></center></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Flow 34</td>
+                          <td>Barcelona</td>
+                          <td>Paris</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar  progress-bar-success" style="width: 30%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>3:29 AM</td>
+                          <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 35</td>
+                          <td>Calella</td>
+                          <td>Tarragona</td>
+                          <td>10 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 72%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:00 AM</td>
+                          <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 36</td>
+                          <td>Barcelona</td>
+                          <td>Madrid</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 50%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:30 AM</td>
+                          <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 37</td>
+                          <td>Node 4</td>
+                          <td>Node 12</td>
+                          <td>100 Mbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 60%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:45 AM</td>
+                          <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 34</td>
+                          <td>Barcelona</td>
+                          <td>Paris</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 37%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>3:29 AM</td>
+                          <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 35</td>
+                          <td>Calella</td>
+                          <td>Tarragona</td>
+                          <td>10 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 56%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:00 AM</td>
+                          <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 36</td>
+                          <td>Barcelona</td>
+                          <td>Madrid</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:30 AM</td>
+                          <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 37</td>
+                          <td>Node 4</td>
+                          <td>Node 12</td>
+                          <td>100 Mbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 85%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:45 AM</td>
+                          <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 34</td>
+                          <td>Barcelona</td>
+                          <td>Paris</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 75%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>3:29 AM</td>
+                          <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 35</td>
+                          <td>Calella</td>
+                          <td>Tarragona</td>
+                          <td>10 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 65%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:00 AM</td>
+                          <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 36</td>
+                          <td>Barcelona</td>
+                          <td>Madrid</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 55%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:30 AM</td>
+                          <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 37</td>
+                          <td>Node 4</td>
+                          <td>Node 12</td>
+                          <td>100 Mbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 45%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:45 AM</td>
+                          <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 34</td>
+                          <td>Barcelona</td>
+                          <td>Paris</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 35%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>3:29 AM</td>
+                          <td>2 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 35</td>
+                          <td>Calella</td>
+                          <td>Tarragona</td>
+                          <td>10 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 23%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:00 AM</td>
+                          <td>2 hour 45 minutes</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 36</td>
+                          <td>Barcelona</td>
+                          <td>Madrid</td>
+                          <td>1 Gbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 17%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:30 AM</td>
+                          <td>1 hour</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 37</td>
+                          <td>Node 4</td>
+                          <td>Node 12</td>
+                          <td>100 Mbps</td>
+                          <td>
+                            <div class="progress progress-striped active margin-0">
+                              <div class="progress-bar progress-bar-success" style="width: 10%"></div>
+                            </div>
+                          </td>
+                          <td>11/21/2013</td>
+                          <td>2:45 AM</td>
+                          <td>6 hours</td>
+                          <td><center><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#statistics">Statistics</button></center></td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>             
+            </div>
+          </div>
+        </div><!-- /Active FLOWS -->
+
+        <div class="row"><!-- Programmed FLOWS -->
+          <div class="col-sm-12">
+            <div class="panel panel-primary">    
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-calendar"></i> Programmed flows</h3>
+              </div>
+              <div class="panel-body">
+                <div id="FLW-prg">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                      <thead>
+                        <tr>
+                          <th>Flow ID <i class="fa fa-sort"></i></th>
+                          <th>Organization <i class="fa fa-sort"></i></th>
+                          <th>From <i class="fa fa-sort"></i></th>
+                          <th>To <i class="fa fa-sort"></i></th>
+                          <th>Speed <i class="fa fa-sort"></i></th>
+                          <th>Date <i class="fa fa-sort"></i></th>
+                          <th>Time start <i class="fa fa-sort"></i></th>
+                          <th>Duration  <i class="fa fa-sort"></i></th>
+                          <th><center><i class="fa fa-edit"></i></center></th>
+                          <th><center><i class="fa fa-eraser"></i></center></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Flow 38</td>
+                          <td>Danone</td>
+                          <td>Zaragoza</td>
+                          <td>Madrid</td>
+                          <td>100 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:00 AM</td>
+                          <td>30 minutes</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 39</td>
+                          <td>Sony</td>
+                          <td>St. Cugat</td>
+                          <td>Barcelona</td>
+                          <td>10 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:30 AM</td>
+                          <td>5 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 40</td>
+                          <td>Seat</td>
+                          <td>Barcelona</td>
+                          <td>Madrid</td>
+                          <td>1 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:45 AM</td>
+                          <td>1 hour</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 41</td>
+                          <td>Zara</td>
+                          <td>Point A</td>
+                          <td>Point B</td>
+                          <td>10 Mbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:45 AM</td>
+                          <td>6 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 38</td>
+                          <td>Danone</td>
+                          <td>Zaragoza</td>
+                          <td>Madrid</td>
+                          <td>100 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:00 AM</td>
+                          <td>30 minutes</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 39</td>
+                          <td>Sony</td>
+                          <td>St. Cugat</td>
+                          <td>Barcelona</td>
+                          <td>10 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:30 AM</td>
+                          <td>5 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 40</td>
+                          <td>Seat</td>
+                          <td>Barcelona</td>
+                          <td>Madrid</td>
+                          <td>1 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:45 AM</td>
+                          <td>1 hour</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 41</td>
+                          <td>Zara</td>
+                          <td>Point A</td>
+                          <td>Point B</td>
+                          <td>10 Mbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:45 AM</td>
+                          <td>6 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 38</td>
+                          <td>Danone</td>
+                          <td>Zaragoza</td>
+                          <td>Madrid</td>
+                          <td>100 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:00 AM</td>
+                          <td>30 minutes</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 39</td>
+                          <td>Sony</td>
+                          <td>St. Cugat</td>
+                          <td>Barcelona</td>
+                          <td>10 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:30 AM</td>
+                          <td>5 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 40</td>
+                          <td>Seat</td>
+                          <td>Barcelona</td>
+                          <td>Madrid</td>
+                          <td>1 Gbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:45 AM</td>
+                          <td>1 hour</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                        <tr>
+                          <td>Flow 41</td>
+                          <td>Zara</td>
+                          <td>Point A</td>
+                          <td>Point B</td>
+                          <td>10 Mbps</td>
+                          <td>11/21/2013</td>
+                          <td>5:45 AM</td>
+                          <td>6 hours</td>
+                          <td><center><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit">Edit</button></center></td>
+                          <td><center><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove">Remove</button></center></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>             
+            </div>
+          </div>
+        </div><!-- /Programmed FLOWS -->
+
+      </div>
+
+
+
+
+
+      </div><!-- /#page-wrapper -->
+
+    </div><!-- /#wrapper -->
+
+<!-- MODALS WINDOWS-->
+
+<!-- STATISTICS-->
+<div class="modal fade" id="statistics" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="statisticsModalLabel">Statistics flow X</h4>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal STATISTICS -->
+
+<!-- EDIT-->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="editModalLabel">Edit flow X</h4>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal EDIT -->
+
+<!-- REMOVE-->
+<div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="removeModalLabel">Remove flow X</h4>
+      </div>
+      <div class="modal-body">
+        <h2>Are you sure you want to remove this flow?</h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger">Remove flow</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal EDIT -->
+
+<!-- ADD NEW flow-->
+<div class="modal fade" id="newFlow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="removeModalLabel">Remove flow X</h4>
+      </div>
+      <div class="modal-body">
+        <h2>Are you sure you want to remove this flow?</h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger">Remove flow</button>
+      </div>
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
+</div><!-- /modal ADD NEW flow -->
+
+    <!-- JavaScript -->
+    <script src="../js/jquery-1.10.2.js"></script>
+    <script src="../js/bootstrap.js"></script>
+
+    <!-- Page Specific Plugins -->
+    <script src="../js/tablesorter/jquery.tablesorter.js"></script>
+    
+
+    <script type="text/javascript" src="../js/jquery.slimscroll.min.js"></script>
+    <script>
+      $(function(){
+          $('#FLW-active').slimScroll({
+              height: '170px'
+          });
+          $('#FLW-prg').slimScroll({
+              height: '170px'
+          });
+      });
+    </script>
+
+  </body>
+</html>
