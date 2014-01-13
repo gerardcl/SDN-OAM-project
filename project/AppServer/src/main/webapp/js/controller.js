@@ -67,7 +67,7 @@
 	//user model 
 	var User = Backbone.Model.extend({
 		//urlRoot:'/user/all?orgId=',
-		urlRoot:'/AppServer/webapp/manager/user',
+		//urlRoot:'/AppServer/webapp/manager/user/'+loginOrg,
 		defaults:{
 			identifier: "",
 			name: "",
@@ -650,18 +650,19 @@
 	var NewUserView = Backbone.View.extend({
 		el: '.page',
 		events: {
-			'submit .edit-org-form': 'saveUser',
+			'submit .edit-user-form': 'saveUser',
 			'click .delete': 'deleteUser'
 		},
 		saveUser: function (ev){
 			var userDetails = $(ev.currentTarget).serializeObject();
 			console.log(userDetails);
 			var user = new User();
-			user.urlRoot = '/AppServer/webapp/manager/'+loginOrg+'user';
+			user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
 			user.save(userDetails, {
 				type: "POST",
-			    contentType: "application/vmd.dxat.appserver.manager.org.collection+json",
+			    contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
 				success: function (ev) {
+					console.log('success saveUser');
 					console.log(ev);
 					if(ev.attributes.identifier == "") alert("this user already exists");
 					else router.navigate('adminUsers/'+ev.attributes.identifier, {trigger: true});
@@ -685,6 +686,7 @@
 			if(options.identifier){
 				// "id" is what backbone takes to GET REST path
 				that.user = new User({id: options.identifier});
+				that.user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
 				that.user.fetch({
 					success: function (user){
 						var template = _.template($('#edit-user-template').html(), {user: user});
@@ -782,7 +784,7 @@
 		router.on('route:editUser', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			newUserView.render({identifier: id});
+			newUserView.render({identifier: id, orgId: loginOrg});
 		});
 
 		router.on('route:orgFlows', function(id) {	
