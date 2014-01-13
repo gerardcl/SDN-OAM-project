@@ -1724,7 +1724,7 @@
 
             <div class="col-md-4 col-sm-4">
               <a href="#/adminOrgs<%= organization ? '/'+organization.get('identifier') : '' %>">
-                <button type="button" class="btn btn-danger margin-10-left"><i class="fa fa-trash-o"></i>   Discard changes
+                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Discard changes
                 </button>
               </a>
             </div>
@@ -1744,6 +1744,7 @@
             <div class="row">
               <div class="col-lg-6 col-md-6 col-sm-12">
 
+                <input type="hidden" class="form-control" name="orgId" value="<%= organization ? organization.get('identifier') : '' %>" >
                 <div class="form-group">
                   <label for="name" class="col-sm-4 control-label">Name</label>
                   <div class="col-sm-8">
@@ -1793,7 +1794,10 @@
             <div class="row">    
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="form-group">
-                  <center><button type="submit" class="btn btn-lg <%= organization ? 'btn-warning' : 'btn-success' %> "><%= organization ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create Organization'%></button></center>
+                  <center>
+                    <button type="submit" class="btn btn-lg <%= organization ? 'btn-warning' : 'btn-success' %> "><%= organization ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create Organization'%></button>
+                    <%= organization ? '<button type="delete" class="btn btn-lg btn-danger delete"><i class="fa fa-trash-o"></i> Remove organization </button>' : '' %> 
+                  </center>
                 </div>
               </div>
             </div>
@@ -1813,7 +1817,7 @@
 
             <div class="col-md-4 col-sm-4">
               <a href="#/adminUsers/<%= loginOrg %>">
-                <button type="button" class="btn btn-danger margin-10-left"><i class="fa fa-trash-o"></i>   Discard changes
+                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Discard changes
                 </button>
               </a>
             </div>
@@ -1882,7 +1886,10 @@
             <div class="row">    
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="form-group">
-                  <center><button type="submit" class="btn btn-lg <%= user ? 'btn-warning' : 'btn-success' %> "><%= user ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create User'%></button></center>
+                  <center>
+                    <button type="submit" class="btn btn-lg <%= user ? 'btn-warning' : 'btn-success' %> "><%= user ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create User'%></button>
+                    <%= user ? '<button type="delete" class="btn btn-lg btn-danger delete"><i class="fa fa-trash-o"></i> Remove user </button>' : '' %> 
+                  </center>
                 </div>
               </div>
             </div>

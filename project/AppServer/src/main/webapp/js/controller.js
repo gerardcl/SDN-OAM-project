@@ -286,7 +286,7 @@
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			console.log(orgDetails);
 			var org = new Organization();
-			org.urlRoot = '/AppServer/webapp/manager/org';
+			org.urlRoot = '/AppServer/webapp/manager/org/'+orgDetails.orgId+'';
 			org.save(orgDetails, {
 				type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.org.collection+json",
