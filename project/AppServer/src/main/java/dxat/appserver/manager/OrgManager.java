@@ -7,7 +7,9 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import dxat.appserver.manager.database.Create;
+import dxat.appserver.manager.database.Delete;
 import dxat.appserver.manager.database.Read;
+import dxat.appserver.manager.database.Update;
 import dxat.appserver.manager.exceptions.FlowAlreadyExistsException;
 import dxat.appserver.manager.exceptions.OrgAlreadyExistsException;
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
@@ -32,6 +34,8 @@ public class OrgManager {
 	private HashMap<String, OrgTerminal> terminals;
 	private Create dbcreate;
 	private Read dbread;
+	private Update dbupdate;
+	private Delete dbdelete;
 	private boolean dbExists;
 
 	private OrgManager(){
@@ -131,28 +135,55 @@ public class OrgManager {
 		neworg.setOAM(torg.isOAM());
 		neworg.setTelephone(torg.getTelephone());
 		neworg.setTorg(torg);
-		HashMap<String, OrgFlow> oflows = new HashMap<>();
-		HashMap<String, OrgUser> ousers = new HashMap<>();
-		HashMap<String, OrgTerminal> oterminals = new HashMap<>();
+		HashMap<String, OrgFlow> oflows = new HashMap<String, OrgFlow>();
+		HashMap<String, OrgUser> ousers = new HashMap<String, OrgUser>();
+		HashMap<String, OrgTerminal> oterminals = new HashMap<String, OrgTerminal>();
 		neworg.setFlows(oflows);
 		neworg.setUsers(ousers);
 		neworg.setTerminals(oterminals);
 		orgs.put(neworg.getIdentifier(), neworg);
 	}
 	
-	public TOrg deleteOrg(String id){
-		//Deleting TOrg from database
+	public TOrg updateTOrg(TOrg torg){
+		dbupdate = new Update();
+		try {
+			dbupdate.updateOrg(torg);
+			torgs.put(torg.getIdentifier(), torg);
+			updateOrg(torg);
+			return torg;
+		} catch (OrgNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
-	public TOrg updateTOrg(TOrg torg){
-		//Updating TOrg from database
+	public void updateOrg(TOrg torg){
+		Org uOrg = orgs.get(torg.getIdentifier());
+		uOrg.setBankAccount(torg.getBankAccount());
+		uOrg.setName(torg.getName());
+		uOrg.setNIF(torg.getNIF());
+		uOrg.setOAM(torg.isOAM());
+		uOrg.setTelephone(torg.getTelephone());
+		uOrg.setTorg(torg);
+		orgs.put(torg.getIdentifier(), uOrg);
+	}
+	
+	public String deleteOrg(String orgId){
+		//Deleting TOrg from database
+		dbdelete = new Delete();
+		try {
+			dbdelete.deleteOrg(orgId);
+			torgs.remove(orgId);
+			orgs.remove(orgId);
+			return orgId;
+		} catch (OrgNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
-	public Org updateOrg(Org org){
-		//TODO
-		return org;
-	}
+
 	public boolean existOrg(TOrg org){
 		for (Entry<String, TOrg> entry1 : torgs.entrySet()) {
 			TOrg torg = entry1.getValue();
@@ -162,6 +193,12 @@ public class OrgManager {
 		System.out.println("this org does not exists");
 		return false;
 	}
+
+	public boolean existOrg(String orgId){
+		if(orgs.containsKey(orgId)) return true;
+		return false;
+	}
+	
 	private String getOrgIdFromUserId(String userId){
 		String orgId = null;
 		for (Entry<String, Org> entry1 : orgs.entrySet()) {
