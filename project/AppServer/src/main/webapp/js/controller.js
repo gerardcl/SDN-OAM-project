@@ -67,7 +67,7 @@
 	//user model 
 	var User = Backbone.Model.extend({
 		//urlRoot:'/user/all?orgId=',
-		urlRoot:'/AppServer/webapp/manager/user',
+		//urlRoot:'/AppServer/webapp/manager/user/'+loginOrg,
 		defaults:{
 			identifier: "",
 			name: "",
@@ -275,7 +275,7 @@
 	var orgsListBSView = new OrgsListBSView();
 	// /Orgs List Bootstrap View
 
-
+	// NEW & EDIT ORG view
 	var NewOrgView = Backbone.View.extend({
 		el: '.page',
 		events: {
@@ -330,7 +330,7 @@
 
 	var newOrgView = new NewOrgView();
 
-	//OrgData View
+	// OrgData View
 	var OrgDataView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) { 
@@ -345,10 +345,10 @@
 						var template = _.template($('#organizations-data-template').html(), {organization: organization});
 						that.$el.html(template); 
 						//SlimScroll
-/*						$('#OM-data').slimScroll({
-							height: '190px'
-						});
-*/					}
+						// $('#OM-data').slimScroll({
+						// 	height: '190px'
+						// });
+					}
 				});
 			} else {
 				var template = _.template($('#organizations-data-template').html(), {organization: null});
@@ -364,7 +364,7 @@
 	var orgDataView = new OrgDataView();
 
 
-	//OrgUsers View
+	// OrgUsers View
 	var OrgUsersView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) { 
@@ -388,7 +388,7 @@
 	var orgUsersView = new OrgUsersView();
 
 
-	//org TERMINAL
+	// org TERMINAL
 	var OrgTerminalsView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) { 
@@ -610,6 +610,7 @@
 	var clientUsersView = new ClientUsersView();
 
 // SHARED VIEWS
+	// FLOW EDIT VIEW
 	var NewFlowView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) {
@@ -644,6 +645,64 @@
 
 	var newFlowView = new NewFlowView();
 
+
+	// USER EDIT view
+	var NewUserView = Backbone.View.extend({
+		el: '.page',
+		events: {
+			'submit .edit-user-form': 'saveUser',
+			'click .delete': 'deleteUser'
+		},
+		saveUser: function (ev){
+			var userDetails = $(ev.currentTarget).serializeObject();
+			console.log(userDetails);
+			var user = new User();
+			user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
+			user.save(userDetails, {
+				type: "POST",
+			    contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
+				success: function (ev) {
+					console.log('success saveUser');
+					console.log(ev);
+					if(ev.attributes.identifier == "") alert("this user already exists");
+					else router.navigate('adminUsers/'+ev.attributes.identifier, {trigger: true});
+				},
+				error: function(model, response) {
+				    alert('wrong');
+				}
+			});
+			return false;
+		},
+		deleteUser: function (ev){
+			this.user.destroy({
+				success: function () {
+					router.navigate('adminOrgs/',{triggq: true});
+				}
+			});
+			return false;
+		},
+		render: function (options) {
+			var that = this;
+			if(options.identifier){
+				// "id" is what backbone takes to GET REST path
+				that.user = new User({id: options.identifier});
+				that.user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
+				that.user.fetch({
+					success: function (user){
+						var template = _.template($('#edit-user-template').html(), {user: user});
+          				that.$el.html(template);
+					}
+				});
+			} else {
+	          var template = _.template($('#edit-user-template').html(), {user: null});
+	          that.$el.html(template);
+	        } 
+
+		}
+	});
+
+	var newUserView = new NewUserView();
+
 //	ROUTES 
 	var Router = Backbone.Router.extend({
 		routes: {
@@ -652,9 +711,11 @@
 			"adminOverview" : "adminOverview", //Admin First View
 			"adminOrgs": "adminOrgs", //Organizations list
 			"adminOrgs/:identifier": "orgData", //Org informtion
-			"newOrg": "editOrg", // CREATE Org
-			"editOrg/:identifier": "editOrg", //EDIT Org template (same as CREATE)
+				"newOrg": "editOrg", // CREATE Org
+				"editOrg/:identifier": "editOrg", //EDIT Org template (same as CREATE)
 			"adminUsers/:identifier": "orgUsers", //Org users
+				"newUser": "editUser", //NEW USER template
+				"editUser/:identifier": "editUser", //EDIT USER template
 			"adminFlows/:identifier": "orgFlows", //active flows of specipic org
 			"adminFlows": "flows", //active flows of specipic org
 			"adminPrgFlows/:identifier": "orgPrgFlows",	//programmed flows of specific org	
@@ -718,6 +779,12 @@
 			loadDefaultStatValues();
 			StopSwitchStats();
 			orgUsersView.render({identifier: id});
+		});
+
+		router.on('route:editUser', function(id) {
+			loadDefaultStatValues();
+			StopSwitchStats();
+			newUserView.render({identifier: id, orgId: loginOrg});
 		});
 
 		router.on('route:orgFlows', function(id) {	
