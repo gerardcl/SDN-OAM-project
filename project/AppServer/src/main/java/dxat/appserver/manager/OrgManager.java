@@ -144,13 +144,22 @@ public class OrgManager {
 		orgs.put(neworg.getIdentifier(), neworg);
 	}
 	
-	public TOrg updateTOrg(TOrg torg){
+	public TOrg updateTOrg(String orgId, TOrg torg){
+		System.out.println("org exists! ("+orgId+")");
 		dbupdate = new Update();
+		TOrg utorg = torgs.get(orgId);
+		utorg.setIdentifier(orgId);
+		utorg.setBankAccount(torg.getBankAccount());
+		utorg.setName(torg.getName());
+		utorg.setNIF(torg.getNIF());
+		utorg.setOAM(torg.isOAM());
+		utorg.setTelephone(torg.getTelephone());
 		try {
-			dbupdate.updateOrg(torg);
-			torgs.put(torg.getIdentifier(), torg);
-			updateOrg(torg);
-			return torg;
+			dbupdate.updateOrg(utorg);
+			torgs.put(orgId, utorg);
+			updateOrg(utorg);
+			System.out.println("org updated: "+orgId);
+			return utorg;
 		} catch (OrgNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -166,6 +175,9 @@ public class OrgManager {
 		uOrg.setOAM(torg.isOAM());
 		uOrg.setTelephone(torg.getTelephone());
 		uOrg.setTorg(torg);
+		uOrg.setFlows(uOrg.getFlows());
+		uOrg.setTerminals(uOrg.getTerminals());
+		uOrg.setUsers(uOrg.getUsers());
 		orgs.put(torg.getIdentifier(), uOrg);
 	}
 	
@@ -196,6 +208,7 @@ public class OrgManager {
 
 	public boolean existOrg(String orgId){
 		if(orgs.containsKey(orgId)) return true;
+		System.out.println("org does not exists...");
 		return false;
 	}
 	

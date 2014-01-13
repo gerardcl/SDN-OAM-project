@@ -75,7 +75,8 @@ public class OrgResource {
 	public TOrg updateOrg(@PathParam("orgId") String orgId, TOrg torg){
 		System.out.println("trying to update org");	
 		if(!orgManager.existOrg(orgId)) return null;
-		return orgManager.updateTOrg(torg);	
+		System.out.println("updating...");
+		return orgManager.updateTOrg(orgId, torg);	
 	}
 	
 	@DELETE
