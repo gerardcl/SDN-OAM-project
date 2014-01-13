@@ -125,20 +125,22 @@ public class FlowManager {
         } else if (eventStr.equals(IFlowEvents.FLOW_COLLECTION)) {
             DeployedFlowCollection deployedFlowCollection = new Gson().fromJson(controllerEvent.getObject(),
                     DeployedFlowCollection.class);
-            List<DeployedFlow> deployedFlowList = deployedFlowCollection.getFlows();
-            flows.clear();
-            for (DeployedFlow deployedFlow : deployedFlowList) {
-                // Put flow in the database
-                flows.put(deployedFlow.getFlowId(), deployedFlow);
+            if (deployedFlowCollection != null) {
+                List<DeployedFlow> deployedFlowList = deployedFlowCollection.getFlows();
+                flows.clear();
+                for (DeployedFlow deployedFlow : deployedFlowList) {
+                    // Put flow in the database
+                    flows.put(deployedFlow.getFlowId(), deployedFlow);
 
-                // Set update
-                DbUpdate update = new DbUpdate();
-                update.setNewValue("true");
-                update.setLegacyValue("false");
-                update.setInventoryId(deployedFlow.getFlowId());
-                update.setPropertyId("enabled");
-                update.setMessage("The flow with ID '" + deployedFlow.getFlowId() + "' is deployed in the network.");
-                updateList.add(update);
+                    // Set update
+                    DbUpdate update = new DbUpdate();
+                    update.setNewValue("true");
+                    update.setLegacyValue("false");
+                    update.setInventoryId(deployedFlow.getFlowId());
+                    update.setPropertyId("enabled");
+                    update.setMessage("The flow with ID '" + deployedFlow.getFlowId() + "' is deployed in the network.");
+                    updateList.add(update);
+                }
             }
         }
         return updateList;
