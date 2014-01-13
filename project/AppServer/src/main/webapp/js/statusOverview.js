@@ -889,20 +889,55 @@ function updateGauges()
 {
 	for (var key in gauges)
 	{
-		var value = getRandomValue(gauges[key]);
+		console.log("updating gauge:");
+		console.log(key);
+		var value = getControllerData(key);//getRandomValue(gauges[key]);
 		gauges[key].redraw(value);
 	}
 }
 
-//TODO CHANGE THE RANDOM VALUE TO AJAX REQUEST!!!
-function getRandomValue(gauge)
-{
-	var overflow = 0; //10;
-	return gauge.config.min - overflow + (gauge.config.max - gauge.config.min + overflow*2) *  Math.random();
+function getControllerData(key){
+	var datastats = {};
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/controller/MemoryPCT/AVERAGE/second
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/controller/CpuAvg/AVERAGE/second
+	var param = (key == "memory" ? "MemoryPCT" : "CpuAvg");
+	var datastatsuri = "/AppServer/webapp/statistics/controller/"+param+"/AVERAGE/second";
+	$.ajaxSetup({
+		async : false
+	}); //execute synchronously
+
+	console.log("GETTING STATS");
+	$.ajax({
+		type: "GET",
+		url: datastatsuri,
+		//contentType: 'json',
+		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+		//headers: {
+		//	Accept : "application/vmd.dxat.appserver.stats+json"
+		//},
+		success : function(result) {
+                            datastats = result;
+                    },
+                    error: function(xhr, msg) {
+                            var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+                            datastats = JSON.parse(rplcd);
+                    }
+	});
+	//		Tractament de dades obtingudes
+	$.ajaxSetup({
+		async : true
+	}); //execute asynchronously
+	return datastats.valueAxxis[0];;
 }
+////TODO CHANGE THE RANDOM VALUE TO AJAX REQUEST!!!
+//function getRandomValue(gauge)
+//{
+//	var overflow = 0; //10;
+//	return gauge.config.min - overflow + (gauge.config.max - gauge.config.min + overflow*2) *  Math.random();
+//}
 
 function initializeControllerStats()
 {
 	createGauges();
-	setInterval(updateGauges, 2000);
+	setInterval(updateGauges, 3000);
 }
