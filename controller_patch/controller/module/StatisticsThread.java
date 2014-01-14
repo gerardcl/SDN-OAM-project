@@ -85,7 +85,7 @@ public class StatisticsThread implements Runnable {
 		Set<String> dpidList = switchFlowMap.keySet();
 
 		for (String dpid : dpidList) {
-			Set<String> flowEntries = switchFlowMap.get(dpid).keySet();
+			List<String> flowEntries = new ArrayList<String>(switchFlowMap.get(dpid).keySet());
 			for (String entryName : flowEntries) {
 				String[] parts = entryName.split("\\.");
 				if (parts.length > 1) {

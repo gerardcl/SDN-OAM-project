@@ -25,340 +25,431 @@ import org.openflow.util.U16;
 import java.util.*;
 
 public class FlowPusherManager {
-	private HashMap<String, DeployedFlow> currentFlows;
+    /**
+     *
+     */
+    private HashMap<String, DeployedFlow> currentFlows;
 
-	public FlowPusherManager() {
-		super();
-		currentFlows = new HashMap<String, DeployedFlow>();
-	}
+    public FlowPusherManager() {
+        super();
+        currentFlows = new HashMap<String, DeployedFlow>();
+    }
 
-	public void deleteAllFlows() {
-		DxatAppModule.getInstance().getFlowPusherService().deleteAllFlows();
-	}
+    /**
+     *
+     */
+    public void deleteAllFlows() {
+        DxatAppModule.getInstance().getFlowPusherService().deleteAllFlows();
+        currentFlows.clear();
+    }
 
-	/**
-	 * This function removes from the switches flow tables the desired flow.
-	 * 
-	 * @param flow
-	 *            It is the flow to remove. It is only needed the flow id.
-	 * @return True if the flow is running or false if not.
-	 */
-	public boolean deleteFlow(Flow flow) {
-		Boolean found = false;
-		IStaticFlowEntryPusherService flowPusherService = DxatAppModule
-				.getInstance().getFlowPusherService();
-		Map<String, Map<String, OFFlowMod>> switchFlowMap = flowPusherService
-				.getFlows();
+    /**
+     * This function removes from the switches flow tables the desired flow.
+     *
+     * @param flow It is the flow to remove. It is only needed the flow id.
+     * @return True if the flow is running or false if not.
+     */
+    public boolean deleteFlow(Flow flow) {
+        Boolean found = false;
+        IStaticFlowEntryPusherService flowPusherService = DxatAppModule
+                .getInstance().getFlowPusherService();
+        Map<String, Map<String, OFFlowMod>> switchFlowMap = flowPusherService
+                .getFlows();
 
-		if (!currentFlows.containsKey(flow.getFlowId()))
-			return false;
+        // Check if the flow exists
+        if (!currentFlows.containsKey(flow.getFlowId()))
+            return false;
 
-		Set<String> dpidSet = switchFlowMap.keySet();
-		for (String dpid : dpidSet) {
-			String entryName = dpid + "." + flow.getFlowId() + ".";
-			List<String> currentFlowList = new ArrayList<String>();
-			// Get Switch flows
-			Set<String> flowSet = switchFlowMap.get(dpid).keySet();
-			for (String flowId : flowSet) {
-				currentFlowList.add(new String(flowId));
-				System.out.println(flowId);
-			}
+        Set<String> dpidSet = switchFlowMap.keySet();
+        for (String dpid : dpidSet) {
+            // Compute entry name start
+            String entryName = dpid + "." + flow.getFlowId() + ".";
+            List<String> currentFlowList = new ArrayList<String>();
 
-			// Delete Switch flows with the desired id
-			for (String flowId : currentFlowList) {
-				if (flowId.startsWith(entryName)) {
-					flowPusherService.deleteFlow(flowId);
-					found = true;
-				}
-			}
-		}
+            // Get Switch flows
+            Set<String> flowSet = switchFlowMap.get(dpid).keySet();
+            for (String flowId : flowSet) {
+                currentFlowList.add(new String(flowId));
+            }
 
-		// Delete flow entry in the current flow list
-		currentFlows.remove(flow.getFlowId());
+            // Delete Switch flows with the desired id
+            System.out.println("%%% Deleteting the following flow entries:");
+            for (String flowId : currentFlowList) {
+                if (flowId.startsWith(entryName)) {
+                    flowPusherService.deleteFlow(flowId);
+                    System.out.println(flowId);
+                    found = true;
+                }
+            }
+        }
 
-		// Return
-		return found;
-	}
+        // Delete flow entry in the current flow list
+        currentFlows.remove(flow.getFlowId());
 
-	/**
-	 * This function pushes a flow. It seeks the access points of the terminals.
-	 * After compute the route and write the flow tables of the switches.
-	 * Finally, if no error store and return the deployed flow.
-	 * 
-	 * @param flow
-	 *            This is the flow which is pushed into the network.
-	 * @return The deployed flow, which contains the same information than the
-	 *         original flow plus the route ports.
-	 * @throws DstTerminalNotFoundException
-	 *             If the destination terminal cannot be found in the network.
-	 * @throws SrcTerminalNotFoundException
-	 *             If the source terminal cannot be found in the network.
-	 * @throws UnreachableTerminalsException
-	 *             If it is not possible find a route between the pair of
-	 *             terminals.
-	 * @throws IllegalFlowEntryException
-	 *             If there is an error generating a flow entry.
-	 * @throws FlowAlreadyExistsException
-	 *             If the flow has been pushed previously.
-	 */
-	public DeployedFlow pushFlow(Flow flow)
-			throws DstTerminalNotFoundException, SrcTerminalNotFoundException,
-			UnreachableTerminalsException, IllegalFlowEntryException,
-			FlowAlreadyExistsException {
+        // Return
+        return found;
+    }
 
-		if (currentFlows.containsKey(flow.getFlowId())) {
-			throw new FlowAlreadyExistsException(flow);
-		}
+    /**
+     * This function pushes a flow. It seeks the access points of the terminals.
+     * After compute the route and write the flow tables of the switches.
+     * Finally, if no error store and return the deployed flow.
+     *
+     * @param flow This is the flow which is pushed into the network.
+     * @return The deployed flow, which contains the same information than the
+     * original flow plus the route ports.
+     * @throws DstTerminalNotFoundException  If the destination terminal cannot be found in the network.
+     * @throws SrcTerminalNotFoundException  If the source terminal cannot be found in the network.
+     * @throws UnreachableTerminalsException If it is not possible find a route between the pair of
+     *                                       terminals.
+     * @throws IllegalFlowEntryException     If there is an error generating a flow entry.
+     * @throws FlowAlreadyExistsException    If the flow has been pushed previously.
+     */
+    public DeployedFlow pushFlow(Flow flow)
+            throws DstTerminalNotFoundException, SrcTerminalNotFoundException,
+            UnreachableTerminalsException, IllegalFlowEntryException,
+            FlowAlreadyExistsException {
 
-		// Get services
-		IStaticFlowEntryPusherService flowPusherService = DxatAppModule
-				.getInstance().getFlowPusherService();
-		IFloodlightProviderService switchService = DxatAppModule.getInstance()
-				.getSwitchService();
-		IDeviceService deviceService = DxatAppModule.getInstance()
-				.getDeviceService();
-		IRoutingService routingService = DxatAppModule.getInstance()
-				.getRoutingService();
+        if (currentFlows.containsKey(flow.getFlowId())) {
+            throw new FlowAlreadyExistsException(flow);
+        }
 
-		// Get flow SRC and destination
-		int flowSrcIpAddr = IPv4.toIPv4Address(flow.getSrcIpAddr());
-		int flowDstIpAddr = IPv4.toIPv4Address(flow.getDstIpAddr());
+        // Get services
+        IStaticFlowEntryPusherService flowPusherService = DxatAppModule
+                .getInstance().getFlowPusherService();
+        IFloodlightProviderService switchService = DxatAppModule.getInstance()
+                .getSwitchService();
+        IDeviceService deviceService = DxatAppModule.getInstance()
+                .getDeviceService();
+        IRoutingService routingService = DxatAppModule.getInstance()
+                .getRoutingService();
 
-		// Initialize the attachment points
-		Long longSrcDpid = null;
-		Short shortSrcPort = null;
-		Long longDstDpid = null;
-		Short shortDstPort = null;
+        // Get flow SRC and destination
+        int flowSrcIpAddr = IPv4.toIPv4Address(flow.getSrcIpAddr());
+        int flowDstIpAddr = IPv4.toIPv4Address(flow.getDstIpAddr());
 
-		// Look for these attachment points
-		@SuppressWarnings("unchecked")
-		Collection<IDevice> deviceCollection = (Collection<IDevice>) deviceService
-				.getAllDevices();
-		// For each network device
-		for (IDevice device : deviceCollection) {
-			// Extract ip addreses
-			Integer[] addresses = device.getIPv4Addresses();
-			// For each IP address
-			for (Integer intAddr : addresses) {
-				// If the IP address is matches with the source address
-				if (intAddr == flowSrcIpAddr) {
-					SwitchPort[] attachments = device.getAttachmentPoints();
-					if (attachments.length > 0) {
-						SwitchPort attachment = attachments[0];
-						longSrcDpid = attachment.getSwitchDPID();
-						shortSrcPort = (short) attachment.getPort();
-					}
-					// If the IP address is matches with the destination address
-				} else if (intAddr == flowDstIpAddr) {
-					SwitchPort[] attachments = device.getAttachmentPoints();
-					if (attachments.length > 0) {
-						SwitchPort attachment = attachments[0];
-						longDstDpid = attachment.getSwitchDPID();
-						shortDstPort = (short) attachment.getPort();
-					}
-				}
-			}
-		}
+        // Initialize the attachment points
+        String srcMacAddr = null;
+        Long longSrcDpid = null;
+        Short shortSrcPort = null;
+        String dstMacAddr = null;
+        Long longDstDpid = null;
+        Short shortDstPort = null;
 
-		// Check if terminals are reachable for find their access points
-		if (longDstDpid == null) {
-			throw new DstTerminalNotFoundException(flow);
-		} else if (longSrcDpid == null) {
-			throw new SrcTerminalNotFoundException(flow);
-		}
+        // Look for these attachment points
+        @SuppressWarnings("unchecked")
+        Collection<IDevice> deviceCollection = (Collection<IDevice>) deviceService
+                .getAllDevices();
+        // For each network device
+        for (IDevice device : deviceCollection) {
+            // Extract ip addreses
+            Integer[] addresses = device.getIPv4Addresses();
+            // For each IP address
+            for (Integer intAddr : addresses) {
+                // If the IP address is matches with the source address
+                if (intAddr == flowSrcIpAddr) {
+                    SwitchPort[] attachments = device.getAttachmentPoints();
+                    if (attachments.length > 0) {
+                        SwitchPort attachment = attachments[0];
+                        longSrcDpid = attachment.getSwitchDPID();
+                        shortSrcPort = (short) attachment.getPort();
 
-		// Calculate The route
-		Route route = routingService.getRoute(longSrcDpid, shortSrcPort,
-				longDstDpid, shortDstPort, 0);
+                        // Set Source MAC address
+                        srcMacAddr = device.getMACAddressString();
+                    }
+                    // If the IP address is matches with the destination address
+                } else if (intAddr == flowDstIpAddr) {
+                    SwitchPort[] attachments = device.getAttachmentPoints();
+                    if (attachments.length > 0) {
+                        SwitchPort attachment = attachments[0];
+                        longDstDpid = attachment.getSwitchDPID();
+                        shortDstPort = (short) attachment.getPort();
 
-		// Check if the route has been done
-		if (route == null) {
-			throw new UnreachableTerminalsException(flow);
-		}
+                        // Set Destination MAC address
+                        dstMacAddr = device.getMACAddressString();
+                    }
+                }
+            }
+        }
 
-		// Put entries in the forwarding tables
-		List<NodePortTuple> routeNodes = route.getPath();
-		String ap1Dpid = "";
-		String ap1Port = "";
-		String ap2Port = "";
-		for (int i = 0; i < routeNodes.size(); i++) {
-			if (i % 2 == 0) {
-				ap1Dpid = HexString.toHexString(routeNodes.get(i).getNodeId());
-				ap1Port = String.valueOf(routeNodes.get(i).getPortId());
-			} else {
-				ap2Port = String.valueOf(routeNodes.get(i).getPortId());
+        // Check if terminals are reachable for find their access points
+        if (longDstDpid == null) {
+            throw new DstTerminalNotFoundException(flow);
+        } else if (longSrcDpid == null) {
+            throw new SrcTerminalNotFoundException(flow);
+        }
 
-				// FORWARD Flow entry
-				String entryName = ap1Dpid + "." + flow.getFlowId()
-						+ ".forward";
-				String matchString = "";
-				matchString += "nw_dst=" + flow.getDstIpAddr() + ",";
-				matchString += "nw_src=" + flow.getSrcIpAddr() + ",";
-				matchString += "nw_proto=" + flow.getProtocol() + ",";
-				matchString += "tp_dst=" + flow.getDstPort() + ",";
-				matchString += "tp_src=" + flow.getSrcPort() + ",";
-				matchString += "dl_type=" + 0x800 + ",";
-				matchString += "in_port=" + ap1Port;
+        // Calculate The route
+        Route route = routingService.getRoute(longSrcDpid, shortSrcPort,
+                longDstDpid, shortDstPort, 0);
 
-				String actionString = "output=" + ap2Port;
+        // Check if the route has been done
+        if (route == null) {
+            throw new UnreachableTerminalsException(flow);
+        }
 
-				OFFlowMod fm = (OFFlowMod) switchService.getOFMessageFactory()
-						.getMessage(OFType.FLOW_MOD);
+        // Put entries in the forwarding tables
+        List<NodePortTuple> routeNodes = route.getPath();
+        String ap1Dpid = "";
+        String ap1Port = "";
+        String ap2Port = "";
+        for (int i = 0; i < routeNodes.size(); i++) {
+            if (i % 2 == 0) {
+                ap1Dpid = HexString.toHexString(routeNodes.get(i).getNodeId());
+                ap1Port = String.valueOf(routeNodes.get(i).getPortId());
+            } else {
+                ap2Port = String.valueOf(routeNodes.get(i).getPortId());
 
-				fm.setIdleTimeout((short) 0); // infinite
-				fm.setHardTimeout((short) 0); // infinite
-				fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
-				fm.setCommand((short) 0);
-				fm.setFlags((short) 0);
-				fm.setOutPort(OFPort.OFPP_NONE.getValue());
-				fm.setCookie((long) 0);
-				fm.setPriority(Short.MAX_VALUE);
-				StaticFlowEntries.initDefaultFlowMod(fm, entryName);
+                // FORWARD Flow entry
+                String entryName = ap1Dpid + "." + flow.getFlowId()
+                        + ".forward";
+                String matchString = "";
+                matchString += "nw_dst=" + flow.getDstIpAddr() + ",";
+                matchString += "nw_src=" + flow.getSrcIpAddr() + ",";
+                matchString += "nw_proto=" + flow.getProtocol() + ",";
+                matchString += "tp_dst=" + flow.getDstPort() + ",";
+                matchString += "tp_src=" + flow.getSrcPort() + ",";
+                matchString += "dl_type=" + 0x800 + ",";
+                matchString += "in_port=" + ap1Port;
 
-				LoadBalancer.parseActionString(fm, actionString);
+                String actionString = "output=" + ap2Port;
 
-				fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
+                OFFlowMod fm = (OFFlowMod) switchService.getOFMessageFactory()
+                        .getMessage(OFType.FLOW_MOD);
 
-				OFMatch ofMatch = new OFMatch();
-				try {
-					ofMatch.fromString(matchString);
-				} catch (IllegalArgumentException e) {
-					deleteFlow(flow);
-					throw new IllegalFlowEntryException(flow, ap1Dpid,
-							matchString);
-				}
-				fm.setMatch(ofMatch);
-				flowPusherService.addFlow(entryName, fm, ap1Dpid);
+                fm.setIdleTimeout((short) 0); // infinite
+                fm.setHardTimeout((short) 0); // infinite
+                fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
+                fm.setCommand((short) 0);
+                fm.setFlags((short) 0);
+                fm.setOutPort(OFPort.OFPP_NONE.getValue());
+                fm.setCookie((long) 0);
+                fm.setPriority(Short.MAX_VALUE);
+                StaticFlowEntries.initDefaultFlowMod(fm, entryName);
 
-				// BACKWARD
-				entryName = ap1Dpid + "." + flow.getFlowId() + ".backward";
-				matchString = "";
-				matchString += "nw_dst=" + flow.getSrcIpAddr() + ",";
-				matchString += "nw_src=" + flow.getDstIpAddr() + ",";
-				matchString += "nw_proto=" + flow.getProtocol() + ",";
-				matchString += "tp_dst=" + flow.getSrcPort() + ",";
-				matchString += "tp_src=" + flow.getDstPort() + ",";
-				matchString += "dl_type=" + 0x800 + ",";
-				matchString += "in_port=" + ap2Port;
+                LoadBalancer.parseActionString(fm, actionString);
 
-				actionString = "output=" + ap1Port;
+                fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
 
-				fm = (OFFlowMod) switchService.getOFMessageFactory()
-						.getMessage(OFType.FLOW_MOD);
+                OFMatch ofMatch = new OFMatch();
+                try {
+                    ofMatch.fromString(matchString);
+                } catch (IllegalArgumentException e) {
+                    deleteFlow(flow);
+                    throw new IllegalFlowEntryException(flow, ap1Dpid,
+                            matchString);
+                }
+                fm.setMatch(ofMatch);
+                flowPusherService.addFlow(entryName, fm, ap1Dpid);
 
-				fm.setIdleTimeout((short) 0); // infinite
-				fm.setHardTimeout((short) 0); // infinite
-				fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
-				fm.setCommand((short) 0);
-				fm.setFlags((short) 0);
-				fm.setOutPort(OFPort.OFPP_NONE.getValue());
-				fm.setCookie((long) 0);
-				fm.setPriority(Short.MAX_VALUE);
-				StaticFlowEntries.initDefaultFlowMod(fm, entryName);
+                // BACKWARD
+                entryName = ap1Dpid + "." + flow.getFlowId() + ".backward";
+                matchString = "";
+                matchString += "nw_dst=" + flow.getSrcIpAddr() + ",";
+                matchString += "nw_src=" + flow.getDstIpAddr() + ",";
+                matchString += "nw_proto=" + flow.getProtocol() + ",";
+                matchString += "tp_dst=" + flow.getSrcPort() + ",";
+                matchString += "tp_src=" + flow.getDstPort() + ",";
+                matchString += "dl_type=" + 0x800 + ",";
+                matchString += "in_port=" + ap2Port;
 
-				LoadBalancer.parseActionString(fm, actionString);
+                actionString = "output=" + ap1Port;
 
-				fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
+                fm = (OFFlowMod) switchService.getOFMessageFactory()
+                        .getMessage(OFType.FLOW_MOD);
 
-				ofMatch = new OFMatch();
-				try {
-					ofMatch.fromString(matchString);
-				} catch (IllegalArgumentException e) {
-					deleteFlow(flow);
-					throw new IllegalFlowEntryException(flow, ap1Dpid,
-							matchString);
-				}
-				fm.setMatch(ofMatch);
-				flowPusherService.addFlow(entryName, fm, ap1Dpid);
-			}
-		}
+                fm.setIdleTimeout((short) 0); // infinite
+                fm.setHardTimeout((short) 0); // infinite
+                fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
+                fm.setCommand((short) 0);
+                fm.setFlags((short) 0);
+                fm.setOutPort(OFPort.OFPP_NONE.getValue());
+                fm.setCookie((long) 0);
+                fm.setPriority(Short.MAX_VALUE);
+                StaticFlowEntries.initDefaultFlowMod(fm, entryName);
 
-		// Get the list of ports of the flow
-		Set<String> flowPortSet = new HashSet<String>();
-		for (NodePortTuple node : routeNodes) {
-			flowPortSet.add(HexString.toHexString(node.getNodeId()) + ":"
-					+ node.getPortId());
-		}
+                LoadBalancer.parseActionString(fm, actionString);
 
-		// Create Deployed flow
-		DeployedFlow deployedFlow = new DeployedFlow();
-		deployedFlow.setBandwidth(flow.getBandwidth());
-		deployedFlow.setDstPort(flow.getDstPort());
-		deployedFlow.setFlowId(flow.getFlowId());
-		deployedFlow.setProtocol(flow.getProtocol());
-		deployedFlow.setQos(flow.getQos());
-		deployedFlow.setRoute(new ArrayList<String>(flowPortSet));
-		deployedFlow.setSrcPort(flow.getSrcPort());
+                fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
 
-		// Add flow to the registry of flows
-		currentFlows.put(flow.getFlowId(), deployedFlow);
+                ofMatch = new OFMatch();
+                try {
+                    ofMatch.fromString(matchString);
+                } catch (IllegalArgumentException e) {
+                    deleteFlow(flow);
+                    throw new IllegalFlowEntryException(flow, ap1Dpid,
+                            matchString);
+                }
+                fm.setMatch(ofMatch);
+                flowPusherService.addFlow(entryName, fm, ap1Dpid);
 
-		// Return the deployed flow
-		return deployedFlow;
-	}
+                // ARP Forward
+                entryName = ap1Dpid + "." + ap1Port + "." + ap2Port + ".arp";
+                if (!flowPusherService.getFlows(ap1Dpid).containsKey(entryName)) {
+                    matchString = "";
+                    matchString += "dl_type=" + 0x806 + ",";
+                    matchString += "in_port=" + ap1Port;
 
-	public void rerouteFlow(String portId) {
-		// List of the flows which use this port
-		List<Flow> relatedFlows = new ArrayList<Flow>();
+                    actionString = "output=" + ap2Port;
 
-		// Fill the flow list which use the port
-		Set<String> flowIdSet = currentFlows.keySet();
-		for (String flowId : flowIdSet) {
-			// Get the deployed flow
-			DeployedFlow deployedFlow = currentFlows.get(flowId);
+                    fm = (OFFlowMod) switchService.getOFMessageFactory()
+                            .getMessage(OFType.FLOW_MOD);
 
-			// Get the set of ports
-			Set<String> portSet = new HashSet<String>(deployedFlow.getRoute());
+                    fm.setIdleTimeout((short) 0); // infinite
+                    fm.setHardTimeout((short) 0); // infinite
+                    fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
+                    fm.setCommand((short) 0);
+                    fm.setFlags((short) 0);
+                    fm.setOutPort(OFPort.OFPP_NONE.getValue());
+                    fm.setCookie((long) 0);
+                    fm.setPriority(Short.MAX_VALUE);
+                    StaticFlowEntries.initDefaultFlowMod(fm, entryName);
 
-			// Check if the flow uses the port
-			if (portSet.contains(portId)) {
-				// Add the flow to a list of flows
-				relatedFlows.add(new Flow(deployedFlow));
-			}
-		}
+                    LoadBalancer.parseActionString(fm, actionString);
 
-		// Delete and push the flows related with the port
-		for (Flow flow : relatedFlows) {
-			deleteFlow(flow);
-			ControllerEvent controllerEvent = new ControllerEvent();
-			controllerEvent.setTimestamp(new Date().getTime());
-			try {
-				DeployedFlow deployedFlow = pushFlow(flow);
-				controllerEvent.setEvent(IFlowEvents.REROUTE_FLOW_SUCCESS);
-				controllerEvent.setObject(new Gson().toJson(deployedFlow));
-			} catch (DstTerminalNotFoundException e) {
-				controllerEvent
-						.setEvent(IFlowEvents.REROUTE_FLOW_DST_TERMINAL_NOT_FOUND);
-				controllerEvent.setObject(new Gson().toJson(flow));
-			} catch (SrcTerminalNotFoundException e) {
-				controllerEvent
-						.setEvent(IFlowEvents.REROUTE_FLOW_SRC_TERMINAL_NOT_FOUND);
-				controllerEvent.setObject(new Gson().toJson(flow));
-			} catch (UnreachableTerminalsException e) {
-				controllerEvent
-						.setEvent(IFlowEvents.REROUTE_FLOW_UNREACHABLE_TERMINALS);
-				controllerEvent.setObject(new Gson().toJson(flow));
-			} catch (IllegalFlowEntryException e) {
-				controllerEvent
-						.setEvent(IFlowEvents.REROUTE_FLOW_ILLEGAL_FLOW_ENTRY);
-				controllerEvent.setObject(new Gson().toJson(flow));
-			} catch (FlowAlreadyExistsException e) {
-				controllerEvent
-						.setEvent(IFlowEvents.PUSH_FLOW_FLOW_ALREADY_EXIST);
-				controllerEvent.setObject(new Gson().toJson(flow));
-			}
+                    fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
 
-			// Broadcast event with the new deployed flow
-			DxatAppModule.getInstance().getModuleServerThread()
-					.broadcastControllerEvent(controllerEvent);
-		}
-	}
+                    ofMatch = new OFMatch();
+                    try {
+                        ofMatch.fromString(matchString);
+                    } catch (IllegalArgumentException e) {
+                        deleteFlow(flow);
+                        throw new IllegalFlowEntryException(flow, ap1Dpid,
+                                matchString);
+                    }
+                    fm.setMatch(ofMatch);
+                    flowPusherService.addFlow(entryName, fm, ap1Dpid);
+                }
 
-	public DeployedFlowCollection getDeployedFlows() {
-		DeployedFlowCollection deployedFlowCollection = new DeployedFlowCollection();
-		List<DeployedFlow> deployedFlowList = new ArrayList<DeployedFlow>(
-				currentFlows.values());
-		deployedFlowCollection.setFlows(deployedFlowList);
-		return deployedFlowCollection;
-	}
+                // ARP Backward
+                entryName = ap1Dpid + "." + ap2Port + "." + ap1Port + ".arp";
+                if (!flowPusherService.getFlows(ap1Dpid).containsKey(entryName)) {
+                    matchString = "";
+                    matchString += "dl_type=" + 0x806 + ",";
+                    matchString += "in_port=" + ap2Port;
+
+                    actionString = "output=" + ap1Port;
+
+                    fm = (OFFlowMod) switchService.getOFMessageFactory()
+                            .getMessage(OFType.FLOW_MOD);
+
+                    fm.setIdleTimeout((short) 0); // infinite
+                    fm.setHardTimeout((short) 0); // infinite
+                    fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
+                    fm.setCommand((short) 0);
+                    fm.setFlags((short) 0);
+                    fm.setOutPort(OFPort.OFPP_NONE.getValue());
+                    fm.setCookie((long) 0);
+                    fm.setPriority(Short.MAX_VALUE);
+                    StaticFlowEntries.initDefaultFlowMod(fm, entryName);
+
+                    LoadBalancer.parseActionString(fm, actionString);
+
+                    fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
+
+                    ofMatch = new OFMatch();
+                    try {
+                        ofMatch.fromString(matchString);
+                    } catch (IllegalArgumentException e) {
+                        deleteFlow(flow);
+                        throw new IllegalFlowEntryException(flow, ap1Dpid,
+                                matchString);
+                    }
+                    fm.setMatch(ofMatch);
+                    flowPusherService.addFlow(entryName, fm, ap1Dpid);
+                }
+            }
+        }
+
+        // Get the list of ports of the flow
+        Set<String> flowPortSet = new HashSet<String>();
+        for (NodePortTuple node : routeNodes) {
+            flowPortSet.add(HexString.toHexString(node.getNodeId()) + ":"
+                    + node.getPortId());
+        }
+
+        // Create Deployed flow
+        DeployedFlow deployedFlow = new DeployedFlow();
+        deployedFlow.setBandwidth(flow.getBandwidth());
+        deployedFlow.setDstPort(flow.getDstPort());
+        deployedFlow.setFlowId(flow.getFlowId());
+        deployedFlow.setProtocol(flow.getProtocol());
+        deployedFlow.setQos(flow.getQos());
+        deployedFlow.setRoute(new ArrayList<String>(flowPortSet));
+        deployedFlow.setSrcPort(flow.getSrcPort());
+
+        // Add flow to the registry of flows
+        currentFlows.put(flow.getFlowId(), deployedFlow);
+
+        // Return the deployed flow
+        return deployedFlow;
+    }
+
+    public void rerouteFlow(String portId) {
+        // List of the flows which use this port
+        List<Flow> relatedFlows = new ArrayList<Flow>();
+
+        // Fill the flow list which use the port
+        Set<String> flowIdSet = currentFlows.keySet();
+        for (String flowId : flowIdSet) {
+            // Get the deployed flow
+            DeployedFlow deployedFlow = currentFlows.get(flowId);
+
+            // Get the set of ports
+            Set<String> portSet = new HashSet<String>(deployedFlow.getRoute());
+
+            // Check if the flow uses the port
+            if (portSet.contains(portId)) {
+                // Add the flow to a list of flows
+                relatedFlows.add(new Flow(deployedFlow));
+
+                // Print related flows
+                System.out.println("[FLOW FALLEN] " + deployedFlow.getFlowId());
+            }
+        }
+
+        // Delete and push the flows related with the port
+        for (Flow flow : relatedFlows) {
+            deleteFlow(flow);
+            ControllerEvent controllerEvent = new ControllerEvent();
+            controllerEvent.setTimestamp(new Date().getTime());
+            try {
+                DeployedFlow deployedFlow = pushFlow(flow);
+                controllerEvent.setEvent(IFlowEvents.REROUTE_FLOW_SUCCESS);
+                controllerEvent.setObject(new Gson().toJson(deployedFlow));
+            } catch (DstTerminalNotFoundException e) {
+                controllerEvent
+                        .setEvent(IFlowEvents.REROUTE_FLOW_DST_TERMINAL_NOT_FOUND);
+                controllerEvent.setObject(new Gson().toJson(flow));
+            } catch (SrcTerminalNotFoundException e) {
+                controllerEvent
+                        .setEvent(IFlowEvents.REROUTE_FLOW_SRC_TERMINAL_NOT_FOUND);
+                controllerEvent.setObject(new Gson().toJson(flow));
+            } catch (UnreachableTerminalsException e) {
+                controllerEvent
+                        .setEvent(IFlowEvents.REROUTE_FLOW_UNREACHABLE_TERMINALS);
+                controllerEvent.setObject(new Gson().toJson(flow));
+            } catch (IllegalFlowEntryException e) {
+                controllerEvent
+                        .setEvent(IFlowEvents.REROUTE_FLOW_ILLEGAL_FLOW_ENTRY);
+                controllerEvent.setObject(new Gson().toJson(flow));
+            } catch (FlowAlreadyExistsException e) {
+                controllerEvent
+                        .setEvent(IFlowEvents.PUSH_FLOW_FLOW_ALREADY_EXIST);
+                controllerEvent.setObject(new Gson().toJson(flow));
+            }
+
+            // Broadcast event with the new deployed flow
+            DxatAppModule.getInstance().getModuleServerThread()
+                    .broadcastControllerEvent(controllerEvent);
+        }
+    }
+
+    public DeployedFlowCollection getDeployedFlows() {
+        DeployedFlowCollection deployedFlowCollection = new DeployedFlowCollection();
+        List<DeployedFlow> deployedFlowList = new ArrayList<DeployedFlow>(
+                currentFlows.values());
+        deployedFlowCollection.setFlows(deployedFlowList);
+        return deployedFlowCollection;
+    }
 }
