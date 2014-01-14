@@ -77,10 +77,8 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
 		} else {
 			controllerEvent.setEvent(LINK_UPDATED);
 		}
-		System.out.println(controllerEvent.getEvent() + " "
-				+ new Gson().toJson(link));
 		controllerEvent.setObject(new Gson().toJson(link));
-		moduleServerThread.sendControllerEvent(controllerEvent);
+		moduleServerThread.broadcastControllerEvent(controllerEvent);
 	}
 
 	@Override
@@ -100,6 +98,6 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
 			TranferLink link = PojoTranslator.link2Pojo(ofLink);
 			linkCollection.getLinks().add(link);
 		}
-        return linkCollection;
+		return linkCollection;
 	}
 }

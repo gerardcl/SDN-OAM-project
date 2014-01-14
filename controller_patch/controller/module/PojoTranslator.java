@@ -63,7 +63,7 @@ public class PojoTranslator {
 		link.setSrcPortId(HexString.toHexString(fLink.getSrc()) + ":"
 				+ fLink.getSrcPort());
 		link.setEnabled(enabled);
-		
+
 		return link;
 	}
 
@@ -92,7 +92,8 @@ public class PojoTranslator {
 		return terminal;
 	}
 
-	public static TranferLink link2Pojo(net.floodlightcontroller.routing.Link ofLink) {
+	public static TranferLink link2Pojo(
+			net.floodlightcontroller.routing.Link ofLink) {
 		TranferLink link = new TranferLink();
 		link.setDstPortId(HexString.toHexString(ofLink.getDst()) + ":"
 				+ ofLink.getDstPort());
