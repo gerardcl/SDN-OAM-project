@@ -23,7 +23,7 @@
 //	Models
 	//TOrg data model  
 	var Organization = Backbone.Model.extend({
-		urlRoot:'/AppServer/webapp/manager/org',
+		urlRoot:'/AppServer/webapi/manager/org',
 		defaults:{
 			name: "",
 			NIF: "",
@@ -52,7 +52,7 @@
 
 	//terminal model  
 	var Terminal = Backbone.Model.extend({
-		//urlRoot:'/AppServer/webapp/manager/terminal/all?orgId=',
+		//urlRoot:'/AppServer/webapi/manager/terminal/all?orgId=',
 		defaults:{
 			identifier: "",
 			active: "",
@@ -67,7 +67,7 @@
 	//user model 
 	var User = Backbone.Model.extend({
 		//urlRoot:'/user/all?orgId=',
-		//urlRoot:'/AppServer/webapp/manager/user/'+loginOrg,
+		//urlRoot:'/AppServer/webapi/manager/user/'+loginOrg,
 		defaults:{
 			identifier: "",
 			name: "",
@@ -83,7 +83,7 @@
 	//TOrg COLLECTION
 	var Organizations = Backbone.Collection.extend({
 		model: Organization,
-		url:'/AppServer/webapp/manager/org/all',
+		url:'/AppServer/webapi/manager/org/all',
 		parse:function (response) {
 			// Parse the response and construct models
 			for ( var i = 0, length = response.torgs.length; i < length; i++) {
@@ -140,7 +140,7 @@
 	//Terminals COLLECTION
 	var Terminals = Backbone.Collection.extend({
 		model: Terminal,
-		//url:'/AppServer/webapp/manager/terminal/all',
+		//url:'/AppServer/webapi/manager/terminal/all',
 		parse:function (response) {
 			for ( var i = 0, length = response.orgTerminals.length; i < length; i++) {
 				var currentValues = response.orgTerminals[i];
@@ -179,7 +179,7 @@
 
 			var aux = JSON.stringify(orgId)
 			console.log(aux);
-			var uri = '/AppServer/webapp/manager/user/all?orgId=' + aux;
+			var uri = '/AppServer/webapi/manager/user/all?orgId=' + aux;
 			console.log(uri);
 			return uri;
 		},*/
@@ -286,7 +286,7 @@
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			console.log(orgDetails);
 			var org = new Organization();
-			org.urlRoot = '/AppServer/webapp/manager/org/'+orgDetails.orgId+'';
+			org.urlRoot = '/AppServer/webapi/manager/org/'+orgDetails.orgId+'';
 			org.save(orgDetails, {
 				type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.org.collection+json",
@@ -370,7 +370,7 @@
 		render: function (options) { 
 			var that = this;
 			that.users = new Users();
-			that.users.url = '/AppServer/webapp/manager/user/'+options.identifier+'/all';
+			that.users.url = '/AppServer/webapi/manager/user/'+options.identifier+'/all';
 			that.users.fetch({
 				success: function (users) {  
 					var template = _.template($('#organizations-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
@@ -396,7 +396,7 @@
 			//if exists fetch details
 			if(options.identifier) {
 				that.terminals = new Terminals();
-				that.terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';
+				that.terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
 				that.terminals.fetch({
 					success: function (terminals) {  
 						var template = _.template($('#organizations-terminals-template').html(), {terminals: terminals.models, orgId: options.identifier, orgName: activeOrgName});
@@ -425,7 +425,7 @@
 			//if exists fetch details
 			if(options.identifier) {
 				that.activeFlows = new Flows();
-				that.activeFlows.url = '/AppServer/webapp/manager/flow/'+options.identifier+'/all';
+				that.activeFlows.url = '/AppServer/webapi/manager/flow/'+options.identifier+'/all';
 				that.activeFlows.fetch({
 					success: function (flows) {  
 						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active, orgName: activeOrgName});
@@ -454,8 +454,8 @@
 		render: function (options) {
 			var that = this;
 			var flows = new Flows();
-			if(options.all==true){flows.url = '/AppServer/webapp/manager/flow/all';}
-			if(options.all==false){flows.url = '/AppServer/webapp/manager/flow/'+options.identifier+'/all';}			
+			if(options.all==true){flows.url = '/AppServer/webapi/manager/flow/all';}
+			if(options.all==false){flows.url = '/AppServer/webapi/manager/flow/'+options.identifier+'/all';}			
 			flows.fetch({
 				success: function (flows) {
 					var template = _.template($('#flows-template').html(), {flows: flows.models});
@@ -481,8 +481,8 @@
 		render: function (options) {
 			var that = this;
 			var terminals = new Terminals();
-			if(options.all==true){terminals.url = '/AppServer/webapp/manager/terminal/all';}
-			if(options.all==false){terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';}
+			if(options.all==true){terminals.url = '/AppServer/webapi/manager/terminal/all';}
+			if(options.all==false){terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';}
 			terminals.fetch({
 				success: function (terminals) {
 					var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
@@ -592,7 +592,7 @@
 		render: function (options) { 
 			var that = this;
 			that.users = new Users();
-			that.users.url = '/AppServer/webapp/manager/user/'+options.identifier+'/all';
+			that.users.url = '/AppServer/webapi/manager/user/'+options.identifier+'/all';
 			that.users.fetch({
 				success: function (users) {  
 					var template = _.template($('#client-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
@@ -657,7 +657,7 @@
 			var userDetails = $(ev.currentTarget).serializeObject();
 			console.log(userDetails);
 			var user = new User();
-			user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
+			user.url = '/AppServer/webapi/manager/user/orgId9/'+'/'+options.identifier;
 			user.save(userDetails, {
 				type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
@@ -686,7 +686,7 @@
 			if(options.identifier){
 				// "id" is what backbone takes to GET REST path
 				that.user = new User({id: options.identifier});
-				that.user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
+				that.user.url = '/AppServer/webapi/manager/user/orgId9/'+'/'+options.identifier;
 				that.user.fetch({
 					success: function (user){
 						var template = _.template($('#edit-user-template').html(), {user: user});
@@ -831,10 +831,10 @@
 		router.on('route:clientOverview', function(id) {
 			clientSidebarView.render({btnHL: 1});
 			flows = new Flows();
-			flows.url = '/AppServer/webapp/manager/flow/'+id+'/all';
+			flows.url = '/AppServer/webapi/manager/flow/'+id+'/all';
 			flows.fetch({});
 			terminals = new Terminals();
-			terminals.url = '/AppServer/webapp/manager/terminal/'+id+'/all';
+			terminals.url = '/AppServer/webapi/manager/terminal/'+id+'/all';
 			terminals.fetch({});
 			//console.log(cntActiveFlows);
 			clientOverviewView.render({identifier: id});

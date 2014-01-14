@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Path("/manager")
+@Path("/")
 public class OrgUserResource {
 //- OrgUserManager: OrgUserManager
 //+ getAllOrgUser(String):List<OrgUser>

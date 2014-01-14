@@ -16,7 +16,7 @@ import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.TOrg;
 import dxat.appserver.manager.pojos.TOrgCollection;
 
-@Path("/manager")
+@Path("/")
 public class OrgResource {
 //	- orgCollection: OrgCollection
 //	+ getOrgIdNameList():HashMap<String, String>
