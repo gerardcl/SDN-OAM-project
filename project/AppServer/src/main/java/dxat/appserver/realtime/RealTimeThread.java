@@ -29,9 +29,13 @@ public class RealTimeThread implements Runnable {
 
     // Topology Managers
     public RealTimeThread(String serverAddr, int serverPort) {
+        //serverAddr = "147.83.118.254";
         this.serverAddr = serverAddr;
         this.serverPort = serverPort;
         System.out.println("************* CREATING REAL TIME THREAD *************");
+        System.out.println("Controller IPv4: " + serverAddr);
+        System.out.println("Controller port: " + serverPort);
+        System.out.println("*****************************************************");
     }
 
     public void getSwitches() {

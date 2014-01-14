@@ -125,6 +125,7 @@ public class FlowManager {
         } else if (eventStr.equals(IFlowEvents.FLOW_COLLECTION)) {
             DeployedFlowCollection deployedFlowCollection = new Gson().fromJson(controllerEvent.getObject(),
                     DeployedFlowCollection.class);
+            System.out.println("Flow collection: " + controllerEvent.getObject());
             if (deployedFlowCollection != null) {
                 List<DeployedFlow> deployedFlowList = deployedFlowCollection.getFlows();
                 flows.clear();

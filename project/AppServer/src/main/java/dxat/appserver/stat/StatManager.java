@@ -52,7 +52,6 @@ public class StatManager {
 
 		// Updating round robin database for controller
 		else {
-
 			RrdDb rrdDb = db.getRrdDbPool().requestRrdDb(
 					LoadConfig.getProperty("rrd4j.dir") + "controller.rrd");
 			if (rrdDb.getLastUpdateTime() == Util.getTime())
