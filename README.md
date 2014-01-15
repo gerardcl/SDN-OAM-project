@@ -23,3 +23,13 @@ SDN-OAM-project
 | URL                                         | Description                                             |
 | ------------------------------------------- |:-------------------------------------------------------:|
 | AppServer/webapi/flows/                     | Return all flows (only active in the controller)        |
+
+
+<h2>LaTeX compilation tips</h2>
+<p>For the publication it is recommended use the TeXstudio editor which provides you a complete free LaTeX environment for develop the publication</p>
+
+<p>Each section  must be wrote in different files. All the figures must be stored under the figures directory in order to mantain the organization and avoid the KAOS.</p>
+
+<p>Please, if you want insert an image, please, use a vectorial format or a lossless compression one.</p>
+
+<p>Do not commit compilation logs and compiled files</p>
