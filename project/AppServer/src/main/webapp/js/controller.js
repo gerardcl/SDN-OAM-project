@@ -2,6 +2,7 @@
 	var cntActiveFlows = 0;
 	var cntPrgFlows = 0;
 	var cntActiveTerms = 0;
+	//var userOrgId = '';
 
 	//call serializeObject to convert to convert the form inputs to an object 
 	$.fn.serializeObject = function() {
@@ -23,12 +24,13 @@
 //	Models
 	//TOrg data model  
 	var Organization = Backbone.Model.extend({
+		idAttribute: "identifier",
 		urlRoot:'/AppServer/webapp/manager/org',
 		defaults:{
 			name: "",
 			NIF: "",
 			bankAccount: "",
-			identifier: "",
+			//identifier: "", // if we inicialize de ID, backbone detects all models as NO NEW 
 			telephone: "",
 			OAM: ""
 		}
@@ -37,7 +39,7 @@
 	//flow model  
 	var Flow = Backbone.Model.extend({
 		defaults:{
-			identifier: "",
+			//identifier: "",
 			active: "",
 			bandwidth: "",
 			dstOTidentifier: "",
@@ -54,7 +56,7 @@
 	var Terminal = Backbone.Model.extend({
 		//urlRoot:'/AppServer/webapp/manager/terminal/all?orgId=',
 		defaults:{
-			identifier: "",
+			//identifier: "",
 			active: "",
 			description: "",
 			hostName: "",
@@ -66,10 +68,9 @@
 
 	//user model 
 	var User = Backbone.Model.extend({
-		//urlRoot:'/user/all?orgId=',
-		//urlRoot:'/AppServer/webapp/manager/user/'+loginOrg,
+		idAttribute: "identifier",
 		defaults:{
-			identifier: "",
+			//identifier: "",
 			name: "",
 			active: "",
 			admin: "",
@@ -278,17 +279,34 @@
 	// NEW & EDIT ORG view
 	var NewOrgView = Backbone.View.extend({
 		el: '.page',
+		render: function (options) {
+			var that = this;
+			if(options.identifier){ //edit
+				// "id" is what backbone takes to GET REST path
+				that.org = new Organization({identifier: options.identifier});
+				console.log(that.org.isNew());
+				that.org.fetch({
+					success: function (org){
+						var template = _.template($('#edit-org-template').html(), {organization: org});
+          				that.$el.html(template);
+					}
+				});
+			} else { //create
+	          var template = _.template($('#edit-org-template').html(), {organization: null});
+	          that.$el.html(template);
+	        } 
+
+		},
 		events: {
 			'submit .edit-org-form': 'saveOrg',
-			'click .delete': 'deleteOrg'
+			'click #delete-org': 'deleteOrg'
 		},
 		saveOrg: function (ev){
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			console.log(orgDetails);
 			var org = new Organization();
-			org.urlRoot = '/AppServer/webapp/manager/org/'+orgDetails.orgId+'';
 			org.save(orgDetails, {
-				type: "POST",
+				//type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.org.collection+json",
 				success: function (ev) {
 					console.log(ev);
@@ -302,29 +320,16 @@
 			return false;
 		},
 		deleteOrg: function (ev){
+			var orgDetails = $(ev.currentTarget).serializeObject();
 			this.org.destroy({
 				success: function () {
 					router.navigate('adminOrgs',{triggq: true});
+				},
+				error: function() {
+					alert('DELETE ERROR');
 				}
 			});
 			return false;
-		},
-		render: function (options) {
-			var that = this;
-			if(options.identifier){
-				// "id" is what backbone takes to GET REST path
-				that.org = new Organization({id: options.identifier});
-				that.org.fetch({
-					success: function (org){
-						var template = _.template($('#edit-org-template').html(), {organization: org});
-          				that.$el.html(template);
-					}
-				});
-			} else {
-	          var template = _.template($('#edit-org-template').html(), {organization: null});
-	          that.$el.html(template);
-	        } 
-
 		}
 	});
 
@@ -335,29 +340,16 @@
 		el: '.page',
 		render: function (options) { 
 			var that = this;
-			//if exists fetch details
-			if(options.identifier) {
-				that.organization = new Organization({id: options.identifier});
+				that.organization = new Organization({identifier: options.identifier});
 				that.organization.fetch({
 					success: function (organization) {  
 						activeOrgName = organization.get('name');
 						console.log(activeOrgName);
 						var template = _.template($('#organizations-data-template').html(), {organization: organization});
 						that.$el.html(template); 
-						//SlimScroll
-						// $('#OM-data').slimScroll({
-						// 	height: '190px'
-						// });
 					}
 				});
-			} else {
-				var template = _.template($('#organizations-data-template').html(), {organization: null});
-				that.$el.html(template);
-				//SlimScroll
-				$('#OM-data').slimScroll({
-					height: '190px'
-				});       
-			}
+			 
 		}
 	});
 
@@ -537,7 +529,7 @@
 		el: '.page',
 		render: function (options) {
 			var that = this;
-			that.organization = new Organization({id: options.identifier});
+			that.organization = new Organization({identifier: options.identifier});
 			that.organization.fetch({
 				success: function (organization) {  
 					activeOrgName = organization.get('name');
@@ -567,7 +559,7 @@
 		el: '.page',
 		render: function (options) { 
 			var that = this;
-			that.organization = new Organization({id: options.identifier});
+			that.organization = new Organization({identifier: options.identifier});
 			that.organization.fetch({
 				success: function (organization) {
 						var template = _.template($('#client-data-template').html(), {organization: organization, activeOrgName: activeOrgName});
@@ -649,17 +641,42 @@
 	// USER EDIT view
 	var NewUserView = Backbone.View.extend({
 		el: '.page',
+		render: function (options) {
+			console.log(options);
+			var that = this;
+			if(options.identifier){ //edit 
+				// "id" is what backbone takes to GET REST path
+				that.user = new User({identifier: options.identifier});
+				var userPath = options.orgId+'/';
+				console.log(userPath);
+				that.user.urlRoot = '/AppServer/webapp/manager/user/'+userPath;
+				that.user.fetch({
+					success: function (user){
+						console.log('orgId inside success: '+options.orgId);
+						var template = _.template($('#edit-user-template').html(), {user: user, orgId: options.orgId});
+          				that.$el.html(template);
+					}
+				});
+			} else { //create
+	          var template = _.template($('#edit-user-template').html(), {user: null, orgId: options.orgId});
+	          that.$el.html(template);
+	        } 
+		},
 		events: {
 			'submit .edit-user-form': 'saveUser',
-			'click .delete': 'deleteUser'
+			'click #delete-user': 'deleteUser'
 		},
 		saveUser: function (ev){
 			var userDetails = $(ev.currentTarget).serializeObject();
 			console.log(userDetails);
+			console.log(ev.currentTarget.orgId.value);
+			userOrgId = ev.currentTarget.orgId.value;
+			userId = userDetails.identifier;
+			console.log(userOrgId+' '+userId);
 			var user = new User();
-			user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
+			user.urlRoot = '/AppServer/webapp/manager/user/'+userOrgId;
 			user.save(userDetails, {
-				type: "POST",
+				//type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
 				success: function (ev) {
 					console.log('success saveUser');
@@ -676,28 +693,10 @@
 		deleteUser: function (ev){
 			this.user.destroy({
 				success: function () {
-					router.navigate('adminOrgs/',{triggq: true});
+					router.navigate('adminOrgs/', {trigger: true});
 				}
 			});
 			return false;
-		},
-		render: function (options) {
-			var that = this;
-			if(options.identifier){
-				// "id" is what backbone takes to GET REST path
-				that.user = new User({id: options.identifier});
-				that.user.url = '/AppServer/webapp/manager/user/orgId9/'+'/'+options.identifier;
-				that.user.fetch({
-					success: function (user){
-						var template = _.template($('#edit-user-template').html(), {user: user});
-          				that.$el.html(template);
-					}
-				});
-			} else {
-	          var template = _.template($('#edit-user-template').html(), {user: null});
-	          that.$el.html(template);
-	        } 
-
 		}
 	});
 
@@ -714,8 +713,6 @@
 				"newOrg": "editOrg", // CREATE Org
 				"editOrg/:identifier": "editOrg", //EDIT Org template (same as CREATE)
 			"adminUsers/:identifier": "orgUsers", //Org users
-				"newUser": "editUser", //NEW USER template
-				"editUser/:identifier": "editUser", //EDIT USER template
 			"adminFlows/:identifier": "orgFlows", //active flows of specipic org
 			"adminFlows": "flows", //active flows of specipic org
 			"adminPrgFlows/:identifier": "orgPrgFlows",	//programmed flows of specific org	
@@ -730,7 +727,9 @@
 			"clientTerminals/:identifier": "clientTerminals",
 			"clientTraffic/:identifier": "clientTraffic",
 			//SHARED ROUTES
-			"newFlow/:identifier": "newFlow"
+			"newFlow/:identifier": "newFlow",
+			"newUser/:orgId": "editUser", //NEW USER template
+			"editUser/:orgId/:identifier": "editUser" //EDIT USER template
 		}
 	});
 
@@ -779,12 +778,6 @@
 			loadDefaultStatValues();
 			StopSwitchStats();
 			orgUsersView.render({identifier: id});
-		});
-
-		router.on('route:editUser', function(id) {
-			loadDefaultStatValues();
-			StopSwitchStats();
-			newUserView.render({identifier: id, orgId: loginOrg});
 		});
 
 		router.on('route:orgFlows', function(id) {	
@@ -872,6 +865,13 @@
 		router.on('route:newFlow', function(id) {
 			newFlowView.render({identifier: id});
 			
+		});
+
+		router.on('route:editUser', function(orgId, identifier) {
+			loadDefaultStatValues();
+			StopSwitchStats();
+			console.log(orgId+' '+identifier)
+			newUserView.render({orgId: orgId, identifier: identifier});
 		});
 
 	Backbone.history.start();
