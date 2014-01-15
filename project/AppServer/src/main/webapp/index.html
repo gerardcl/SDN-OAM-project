@@ -1057,12 +1057,14 @@
                                 <div class="tab-pane active" id="aPoints"><!-- Terminals -->       
                                   <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                      
+                    
+                                      <!-- Active Terminals -->
                                       <div class="panel panel-primary">
                                         <div class="panel-body">
 
                                           <div class="padding-10-bot">
-                                            <button type="button" class="btn btn-success btn-lg"><i class="fa fa-laptop"></i> ADD Node</button>
+                                            <a href="#/adminTerminals"
+                                              <button type="button" class="btn btn-success btn-lg"><i class="fa fa-laptop"></i> ADD Terminal</button>
                                           </div>
 
                                           <div id="OM-ap">
@@ -1108,7 +1110,7 @@
                                           </div>
                 
                                         </div>
-                                      </div>
+                                      </div><!-- /Active Terminals -->
                                     </div>
                                   </div>
                                 </div><!-- /Terminals --> 
@@ -1436,10 +1438,57 @@
           <div class="row"><!-- Acccess Points -->
             <div class="col-sm-12">
 
-              <div class="panel panel-primary">
+              <div class="panel panel-warning"><!-- UNASSIGNED Terminals -->
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-desktop"></i> Unassigned Terminals</h3>
+                </div>
+                <div class="panel-body">
+
+                  <div id="un-AP">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover table-striped tablesorter">
+                       
+                 <thead>
+                  <tr>
+                    <th>Host name <i class="fa fa-sort"></i></th>
+                    <th>ID <i class="fa fa-sort"></i></th>
+                    <th>Description <i class="fa fa-sort"></i></th>
+                    <th>IP <i class="fa fa-sort"></i></th>
+                    <th>Interface <i class="fa fa-sort"></i></th>
+                    <th>MAC <i class="fa fa-sort"></i></th>
+                    <th><center><i class="fa fa-edit"></i></center></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <% _.each(terminals, function(terminal) { 
+                    if(terminal.get('active')==true){ %>
+
+                    <tr>
+                      <td><%= terminal.get('hostName') %></td>
+                      <td><%= terminal.get('identifier') %></td>
+                      <td><%= terminal.get('description') %></td>
+                      <td><%= terminal.get('ipAddress') %></td>
+                      <td><%= terminal.get('ifaceSpeed') %></td>
+                      <td><%= terminal.get('mac') %></td>
+                      <td><center><a href="#/editTerminal/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Assign org</button></a></center></td>
+                    </tr>
+
+                  <%  }
+                  }); %>
+                </tbody>
+
+                      </table>
+                    </div>
+                  </div>
+
+                </div>
+              </div><!-- /UNASSIGNED Terminals -->
+
+              <div class="panel panel-primary"><!-- ACTIVE Terminals -->
               
                 <div class="panel-heading">
-                  <h3 class="panel-title"><i class="fa fa-desktop"></i> Terminals</h3>
+                  <h3 class="panel-title"><i class="fa fa-desktop"></i> Active terminals</h3>
                 </div>
 
                 <div class="panel-body">
@@ -1482,7 +1531,7 @@
                   </div>              
                 </div>
                 
-              </div>
+              </div><!-- /ACTIVE Terminals -->
 
             </div>
           </div><!-- /Terminals -->
@@ -1947,6 +1996,125 @@
         </div><!-- /.modal -->
     </script>
     <!-- /EDIT-CREATE USER TEMPLATE -->
+
+    <!-- EDIT-ASSIGN TERMINAL TEMPLATE -->
+    <script type="text/template" id="edit-terminal-template">
+
+      <div class="panel <%= terminal ? 'panel-danger' : 'panel-success' %>">
+        <div class="panel-heading">
+
+          <div class="row">
+
+            <div class="col-md-4 col-sm-4">
+              <a href="#/adminTerminals/<%= orgId  %>">
+                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Discard changes
+                </button>
+              </a>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+              <h2 class="panel-title"> <center> <%= terminal ? 'Edit Terminal: '+terminal.get('hostName') : 'Create Terminal' %> </center> </h2>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="panel-body">
+          <form class="form-horizontal edit-terminal-form well" role="form">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="name" class="col-sm-4 control-label">Name</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="name" value="<%= terminal ? terminal.get('name') : '' %>" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="description" class="col-sm-4 control-label">Description</label>
+                  <div class="col-sm-8">
+                    <input type="description" class="form-control" name="email" value="<%= terminal ? terminal.get('description') : '' %>"  >
+                  </div>
+                </div>
+
+              
+
+                <div class="form-group">
+                  <label for="ifaceSpeed" class="col-sm-4 control-label">Interface</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="ifaceSpeed" value="<%= terminal ? terminal.get('ifaceSpeed') : '' %>"  >
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="ipAddress" class="col-sm-4 control-label">Password</label>
+                  <div class="col-sm-8">
+                    <input type="ipAddress" class="form-control" name="ipAddress" value="<%= terminal ? terminal.get('ipAddress') : '' %>"  >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="admin" class="col-sm-4 control-label">is admin?</label>
+                  <div class="col-sm-8">
+                  <input type="hidden" id="orgId" value="<%= orgId %>" />
+                  
+                    <% if(terminal){ %>
+                      <input type="hidden" name="identifier" value="<%= terminal.get('identifier') %>" />
+                      <input type="checkbox" class="form-control" id="admin" 
+                          <%= terminal.get('admin') ? 'checked' : ''%> />
+                    <% }else{ %> 
+                      <input type="checkbox" class="form-control" id="admin" />
+                    <% } %>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">    
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group">
+                  <center>
+                    <button type="submit" class="btn btn-lg <%= terminal ? 'btn-warning' : 'btn-success' %> "><%= terminal ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create Terminal'%></button>
+                    <%= terminal ? '<a data-toggle="modal" href="#confirmationTerminal" class="btn btn-lg btn-danger"><i class="fa fa-trash-o"></i> Remove Terminal </a>' : '' %> 
+                  </center>
+                </div>
+              </div>
+            </div>
+          </form>  
+        </div>
+      </div>
+
+      <!-- DELETE USER Modal -->
+        <div class="modal fade" id="confirmationTerminal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Remove terminal <%= terminal ? terminal.get('name') : '' %></h4>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to remove <center><h2 class="well"><%= terminal ? terminal.get('name') : '' %>?</h2> </center> 
+                <br>
+                <%= terminal ? terminal.get('identifier') : '' %>  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+                <button type="button" id="unassign-terminal" class="btn btn-danger delete"><i class="fa fa-trash-o"></i> Remove</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </script>
+    <!-- /EDIT-ASSIGN TERMINAL TEMPLATE -->
 
   <!-- /SHARED TEMPLATES -->
 

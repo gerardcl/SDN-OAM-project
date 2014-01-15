@@ -54,6 +54,7 @@
 
 	//terminal model  
 	var Terminal = Backbone.Model.extend({
+		idAttribute: "identifier",
 		//urlRoot:'/AppServer/webapi/manager/terminal/all?orgId=',
 		defaults:{
 			//identifier: "",
@@ -479,8 +480,11 @@
 				success: function (terminals) {
 					var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
 					that.$el.html(template);
+					$('#un-AP').slimScroll({
+						height: '250px'
+					});
 					$('#AP').slimScroll({
-						height: '500px'
+						height: '250px'
 					});
 				}
 			});
@@ -639,17 +643,17 @@
 
 
 	// USER EDIT view
-	var NewUserView = Backbone.View.extend({
+	var EditUserView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) {
 			console.log(options);
 			var that = this;
 			if(options.identifier){ //edit 
-				// "id" is what backbone takes to GET REST path
+				// "identifier" is what backbone takes to GET REST path
 				that.user = new User({identifier: options.identifier});
 				var userPath = options.orgId+'/';
 				console.log(userPath);
-				that.user.urlRoot = '/AppServer/webapp/manager/user/'+userPath;
+				that.user.urlRoot = '/AppServer/webapi/manager/user/'+userPath;
 				that.user.fetch({
 					success: function (user){
 						console.log('orgId inside success: '+options.orgId);
@@ -674,7 +678,7 @@
 			userId = userDetails.identifier;
 			console.log(userOrgId+' '+userId);
 			var user = new User();
-			user.urlRoot = '/AppServer/webapp/manager/user/'+userOrgId;
+			user.urlRoot = '/AppServer/webapi/manager/user/'+userOrgId;
 			user.save(userDetails, {
 				//type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
@@ -700,7 +704,71 @@
 		}
 	});
 
-	var newUserView = new NewUserView();
+	var editUserView = new EditUserView();
+
+	// TERMINAL EDIT view
+	var EditTerminalView = Backbone.View.extend({
+		el: '.page',
+		render: function (options) {
+			console.log(options);
+			var that = this;
+			if(options.identifier){ //edit 
+				// "identifier" is what backbone takes to GET REST path
+				that.terminal = new Terminal({identifier: options.identifier});
+				var terminalPath = options.orgId+'/';
+				console.log(terminalPath);
+				that.terminal.urlRoot = '/AppServer/webapi/manager/terminal/'+terminalPath;
+				that.terminal.fetch({
+					success: function (terminal){
+						console.log('orgId inside success: '+options.orgId);
+						var template = _.template($('#edit-terminal-template').html(), {terminal: terminal, orgId: options.orgId});
+          				that.$el.html(template);
+					}
+				});
+			} else { //create
+	          var template = _.template($('#edit-terminal-template').html(), {terminal: null, orgId: options.orgId});
+	          that.$el.html(template);
+	        } 
+		},
+		events: {
+			'submit .edit-terminal-form': 'saveTerminal',
+			'click #unassign-terminal': 'unassignTerminal'
+		},
+		saveTerminal: function (ev){
+			var terminalDetails = $(ev.currentTarget).serializeObject();
+			console.log(terminalDetails);
+			console.log(ev.currentTarget.orgId.value);
+			terminalOrgId = ev.currentTarget.orgId.value;
+			terminalId = terminalDetails.identifier;
+			console.log(terminalOrgId+' '+terminalId);
+			var terminal = new Terminal();
+			terminal.urlRoot = '/AppServer/webapi/manager/terminal/'+terminalOrgId;
+			terminal.save(terminalDetails, {
+				//type: "POST",
+			    contentType: "application/vmd.dxat.appserver.manager.terminal.collection+json",
+				success: function (ev) {
+					console.log('success saveTerminal');
+					console.log(ev);
+					if(ev.attributes.identifier == "") alert("this terminal already exists");
+					else router.navigate('adminTerminals/'+ev.attributes.identifier, {trigger: true});
+				},
+				error: function(model, response) {
+				    alert('wrong');
+				}
+			});
+			return false;
+		},
+		unassignTerminal: function (ev){
+			this.terminal.destroy({
+				success: function () {
+					router.navigate('adminOrgs/', {trigger: true});
+				}
+			});
+			return false;
+		}
+	});
+
+	var editTerminalView = new EditTerminalView();
 
 //	ROUTES 
 	var Router = Backbone.Router.extend({
@@ -729,7 +797,9 @@
 			//SHARED ROUTES
 			"newFlow/:identifier": "newFlow",
 			"newUser/:orgId": "editUser", //NEW USER template
-			"editUser/:orgId/:identifier": "editUser" //EDIT USER template
+			"editUser/:orgId/:identifier": "editUser", //EDIT USER template
+			"editTerminal/:identifier": "editTerminal", //ASSIGN org to terminal
+			"editTerminal/:orgId/:identifier": "editTerminal" //EDIT terminal
 		}
 	});
 
@@ -871,8 +941,16 @@
 			loadDefaultStatValues();
 			StopSwitchStats();
 			console.log(orgId+' '+identifier)
-			newUserView.render({orgId: orgId, identifier: identifier});
+			editUserView.render({orgId: orgId, identifier: identifier});
 		});
+
+		router.on('route:editTerminal', function(orgId, identifier) {
+			loadDefaultStatValues();
+			StopSwitchStats();
+			console.log(orgId+' '+identifier)
+			editTerminalView.render({orgId: orgId, identifier: identifier});
+		});
+
 
 	Backbone.history.start();
 
