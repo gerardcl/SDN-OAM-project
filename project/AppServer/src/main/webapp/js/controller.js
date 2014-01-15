@@ -324,7 +324,7 @@
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			this.org.destroy({
 				success: function () {
-					router.navigate('adminOrgs',{triggq: true});
+					router.navigate('adminOrgs',{triger: true});
 				},
 				error: function() {
 					alert('DELETE ERROR');

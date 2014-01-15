@@ -381,6 +381,7 @@ public class OrgManager {
 					terminal.setIpAddress("192.168."+Integer.toString(i)+"."+Integer.toString(j)+"0");
 					terminal.setMac("DD:XX:AA:TT:"+Integer.toString(j)+"B:"+Integer.toString(i)+"C");
 					terminal.setActive(i%2==0?true:false);
+					terminal.setAssigned(i%2==0?true:false);
 					tempTerminals.put(terminal.identifier, terminal);
 					terminals.put(terminal.identifier, terminal);
 					try {

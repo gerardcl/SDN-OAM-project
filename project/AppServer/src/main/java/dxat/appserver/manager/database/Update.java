@@ -36,6 +36,7 @@ public class Update {
 			userdoc.put("NIF", torg.getNIF());
 			userdoc.put("telephone", torg.getTelephone());
 			userdoc.put("bankAccount", torg.getBankAccount());
+			userdoc.put("isOAM",torg.isOAM());
 
 			BasicDBObject update = new BasicDBObject("$set", userdoc);
 			collection.update(org, update);
@@ -63,6 +64,8 @@ public class Update {
 				userdoc.put("users.$.email", user.getEmail());
 				userdoc.put("users.$.password", user.getPassword());
 				userdoc.put("users.$.telephone", user.getTelephone());
+				userdoc.put("users.$.isActive", user.isActive());
+				userdoc.put("users.$.isAdmin", user.isAdmin());
 
 				BasicDBObject update = new BasicDBObject("$set", userdoc);
 				collection.update(query, update);
@@ -99,7 +102,11 @@ public class Update {
 						terminal.getIfaceSpeed());
 				terminaldoc.put("terminals.$.description",
 						terminal.getDescription());
-
+				terminaldoc.put("terminals.$.active",
+						terminal.isActive());
+				terminaldoc.put("terminals.$.assigned",
+						terminal.isAssigned());
+				
 				BasicDBObject update = new BasicDBObject("$set", terminaldoc);
 				collection.update(query, update);
 			} else {

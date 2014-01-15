@@ -73,7 +73,7 @@ public class Create {
 				userdoc.put("password", user.getPassword());
 				userdoc.put("telephone", user.getTelephone());
 				userdoc.put("isAdmin", user.isAdmin());
-				userdoc.put("active",user.isActive());
+				userdoc.put("isActive",user.isActive());
 
 				BasicDBObject update = new BasicDBObject("$push",
 						new BasicDBObject("users", userdoc));
@@ -140,6 +140,7 @@ public class Create {
 				userdoc.put("ifaceSpeed", terminal.getIfaceSpeed());
 				userdoc.put("description", terminal.getDescription());
 				userdoc.put("active",terminal.isActive());
+				userdoc.put("assigned",terminal.isAssigned());
 				
 				BasicDBObject update = new BasicDBObject("$push",
 						new BasicDBObject("terminals", userdoc));
