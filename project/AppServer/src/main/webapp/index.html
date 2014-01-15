@@ -756,7 +756,7 @@
 
             <div class="col-md-4 col-sm-4">
               <a href="#/adminOrgs<%= organization ? '/'+organization.get('identifier') : '' %>">
-                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Discard changes
+                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                 </button>
               </a>
             </div>
@@ -809,6 +809,13 @@
                   <label for="NIF" class="col-sm-4 control-label">CIF</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" name="NIF" value="<%= organization ? organization.get('NIF') : '' %>"  >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="telephone" class="col-sm-4 control-label">CIF</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="telephone" value="<%= organization ? organization.get('telephone') : '' %>"  >
                   </div>
                 </div>
 
@@ -1061,49 +1068,39 @@
                                       <!-- Active Terminals -->
                                       <div class="panel panel-primary">
                                         <div class="panel-body">
-
-                                          <div class="padding-10-bot">
-                                            <a href="#/adminTerminals"
-                                              <button type="button" class="btn btn-success btn-lg"><i class="fa fa-laptop"></i> ADD Terminal</button>
-                                          </div>
-
                                           <div id="OM-ap">
                                             <div class="table-responsive">
                                               <table class="table table-bordered table-hover table-striped tablesorter">
                                                
-                                         <thead>
-                                          <tr>
-                                            <th>Host name <i class="fa fa-sort"></i></th>
-                                            <th>ID <i class="fa fa-sort"></i></th>
-                                            <th>Description <i class="fa fa-sort"></i></th>
-                                            <th>IP <i class="fa fa-sort"></i></th>
-                                            <th>Interface <i class="fa fa-sort"></i></th>
-                                            <th>MAC <i class="fa fa-sort"></i></th>
-                                            <th><center><i class="fa fa-bar-chart-o"></i></center></th>
-                                            <th><center><i class="fa fa-edit"></i></center></th>
-                                            <th><center><i class="fa fa-eraser"></i></center></th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
+                                                <thead>
+                                                  <tr>
+                                                    <th>Host name <i class="fa fa-sort"></i></th>
+                                                    <th>ID <i class="fa fa-sort"></i></th>
+                                                    <th>Description <i class="fa fa-sort"></i></th>
+                                                    <th>IP <i class="fa fa-sort"></i></th>
+                                                    <th>Interface <i class="fa fa-sort"></i></th>
+                                                    <th>MAC <i class="fa fa-sort"></i></th>
+                                                    <th><center><i class="fa fa-edit"></i></center></th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
 
-                                          <% _.each(terminals, function(terminal) { 
-                                            if(terminal.get('active')==true){ %>
+                                                  <% _.each(terminals, function(terminal) { 
+                                                    if(terminal.get('active')==true){ %>
 
-                                            <tr>
-                                              <td><%= terminal.get('hostName') %></td>
-                                              <td><%= terminal.get('identifier') %></td>
-                                              <td><%= terminal.get('description') %></td>
-                                              <td><%= terminal.get('ipAddress') %></td>
-                                              <td><%= terminal.get('ifaceSpeed') %></td>
-                                              <td><%= terminal.get('mac') %></td>
-                                              <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
-                                              <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
-                                              <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
-                                            </tr>
+                                                    <tr>
+                                                      <td><%= terminal.get('hostName') %></td>
+                                                      <td><%= terminal.get('identifier') %></td>
+                                                      <td><%= terminal.get('description') %></td>
+                                                      <td><%= terminal.get('ipAddress') %></td>
+                                                      <td><%= terminal.get('ifaceSpeed') %></td>
+                                                      <td><%= terminal.get('mac') %></td>
+                                                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                                                    </tr>
 
-                                          <%  }
-                                          }); %>
-                                        </tbody>
+                                                  <%  }
+                                                  }); %>
+                                                </tbody>
 
                                               </table>
                                             </div>
@@ -1435,20 +1432,62 @@
 
 	<!-- TERMINALS VIEW -->
 	<script type="text/template" id="terminals-template">
-          <div class="row"><!-- Acccess Points -->
-            <div class="col-sm-12">
+    <div class="row"><!-- Acccess Points -->
+      <div class="col-sm-12">
 
-              <div class="panel panel-warning"><!-- UNASSIGNED Terminals -->
-                <div class="panel-heading">
-                  <h3 class="panel-title"><i class="fa fa-desktop"></i> Unassigned Terminals</h3>
-                </div>
-                <div class="panel-body">
+        <div class="panel panel-warning"><!-- UNASSIGNED Terminals -->
+          <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-desktop"></i> Unassigned Terminals</h3>
+          </div>
+          <div class="panel-body">
 
-                  <div id="un-AP">
-                    <div class="table-responsive">
-                      <table class="table table-bordered table-hover table-striped tablesorter">
-                       
-                 <thead>
+            <div id="un-AP">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped tablesorter">
+                 
+                  <thead>
+                    <tr>
+                      <th>ID <i class="fa fa-sort"></i></th>
+                      <th>IP <i class="fa fa-sort"></i></th>
+                      <th>Interface <i class="fa fa-sort"></i></th>
+                      <th>MAC <i class="fa fa-sort"></i></th>
+                      <th><center><i class="fa fa-edit"></i></center></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <% _.each(terminals, function(terminal) { 
+                      if(terminal.get('active')==true){ %>
+
+                      <tr>
+                        <td><%= terminal.get('identifier') %></td>
+                        <td><%= terminal.get('ipAddress') %></td>
+                        <td><%= terminal.get('ifaceSpeed') %></td>
+                        <td><%= terminal.get('mac') %></td>
+                        <td><center><a href="#/assignTerminal/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Assign org</button></a></center></td>
+                      </tr>
+
+                    <%  }
+                    }); %>
+                  </tbody>
+
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /UNASSIGNED Terminals -->
+
+        <div class="panel panel-primary"><!-- ACTIVE Terminals -->
+        
+          <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-desktop"></i> Active terminals</h3>
+          </div>
+
+          <div class="panel-body">
+            <div class="table-responsive" id="AP">
+              <table class="table table-bordered table-hover table-striped tablesorter">
+                <thead>
                   <tr>
                     <th>Host name <i class="fa fa-sort"></i></th>
                     <th>ID <i class="fa fa-sort"></i></th>
@@ -1456,7 +1495,9 @@
                     <th>IP <i class="fa fa-sort"></i></th>
                     <th>Interface <i class="fa fa-sort"></i></th>
                     <th>MAC <i class="fa fa-sort"></i></th>
+                    <th><center><i class="fa fa-bar-chart-o"></i></center></th>
                     <th><center><i class="fa fa-edit"></i></center></th>
+                    <th><center><i class="fa fa-eraser"></i></center></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1471,70 +1512,22 @@
                       <td><%= terminal.get('ipAddress') %></td>
                       <td><%= terminal.get('ifaceSpeed') %></td>
                       <td><%= terminal.get('mac') %></td>
-                      <td><center><a href="#/editTerminal/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Assign org</button></a></center></td>
+                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
+                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
                     </tr>
 
                   <%  }
                   }); %>
                 </tbody>
+              </table>
+            </div>              
+          </div>
+          
+        </div><!-- /ACTIVE Terminals -->
 
-                      </table>
-                    </div>
-                  </div>
-
-                </div>
-              </div><!-- /UNASSIGNED Terminals -->
-
-              <div class="panel panel-primary"><!-- ACTIVE Terminals -->
-              
-                <div class="panel-heading">
-                  <h3 class="panel-title"><i class="fa fa-desktop"></i> Active terminals</h3>
-                </div>
-
-                <div class="panel-body">
-                  <div class="table-responsive" id="AP">
-                    <table class="table table-bordered table-hover table-striped tablesorter">
-                      <thead>
-                        <tr>
-                          <th>Host name <i class="fa fa-sort"></i></th>
-                          <th>ID <i class="fa fa-sort"></i></th>
-                          <th>Description <i class="fa fa-sort"></i></th>
-                          <th>IP <i class="fa fa-sort"></i></th>
-                          <th>Interface <i class="fa fa-sort"></i></th>
-                          <th>MAC <i class="fa fa-sort"></i></th>
-                          <th><center><i class="fa fa-bar-chart-o"></i></center></th>
-                          <th><center><i class="fa fa-edit"></i></center></th>
-                          <th><center><i class="fa fa-eraser"></i></center></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-
-                        <% _.each(terminals, function(terminal) { 
-                          if(terminal.get('active')==true){ %>
-
-                          <tr>
-                            <td><%= terminal.get('hostName') %></td>
-                            <td><%= terminal.get('identifier') %></td>
-                            <td><%= terminal.get('description') %></td>
-                            <td><%= terminal.get('ipAddress') %></td>
-                            <td><%= terminal.get('ifaceSpeed') %></td>
-                            <td><%= terminal.get('mac') %></td>
-                            <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
-                            <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
-                            <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
-                          </tr>
-
-                        <%  }
-                        }); %>
-                      </tbody>
-                    </table>
-                  </div>              
-                </div>
-                
-              </div><!-- /ACTIVE Terminals -->
-
-            </div>
-          </div><!-- /Terminals -->
+      </div>
+    </div><!-- /Terminals -->
       </script>
 	<!-- /TERMINALS VIEW -->
 
@@ -1620,118 +1613,118 @@
 
 	<!-- CLIENT ORG DATA -->
 	<script type="text/template" id="client-data-template">
-        <div class="col-md-12 col-sm-12 slim-flows"> 
-              <div class="panel panel-primary">
-                <div class="panel-heading">
-                  <h3 class="panel-title"> <center> <%= activeOrgName %> </center> </h3>
-                </div>
+    <div class="col-md-12 col-sm-12 slim-flows"> 
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title"> <center> <%= activeOrgName %> </center> </h3>
+            </div>
 
-                  <div class="panel-body">
-                    <div class="row padding-10">
+              <div class="panel-body">
+                <div class="row padding-10">
 
-                      <div class="row"> <!-- ROW Org.Data + Org.Users -->  
-                        <div class="col-lg-12">
-                          <div class="panel">
-                            <div class="tabbable">
-                              <ul class="nav nav-pills nav-justified">
-                                <li class="active"><a href="#/clientOrgData/<%= loginOrg %>" data-toggle=""> <i class="fa fa-briefcase"></i> Organization Data</a></li>
-                                <li class=""><a href="#/clientOrgUsers/<%= loginOrg %>" data-toggle=""> <i class="fa fa-group"></i> Organization Users</a></li>
-                              </ul>
-                                            
-                              <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Terminals + Active flows content -->
+                  <div class="row"> <!-- ROW Org.Data + Org.Users -->  
+                    <div class="col-lg-12">
+                      <div class="panel">
+                        <div class="tabbable">
+                          <ul class="nav nav-pills nav-justified">
+                            <li class="active"><a href="#/clientOrgData/<%= loginOrg %>" data-toggle=""> <i class="fa fa-briefcase"></i> Organization Data</a></li>
+                            <li class=""><a href="#/clientOrgUsers/<%= loginOrg %>" data-toggle=""> <i class="fa fa-group"></i> Organization Users</a></li>
+                          </ul>
+                                        
+                          <div class="tab-content"><!-- tabs ROW Org.Data + Org.Users + Terminals + Active flows content -->
 
-                                <div class="tab-pane active" id="orgData"><!-- ROW Org.Data --> 
-                                  <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12">
-                                      
-                                      <div class="panel panel-primary">
-                                        <div class="panel-body">
+                            <div class="tab-pane active" id="orgData"><!-- ROW Org.Data --> 
+                              <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                  
+                                  <div class="panel panel-primary">
+                                    <div class="panel-body">
 
-                                          <div id="client-data">
+                                      <div id="client-data">
 
-                                            <form class="form-horizontal" role="form">
+                                        <form class="form-horizontal" role="form">
 
-                                              <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                          <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
 
-                                                  <div class="form-group">
-                                                    <label for="orgID" class="col-sm-4 control-label">ID</label>
-                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control" id="orgID" value="<%= organization ? organization.get('identifier') : '' %>" placeholder="orgID" disabled>
-                                                    </div>
-                                                  </div>
-
-                                                  <div class="form-group">
-                                                    <label for="orgName" class="col-sm-4 control-label">Name</label>
-                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control" id="orgName" value="<%= organization ? organization.get('name') : '' %>" placeholder="Ikea" disabled>
-                                                    </div>
-                                                  </div>
-
-                                                  <div class="form-group">
-                                                    <label for="orgBankAccount" class="col-sm-4 control-label">Bank Account</label>
-                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control" id="orgBankAccount" value="<%= organization ? organization.get('bankAccount') : '' %>" placeholder="46475956605938294" disabled>
-                                                    </div>
-                                                  </div>
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-12">
-
-                                                  <div class="form-group">
-                                                    <label for="orgCif" class="col-sm-4 control-label">CIF</label>
-                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control" id="orgCif" value="<%= organization ? organization.get('NIF') : '' %>" placeholder="34957684" disabled>
-                                                    </div>
-                                                  </div>
-
-                                                  <div class="form-group">
-                                                    <label for="orgPassword" class="col-sm-4 control-label">Password</label>
-                                                    <div class="col-sm-8">
-                                                      <input type="password" class="form-control" id="orgPassword" placeholder="*********" disabled>
-                                                    </div>
-                                                  </div>
-
-                                                  <div class="form-group">
-                                                    <label for="orgIsOam" class="col-sm-4 control-label">is OAM?</label>
-                                                    <div class="col-sm-8">
-                                                      <input type="checkbox" class="form-control" id="orgIsOam" checked="<%= organization.get('OAM') %>" disabled>
-                                                    </div>
-                                                  </div>
+                                              <div class="form-group">
+                                                <label for="orgID" class="col-sm-4 control-label">ID</label>
+                                                <div class="col-sm-8">
+                                                  <input type="text" class="form-control" id="orgID" value="<%= organization ? organization.get('identifier') : '' %>" placeholder="orgID" disabled>
                                                 </div>
                                               </div>
 
-                                              <div class="row">    
-                                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                                  <div class="form-group">
-                                                    <center><button type="submit" class="btn btn-warning btn-lg">Edit Data</button></center>
-                                                  </div>
+                                              <div class="form-group">
+                                                <label for="orgName" class="col-sm-4 control-label">Name</label>
+                                                <div class="col-sm-8">
+                                                  <input type="text" class="form-control" id="orgName" value="<%= organization ? organization.get('name') : '' %>" placeholder="Ikea" disabled>
                                                 </div>
                                               </div>
-                                            </form>  
 
+                                              <div class="form-group">
+                                                <label for="orgBankAccount" class="col-sm-4 control-label">Bank Account</label>
+                                                <div class="col-sm-8">
+                                                  <input type="text" class="form-control" id="orgBankAccount" value="<%= organization ? organization.get('bankAccount') : '' %>" placeholder="46475956605938294" disabled>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                              <div class="form-group">
+                                                <label for="orgCif" class="col-sm-4 control-label">CIF</label>
+                                                <div class="col-sm-8">
+                                                  <input type="text" class="form-control" id="orgCif" value="<%= organization ? organization.get('NIF') : '' %>" placeholder="34957684" disabled>
+                                                </div>
+                                              </div>
+
+                                              <div class="form-group">
+                                                <label for="orgPassword" class="col-sm-4 control-label">Password</label>
+                                                <div class="col-sm-8">
+                                                  <input type="password" class="form-control" id="orgPassword" placeholder="*********" disabled>
+                                                </div>
+                                              </div>
+
+                                              <div class="form-group">
+                                                <label for="orgIsOam" class="col-sm-4 control-label">is OAM?</label>
+                                                <div class="col-sm-8">
+                                                  <input type="checkbox" class="form-control" id="orgIsOam" checked="<%= organization.get('OAM') %>" disabled>
+                                                </div>
+                                              </div>
+                                            </div>
                                           </div>
-                
-                                        </div>
+
+                                          <div class="row">    
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                              <div class="form-group">
+                                                <center><button type="submit" class="btn btn-warning btn-lg">Edit Data</button></center>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </form>  
+
                                       </div>
+            
                                     </div>
                                   </div>
-                                </div><!-- /ROW Org.Data --> 
+                                </div>
+                              </div>
+                            </div><!-- /ROW Org.Data --> 
 
 
 
-                              </div><!-- /tabs ROW Org.Data + Org.Users + Terminals + Active flows content -->
-                            
-                            </div>
-                          </div>
+                          </div><!-- /tabs ROW Org.Data + Org.Users + Terminals + Active flows content -->
+                        
                         </div>
-                      </div><!-- /ROW Org.Data + Org.Users -->
+                      </div>
+                    </div>
+                  </div><!-- /ROW Org.Data + Org.Users -->
 
-                    </div>  <!-- /row-->
-                  </div>
-                
+                </div>  <!-- /row-->
               </div>
-        </div>
+            
+          </div>
+    </div>
       </script>
 	<!-- /CLIENT ORG DATA -->
 
@@ -1888,7 +1881,7 @@
 
             <div class="col-md-4 col-sm-4">
               <a href="#/adminUsers/<%= orgId  %>">
-                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Discard changes
+                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                 </button>
               </a>
             </div>
@@ -2006,14 +1999,14 @@
           <div class="row">
 
             <div class="col-md-4 col-sm-4">
-              <a href="#/adminTerminals/<%= orgId  %>">
-                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Discard changes
+              <a href="#/adminTerminals">
+                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                 </button>
               </a>
             </div>
 
             <div class="col-md-4 col-sm-4">
-              <h2 class="panel-title"> <center> <%= terminal ? 'Edit Terminal: '+terminal.get('hostName') : 'Create Terminal' %> </center> </h2>
+              <h2 class="panel-title"> <center> <%= terminal ? 'Edit Terminal: '+terminal.get('hostName') : 'Assign organization to terminal' %> </center> </h2>
             </div>
 
             <div class="col-md-4 col-sm-4">

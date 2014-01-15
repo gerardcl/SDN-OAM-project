@@ -324,7 +324,7 @@
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			this.org.destroy({
 				success: function () {
-					router.navigate('adminOrgs',{triggq: true});
+					router.navigate('adminOrgs',{triggger: true});
 				},
 				error: function() {
 					alert('DELETE ERROR');
@@ -720,7 +720,7 @@
 				that.terminal.urlRoot = '/AppServer/webapp/manager/terminal/'+terminalPath;
 				that.terminal.fetch({
 					success: function (terminal){
-						console.log('orgId inside success: '+options.orgId);
+						console.log('orgId inside edit terminal fetch success: '+options.orgId);
 						var template = _.template($('#edit-terminal-template').html(), {terminal: terminal, orgId: options.orgId});
           				that.$el.html(template);
 					}
@@ -798,7 +798,7 @@
 			"newFlow/:identifier": "newFlow",
 			"newUser/:orgId": "editUser", //NEW USER template
 			"editUser/:orgId/:identifier": "editUser", //EDIT USER template
-			"editTerminal/:identifier": "editTerminal", //ASSIGN org to terminal
+			"assignTerminal/:identifier": "editTerminal", //ASSIGN org to terminal
 			"editTerminal/:orgId/:identifier": "editTerminal" //EDIT terminal
 		}
 	});
@@ -945,6 +945,7 @@
 		});
 
 		router.on('route:editTerminal', function(orgId, identifier) {
+			console.log('editTerminal route trigged');
 			loadDefaultStatValues();
 			StopSwitchStats();
 			console.log(orgId+' '+identifier)
