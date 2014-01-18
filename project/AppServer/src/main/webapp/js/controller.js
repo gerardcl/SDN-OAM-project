@@ -818,6 +818,7 @@
 			adminOverviewView.render();
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			initStatusOverview();
 			//SlimScroll HEIGHTS
 			$('#GS-alerts').slimScroll({
@@ -828,6 +829,7 @@
 		router.on('route:adminOrgs', function() {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 2});
 			orgsListBSView.render();  
 		});
@@ -835,42 +837,49 @@
 		router.on('route:editOrg', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			newOrgView.render({identifier: id});
 		});
 
 		router.on('route:orgData', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			orgDataView.render({identifier: id});
 		});
 
 		router.on('route:orgUsers', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			orgUsersView.render({identifier: id});
 		});
 
 		router.on('route:orgFlows', function(id) {	
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			orgFlowsView.render({identifier: id, active: true});
 		});
 
 		router.on('route:orgPrgFlows', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			orgFlowsView.render({identifier: id, active: false});
 		});
 
 		router.on('route:orgTerminals', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			orgTerminalsView.render({identifier: id});
 		});
 
 		router.on('route:flows', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 3});
 			flowsView.render({identifier: id, all: true});
 		});
@@ -878,6 +887,7 @@
 		router.on('route:terminals', function() {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 4});
 			terminalsView.render({all: true});
 		});
@@ -886,6 +896,7 @@
 		router.on('route:traffic', function() {
 			loadDefaultStatValues();
 			StopSwitchStats();
+			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 5});
 			trafficView.render();
 		});
