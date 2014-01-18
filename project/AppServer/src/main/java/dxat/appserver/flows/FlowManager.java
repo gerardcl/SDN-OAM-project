@@ -119,7 +119,6 @@ public class FlowManager {
                 update.setNewValue("false");
                 update.setPropertyId("enabled");
                 update.setMessage("The flow with id '" + deployedFlow.getFlowId() + "' has been deleted successfully.");
-                flows.remove(deployedFlow.getFlowId());
             }
             flows.clear();
         } else if (eventStr.equals(IFlowEvents.FLOW_COLLECTION)) {
