@@ -39,7 +39,7 @@ public class OrgManager {
 	private boolean dbExists;
 
 	private OrgManager(){
-		dbExists = true;
+		dbExists = false;
 		initOrgManager();
 	}
 
@@ -187,6 +187,9 @@ public class OrgManager {
 		try {
 			dbdelete.deleteOrg(orgId);
 			torgs.remove(orgId);
+			deleteUsers(orgId);
+			deleteTerminals(orgId);
+			deleteFlows(orgId);
 			orgs.remove(orgId);
 			return orgId;
 		} catch (OrgNotFoundException e) {
@@ -196,6 +199,34 @@ public class OrgManager {
 		return null;
 	}
 
+	public void deleteUsers(String orgId){
+		Org selectedOrg = orgs.get(orgId);
+		for (Entry<String, OrgUser> entry : users.entrySet()) {
+			OrgUser user = entry.getValue();
+			if(selectedOrg.getUsers().containsKey(user.getIdentifier())){
+				users.remove(user.getIdentifier());
+			}
+		}
+	}
+	public void deleteTerminals(String orgId){
+		Org selectedOrg = orgs.get(orgId);
+		for (Entry<String, OrgTerminal> entry : terminals.entrySet()) {
+			OrgTerminal terminal = entry.getValue();
+			if(selectedOrg.getTerminals().containsKey(terminal.getIdentifier())){
+				terminals.remove(terminal.getIdentifier());
+			}
+		}
+	}
+	public void deleteFlows(String orgId){
+		Org selectedOrg = orgs.get(orgId);
+		for (Entry<String, OrgFlow> entry : flows.entrySet()) {
+			OrgFlow flow = entry.getValue();
+			if(selectedOrg.getFlows().containsKey(flow.getIdentifier())){
+				flows.remove(flow.getIdentifier());
+			}
+		}
+	}
+	
 	public boolean existOrg(TOrg org){
 		for (Entry<String, TOrg> entry1 : torgs.entrySet()) {
 			TOrg torg = entry1.getValue();

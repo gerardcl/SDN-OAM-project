@@ -4,7 +4,7 @@
 	var cntActiveTerms = 0;
 	//var userOrgId = '';
 
-	//call serializeObject to convert to convert the form inputs to an object 
+	//call serializeObject to convert the form inputs to an object 
 	$.fn.serializeObject = function() {
 	  var o = {};
 	  var a = this.serializeArray();
@@ -242,6 +242,9 @@
 		el: '.page',
 		render: function () {
 			var that = this;
+			var oamSDNloggedtext = $('#oamSDNlogged').text();
+			var res = oamSDNloggedtext.split('| ');
+			loginOrg = res[1];
 			var template = _.template($('#admin-overview-template').html());
 			that.$el.html(template);
 			//SlimScroll HEIGHTS
@@ -304,13 +307,11 @@
 		},
 		saveOrg: function (ev){
 			var orgDetails = $(ev.currentTarget).serializeObject();
-			console.log(orgDetails);
 			var org = new Organization();
 			org.save(orgDetails, {
 				//type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.org.collection+json",
 				success: function (ev) {
-					console.log(ev);
 					if(ev.attributes.identifier == "") alert("this org already exists");
 					else router.navigate('adminOrgs/'+ev.attributes.identifier, {trigger: true});
 				},
@@ -322,14 +323,28 @@
 		},
 		deleteOrg: function (ev){
 			var orgDetails = $(ev.currentTarget).serializeObject();
-			this.org.destroy({
-				success: function () {
-					router.navigate('adminOrgs',{triger: true});
-				},
-				error: function() {
-					alert('DELETE ERROR');
-				}
-			});
+			if(this.org.id == loginOrg){
+				alert("You are not able to delete your organization! are you all right?");
+			}else{
+				this.org.destroy({
+					success: function (response) {
+						if(response != ""){
+							router.navigate('adminOrgs',{trigger: true});
+							$('#confirmation').modal('hide');
+							$('body').removeClass('modal-open');
+							$('.modal-backdrop').remove();
+						}
+						else alert('DELETE ERROR');
+					},
+					error: function(response) {
+						router.navigate('adminOrgs',{trigger: true});
+						$('#confirmation').modal('hide');
+						$('body').removeClass('modal-open');
+						$('.modal-backdrop').remove();
+					}
+				});
+				return false;	
+			}
 			return false;
 		}
 	});

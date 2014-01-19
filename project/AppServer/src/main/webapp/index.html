@@ -124,7 +124,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/adminOverview"><i class="fa fa-gamepad"></i> OAM SDN [ <%= loginOrg %> ]</a>
+            <a class="navbar-brand" href="#/adminOverview" id="oamSDNlogged"><i class="fa fa-gamepad"></i> OAM SDN | <%= loginOrg %></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -859,7 +859,7 @@
                 <%= organization ? organization.get('identifier') : '' %>  
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"><i class="fa fa-reply"></i> Cancel</button>
                 <button type="button" id="delete-org" class="btn btn-danger delete"><i class="fa fa-trash-o"></i> Remove</button>
               </div>
             </div><!-- /.modal-content -->
