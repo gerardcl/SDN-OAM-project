@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import dxat.appserver.stat.StatManager;
 import dxat.appserver.stat.pojos.StatResponse;
 
-@Path("/statistics")
+@Path("/")
 public class StatResource {
 
 	private StatManager statMngr = StatManager.getInstance();

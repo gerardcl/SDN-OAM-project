@@ -19,7 +19,7 @@ import dxat.appserver.topology.pojos.SwitchCollection;
 import dxat.appserver.topology.pojos.Terminal;
 import dxat.appserver.topology.pojos.TerminalCollection;
 
-@Path("/topology")
+@Path("/")
 public class TopologyResource {
 	private SwitchManager switchManager = SwitchManager.getInstance();
 	private LinkManager linkManager = LinkManager.getInstance();

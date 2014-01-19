@@ -31,21 +31,21 @@ public class RealTimeManager implements IRealTimeManager {
         ServerRequest serverRequest = new ServerRequest();
         serverRequest.setRequest(IServerRequests.PUSH_FLOW_REQUEST);
         serverRequest.setObject(new Gson().toJson(flow));
-        realTimeThread.sendrequest(serverRequest);
+        realTimeThread.sendRequest(serverRequest);
     }
 
     public void deleteAllFlows() {
         ServerRequest serverRequest = new ServerRequest();
         serverRequest.setRequest(IServerRequests.DELETE_ALL_FLOWS_REQUEST);
         serverRequest.setObject("NONE");
-        realTimeThread.sendrequest(serverRequest);
+        realTimeThread.sendRequest(serverRequest);
     }
 
     public void deleteFlow(Flow flow) {
         ServerRequest serverRequest = new ServerRequest();
         serverRequest.setRequest(IServerRequests.DELETE_FLOW_REQUEST);
         serverRequest.setObject(new Gson().toJson(flow));
-        realTimeThread.sendrequest(serverRequest);
+        realTimeThread.sendRequest(serverRequest);
     }
 
     public static RealTimeManager getInstance() {

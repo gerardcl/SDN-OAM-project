@@ -21,54 +21,55 @@ import java.util.Date;
  */
 public class PacketListener implements IOFMessageListener {
 
-    private ModuleServerThread moduleServerThread;
+	private ModuleServerThread moduleServerThread;
 
-    public PacketListener(ModuleServerThread moduleServerThread) {
-        super();
-        this.moduleServerThread = moduleServerThread;
-    }
+	public PacketListener(ModuleServerThread moduleServerThread) {
+		super();
+		this.moduleServerThread = moduleServerThread;
+	}
 
-    @Override
-    public Command receive(IOFSwitch sw, OFMessage msg, FloodlightContext cntx) {
-        /* Get data of the message header */
-        OFPacketIn pi = (OFPacketIn) msg;
-        OFMatch match = new OFMatch();
-        match.loadFromPacket(pi.getPacketData(), (short) 0);
+	@Override
+	public Command receive(IOFSwitch sw, OFMessage msg, FloodlightContext cntx) {
+		/* Get data of the message header */
+		OFPacketIn pi = (OFPacketIn) msg;
+		OFMatch match = new OFMatch();
+		match.loadFromPacket(pi.getPacketData(), (short) 0);
 
-        /* Copy data into the Packet Instance */
-        Packet packet = new Packet();
-        packet.setNetworkDestination(IPv4.fromIPv4Address(match.getNetworkDestination()));
-        packet.setNetworkProtocol(match.getNetworkProtocol());
-        packet.setNetworkSource(IPv4.fromIPv4Address(match.getNetworkSource()));
-        packet.setNetworkTypeOfService(match.getNetworkTypeOfService());
-        packet.setPortId(sw.getStringId() + ":" + match.getInputPort());
-        packet.setTransportDestination(match.getTransportDestination());
-        packet.setTransportSource(match.getTransportSource());
+		/* Copy data into the Packet Instance */
+		Packet packet = new Packet();
+		packet.setNetworkDestination(IPv4.fromIPv4Address(match
+				.getNetworkDestination()));
+		packet.setNetworkProtocol(match.getNetworkProtocol());
+		packet.setNetworkSource(IPv4.fromIPv4Address(match.getNetworkSource()));
+		packet.setNetworkTypeOfService(match.getNetworkTypeOfService());
+		packet.setPortId(sw.getStringId() + ":" + match.getInputPort());
+		packet.setTransportDestination(match.getTransportDestination());
+		packet.setTransportSource(match.getTransportSource());
 
-        /* Create controller event */
-        ControllerEvent controllerEvent = new ControllerEvent();
-        controllerEvent.setEvent(IPacketEvent.PACKET_RECEIVED);
-        controllerEvent.setObject(new Gson().toJson(packet));
-        controllerEvent.setTimestamp(new Date().getTime());
+		/* Create controller event */
+		ControllerEvent controllerEvent = new ControllerEvent();
+		controllerEvent.setEvent(IPacketEvent.PACKET_RECEIVED);
+		controllerEvent.setObject(new Gson().toJson(packet));
+		controllerEvent.setTimestamp(new Date().getTime());
 
-        /* Send the event to the application server */
-        moduleServerThread.sendControllerEvent(controllerEvent);
+		/* Send the event to the application server */
+		moduleServerThread.broadcastControllerEvent(controllerEvent);
 
-        return Command.CONTINUE;
-    }
+		return Command.CONTINUE;
+	}
 
-    @Override
-    public String getName() {
-        return null;
-    }
+	@Override
+	public String getName() {
+		return null;
+	}
 
-    @Override
-    public boolean isCallbackOrderingPrereq(OFType type, String name) {
-        return false;
-    }
+	@Override
+	public boolean isCallbackOrderingPrereq(OFType type, String name) {
+		return false;
+	}
 
-    @Override
-    public boolean isCallbackOrderingPostreq(OFType type, String name) {
-        return false;
-    }
+	@Override
+	public boolean isCallbackOrderingPostreq(OFType type, String name) {
+		return false;
+	}
 }
