@@ -40,7 +40,7 @@ public class OrgManager {
 	private boolean dbExists;
 
 	private OrgManager(){
-		dbExists = false;
+		dbExists = true;
 		initOrgManager();
 	}
 
