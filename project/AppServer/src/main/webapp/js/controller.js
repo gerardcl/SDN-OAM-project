@@ -329,12 +329,8 @@
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			this.org.destroy({
 				success: function () {
-<<<<<<< HEAD
 					$('#confirmation').modal('hide');
-					router.navigate('adminOrgs',{triggger: true});
-=======
-					router.navigate('adminOrgs',{triger: true});
->>>>>>> aa04bebd219edfe80ef02fe8ed3dbeeb0ca1f16a
+					router.navigate('adminOrgs',{trigger: true});
 				},
 				error: function() {
 					$('#confirmation').modal('hide');
@@ -491,14 +487,10 @@
 
 			var that = this;
 			var terminals = new Terminals();
-<<<<<<< HEAD
 			//to use same template with both [admin(all=true) and org(all=false)] views
 			if(options.all==true){terminals.url = '/AppServer/webapp/manager/terminal/all';}
 			if(options.all==false){terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';}
-=======
-			if(options.all==true){terminals.url = '/AppServer/webapi/manager/terminal/all';}
-			if(options.all==false){terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';}
->>>>>>> aa04bebd219edfe80ef02fe8ed3dbeeb0ca1f16a
+
 			terminals.fetch({
 				success: function (terminals) {
 					var template = _.template($('#terminals-template').html(), {terminals: terminals.models, organizations: organizations.models});
