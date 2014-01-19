@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.UUID;
 
 import dxat.appserver.manager.database.Create;
@@ -113,7 +114,7 @@ public class OrgManager {
 		newtorg.setNIF(torg.getNIF());
 		newtorg.setOAM(torg.isOAM());
 		newtorg.setTelephone(torg.getTelephone());
-		newtorg.setIdentifier(Integer.toString(torg.getName().hashCode()));
+		newtorg.setIdentifier(Integer.toString(Math.abs((int) (torg.getName().hashCode()*Math.random()*-10))));
 		try {
 			dbcreate.createOrg(newtorg);
 			torgs.put(newtorg.getIdentifier(), newtorg);
