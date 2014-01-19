@@ -21,6 +21,11 @@
 	  return o;
 	};
 
+	$(document).on("click", ".assignationModal", function () {
+    	var assignation = $(this).data('id');
+    	$(".modal-body #assignation").val( assignation );
+	});
+
 //	Models
 	//TOrg data model  
 	var Organization = Backbone.Model.extend({
@@ -324,9 +329,11 @@
 			var orgDetails = $(ev.currentTarget).serializeObject();
 			this.org.destroy({
 				success: function () {
+					$('#confirmation').modal('hide');
 					router.navigate('adminOrgs',{triggger: true});
 				},
 				error: function() {
+					$('#confirmation').modal('hide');
 					alert('DELETE ERROR');
 				}
 			});
@@ -472,19 +479,29 @@
 	var TerminalsView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) {
+
+			//obtain organizations list to make a dropdown to assign org to terminals
+				organizations = new Organizations();
+				organizations.url = '/AppServer/webapp/manager/org/all';
+				organizations.fetch();
+
 			var that = this;
 			var terminals = new Terminals();
+			//to use same template with both [admin(all=true) and org(all=false)] views
 			if(options.all==true){terminals.url = '/AppServer/webapp/manager/terminal/all';}
 			if(options.all==false){terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';}
 			terminals.fetch({
 				success: function (terminals) {
-					var template = _.template($('#terminals-template').html(), {terminals: terminals.models});
+					var template = _.template($('#terminals-template').html(), {terminals: terminals.models, organizations: organizations.models});
 					that.$el.html(template);
 					$('#un-AP').slimScroll({
 						height: '250px'
 					});
 					$('#AP').slimScroll({
 						height: '250px'
+					});
+					$('.listScroll').slimScroll({
+						height: '150px'
 					});
 				}
 			});
@@ -697,7 +714,11 @@
 		deleteUser: function (ev){
 			this.user.destroy({
 				success: function () {
+					$('#confirmationUser').modal('hide');
 					router.navigate('adminOrgs/', {trigger: true});
+				},
+				error: function () {
+					$('#confirmationUser').modal('hide');
 				}
 			});
 			return false;
@@ -712,8 +733,17 @@
 		render: function (options) {
 			console.log(options);
 			var that = this;
+
+				organizations = new Organizations();
+				organizations.url = '/AppServer/webapp/manager/org/all';
+				organizations.fetch();
+
+
 			if(options.identifier){ //edit 
 				// "identifier" is what backbone takes to GET REST path
+				
+				console.log('organizations.length '+organizations.length);
+
 				that.terminal = new Terminal({identifier: options.identifier});
 				var terminalPath = options.orgId+'/';
 				console.log(terminalPath);
@@ -721,12 +751,12 @@
 				that.terminal.fetch({
 					success: function (terminal){
 						console.log('orgId inside edit terminal fetch success: '+options.orgId);
-						var template = _.template($('#edit-terminal-template').html(), {terminal: terminal, orgId: options.orgId});
+						var template = _.template($('#edit-terminal-template').html(), {terminal: terminal, organizations: organizations.models, orgId: options.orgId});
           				that.$el.html(template);
 					}
 				});
 			} else { //create
-	          var template = _.template($('#edit-terminal-template').html(), {terminal: null, orgId: options.orgId});
+	          var template = _.template($('#edit-terminal-template').html(), {terminal: null, organizations: organizations.models, orgId: options.orgId});
 	          that.$el.html(template);
 	        } 
 		},
@@ -948,6 +978,11 @@
 			console.log('editTerminal route trigged');
 			loadDefaultStatValues();
 			StopSwitchStats();
+			if(identifier==null){
+				console.log('id '+identifier);
+				identifier=orgId;
+				console.log('id '+identifier);
+				orgId=undefined;}
 			console.log(orgId+' '+identifier)
 			editTerminalView.render({orgId: orgId, identifier: identifier});
 		});
@@ -958,6 +993,7 @@
 	var loginUser = '';
 	var loginOrg = '';
 	var activeOrgName = '';
+	
 
 	
 

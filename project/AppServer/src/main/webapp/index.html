@@ -1451,7 +1451,7 @@
                       <th>IP <i class="fa fa-sort"></i></th>
                       <th>Interface <i class="fa fa-sort"></i></th>
                       <th>MAC <i class="fa fa-sort"></i></th>
-                      <th><center><i class="fa fa-edit"></i></center></th>
+                      <th><center> Assign Organization <i class="fa fa-edit"></i></center></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1464,11 +1464,30 @@
                         <td><%= terminal.get('ipAddress') %></td>
                         <td><%= terminal.get('ifaceSpeed') %></td>
                         <td><%= terminal.get('mac') %></td>
-                        <td><center><a href="#/assignTerminal/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Assign org</button></a></center></td>
-                      </tr>
+                        <td>
 
+                          <center>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="assignOrg">
+                                Assign organization
+                                <span class="caret"></span>
+                              </button>
+
+                            <ul class="dropdown-menu">
+                              <div class="listScroll"> 
+                                <% _.each(organizations, function(organization) { %>
+
+                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' data-id="<%= terminal.get('identifier') %> to <%= organization.get('name') %>" onclick=""><span class="badge"><%= organization.get('identifier') %></span> <%= organization.get('name') %></a>
+    
+                                <% }); %>
+                              </div>
+                            </ul>
+                          </center>
+                        </td>
+                      </tr>
                     <%  }
                     }); %>
+
                   </tbody>
 
                 </table>
@@ -1495,9 +1514,7 @@
                     <th>IP <i class="fa fa-sort"></i></th>
                     <th>Interface <i class="fa fa-sort"></i></th>
                     <th>MAC <i class="fa fa-sort"></i></th>
-                    <th><center><i class="fa fa-bar-chart-o"></i></center></th>
                     <th><center><i class="fa fa-edit"></i></center></th>
-                    <th><center><i class="fa fa-eraser"></i></center></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1512,9 +1529,7 @@
                       <td><%= terminal.get('ipAddress') %></td>
                       <td><%= terminal.get('ifaceSpeed') %></td>
                       <td><%= terminal.get('mac') %></td>
-                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
-                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
-                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                      <td><center><a href="#/assignTerminal/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Assign org</button></a></center></td>
                     </tr>
 
                   <%  }
@@ -1528,6 +1543,31 @@
 
       </div>
     </div><!-- /Terminals -->
+
+
+      <!-- ASSIGN ORG MODAL -->
+        <div class="modal fade" id="confirmationOrgAssign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Assign organization to terminal</h4>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to assign terminal 
+
+                
+                <center><span class="label label-info" name="assignation" id="assignation"><%= $(this).data('id') %></span></center>
+
+             
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+                <button type="button" id="assign-terminal" class="btn btn-success"><i class="fa fa-link"></i> Assign terminal</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
       </script>
 	<!-- /TERMINALS VIEW -->
 
@@ -1996,6 +2036,28 @@
       <div class="panel <%= terminal ? 'panel-danger' : 'panel-success' %>">
         <div class="panel-heading">
 
+          <div class="row">
+
+            <div class="btn-group dropup">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="orgsList">
+                Select organization
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <div class="listScroll"> 
+
+                  <% _.each(organizations, function(organization) { %>
+
+                    <li class='list-group-item' id="tinterval" onclick=""><%= organization.get('name') %></li>                    
+                  <% }); %>
+
+                </div>
+
+
+              </ul>
+            </div>
+          </div>
+          
           <div class="row">
 
             <div class="col-md-4 col-sm-4">
