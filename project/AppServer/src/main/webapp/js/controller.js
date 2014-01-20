@@ -30,12 +30,22 @@
     	var terminalId = objectToAssign.id; 
     	var orgId = objectToAssign.orgid;
     	var orgName = objectToAssign.orgname;
+
+    	var ipAddress = objectToAssign.terminaladdress;
+    	var mac = objectToAssign.terminalmac;
+    	var ifaceSpeed = objectToAssign.terminaliface;
+    	var hostName = objectToAssign.terminalname;
+
     	console.log(terminalId);
     	console.log(orgId);
     	console.log(orgName);
     	$(".modal-body #terminalId").val( terminalId );
     	$(".modal-body #orgId").val( orgId );
     	$(".modal-body #orgName").val( orgName );
+    	$(".modal-body #terminalIP").val( ipAddress );
+    	$(".modal-body #terminalMac").val( mac );
+    	$(".modal-body #terminalSpeed").val( ifaceSpeed );
+    	$(".modal-body #terminalName").val( hostName );
 	});
 
 //	Models
@@ -527,14 +537,14 @@
 			});
 		},
 		events: {
-			'submit #assign-terminal': 'assign'
+			'submit .assign-term-form': 'assign'
 		},
 		assign: function (ev){
 			var termDetails = $(ev.currentTarget).serializeObject();
 			console.log(termDetails);
 
 			var terminal = new Terminal();
-			terminal.url = '/AppServer/webapp/manager/terminal/'+ev.orgId;
+			terminal.url = '/AppServer/webapp/manager/terminal/'+termDetails.orgId;
 			terminal.save(termDetails, {
 				//type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.terminal.collection+json",

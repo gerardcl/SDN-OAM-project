@@ -1470,7 +1470,7 @@
                               <div class="listScroll"> 
                                 <% _.each(organizations, function(org) { %>
 
-                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' id="infoAssignation" data-id="<%= terminal.get('identifier') %>" data-orgname="<%= org.get('name') %>" data-orgid="<%= org.get('identifier') %>" ><span class="badge"><%= org.get('identifier') %></span> <%= org.get('name') %></a>
+                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' id="infoAssignation" data-id="<%= terminal.get('identifier') %>" data-orgname="<%= org.get('name') %>" data-orgid="<%= org.get('identifier') %>" data-terminaladdress="<%= terminal.get('ipAddress') %>" data-terminalname="<%= terminal.get('name') %>" data-terminaliface="<%= terminal.get('ifaceSpeed') %>" data-terminalmac="<%= terminal.get('mac') %>"><span class="badge"><%= org.get('identifier') %></span> <%= org.get('name') %></a>
     
                                 <% }); %>
                               </div>
@@ -1547,18 +1547,28 @@
                 <h4 class="modal-title">Assign organization to terminal</h4>
               </div>
               <div class="modal-body">
-                Are you sure you want to assign terminal: <br> 
 
-                <input type="text" name="terminalId" id="terminalId" value=""/>
-                <input type="hidden" name="orgId" id="orgId" value=""/>
+                <form class="form-horizontal assign-term-form well" role="form">
 
-                <br> to organization: <br>
-                <input type="text" name="orgName" id="orgName" value=""/>  ?
-             
+                  Are you sure you want to assign terminal: <br> <br>
+
+                  <input type="text" name="terminalId" id="terminalId" value="" readonly />
+                  <br> to organization: <br>
+                  <input type="text" name="orgName" id="orgName" value="" readonly/>  ?<br><br>
+                  You MUST specify a name for this terminal:<br> <input type="text" name="hostName" id="terminalName" value="" required/> <br><br>
+                  and you can also add a description: <br> <input type="text" name="description" id="description" size="55" value=""/>
+
+                  <input type="hidden" id="orgId" value=""/>
+                  <input type="hidden" name="ipAddress" id="terminalIP" value=""/>
+                  <input type="hidden" name="mac" id="terminalMac" value=""/>
+                  <input type="hidden" name="ifaceSpeed" id="terminalSpeed" value=""/>
+                
+                </form>
+
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
-                <button type="submit" id="assign-terminal" class="btn btn-success"><i class="fa fa-link"></i> Assign terminal</button>
+                <button type="button" id="assign-terminal" class="btn btn-success"><i class="fa fa-link"></i> Assign terminal</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
