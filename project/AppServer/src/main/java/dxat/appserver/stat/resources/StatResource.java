@@ -1,13 +1,22 @@
 package dxat.appserver.stat.resources;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import dxat.appserver.flows.FlowManager;
+import dxat.appserver.flows.pojos.DeployedFlow;
 import dxat.appserver.stat.StatManager;
+import dxat.appserver.stat.pojos.AgregatedFlow;
+import dxat.appserver.stat.pojos.MatrixStat;
 import dxat.appserver.stat.pojos.StatResponse;
 
 @Path("/")
@@ -95,8 +104,8 @@ public class StatResource {
 	}
 
 	/*
-	 * @param statParameter Statistic requested parameter, are allowed:
-	 * CpuAvg, MemoryPCT
+	 * @param statParameter Statistic requested parameter, are allowed: CpuAvg,
+	 * MemoryPCT
 	 * 
 	 * @param typeOfStat Type of the value: MIN, MAX, AVERAGE
 	 * 
@@ -116,4 +125,43 @@ public class StatResource {
 		return statMngr.getControllerStat(statParameter, typeOfStat,
 				granularity);
 	}
+
+	/*****************************************************************************
+	 * 
+	 * 
+	 */
+
+	@GET
+	@Path("/traficmatrix/")
+	@Produces(MediaType.MATRIXSTATS)
+	public MatrixStat getFlowStat() throws IOException {
+		HashMap<AgregatedFlow, AgregatedFlow> agregatedFlows = new HashMap<AgregatedFlow, AgregatedFlow>();
+
+		List<DeployedFlow> deployedFlowList = FlowManager.getInstance().getFlows().getFlows();
+		for (DeployedFlow deployedFlow : deployedFlowList) {
+			AgregatedFlow agregatedFlow = new AgregatedFlow();
+			agregatedFlow.setForward(deployedFlow);
+			if (!agregatedFlows.containsKey(agregatedFlow)) {
+				agregatedFlows.put(agregatedFlow,agregatedFlow);
+			}
+			agregatedFlows.get(agregatedFlow).aggregate(statMngr.getInstance().getFlowStat(deployedFlow.getFlowId()+".forward", "byteCount", "AVERAGE", "second").getValueAxxis()[0]);
+			
+			agregatedFlow = new AgregatedFlow();
+			agregatedFlow.setBackward(deployedFlow);
+			if (!agregatedFlows.containsKey(agregatedFlow)) {
+				agregatedFlows.put(agregatedFlow,agregatedFlow);
+			}
+			agregatedFlows.get(agregatedFlow).aggregate(statMngr.getInstance().getFlowStat(deployedFlow.getFlowId()+".backward", "byteCount", "AVERAGE", "second").getValueAxxis()[0]);
+			
+		}
+		List<AgregatedFlow> agregatedFlowList = new ArrayList<AgregatedFlow>(agregatedFlows.values());
+		Collections.sort(agregatedFlowList);
+		MatrixStat matrix = new MatrixStat();
+		matrix.setMatrix(agregatedFlowList);
+		
+		return matrix;
+	}
+
+
+
 }
