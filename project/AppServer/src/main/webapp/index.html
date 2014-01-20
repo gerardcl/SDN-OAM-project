@@ -1200,7 +1200,7 @@
                                         <div class="panel-body">
 
                                           <div class="padding-10-bot">
-                                            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW</button>
+                                            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW for <%= orgName %></button>
                                           </div>
 
 
@@ -1448,7 +1448,7 @@
                       <th>IP <i class="fa fa-sort"></i></th>
                       <th>Interface <i class="fa fa-sort"></i></th>
                       <th>MAC <i class="fa fa-sort"></i></th>
-                      <th><center><i class="fa fa-edit"></i></center></th>
+					  <th><center> Assign Organization <i class="fa fa-edit"></i></center></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1461,9 +1461,27 @@
                         <td><%= terminal.get('ipAddress') %></td>
                         <td><%= terminal.get('ifaceSpeed') %></td>
                         <td><%= terminal.get('mac') %></td>
-                        <td><center><a href="#/assignTerminal/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Assign org</button></a></center></td>
-                      </tr>
+                        <td> 
 
+                          <center>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="assignOrg">
+                                Assign organization
+                                <span class="caret"></span>
+                              </button>
+
+                            <ul class="dropdown-menu">
+                              <div class="listScroll"> 
+                                <% _.each(organizations, function(org) { %>
+
+                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' id="infoAssignation" data-id="<%= terminal.get('identifier') %>" data-orgname="<%= org.get('name') %>" data-orgid="<%= org.get('identifier') %>" data-terminaladdress="<%= terminal.get('ipAddress') %>" data-terminalname="<%= terminal.get('name') %>" data-terminaliface="<%= terminal.get('ifaceSpeed') %>" data-terminalmac="<%= terminal.get('mac') %>"><span class="badge"><%= org.get('identifier') %></span> <%= org.get('name') %></a>
+    
+                                <% }); %>
+                              </div>
+                            </ul>
+                          </center>
+                        </td>
+                      </tr>
                     <%  }
                     }); %>
                   </tbody>
@@ -1492,9 +1510,7 @@
                     <th>IP <i class="fa fa-sort"></i></th>
                     <th>Interface <i class="fa fa-sort"></i></th>
                     <th>MAC <i class="fa fa-sort"></i></th>
-                    <th><center><i class="fa fa-bar-chart-o"></i></center></th>
                     <th><center><i class="fa fa-edit"></i></center></th>
-                    <th><center><i class="fa fa-eraser"></i></center></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1509,9 +1525,7 @@
                       <td><%= terminal.get('ipAddress') %></td>
                       <td><%= terminal.get('ifaceSpeed') %></td>
                       <td><%= terminal.get('mac') %></td>
-                      <td><center><button type="button" class="btn btn-info btn-sm">Statistics</button></center></td>
-                      <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
-                      <td><center><button type="button" class="btn btn-danger btn-sm">Remove</button></center></td>
+                      <td><center><a href="#/assignTerminal/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Assign org</button></a></center></td>
                     </tr>
 
                   <%  }
@@ -1525,8 +1539,43 @@
 
       </div>
     </div><!-- /Terminals -->
-      </script>
-	<!-- /TERMINALS VIEW -->
+
+<!-- ASSIGN ORG MODAL -->
+       <div class="modal fade" id="confirmationOrgAssign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+               <h4 class="modal-title">Assign organization to terminal</h4>
+             </div>
+             <div class="modal-body">
+
+               <form class="form-horizontal assign-term-form well" role="form">
+
+                 Are you sure you want to assign terminal: <br> <br>
+
+                 <input type="text" name="terminalId" id="terminalId" value="" readonly />
+                 <br> to organization: <br>
+                 <input type="text" name="orgName" id="orgName" value="" readonly/>  ?<br><br>
+                 You MUST specify a name for this terminal:<br> <input type="text" name="hostName" id="terminalName" value="" required/> <br><br>
+                 and you can also add a description: <br> <input type="text" name="description" id="description" size="55" value=""/>
+
+                 <input type="hidden" id="orgId" value=""/>
+                 <input type="hidden" name="ipAddress" id="terminalIP" value=""/>
+                 <input type="hidden" name="mac" id="terminalMac" value=""/>
+                 <input type="hidden" name="ifaceSpeed" id="terminalSpeed" value=""/>
+               
+               </form>
+
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+               <button type="submit" id="assign-terminal" class="btn btn-success"><i class="fa fa-link"></i> Assign terminal</button>
+             </div>
+           </div><!-- /.modal-content -->
+         </div><!-- /.modal-dialog -->
+       </div><!-- /.modal -->
+     </script>	<!-- /TERMINALS VIEW -->
 
 	<!-- TRAFFIC VIEW -->
 	<script type="text/template" id="traffic-template">
@@ -1987,12 +2036,153 @@
     </script>
     <!-- /EDIT-CREATE USER TEMPLATE -->
 
+    <!-- EDIT-CREATE USER TEMPLATE -->
+    <script type="text/template" id="edit-user-template">
+
+      <div class="panel <%= user ? 'panel-danger' : 'panel-success' %>">
+        <div class="panel-heading">
+
+          <div class="row">
+
+            <div class="col-md-4 col-sm-4">
+              <a href="#/adminUsers/<%= orgId  %>">
+                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
+                </button>
+              </a>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+              <h2 class="panel-title"> <center> <%= user ? 'Edit User: '+user.get('name') : 'Create User' %> </center> </h2>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="panel-body">
+          <form class="form-horizontal edit-user-form well" role="form">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="name" class="col-sm-4 control-label">Name</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="name" value="<%= user ? user.get('name') : '' %>" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="col-sm-4 control-label">Email</label>
+                  <div class="col-sm-8">
+                    <input type="email" class="form-control" name="email" value="<%= user ? user.get('email') : '' %>"  >
+                  </div>
+                </div>
+
+              
+
+                <div class="form-group">
+                  <label for="telephone" class="col-sm-4 control-label">Telephone</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="telephone" value="<%= user ? user.get('telephone') : '' %>"  >
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-12">
+
+                <div class="form-group">
+                  <label for="password" class="col-sm-4 control-label">Password</label>
+                  <div class="col-sm-8">
+                    <input type="password" class="form-control" name="password" value="<%= user ? user.get('password') : '' %>"  >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="admin" class="col-sm-4 control-label">is admin?</label>
+                  <div class="col-sm-8">
+                    <input type="hidden" id="orgId" value="<%= orgId %>" />
+                    
+                    <% if(user){ %>
+                      <input type="hidden" name="identifier" value="<%= user.get('identifier') %>" />
+                    <% } %>
+
+                    <input type="checkbox" class="form-control" name="admin" "
+                      <% if(user){
+                          if(user.get('admin')) %> checked
+                      <%} %>" >                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">    
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group">
+                  <center>
+                    <button type="submit" class="btn btn-lg <%= user ? 'btn-warning' : 'btn-success' %> "><%= user ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create User'%></button>
+                    <%= user ? '<a data-toggle="modal" href="#confirmationUser" class="btn btn-lg btn-danger"><i class="fa fa-trash-o"></i> Remove User </a>' : '' %> 
+                  </center>
+                </div>
+              </div>
+            </div>
+          </form>  
+        </div>
+      </div>
+
+      <!-- DELETE USER Modal -->
+        <div class="modal fade" id="confirmationUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Remove user <%= user ? user.get('name') : '' %></h4>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to remove <center><h2 class="well"><%= user ? user.get('name') : '' %>?</h2> </center> 
+                <br>
+                <%= user ? user.get('identifier') : '' %>  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+                <button type="button" id="delete-user" class="btn btn-danger delete"><i class="fa fa-trash-o"></i> Remove</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </script>
+    <!-- /EDIT-CREATE USER TEMPLATE -->
+
     <!-- EDIT-ASSIGN TERMINAL TEMPLATE -->
     <script type="text/template" id="edit-terminal-template">
 
       <div class="panel <%= terminal ? 'panel-danger' : 'panel-success' %>">
         <div class="panel-heading">
 
+          <div class="row">
+
+            <div class="btn-group dropup">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="orgsList">
+                Select organization
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <div class="listScroll"> 
+
+                  <% _.each(organizations, function(organization) { %>
+
+                    <li class='list-group-item' id="tinterval" onclick=""><%= organization.get('name') %></li>                    
+                  <% }); %>
+
+                </div>
+
+
+              </ul>
+            </div>
+          </div>
+          
           <div class="row">
 
             <div class="col-md-4 col-sm-4">
@@ -2126,8 +2316,8 @@
 	<script src="js/backbone-min.js"></script>
 	<script src="js/tablesorter/jquery.tablesorter.js"></script>
 	<script src="js/tablesorter/tables.js"></script>
-	<script src="js/d3.v3.min.js"></script>
 	<!-- CONTROLLER -->
+	<script src="js/d3.v3.min.js"></script>
 	<script src="js/gauge.js"></script>
 	<script src="js/statusOverview.js"></script>
 	<script type="text/javascript" src="js/controller.js"></script>
