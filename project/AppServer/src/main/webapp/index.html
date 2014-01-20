@@ -1470,7 +1470,7 @@
                               <div class="listScroll"> 
                                 <% _.each(organizations, function(organization) { %>
 
-                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' data-id="<%= terminal.get('identifier') %> to <%= organization.get('name') %>" onclick=""><span class="badge"><%= organization.get('identifier') %></span> <%= organization.get('name') %></a>
+                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' id="infoAssignation" data-id="<%= terminal.get('identifier') %>" data-orgname="<%= organization.get('name') %>" data-orgid="<%= organization.get('identifier') %>" onclick=""><span class="badge"><%= organization.get('identifier') %></span> <%= organization.get('name') %></a>
     
                                 <% }); %>
                               </div>
@@ -1549,7 +1549,10 @@
               <div class="modal-body">
                 Are you sure you want to assign terminal 
 
-                
+                <input type="text" name="terminalId" id="terminalId" value=""/>
+                <input type="text" name="orgId" id="orgId" value=""/>
+                <input type="text" name="orgName" id="orgName" value=""/>
+
                 <center><span class="label label-info" name="assignation" id="assignation"><%= $(this).data('id') %></span></center>
 
              

@@ -22,8 +22,13 @@
 	};
 
 	$(document).on("click", ".assignationModal", function () {
-    	var assignation = $(this).data('id');
-    	$(".modal-body #assignation").val( assignation );
+		var infoAssignation = document.getElementById('infoAssignation');
+    	var terminalId = $(this).data('id');
+    	var orgId = infoAssignation.getAttribute('data-orgid');
+    	var orgName = infoAssignation.getAttribute('data-orgname');
+    	$(".modal-body #terminalId").val( terminalId );
+    	$(".modal-body #orgId").val( orgId );
+    	$(".modal-body #orgName").val( orgName );
 	});
 
 //	Models
