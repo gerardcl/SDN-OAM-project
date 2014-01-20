@@ -55,6 +55,7 @@ public class TerminalManager {
                 throw e;
             } finally {
                 terminalTopologyDB.closedb();
+                
             }
 
         } else if (eventStr.equals(ITerminalEvents.TERMINAL_IPV4_CHANGED)
@@ -91,6 +92,8 @@ public class TerminalManager {
             terminalDB.closedb();
         }
 
+        
+        
         return updates;
     }
 
