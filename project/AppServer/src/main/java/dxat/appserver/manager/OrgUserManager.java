@@ -21,26 +21,30 @@ public class OrgUserManager {
 		//TODO
 		return null;
 	}
-	public void addOrgUser(String orgId, OrgUser user){
+	public OrgUser addOrgUser(String orgId, OrgUser user){
 		//TODO
+		
+		return user;
 	}
 	public OrgUser getOrgUser(String orgId, String userId){
 		//TODO
 		return null;
 	}
-	public void deleteOrgUser(String orgId, String userId){
+	public String deleteOrgUser(String orgId, String userId){
+		return userId;
 		//TODO
 	}
-	public void updateOrgUser(String orgId, OrgUser user){
+	public OrgUser updateOrgUser(String orgId, OrgUser user){
 		//TODO
+		return user;
 	}
 	public OrgSession checkPassword(String username, String password){
-		OrgSession session = orgManager.getInstance().existUser(username);
+		OrgSession session = OrgManager.getInstance().existUser(username);
 		if(session!=null){
 			System.out.println("USER EXIST");
-			if(orgManager.getInstance().getUsers().get(session.getUserId()).getPassword().equals(password)){
+			if(OrgManager.getInstance().getUsers().get(session.getUserId()).getPassword().equals(password)){
 				System.out.println("CORRECT PASSWORD");
-				if(orgManager.getInstance().getUsers().get(session.getUserId()).isAdmin()){
+				if(OrgManager.getInstance().getUsers().get(session.getUserId()).isAdmin()){
 					session.setMsg("1");
 					return session;
 				}
@@ -51,5 +55,14 @@ public class OrgUserManager {
 			}else System.out.println("INCORRECT PASSWORD");
 		}else System.out.println("USER DOES NOT EXIST");
 		return null;
+	}
+	
+	public boolean existUser(OrgUser user) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public boolean existUser(String userId) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

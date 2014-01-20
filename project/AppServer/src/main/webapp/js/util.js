@@ -16,7 +16,7 @@
 
 		console.log("submitting user and password to server...");
 		var requestUrl =
-			"/AppServer/webapp/manager/user/auth?username=" + $('#username').val() +
+			"/AppServer/webapi/manager/user/auth?username=" + $('#username').val() +
 			"&password=" + $('#password').val();
 		//console.log(requestUrl); //firebug console output
 //		$.getJSON(requestUrl,
@@ -38,7 +38,6 @@
 //		    contentType: "application/json; charset=UTF-8",
 		    success: function(msg){
 		        //console.log(msg);
-		        //console.log("success");
 		        if(!msg){
 		        	$("#loading").hide();
 		        	$("#msg").show();
@@ -47,15 +46,11 @@
 		    		location.href = "/AppServer/#/adminOverview";
 		    		loginUser = msg.userId;
 		        	loginOrg = msg.orgId;
-		        	console.log(loginOrg);
-		        	console.log(loginUser);
 		    	} 
 		    	else if(msg.msg == "2") {
 		    		location.href = "/AppServer/#/clientOverview/"+msg.orgId;
 		    		loginUser = msg.userId;
 		        	loginOrg = msg.orgId;
-		        	console.log(loginOrg);
-		        	console.log(loginUser);
 		    	} 
 		    },
 		    error: function(xhr, msg) { 
@@ -64,8 +59,16 @@
 		        	$("#loading").hide();
 		        	$("#msg").show();
 		        }
-		    	else if(xhr.responseText.msg == "1") location.href = "/AppServer/#/adminOverview";
-		    	else if(xhr.responseText.msg == "2") location.href = "/AppServer/#/clientOverview/"+msg.orgId;
+		    	else if(xhr.responseText.msg == "1"){
+		    		location.href = "/AppServer/#/adminOverview";
+		    		loginUser = xhr.responseText.userId;
+		        	loginOrg = xhr.responseText.orgId;
+		    	} 
+		    	else if(xhr.responseText.msg == "2"){
+		    		location.href = "/AppServer/#/clientOverview/"+xhr.responseText.orgId;
+		    		loginUser = xhr.responseText.userId;
+		        	loginOrg = xhr.responseText.orgId;
+		    	} 
 		    }
 		});
 	});

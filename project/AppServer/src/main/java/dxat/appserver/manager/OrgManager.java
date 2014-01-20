@@ -7,7 +7,9 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import dxat.appserver.manager.database.Create;
+import dxat.appserver.manager.database.Delete;
 import dxat.appserver.manager.database.Read;
+import dxat.appserver.manager.database.Update;
 import dxat.appserver.manager.exceptions.FlowAlreadyExistsException;
 import dxat.appserver.manager.exceptions.OrgAlreadyExistsException;
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
@@ -32,6 +34,8 @@ public class OrgManager {
 	private HashMap<String, OrgTerminal> terminals;
 	private Create dbcreate;
 	private Read dbread;
+	private Update dbupdate;
+	private Delete dbdelete;
 	private boolean dbExists;
 
 	private OrgManager(){
@@ -109,7 +113,7 @@ public class OrgManager {
 		newtorg.setNIF(torg.getNIF());
 		newtorg.setOAM(torg.isOAM());
 		newtorg.setTelephone(torg.getTelephone());
-		newtorg.setIdentifier(Integer.toString(torg.getName().hashCode()));
+		newtorg.setIdentifier(Integer.toString(Math.abs((int) (torg.getName().hashCode()*Math.random()*-10))));
 		try {
 			dbcreate.createOrg(newtorg);
 			torgs.put(newtorg.getIdentifier(), newtorg);
@@ -131,28 +135,110 @@ public class OrgManager {
 		neworg.setOAM(torg.isOAM());
 		neworg.setTelephone(torg.getTelephone());
 		neworg.setTorg(torg);
-		HashMap<String, OrgFlow> oflows = new HashMap<>();
-		HashMap<String, OrgUser> ousers = new HashMap<>();
-		HashMap<String, OrgTerminal> oterminals = new HashMap<>();
+		HashMap<String, OrgFlow> oflows = new HashMap<String, OrgFlow>();
+		HashMap<String, OrgUser> ousers = new HashMap<String, OrgUser>();
+		HashMap<String, OrgTerminal> oterminals = new HashMap<String, OrgTerminal>();
 		neworg.setFlows(oflows);
 		neworg.setUsers(ousers);
 		neworg.setTerminals(oterminals);
 		orgs.put(neworg.getIdentifier(), neworg);
 	}
 	
-	public TOrg deleteOrg(String id){
-		//Deleting TOrg from database
+	public TOrg updateTOrg(String orgId, TOrg torg){
+		System.out.println("org exists! ("+orgId+")");
+		dbupdate = new Update();
+		TOrg utorg = torgs.get(orgId);
+		utorg.setIdentifier(orgId);
+		utorg.setBankAccount(torg.getBankAccount());
+		utorg.setName(torg.getName());
+		utorg.setNIF(torg.getNIF());
+		utorg.setOAM(torg.isOAM());
+		utorg.setTelephone(torg.getTelephone());
+		try {
+			dbupdate.updateOrg(utorg);
+			torgs.put(orgId, utorg);
+			updateOrg(utorg);
+			System.out.println("org updated: "+orgId);
+			return utorg;
+		} catch (OrgNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
-	public TOrg updateTOrg(TOrg torg){
-		//Updating TOrg from database
+	public void updateOrg(TOrg torg){
+		Org uOrg = orgs.get(torg.getIdentifier());
+		uOrg.setBankAccount(torg.getBankAccount());
+		uOrg.setName(torg.getName());
+		uOrg.setNIF(torg.getNIF());
+		uOrg.setOAM(torg.isOAM());
+		uOrg.setTelephone(torg.getTelephone());
+		uOrg.setTorg(torg);
+		uOrg.setFlows(uOrg.getFlows());
+		uOrg.setTerminals(uOrg.getTerminals());
+		uOrg.setUsers(uOrg.getUsers());
+		orgs.put(torg.getIdentifier(), uOrg);
+	}
+	
+	public String deleteOrg(String orgId){
+		//Deleting TOrg from database
+		dbdelete = new Delete();
+		try {
+			dbdelete.deleteOrg(orgId);
+			torgs.remove(orgId);
+			deleteUsers(orgId);
+			deleteTerminals(orgId);
+			deleteFlows(orgId);
+			orgs.remove(orgId);
+			return orgId;
+		} catch (OrgNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
-	public Org updateOrg(Org org){
-		//TODO
-		return org;
+
+	public void deleteUsers(String orgId){
+		Org selectedOrg = orgs.get(orgId);
+		ArrayList<String> ids = new ArrayList<>();
+		for (Entry<String, OrgUser> entry : users.entrySet()) {
+			OrgUser user = entry.getValue();
+			if(selectedOrg.getUsers().containsKey(user.getIdentifier())){
+				ids.add(user.getIdentifier());
+			}
+		}
+		for(String id: ids){
+			users.remove(id);
+		}
 	}
+	public void deleteTerminals(String orgId){
+		Org selectedOrg = orgs.get(orgId);
+		ArrayList<String> ids = new ArrayList<>();
+		for (Entry<String, OrgTerminal> entry : terminals.entrySet()) {
+			OrgTerminal terminal = entry.getValue();
+			if(selectedOrg.getTerminals().containsKey(terminal.getIdentifier())){
+				ids.add(terminal.getIdentifier());
+			}
+		}
+		for(String id: ids){
+			terminals.remove(id);
+		}
+	}
+	public void deleteFlows(String orgId){
+		Org selectedOrg = orgs.get(orgId);
+		ArrayList<String> ids = new ArrayList<>();
+		for (Entry<String, OrgFlow> entry : flows.entrySet()) {
+			OrgFlow flow = entry.getValue();
+			if(selectedOrg.getFlows().containsKey(flow.getIdentifier())){
+				ids.add(flow.getIdentifier());
+			}
+		}
+		for(String id: ids){
+			flows.remove(id);
+		}
+	}
+	
 	public boolean existOrg(TOrg org){
 		for (Entry<String, TOrg> entry1 : torgs.entrySet()) {
 			TOrg torg = entry1.getValue();
@@ -162,6 +248,13 @@ public class OrgManager {
 		System.out.println("this org does not exists");
 		return false;
 	}
+
+	public boolean existOrg(String orgId){
+		if(orgs.containsKey(orgId)) return true;
+		System.out.println("org does not exists...");
+		return false;
+	}
+	
 	private String getOrgIdFromUserId(String userId){
 		String orgId = null;
 		for (Entry<String, Org> entry1 : orgs.entrySet()) {
@@ -276,8 +369,9 @@ public class OrgManager {
 					flow.setActive(i%3==0?true:false);
 					flow.setDstOTidentifier(orgTD);
 					flow.setSrcOTidentifier(orgTS);
-					tempFlows.put(flow.identifier, flow);
-					flows.put(flow.identifier, flow);
+					tempFlows.put(flow.getIdentifier(), flow);
+					System.out.println("new flow with id = "+flow.getIdentifier());
+					flows.put(flow.getIdentifier(), flow);
 					try {
 						dbcreate.createFlow(flow, org.getIdentifier());
 					} catch (FlowAlreadyExistsException e) {
@@ -303,8 +397,9 @@ public class OrgManager {
 					user.setPassword(Integer.toString(j)+"dxat"+Integer.toString(i));
 					user.setAdmin(j%(maxorgs-1)==0?true:false);
 					user.setActive(i%3==0?true:false);
-					tempUsers.put(user.identifier, user);
-					users.put(user.identifier, user);
+					tempUsers.put(user.getIdentifier(), user);
+					System.out.println("new user with id = "+user.getIdentifier());
+					users.put(user.getIdentifier(), user);
 					try {
 						dbcreate.createUser(user, org.getIdentifier());
 					} catch (OrgNotFoundException e) {
@@ -331,8 +426,10 @@ public class OrgManager {
 					terminal.setIpAddress("192.168."+Integer.toString(i)+"."+Integer.toString(j)+"0");
 					terminal.setMac("DD:XX:AA:TT:"+Integer.toString(j)+"B:"+Integer.toString(i)+"C");
 					terminal.setActive(i%2==0?true:false);
-					tempTerminals.put(terminal.identifier, terminal);
-					terminals.put(terminal.identifier, terminal);
+					terminal.setAssigned(i%2==0?true:false);
+					tempTerminals.put(terminal.getIdentifier(), terminal);
+					System.out.println("new terminal with id = "+terminal.getIdentifier());
+					terminals.put(terminal.getIdentifier(), terminal);
 					try {
 						dbcreate.createTerminal(terminal, org.getIdentifier());
 					} catch (TerminalAlreadyExistsException e) {

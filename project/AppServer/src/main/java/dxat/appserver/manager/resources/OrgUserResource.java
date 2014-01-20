@@ -1,12 +1,17 @@
 package dxat.appserver.manager.resources;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import dxat.appserver.manager.OrgManager;
 import dxat.appserver.manager.OrgUserManager;
 import dxat.appserver.manager.pojos.OrgSession;
 import dxat.appserver.manager.pojos.OrgUser;
@@ -18,11 +23,14 @@ import dxat.appserver.manager.pojos.OrgUserCollection;
 //import com.google.gson.Gson;
 
 
+
+import dxat.appserver.manager.pojos.TOrg;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Path("/manager")
+@Path("/")
 public class OrgUserResource {
 //- OrgUserManager: OrgUserManager
 //+ getAllOrgUser(String):List<OrgUser>
@@ -41,7 +49,7 @@ public class OrgUserResource {
 	@Path("/fulluser/all")	
 	@Produces(AppServerMediaType.ORG_USER_COLLECTION) 
 	public OrgUserCollection getAllUsers() {
-		List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserManager.orgManager.getInstance().getUsers().values());
+		List<OrgUser> orgUserList = new ArrayList<OrgUser>(OrgManager.getInstance().getUsers().values());
 		OrgUserCollection orgUsers = new OrgUserCollection();
 		orgUsers.setOrgUsers(orgUserList);
 		return orgUsers;//(OrgFlowCollection) orgFlowManager.getAllFlows();
@@ -51,7 +59,7 @@ public class OrgUserResource {
 	@Path("/user/{orgId}/all")	
 	@Produces(AppServerMediaType.ORG_USER_COLLECTION) 
 	public OrgUserCollection getAllOrgUsers(@PathParam("orgId") String orgId) {
-		List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserManager.orgManager.getInstance().getOrg(orgId).getUsers().values());
+		List<OrgUser> orgUserList = new ArrayList<OrgUser>(OrgManager.getInstance().getOrg(orgId).getUsers().values());
 		OrgUserCollection orgUsers = new OrgUserCollection();
 		orgUsers.setOrgUsers(orgUserList);
 		return orgUsers;//(OrgFlowCollection) orgFlowManager.getAllFlows();
@@ -64,6 +72,41 @@ public class OrgUserResource {
 		return orgUserManager.orgManager.getOrg(orgId).getUsers().get(userId);
 	}	
 
+	//INSERT USER -> CREATE USER IF POSSIBLE
+	@POST
+	@Path("/user/{orgId}")
+	@Consumes(AppServerMediaType.ORG_COLLECTION)
+	@Produces(AppServerMediaType.ORG_COLLECTION)
+	public OrgUser insertUser(@PathParam("orgId") String orgId, OrgUser user){
+		System.out.println("trying to insert new user");
+		if(!orgUserManager.orgManager.existOrg(orgId)) return null;
+		if(orgUserManager.existUser(user))return null;
+		return orgUserManager.addOrgUser(orgId,user);
+	}
+	
+	@PUT
+	@Path("/user/{orgId}/{userId}")
+	@Consumes(AppServerMediaType.ORG_COLLECTION)
+	@Produces(AppServerMediaType.ORG_COLLECTION)
+	public OrgUser updateOrg(@PathParam("orgId") String orgId, @PathParam("userId") String userId, OrgUser user){
+		System.out.println("trying to update user");	
+		if(!orgUserManager.orgManager.existOrg(orgId)) return null;
+		if(!orgUserManager.existUser(user))return null;
+		if(!orgUserManager.existUser(userId))return null;
+		if(!orgUserManager.existUser(user.getIdentifier()))return null;
+		System.out.println("updating...");
+		return orgUserManager.updateOrgUser(orgId, user);	
+	}
+	
+	@DELETE
+	@Path("/user/{orgId}/{userId}")
+	public String deleteOrg(@PathParam("orgId") String orgId, @PathParam("userId") String userId){
+		if(!orgUserManager.orgManager.existOrg(orgId)) return "this org does not exists!";
+		if(!orgUserManager.existUser(userId))return null;
+		if(orgUserManager.deleteOrgUser(orgId,userId)==null) System.out.println("something went wrong when deleting user: "+userId);
+		return userId;
+	}
+	
 	//CHECK USER PASSWORD...
 	@GET
 	@Path("/user/auth")

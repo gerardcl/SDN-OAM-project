@@ -21,7 +21,7 @@ import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.OrgFlow;
 import dxat.appserver.manager.pojos.OrgFlowCollection;
 
-@Path("/manager")
+@Path("/")
 public class OrgFlowResource {
 //	- orgFlowManager: OrgFlowManager
 //	+ getAllOrgFlow(String):List<OrgFlow>
