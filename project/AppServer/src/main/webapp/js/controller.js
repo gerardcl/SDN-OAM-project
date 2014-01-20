@@ -309,7 +309,15 @@
 		},
 		saveOrg: function (ev){
 			var orgDetails = $(ev.currentTarget).serializeObject();
+
+			//changing 'on' by true 
+			if(orgDetails.OAM=='on'){
+				orgDetails.OAM=true;
+			}else{
+				orgDetails.OAM=false;
+			};
 			console.log(orgDetails);
+
 			var org = new Organization();
 			org.save(orgDetails, {
 				//type: "POST",
@@ -689,7 +697,16 @@
 		},
 		saveUser: function (ev){
 			var userDetails = $(ev.currentTarget).serializeObject();
+
 			console.log(userDetails);
+			//changing 'on' by true 
+			if(userDetails.admin=='on'){
+				userDetails.admin=true;
+			}else{
+				userDetails.admin=false;
+			};
+			console.log(userDetails);
+
 			console.log(ev.currentTarget.orgId.value);
 			userOrgId = ev.currentTarget.orgId.value;
 			userId = userDetails.identifier;

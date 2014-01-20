@@ -813,13 +813,6 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="telephone" class="col-sm-4 control-label">CIF</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" name="telephone" value="<%= organization ? organization.get('telephone') : '' %>"  >
-                  </div>
-                </div>
-
-                <div class="form-group">
                   <label for="OAM" class="col-sm-4 control-label">is OAM?</label>
                   <div class="col-sm-8">
                     <input type="checkbox" class="form-control" name="OAM" "
@@ -1203,7 +1196,7 @@
                                         <div class="panel-body">
 
                                           <div class="padding-10-bot">
-                                            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW</button>
+                                            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW for <%= orgName %></button>
                                           </div>
 
 
@@ -1978,16 +1971,17 @@
                 <div class="form-group">
                   <label for="admin" class="col-sm-4 control-label">is admin?</label>
                   <div class="col-sm-8">
-                  <input type="hidden" id="orgId" value="<%= orgId %>" />
-                  
+                    <input type="hidden" id="orgId" value="<%= orgId %>" />
+                    
                     <% if(user){ %>
                       <input type="hidden" name="identifier" value="<%= user.get('identifier') %>" />
-                      <input type="checkbox" class="form-control" id="admin" 
-                          <%= user.get('admin') ? 'checked' : ''%> />
-                    <% }else{ %> 
-                      <input type="checkbox" class="form-control" id="admin" />
                     <% } %>
 
+                    <input type="checkbox" class="form-control" name="admin" "
+                      <% if(user){
+                          if(user.get('admin')) %> checked
+                      <%} %>" >
+                    
                   </div>
                 </div>
               </div>
