@@ -8,7 +8,6 @@ public class OrgTerminal {
 	private double ifaceSpeed;
 	private String description;
 	private boolean active;
-	private boolean assigned;
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -50,11 +49,5 @@ public class OrgTerminal {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
-	}
-	public boolean isAssigned() {
-		return assigned;
-	}
-	public void setAssigned(boolean assigned) {
-		this.assigned = assigned;
 	}
 }

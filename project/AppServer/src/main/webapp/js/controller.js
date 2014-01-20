@@ -30,7 +30,7 @@
 	//TOrg data model  
 	var Organization = Backbone.Model.extend({
 		idAttribute: "identifier",
-		urlRoot:'/AppServer/webapi/manager/org',
+		urlRoot:'/AppServer/webapp/manager/org',
 		defaults:{
 			name: "",
 			NIF: "",
@@ -60,7 +60,7 @@
 	//terminal model  
 	var Terminal = Backbone.Model.extend({
 		idAttribute: "identifier",
-		//urlRoot:'/AppServer/webapi/manager/terminal/all?orgId=',
+		//urlRoot:'/AppServer/webapp/manager/terminal/all?orgId=',
 		defaults:{
 			//identifier: "",
 			active: "",
@@ -90,7 +90,7 @@
 	//TOrg COLLECTION
 	var Organizations = Backbone.Collection.extend({
 		model: Organization,
-		url:'/AppServer/webapi/manager/org/all',
+		url:'/AppServer/webapp/manager/org/all',
 		parse:function (response) {
 			// Parse the response and construct models
 			for ( var i = 0, length = response.torgs.length; i < length; i++) {
@@ -147,7 +147,7 @@
 	//Terminals COLLECTION
 	var Terminals = Backbone.Collection.extend({
 		model: Terminal,
-		//url:'/AppServer/webapi/manager/terminal/all',
+		//url:'/AppServer/webapp/manager/terminal/all',
 		parse:function (response) {
 			for ( var i = 0, length = response.orgTerminals.length; i < length; i++) {
 				var currentValues = response.orgTerminals[i];
@@ -186,7 +186,7 @@
 
 			var aux = JSON.stringify(orgId)
 			console.log(aux);
-			var uri = '/AppServer/webapi/manager/user/all?orgId=' + aux;
+			var uri = '/AppServer/webapp/manager/user/all?orgId=' + aux;
 			console.log(uri);
 			return uri;
 		},*/
@@ -330,7 +330,7 @@
 			this.org.destroy({
 				success: function () {
 					$('#confirmation').modal('hide');
-					router.navigate('adminOrgs',{trigger: true});
+					router.navigate('adminOrgs',{triggger: true});
 				},
 				error: function() {
 					$('#confirmation').modal('hide');
@@ -370,7 +370,7 @@
 		render: function (options) { 
 			var that = this;
 			that.users = new Users();
-			that.users.url = '/AppServer/webapi/manager/user/'+options.identifier+'/all';
+			that.users.url = '/AppServer/webapp/manager/user/'+options.identifier+'/all';
 			that.users.fetch({
 				success: function (users) {  
 					var template = _.template($('#organizations-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
@@ -396,7 +396,7 @@
 			//if exists fetch details
 			if(options.identifier) {
 				that.terminals = new Terminals();
-				that.terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
+				that.terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';
 				that.terminals.fetch({
 					success: function (terminals) {  
 						var template = _.template($('#organizations-terminals-template').html(), {terminals: terminals.models, orgId: options.identifier, orgName: activeOrgName});
@@ -425,7 +425,7 @@
 			//if exists fetch details
 			if(options.identifier) {
 				that.activeFlows = new Flows();
-				that.activeFlows.url = '/AppServer/webapi/manager/flow/'+options.identifier+'/all';
+				that.activeFlows.url = '/AppServer/webapp/manager/flow/'+options.identifier+'/all';
 				that.activeFlows.fetch({
 					success: function (flows) {  
 						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active, orgName: activeOrgName});
@@ -454,8 +454,8 @@
 		render: function (options) {
 			var that = this;
 			var flows = new Flows();
-			if(options.all==true){flows.url = '/AppServer/webapi/manager/flow/all';}
-			if(options.all==false){flows.url = '/AppServer/webapi/manager/flow/'+options.identifier+'/all';}			
+			if(options.all==true){flows.url = '/AppServer/webapp/manager/flow/all';}
+			if(options.all==false){flows.url = '/AppServer/webapp/manager/flow/'+options.identifier+'/all';}			
 			flows.fetch({
 				success: function (flows) {
 					var template = _.template($('#flows-template').html(), {flows: flows.models});
@@ -490,7 +490,6 @@
 			//to use same template with both [admin(all=true) and org(all=false)] views
 			if(options.all==true){terminals.url = '/AppServer/webapp/manager/terminal/all';}
 			if(options.all==false){terminals.url = '/AppServer/webapp/manager/terminal/'+options.identifier+'/all';}
-
 			terminals.fetch({
 				success: function (terminals) {
 					var template = _.template($('#terminals-template').html(), {terminals: terminals.models, organizations: organizations.models});
@@ -606,7 +605,7 @@
 		render: function (options) { 
 			var that = this;
 			that.users = new Users();
-			that.users.url = '/AppServer/webapi/manager/user/'+options.identifier+'/all';
+			that.users.url = '/AppServer/webapp/manager/user/'+options.identifier+'/all';
 			that.users.fetch({
 				success: function (users) {  
 					var template = _.template($('#client-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
@@ -671,7 +670,7 @@
 				that.user = new User({identifier: options.identifier});
 				var userPath = options.orgId+'/';
 				console.log(userPath);
-				that.user.urlRoot = '/AppServer/webapi/manager/user/'+userPath;
+				that.user.urlRoot = '/AppServer/webapp/manager/user/'+userPath;
 				that.user.fetch({
 					success: function (user){
 						console.log('orgId inside success: '+options.orgId);
@@ -696,7 +695,7 @@
 			userId = userDetails.identifier;
 			console.log(userOrgId+' '+userId);
 			var user = new User();
-			user.urlRoot = '/AppServer/webapi/manager/user/'+userOrgId;
+			user.urlRoot = '/AppServer/webapp/manager/user/'+userOrgId;
 			user.save(userDetails, {
 				//type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
@@ -748,7 +747,7 @@
 				that.terminal = new Terminal({identifier: options.identifier});
 				var terminalPath = options.orgId+'/';
 				console.log(terminalPath);
-				that.terminal.urlRoot = '/AppServer/webapi/manager/terminal/'+terminalPath;
+				that.terminal.urlRoot = '/AppServer/webapp/manager/terminal/'+terminalPath;
 				that.terminal.fetch({
 					success: function (terminal){
 						console.log('orgId inside edit terminal fetch success: '+options.orgId);
@@ -773,7 +772,7 @@
 			terminalId = terminalDetails.identifier;
 			console.log(terminalOrgId+' '+terminalId);
 			var terminal = new Terminal();
-			terminal.urlRoot = '/AppServer/webapi/manager/terminal/'+terminalOrgId;
+			terminal.urlRoot = '/AppServer/webapp/manager/terminal/'+terminalOrgId;
 			terminal.save(terminalDetails, {
 				//type: "POST",
 			    contentType: "application/vmd.dxat.appserver.manager.terminal.collection+json",
@@ -849,7 +848,6 @@
 			adminOverviewView.render();
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			initStatusOverview();
 			//SlimScroll HEIGHTS
 			$('#GS-alerts').slimScroll({
@@ -860,7 +858,6 @@
 		router.on('route:adminOrgs', function() {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 2});
 			orgsListBSView.render();  
 		});
@@ -868,49 +865,42 @@
 		router.on('route:editOrg', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			newOrgView.render({identifier: id});
 		});
 
 		router.on('route:orgData', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			orgDataView.render({identifier: id});
 		});
 
 		router.on('route:orgUsers', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			orgUsersView.render({identifier: id});
 		});
 
 		router.on('route:orgFlows', function(id) {	
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			orgFlowsView.render({identifier: id, active: true});
 		});
 
 		router.on('route:orgPrgFlows', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			orgFlowsView.render({identifier: id, active: false});
 		});
 
 		router.on('route:orgTerminals', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			orgTerminalsView.render({identifier: id});
 		});
 
 		router.on('route:flows', function(id) {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 3});
 			flowsView.render({identifier: id, all: true});
 		});
@@ -918,7 +908,6 @@
 		router.on('route:terminals', function() {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 4});
 			terminalsView.render({all: true});
 		});
@@ -927,7 +916,6 @@
 		router.on('route:traffic', function() {
 			loadDefaultStatValues();
 			StopSwitchStats();
-			stopTopoWeatherMapRefresh();
 			adminSidebarView.render({btnHL: 5});
 			trafficView.render();
 		});
@@ -936,10 +924,10 @@
 		router.on('route:clientOverview', function(id) {
 			clientSidebarView.render({btnHL: 1});
 			flows = new Flows();
-			flows.url = '/AppServer/webapi/manager/flow/'+id+'/all';
+			flows.url = '/AppServer/webapp/manager/flow/'+id+'/all';
 			flows.fetch({});
 			terminals = new Terminals();
-			terminals.url = '/AppServer/webapi/manager/terminal/'+id+'/all';
+			terminals.url = '/AppServer/webapp/manager/terminal/'+id+'/all';
 			terminals.fetch({});
 			//console.log(cntActiveFlows);
 			clientOverviewView.render({identifier: id});

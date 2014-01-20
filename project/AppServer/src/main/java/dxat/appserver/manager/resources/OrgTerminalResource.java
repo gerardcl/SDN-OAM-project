@@ -13,7 +13,7 @@ import dxat.appserver.manager.OrgTerminalManager;
 import dxat.appserver.manager.pojos.OrgTerminal;
 import dxat.appserver.manager.pojos.OrgTerminalCollection;
 
-@Path("/")
+@Path("/manager")
 public class OrgTerminalResource {
 //	- orgTerminalManager: OrgTerminalManager
 //	+ getAllOrgTerminal(String):List<OrgTerminal>

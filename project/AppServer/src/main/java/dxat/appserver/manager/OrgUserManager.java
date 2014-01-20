@@ -35,12 +35,12 @@ public class OrgUserManager {
 		//TODO
 	}
 	public OrgSession checkPassword(String username, String password){
-		OrgSession session = OrgManager.getInstance().existUser(username);
+		OrgSession session = orgManager.getInstance().existUser(username);
 		if(session!=null){
 			System.out.println("USER EXIST");
-			if(OrgManager.getInstance().getUsers().get(session.getUserId()).getPassword().equals(password)){
+			if(orgManager.getInstance().getUsers().get(session.getUserId()).getPassword().equals(password)){
 				System.out.println("CORRECT PASSWORD");
-				if(OrgManager.getInstance().getUsers().get(session.getUserId()).isAdmin()){
+				if(orgManager.getInstance().getUsers().get(session.getUserId()).isAdmin()){
 					session.setMsg("1");
 					return session;
 				}

@@ -16,7 +16,7 @@
 
 		console.log("submitting user and password to server...");
 		var requestUrl =
-			"/AppServer/webapi/manager/user/auth?username=" + $('#username').val() +
+			"/AppServer/webapp/manager/user/auth?username=" + $('#username').val() +
 			"&password=" + $('#password').val();
 		//console.log(requestUrl); //firebug console output
 //		$.getJSON(requestUrl,

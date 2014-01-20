@@ -12,21 +12,43 @@ function initStatusOverview(){
 }
 
 //TOPOLOGY GRAPH
-var switchesURL = "/AppServer/webapi/topology/switches";
-var terminalsURL = "/AppServer/webapi/topology/terminals";
-var linksURL = "/AppServer/webapi/topology/links";
-var dataSwitches;
-var dataTerminals;
-var dataLinks;
-var nodes = [];
-var links = [];
-var refreshIntervalTWM;
+function createTopologyGraph(){
+	var width = 400, height = 300;
 
-function stopTopoWeatherMapRefresh(){
-	clearInterval(refreshIntervalTWM);
-}
+	//var color = d3.scale.category20();
 
-function getTopoWeatherMap(){
+	var force = d3.layout.force().charge(-1120).linkDistance(70).size(
+			[ width, height ]);
+
+	var svg = d3.select("#topo")
+	.append("svg")
+	.attr({
+		"width": "100%",
+		"height": height
+	})
+	.attr("viewBox", "0 0 " + width + " " + height )
+	.attr("preserveAspectRatio", "xMidYMid meet")
+	.attr("pointer-events", "all")
+	.call(d3.behavior.zoom().on("zoom", redraw));
+
+	var pict = svg
+	.append('svg:g');
+
+	function redraw() {
+		pict.attr("transform",
+				"translate(" + d3.event.translate + ")"
+				+ " scale(" + d3.event.scale + ")");
+	}
+
+	var switchesURL = "/AppServer/webapp/topology/switches";
+	var terminalsURL = "/AppServer/webapp/topology/terminals";
+	var linksURL = "/AppServer/webapp/topology/links";
+	var dataSwitches;
+	var dataTerminals;
+	var dataLinks;
+	var nodes = [];
+	var links = [];
+
 	$.ajaxSetup({
 		async : false
 	}); //execute synchronously
@@ -73,352 +95,143 @@ function getTopoWeatherMap(){
 	$.ajaxSetup({
 		async : true
 	}); //execute asynchronously
-	var terminals =[];// abans era... dataTerminals.terminals;
-	for (var i=0; i < dataTerminals.terminals.length; i++){
-		if ((dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0")&&(dataTerminals.terminals[i].ipv4!="0.0.0.0")){
-			terminals.push(dataTerminals.terminals[i]);
-		}
-	}
+	var terminals = dataTerminals.terminals;
 	nodes = dataSwitches.switches;
-	//var rawLinks = dataLinks.links;
-	var src,trg;
+	var rawLinks = dataLinks.links;
+	var src, trg;
 
-	var new_obj = {"colorTx":0, "colorRx":0};
-	dataLinks.links.push( new_obj );
-	dataTerminals.terminals.push( new_obj );
-
-	for (var i=0; i<dataLinks.links.length; i++){
-		//alert(i);
-		//Dummy request to..
-		var reqUriRx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].dstPortId+"/receiveBytes/AVERAGE/minute";
-		//alert (reqUriRx);
-		//Obtained DUMMYajax response
-		var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriRx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response1 = result;
-			}
-		});
-		
-		//Dummy request to...
-		var reqUriTx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].srcPortId+"/transmitBytes/AVERAGE/minute";
-		//alert (reqUriTx);
-		//Obtained DUMMYajax response
-		var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriTx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response2 = result;
-			}
-		});
-		//Transmitted bytes
-		//Recieved bytes
-		var sumRx=0;
-		var sumTx=0;
-
-		for (var j=0; j<response1.valueAxxis.length;j++){
-			sumRx+=response1.valueAxxis[j];
-			sumTx+=response2.valueAxxis[j];
-		}
-
-		sumRx = ((sumRx/60)*8/1000000).toFixed(2);
-		sumTx = ((sumTx/60)*8/1000000).toFixed(2);
-		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
-		var colorRx = getGreenToRed(sumRx);
-		var colorTx = getGreenToRed(sumTx);
-		dataLinks.links[i].colorRx=colorRx;
-		dataLinks.links[i].colorTx=colorTx;
-
-		//alert("RECIBIDO AQUI: "+dataLinks.links[i].colorRx+" TRANSM AQUI: "+dataLinks.links[i].colorTx);
-
-	}
-
-
-
-	for (var i=0;i<dataLinks.links.length;i++){
-		for(var j=0;j<nodes.length;j++){
-			for(var k=0;k<nodes[j].ports.length;k++){
-				if(dataLinks.links[i].srcPortId == nodes[j].ports[k].portId){
+	for (var i = 0; i < rawLinks.length; i++) {
+		for (var j = 0; j < nodes.length; j++) {
+			for (var k = 0; k < nodes[j].ports.length; k++) {
+				if (rawLinks[i].srcPortId == nodes[j].ports[k].portId) {
 					src = j;
 				}
-				if(dataLinks.links[i].dstPortId == nodes[j].ports[k].portId){
+				if (rawLinks[i].dstPortId == nodes[j].ports[k].portId) {
 					trg = j;
 				}
 			}
-			if (!((src==null)||(trg==null))){
-
+			if (!((src == null) || (trg == null))) {
 				//alert(src+" "+trg);
-
-
-				links.push({"source":src,"target":trg,"value":8,"type":"suit","color":dataLinks.links[i].colorTx});
-				links.push({"source":trg,"target":src,"value":8,"type":"suit","color":dataLinks.links[i].colorRx});
-				src= null;
-				trg=null;
+				links.push({
+					"source" : src,
+					"target" : trg,
+					"value" : 8
+				});
+				src = null;
+				trg = null;
 			}
-		}	
-	}
-
-
-	for (var i=0; i<dataTerminals.terminals.length; i++){
-		//alert(i);
-		//Dummy request to..
-		var reqUriRx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/receiveBytes/AVERAGE/minute";
-		//alert (reqUriRx);
-		//Obtained DUMMYajax response
-		var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriRx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response1 = result;
-			}
-		});	
-		//Dummy request to...
-		var reqUriTx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/transmitBytes/AVERAGE/minute";
-		//alert (reqUriTx);
-		//Obtained DUMMYajax response
-		var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriTx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response2 = result;
-			}
-		});	//Transmitted bytes
-		//Recieved bytes
-		var sumRx=0;
-		var sumTx=0;
-
-		for (var j=0; j<response1.valueAxxis.length;j++){
-			sumRx+=response1.valueAxxis[j];
-			sumTx+=response2.valueAxxis[j];
 		}
-
-		sumRx = ((sumRx/60)*8/1000000).toFixed(2);
-		sumTx = ((sumTx/60)*8/1000000).toFixed(2);
-		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
-		var colorRx = getGreenToRed(sumRx);
-		var colorTx = getGreenToRed(sumTx);
-		dataTerminals.terminals[i].colorRx=colorRx;
-		dataTerminals.terminals[i].colorTx=colorTx;
 	}
 
-	for (var i=0; i<terminals.length;i++){
+	for (var i = 0; i < terminals.length; i++) {
 		nodes.push(terminals[i]);
-	} 
-	//alert(nodes.length);
-	for(var i=0;i<nodes.length;i++){
-		if(nodes[i].portAPId !=null){
+	}
+	for (var i = 0; i < nodes.length; i++) {
+		if (nodes[i].portAPId != null) {
 			//alert("STEP1: "+nodes[i].portAPId);
-			for(var j=0;j<nodes.length;j++){
-				if(nodes[j].portAPId == null){
-					for(var k=0;k<nodes[j].ports.length;k++){
+			for (var j = 0; j < nodes.length; j++) {
+				if (nodes[j].portAPId == null) {
+					for (var k = 0; k < nodes[j].ports.length; k++) {
 						//alert("STEP2: "+nodes[j].ports[k].portId);
-						if (nodes[i].portAPId==nodes[j].ports[k].portId){
+						if (nodes[i].portAPId == nodes[j].ports[k].portId) {
 							src = i;
-							trg =j;	
-							//alert("Link Pushed: "+nodes[j].swId+ " TO "+nodes[i].terminalId);
-							links.push({"source":src,"target":trg,"value":8,"type":"suit","color":nodes[i].colorRx});
-							links.push({"source":trg,"target":src,"value":8,"type":"suit","color":nodes[i].colorTx});
+							trg = j;
+							links.push({
+								"source" : src,
+								"target" : trg,
+								"value" : 8
+							});
 						}
 					}
 				}
 			}
-		}	
-	}
-
-	function getGreenToRed(percent){
-		g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
-		r = percent>50 ? 255 : Math.floor((percent*2)*255/100);
-		return 'rgb('+r+','+g+',0)';
-	}
-
-
-}//END GET TOPO WEATHER MAP
-
-
-function createTopologyGraph(){
-
-	//Represenació grafic 
-	var width = 400,
-	height = 300
-
-	var force = d3.layout.force()
-	.nodes(nodes)
-	//.gravity(.05)
-	.links(links)
-	.size([width, height])
-	.linkDistance(110)
-	.charge(-1000)
-	.on("tick", tick)
-	.start();
-
-	/*var force = d3.layout.force()
-    .gravity(.05)
-    .distance(100)
-    .charge(-1000)
-    .linkDistance(80)
-    .size([width, height]);
-
-  force
-      .nodes(nodes)
-      .links(links)
-      .start();*/
-
-	var svg = d3.select("#topo").append("svg")
-	.attr("width", "100%")
-	.attr("height", height);
-
-
-	svg.append("defs").selectAll("marker")
-	.data(["suit", "licensing", "resolved"])
-	.enter().append("marker")
-	.attr("id", function(d) {return d; })
-	.attr("viewBox", "0 -5 10 10")
-	.attr("refX", 29)
-	.attr("refY", -3)
-	.attr("markerWidth", 8)
-	.attr("markerHeight", 8)
-	.attr("orient", "auto")
-	.append("path")
-	.attr("d", "M0,-5L10,0L0,5");
-
-	var path = svg.append("g").selectAll("path")
-	.data(links)
-	.enter().append("path")
-	.attr("class", function(d) { return "link " + d.type; })
-	.attr("marker-end", function(d) { return "url(#" + d.type + ")"; })
-	.style("stroke",  function(d) {return d.color;/*	var color="#000";
-    								switch (d.color){
-    									case 2:
-    										return d.color;
-    									case 10:
-    										return color = "#F00";
-        								default:
-            								var color="#00F";
-        								return color;
-    									}*/}); //Amb aixó canviarem el color!
-
-
-	/* var link = svg.selectAll(".link")
-     .data(links)
-     .enter().append("line")
-     .attr("class", "link")
-     //.style("stroke", "#F00") //Amb aixo es canvia el color del link
-     .style("stroke-width", function(d) { return Math.sqrt(d.value); });*/
-
-	var node = 	svg.selectAll(".node")
-	.data(nodes)
-	.enter().append("g")
-	.attr("class", "node")
-	.on("tick",  function (d){return path.attr("d", linkArc)})
-	.call(force.drag);
-
-
-
-	node.append("title").text(function(d) {
-		if(d.portAPId ==null){
-			var ports= d.ports.length;
-			for(var i=0;i<d.ports.length;i++){						
-				ports+= "\n   Port "+i+":\n     MAC: "+d.ports[i].mac+"\n     Name: "+d.ports[i].name+"\n     PortId: "+d.ports[i].portId;
-			}
-			return ("switch ID: "+d.swId+"\n Hardware: "+d.hardware+"\n Software: "+d.software+"\n Manufacturer: "+d.manufacturer+
-					"\n Total ports: "+ports);
-		}else{
-			return ("Terminal Id: "+d.terminalId+"\n IPv4: "+d.ipv4+"\n MAC: "+d.mac+"\n SDN Access port: "+d.portAPId);
 		}
+	}
+
+//	Represenació grafic
+	force.nodes(nodes).links(links).start();
+
+	var link = svg.selectAll(".link").data(links).enter().append("line")
+	.attr("class", "link")
+//	.style("stroke", "#F00")
+	.style("stroke-width", function(d) {
+		return Math.sqrt(d.value);
 	});
 
-	node.append("image")
-	.attr("xlink:href", function (d)	{	if (d.portAPId ==null){
-		return "/img/switch.svg"
-	}else{
-		return "/img/terminal.svg"
-	}
-	})
-	.attr("x", function (d)	{	if (d.portAPId ==null){
-		return -50
-	}else{
-		return -20
-	}
-	})
-	.attr("y", function (d)	{	if (d.portAPId ==null){
-		return -50
-	}else{
-		return -20
-	}
-	})
-	.attr("width", function (d)	{	if (d.portAPId ==null){
-		return 100
-	}else{
-		return 50
-	}
-	})
-	.attr("height", function (d)	{	if (d.portAPId ==null){
-		return 100
-	}else{
-		return 50
-	}
+	var node = svg.selectAll(".node").data(nodes).enter().append("circle")
+	.attr("class", (function(d) {
+		if (d.enabled == true) {
+			return "nodeGREEN";
+		} else {
+			return "nodeRED";
+		}
+	})).attr("r", 25).call(force.drag);
+
+	var term = svg.selectAll(".node").data(terminals).enter().append(
+	"circle").attr("class", (function(d) {
+		if (d.enabled == true) {
+			return "nodeBLUE";
+		} else {
+			return "nodeRED";
+		}
+	})).attr("r", 25).call(force.drag);
+
+	node.append("title").text(
+			function(d) {
+				if (d.portAPId == null) {
+					var ports = d.ports.length;
+
+					for (var i = 0; i < d.ports.length; i++) {
+						//alert(d.ports[j].mac);
+						ports += "\n   Port " + i + ":\n     MAC: "
+						+ d.ports[i].mac + "\n     Name: "
+						+ d.ports[i].name + "\n     PortId: "
+						+ d.ports[i].portId;
+						//alert(ports);
+					}
+				}
+
+				return ("switch ID: " + d.swId + "\n Hardware: "
+						+ d.hardware + "\n Software: " + d.software
+						+ "\n Manufacturer: " + d.manufacturer
+						+ "\n Total ports: " + ports);
+			});
+
+	term.append("title").text(
+			function(d) {
+				return ("Terminal Id: " + d.terminalId + "\n IPv4: "
+						+ d.ipv4 + "\n MAC: " + d.mac
+						+ "\n SDN Access port: " + d.portAPId);
+			});
+
+	force.on("tick", function() {
+		link.attr("x1", function(d) {
+			return d.source.x;
+		}).attr("y1", function(d) {
+			return d.source.y;
+		}).attr("x2", function(d) {
+			return d.target.x;
+		}).attr("y2", function(d) {
+			return d.target.y;
+		});
+
+		node.attr("cx", function(d) {
+			return d.x;
+		}).attr("cy", function(d) {
+			return d.y;
+		});
+
+		term.attr("cx", function(d) {
+			return d.x;
+		}).attr("cy", function(d) {
+			return d.y;
+		});
+
 	});
-
-	/*force.on("tick", function() {
-		link.attr("x1", function(d) { return d.source.x; })
-		    .attr("y1", function(d) { return d.source.y; })
-		    .attr("x2", function(d) { return d.target.x; })
-		    .attr("y2", function(d) { return d.target.y; });
-	    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });	
-		});*/
-	function tick() {
-		path.attr("d", linkArc);
-		node.attr("transform", transform);
-		// text.attr("transform", transform);
-	}
-
-	function linkArc(d) {
-		var dx = d.target.x - d.source.x,
-		dy = d.target.y - d.source.y,
-		dr = Math.sqrt(dx * dx + dy * dy);
-		return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-	}
-
-	function transform(d) {
-		return "translate(" + d.x + "," + d.y + ")";
-	}
-
-
-
-	//TODO SET INTERVAL WEATHER MAP HERE
-	
-	refreshIntervalTWM = setInterval(function() {
-		getTopoWeatherMap();
-	},60000);
 
 	node.on("click", function(d) {
 		StopSwitchStats();
-
+		
 		console.log("node " + d.swId + " was clicked");
 		var switchInfo = "<h4> Switch info</h4>";
 		switchInfo += "<b>ID:</b>  "+d.swId+"<p>";
@@ -439,6 +252,10 @@ function createTopologyGraph(){
 		$("#statistics").show();
 		InitSwitchStats(d.swId);
 	});
+
+	term.on("click", function(d) {
+		console.log("terminal " + d.terminalId + " was clicked");
+	});
 }
 
 
@@ -453,21 +270,16 @@ var selectedTimeInterval = "";
 var valueSuffix = " Bytes/s";
 var refreshIntervalIdPort;
 var refreshIntervalIdSwitch;
-var refreshIntervalController;
 var refreshLoadingSSTATS;
 
 function StopSwitchStats(){
 	clearInterval(refreshIntervalIdSwitch);
 	clearInterval(refreshLoadingSSTATS);
 }
-
-
-//TODO mix getData methods!!!
-
 function InitSwitchStats(idSwitch){
-	//http://147.83.113.109:8080/AppServer/webapi/statistics/switch/00:01:d4:ca:6d:c4:44:1e/packetCount/MAX/second
-	//http://147.83.113.109:8080/AppServer/webapi/statistics/switch/00:01:d4:ca:6d:c4:44:1e/byteCount/MAX/second
-	//http://147.83.113.109:8080/AppServer/webapi/statistics/switch/00:01:d4:ca:6d:c4:44:1e/flowCount/MAX/second
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/packetCount/MAX/second
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/byteCount/MAX/second
+	//http://147.83.113.109:8080/AppServer/webapp/statistics/switch/00:01:d4:ca:6d:c4:44:1e/flowCount/MAX/second
 	var sitchTimeIntervalUpdate = 5000; //1 second per update
 	refreshIntervalIdSwitch = setInterval(function() {
 		clearInterval(refreshLoadingSSTATS);
@@ -480,11 +292,11 @@ function InitSwitchStats(idSwitch){
 			$("#flowCount").html("loading...");
 		},sitchTimeIntervalUpdate-1000);
 	},sitchTimeIntervalUpdate);
-
-
+	
+	
 	function getpacketCountData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapi/statistics/switch/"+idSwitch+"/packetCount/MAX/second";
+		var datastatsuri = "/AppServer/webapp/statistics/switch/"+idSwitch+"/packetCount/MAX/second";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -514,7 +326,7 @@ function InitSwitchStats(idSwitch){
 	}
 	function getbyteCountData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapi/statistics/switch/"+idSwitch+"/byteCount/MAX/second";
+		var datastatsuri = "/AppServer/webapp/statistics/switch/"+idSwitch+"/byteCount/MAX/second";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -544,7 +356,7 @@ function InitSwitchStats(idSwitch){
 	}
 	function getflowCountData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapi/statistics/switch/"+idSwitch+"/flowCount/MAX/second";
+		var datastatsuri = "/AppServer/webapp/statistics/switch/"+idSwitch+"/flowCount/MAX/second";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -572,7 +384,7 @@ function InitSwitchStats(idSwitch){
 		}); //execute asynchronously
 		return datastats.valueAxxis[0];
 	}
-
+	
 }
 
 function byHourGraph(){
@@ -587,7 +399,7 @@ function byHourGraph(){
 			animation: false,
 		},
 		title: {
-			text: data.parameter+' by '+selectedValueType+' on port: ' +data.idObject
+			text: data.parameter+' on port: ' +data.idObject
 		},
 		legend: {
 			x: 0,
@@ -649,7 +461,7 @@ function byHourGraph(){
 	/*funció de petició (no passa)REST. Per ara es static*/
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapi/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/hour";
+		var datastatsuri = "/AppServer/webapp/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/hour";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -681,28 +493,9 @@ function byHourGraph(){
 	function getXAxis(axis){
 		var timeUTC=[];
 		var timeAxis=[];
-		var hours;
-		var minutes;
-		var seconds;
-
 		for (var i=0; i<axis.length;i++){
 			timeUTC.push(new Date(axis[i]*1000));
-			hours =timeUTC[i].getHours();
-			minutes =timeUTC[i].getMinutes();
-			seconds=timeUTC[i].getSeconds();
-
-			if ((hours >= 0)&&(hours <= 9)){ 
-				hours="0"+hours; 
-			}
-
-			if ((minutes >= 0)&&(minutes <= 9)){ 
-				minutes="0"+minutes; 
-			}
-
-			if ((seconds >= 0)&&(seconds <= 9)){ 
-				seconds="0"+seconds; 
-			}
-			timeAxis[i]= hours+":"+minutes+":"+seconds;
+			timeAxis[i]= timeUTC[i].getHours()+":"+timeUTC[i].getMinutes()+":"+timeUTC[i].getSeconds();
 		}
 		return timeAxis;
 	}
@@ -720,7 +513,7 @@ function byMinuteGraph(){
 			animation: false,
 		},
 		title: {
-			text: data.parameter+' by '+selectedValueType+' on port: ' +data.idObject
+			text: data.parameter+' on port: ' +data.idObject
 		},
 		legend: {
 			x: 0,
@@ -752,7 +545,7 @@ function byMinuteGraph(){
 		series: [{
 			name: data.parameter,
 			data: data.valueAxxis,
-			color: '#AA0000'
+            color: '#AA0000'
 		}]
 
 	});
@@ -782,7 +575,7 @@ function byMinuteGraph(){
 	/*funció de petició (no passa)REST. Per ara es static*/
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapi/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/minute";
+		var datastatsuri = "/AppServer/webapp/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/minute";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -797,12 +590,12 @@ function byMinuteGraph(){
 			//	Accept : "application/vmd.dxat.appserver.stats+json"
 			//},
 			success : function(result) {
-				datastats = result;
-			},
-			error: function(xhr, msg) {
-				var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-				datastats = JSON.parse(rplcd);
-			}
+                                datastats = result;
+                        },
+                        error: function(xhr, msg) {
+                                var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+                                datastats = JSON.parse(rplcd);
+                        }
 		});
 		//		Tractament de dades obtingudes
 		$.ajaxSetup({
@@ -814,28 +607,9 @@ function byMinuteGraph(){
 	function getXAxis(axis){
 		var timeUTC=[];
 		var timeAxis=[];
-		var hours;
-		var minutes;
-		var seconds;
-
 		for (var i=0; i<axis.length;i++){
 			timeUTC.push(new Date(axis[i]*1000));
-			hours =timeUTC[i].getHours();
-			minutes =timeUTC[i].getMinutes();
-			seconds=timeUTC[i].getSeconds();
-
-			if ((hours >= 0)&&(hours <= 9)){ 
-				hours="0"+hours; 
-			}
-
-			if ((minutes >= 0)&&(minutes <= 9)){ 
-				minutes="0"+minutes; 
-			}
-
-			if ((seconds >= 0)&&(seconds <= 9)){ 
-				seconds="0"+seconds; 
-			}
-			timeAxis[i]= hours+":"+minutes+":"+seconds;
+			timeAxis[i]= timeUTC[i].getHours()+":"+timeUTC[i].getMinutes()+":"+timeUTC[i].getSeconds();
 		}
 		return timeAxis;
 	}
@@ -853,7 +627,11 @@ function bySecondGraph(){
 
 	var timeUTC=[];
 	var timeAxis=[];
-	timeAxis = getXAxis(timeData);
+	for (var i=0;i<timeData.length;i++){
+		timeUTC[i] = new Date(timeData[i]);
+		timeAxis[i]= timeUTC[i].getHours()+":"+timeUTC[i].getMinutes()+":"+timeUTC[i].getSeconds();
+		//alert(timeAxis[i]);
+	}
 
 	var lastTime = timeData[(timeData.length-1)*1000];
 
@@ -863,7 +641,7 @@ function bySecondGraph(){
 			animation: false,
 		},
 		title: {
-			text: data.parameter+' by '+selectedValueType+' on port: ' +data.idObject
+			text: data.parameter+' on port: ' +data.idObject
 		},
 		legend: {
 			x: 0,
@@ -899,7 +677,7 @@ function bySecondGraph(){
 		series: [{
 			name: data.parameter,
 			data: valueData,
-			color: '#0000AA'
+            color: '#0000AA'
 		}]
 
 	});
@@ -936,44 +714,18 @@ function bySecondGraph(){
 			valueData.push(data2.valueAxxis[i]);
 		}
 
-		timeAxis = getXAxis(timeData);
+		for (var i=0;i<timeData.length;i++){
+			timeUTC[i] = new Date(timeData[i]);
+			timeAxis[i]= timeUTC[i].getHours()+":"+timeUTC[i].getMinutes()+":"+timeUTC[i].getSeconds();
 
+		}
 		chart.series[0].setData(valueData);
 		chart.xAxis[0].setCategories(timeAxis);
 	}
 
-	function getXAxis(axis){
-		var timeUTC=[];
-		var timeAxis=[];
-		var hours;
-		var minutes;
-		var seconds;
-
-		for (var i=0; i<axis.length;i++){
-			timeUTC.push(new Date(axis[i]*1000));
-			hours =timeUTC[i].getHours();
-			minutes =timeUTC[i].getMinutes();
-			seconds=timeUTC[i].getSeconds();
-
-			if ((hours >= 0)&&(hours <= 9)){ 
-				hours="0"+hours; 
-			}
-
-			if ((minutes >= 0)&&(minutes <= 9)){ 
-				minutes="0"+minutes; 
-			}
-
-			if ((seconds >= 0)&&(seconds <= 9)){ 
-				seconds="0"+seconds; 
-			}
-			timeAxis[i]= hours+":"+minutes+":"+seconds;
-		}
-		return timeAxis;
-	}
-
 	function getData(){
 		var datastats = {};
-		var datastatsuri = "/AppServer/webapi/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/second";
+		var datastatsuri = "/AppServer/webapp/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/second";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
@@ -988,12 +740,12 @@ function bySecondGraph(){
 			//	Accept : "application/vmd.dxat.appserver.stats+json"
 			//},
 			success : function(result) {
-				datastats = result;
-			},
-			error: function(xhr, msg) {
-				var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-				datastats = JSON.parse(rplcd);
-			}
+                                datastats = result;
+                        },
+                        error: function(xhr, msg) {
+                                var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+                                datastats = JSON.parse(rplcd);
+                        }
 		});
 		$.ajaxSetup({
 			async : true
@@ -1004,7 +756,6 @@ function bySecondGraph(){
 
 function loadDefaultStatValues(){
 	clearInterval(refreshIntervalIdPort);
-	clearInterval(refreshIntervalController);
 
 	$('#textgraph').show();
 	$('#statisticsGraph').hide();
@@ -1020,7 +771,6 @@ function loadDefaultStatValues(){
 
 function printPortGraph(){
 	clearInterval(refreshIntervalIdPort);
-	clearInterval(refreshIntervalController);
 
 	if(selectedPort != ""){
 		$('#textgraph').hide();
@@ -1030,32 +780,32 @@ function printPortGraph(){
 		console.log(selectedPort);
 		console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
 		switch(selectedParam){
-		case "receivePackets": valueSuffix = " Packets/s";
-		break;
-		case "transmitPackets": valueSuffix = " Packets/s";
-		break;
-		case "receiveBytes": valueSuffix = " Bytes/s";
-		break;
-		case "transmitBytes": valueSuffix = " Bytes/s";
-		break;
-		case "receiveDropped": valueSuffix = " Packets/s";
-		break;
-		case "transmitDropped": valueSuffix = " Packets/s";
-		break;
-		case "receiveErrors": valueSuffix = " Packets/s";
-		break;
-		case "transmitErrors": valueSuffix = " Packets/s";
-		break;
-		case "receiveFrameErrors": valueSuffix = " Packets/s";
-		break;
-		case "receiveOverrunErrors": valueSuffix = " Packets/s";
-		break;
-		case "receiveCRCErrors": valueSuffix = " Packets/s";
-		break;
-		case "collisions": valueSuffix = " Packets/s";
-		break;
-		default : valueSuffix = " Bytes/s";
-		break;
+			case "receivePackets": valueSuffix = " Packets/s";
+				break;
+			case "transmitPackets": valueSuffix = " Packets/s";
+				break;
+			case "receiveBytes": valueSuffix = " Bytes/s";
+				break;
+			case "transmitBytes": valueSuffix = " Bytes/s";
+				break;
+			case "receiveDropped": valueSuffix = " Packets/s";
+				break;
+			case "transmitDropped": valueSuffix = " Packets/s";
+				break;
+			case "receiveErrors": valueSuffix = " Packets/s";
+				break;
+			case "transmitErrors": valueSuffix = " Packets/s";
+				break;
+			case "receiveFrameErrors": valueSuffix = " Packets/s";
+				break;
+			case "receiveOverrunErrors": valueSuffix = " Packets/s";
+				break;
+			case "receiveCRCErrors": valueSuffix = " Packets/s";
+				break;
+			case "collisions": valueSuffix = " Packets/s";
+				break;
+			default : valueSuffix = " Bytes/s";
+				break;
 		}
 
 		if(selectedTimeInterval == "hour") byHourGraph();
@@ -1083,17 +833,17 @@ function showPortStats(){
 	if(event.target.id == "tinterval"){
 		console.log("selected time interval: "+$(event.target).text());
 		switch ($(event.target).text()){
-		case "Per minute": selectedTimeInterval = "minute";
-		$("#btinterval").html('Per minute <span class="caret"></span>');
-		break;
-		case "Per hour": selectedTimeInterval = "hour";
-		$("#btinterval").html('Per hour <span class="caret"></span>');
-		break;
-		case "Per second": selectedTimeInterval = "second";
-		$("#btinterval").html('Per second <span class="caret"></span>');
-		break;
-		default:
-			break;
+			case "Per minute": selectedTimeInterval = "minute";
+				$("#btinterval").html('Per minute <span class="caret"></span>');
+				break;
+			case "Per hour": selectedTimeInterval = "hour";
+				$("#btinterval").html('Per hour <span class="caret"></span>');
+				break;
+			case "Per second": selectedTimeInterval = "second";
+				$("#btinterval").html('Per second <span class="caret"></span>');
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -1139,55 +889,20 @@ function updateGauges()
 {
 	for (var key in gauges)
 	{
-		console.log("updating gauge:");
-		console.log(key);
-		var value = getControllerData(key);//getRandomValue(gauges[key]);
+		var value = getRandomValue(gauges[key]);
 		gauges[key].redraw(value);
 	}
 }
 
-function getControllerData(key){
-	var datastats = {};
-	//http://147.83.113.109:8080/AppServer/webapi/statistics/controller/MemoryPCT/AVERAGE/second
-	//http://147.83.113.109:8080/AppServer/webapi/statistics/controller/CpuAvg/AVERAGE/second
-	var param = (key == "memory" ? "MemoryPCT" : "CpuAvg");
-	var datastatsuri = "/AppServer/webapi/statistics/controller/"+param+"/AVERAGE/second";
-	$.ajaxSetup({
-		async : false
-	}); //execute synchronously
-
-	console.log("GETTING STATS");
-	$.ajax({
-		type: "GET",
-		url: datastatsuri,
-		//contentType: 'json',
-		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-		//headers: {
-		//	Accept : "application/vmd.dxat.appserver.stats+json"
-		//},
-		success : function(result) {
-			datastats = result;
-		},
-		error: function(xhr, msg) {
-			var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-			datastats = JSON.parse(rplcd);
-		}
-	});
-	//		Tractament de dades obtingudes
-	$.ajaxSetup({
-		async : true
-	}); //execute asynchronously
-	return datastats.valueAxxis[0];;
+//TODO CHANGE THE RANDOM VALUE TO AJAX REQUEST!!!
+function getRandomValue(gauge)
+{
+	var overflow = 0; //10;
+	return gauge.config.min - overflow + (gauge.config.max - gauge.config.min + overflow*2) *  Math.random();
 }
-////TODO CHANGE THE RANDOM VALUE TO AJAX REQUEST!!!
-//function getRandomValue(gauge)
-//{
-//var overflow = 0; //10;
-//return gauge.config.min - overflow + (gauge.config.max - gauge.config.min + overflow*2) *  Math.random();
-//}
 
 function initializeControllerStats()
 {
 	createGauges();
-	refreshIntervalController = setInterval(updateGauges, 3000);
+	setInterval(updateGauges, 2000);
 }

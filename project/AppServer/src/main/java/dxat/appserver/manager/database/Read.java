@@ -141,7 +141,7 @@ public class Read {
 			String password = (String) user.get("password");
 			int telephone = (Integer) user.get("telephone");
 			boolean isAdmin = (Boolean) user.get("isAdmin");
-			boolean isActive = (Boolean) user.get("isActive");
+			boolean active = (Boolean) user.get("active");
 
 			orgUser.setIdentifier(identifier);
 			orgUser.setName(name);
@@ -149,7 +149,7 @@ public class Read {
 			orgUser.setPassword(password);
 			orgUser.setTelephone(telephone);
 			orgUser.setAdmin(isAdmin);
-			orgUser.setActive(isActive);
+			orgUser.setActive(active);
 
 			usersHM.put(identifier, orgUser);
 		}
@@ -173,7 +173,7 @@ public class Read {
 				String password = (String) user.get("password");
 				int telephone = (Integer) user.get("telephone");
 				boolean isAdmin = (Boolean) user.get("isAdmin");
-				boolean isActive = (Boolean) user.get("isActive");
+				boolean active = (Boolean) user.get("active");
 
 				orgUser.setIdentifier(identifier);
 				orgUser.setName(name);
@@ -181,7 +181,7 @@ public class Read {
 				orgUser.setPassword(password);
 				orgUser.setTelephone(telephone);
 				orgUser.setAdmin(isAdmin);
-				orgUser.setActive(isActive);
+				orgUser.setActive(active);
 
 				usersHM.put(identifier, orgUser);
 
@@ -270,19 +270,18 @@ public class Read {
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		BasicDBObject updateOrg = new BasicDBObject("identifier", idOrg);
 		DBObject org = collection.findOne(updateOrg);
-		BasicDBList terminalsOrg = (BasicDBList) org.get("terminals");
-		for (int i =0;i<terminalsOrg.size();i++){
+		BasicDBList flowsOrg = (BasicDBList) org.get("terminals");
+		for (int i =0;i<flowsOrg.size();i++){
 			OrgTerminal orgTerminal = new OrgTerminal();
-			DBObject terminal = (BasicDBObject) terminalsOrg.get(i);
+			DBObject flow = (BasicDBObject) flowsOrg.get(i);
 
-			String identifier = (String) terminal.get("identifier");
-			String hostName = (String) terminal.get("hostName");
-			String ipAddress = (String) terminal.get("ipAddress");
-			String mac = (String) terminal.get("mac");
-			double ifaceSpeed = (Double) terminal.get("ifaceSpeed");
-			String description = (String) terminal.get("description");
-			boolean active = (Boolean) terminal.get("active");
-			boolean assigned = (Boolean) terminal.get("assigned");
+			String identifier = (String) flow.get("identifier");
+			String hostName = (String) flow.get("hostName");
+			String ipAddress = (String) flow.get("ipAddress");
+			String mac = (String) flow.get("mac");
+			double ifaceSpeed = (Double) flow.get("ifaceSpeed");
+			String description = (String) flow.get("description");
+			boolean active = (Boolean) flow.get("active");
 
 			orgTerminal.setIdentifier(identifier);
 			orgTerminal.setHostName(hostName);
@@ -291,7 +290,6 @@ public class Read {
 			orgTerminal.setIfaceSpeed(ifaceSpeed);
 			orgTerminal.setDescription(description);
 			orgTerminal.setActive(active);
-			orgTerminal.setAssigned(assigned);
 
 			terminalsHM.put(identifier, orgTerminal);
 		}
@@ -317,7 +315,6 @@ public class Read {
 				double ifaceSpeed = (Double) terminal.get("ifaceSpeed");
 				String description = (String) terminal.get("description");
 				boolean active = (Boolean) terminal.get("active");
-				boolean assigned = (Boolean) terminal.get("assigned");
 
 				orgTerminal.setIdentifier(identifier);
 				orgTerminal.setHostName(hostName);
@@ -326,8 +323,7 @@ public class Read {
 				orgTerminal.setIfaceSpeed(ifaceSpeed);
 				orgTerminal.setDescription(description);
 				orgTerminal.setActive(active);
-				orgTerminal.setAssigned(assigned);
-				
+
 				terminalsHM.put(identifier, orgTerminal);
 			}
 		}
