@@ -21,9 +21,18 @@ var dataLinks;
 var nodes = [];
 var links = [];
 var refreshIntervalTWM;
+var txResponseLinks;
+var rxResponseLinks;
+var txResponseTerminals;
+var rxResponseTerminals;
 
 function stopTopoWeatherMapRefresh(){
 	clearInterval(refreshIntervalTWM);
+	dataSwitches ={};
+	dataTerminals ={};
+	dataLinks ={};
+	nodes = [];
+	links = [];
 }
 
 function getTopoWeatherMap(){
@@ -93,45 +102,68 @@ function getTopoWeatherMap(){
 		var reqUriRx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].dstPortId+"/receiveBytes/AVERAGE/minute";
 		//alert (reqUriRx);
 		//Obtained DUMMYajax response
-		var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriRx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response1 = result;
-			}
-		});
-		
+		//var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
+		if(dataLinks.links[i].dstPortId != undefined){
+			$.ajaxSetup({
+				async : false
+			}); //execute synchronously
+
+			$.ajax({
+				type: "GET",
+				url: reqUriRx,
+				//contentType: 'application/json',
+				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+//				headers: {
+//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+//				},
+				success : function(result) {
+					rxResponseLinks = result;
+					console.log("LINKS RX RESULT:");
+					console.log(result);
+				},
+				error: function(xhr, msg) {
+					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+					rxResponseLinks = JSON.parse(rplcd);
+				}
+			});
+		}else console.log("undefined!!!");
 		//Dummy request to...
 		var reqUriTx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].srcPortId+"/transmitBytes/AVERAGE/minute";
 		//alert (reqUriTx);
 		//Obtained DUMMYajax response
-		var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriTx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response2 = result;
-			}
-		});
-		//Transmitted bytes
-		//Recieved bytes
+		//var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
+		if(dataLinks.links[i].srcPortId!=undefined){
+			$.ajax({
+				type: "GET",
+				url: reqUriTx,
+				//contentType: 'application/json',
+				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+//				headers: {
+//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+//				},
+				success : function(result) {
+					txResponseLinks = result;
+					console.log("LINKS TX RESULT:");
+					console.log(result);
+				},
+				error: function(xhr, msg) {
+					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+					txResponseLinks = JSON.parse(rplcd);
+				}
+			});
+
+			$.ajaxSetup({
+				async : true
+			}); //execute synchronously
+			//Transmitted bytes
+			//Recieved bytes
+		}else console.log("undefined!!!");
 		var sumRx=0;
 		var sumTx=0;
 
-		for (var j=0; j<response1.valueAxxis.length;j++){
-			sumRx+=response1.valueAxxis[j];
-			sumTx+=response2.valueAxxis[j];
+		for (var j=0; j<rxResponseLinks.valueAxxis.length;j++){
+			sumRx+=rxResponseLinks.valueAxxis[j];
+			sumTx+=txResponseLinks.valueAxxis[j];
 		}
 
 		sumRx = ((sumRx/60)*8/1000000).toFixed(2);
@@ -175,46 +207,70 @@ function getTopoWeatherMap(){
 	for (var i=0; i<dataTerminals.terminals.length; i++){
 		//alert(i);
 		//Dummy request to..
+
+		$.ajaxSetup({
+			async : false
+		}); //execute synchronously
+
 		var reqUriRx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/receiveBytes/AVERAGE/minute";
 		//alert (reqUriRx);
 		//Obtained DUMMYajax response
-		var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriRx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response1 = result;
-			}
-		});	
+		//var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
+		if(dataTerminals.terminals[i].portAPId!=undefined){
+			$.ajax({
+				type: "GET",
+				url: reqUriRx,
+				//contentType: 'application/json',
+				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+//				headers: {
+//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+//				},
+				success : function(result) {
+					rxResponseTerminals = result;
+					console.log("TERMINALS RX RESULT:");
+					console.log(result);
+				},
+				error: function(xhr, msg) {
+					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+					rxResponseTerminals = JSON.parse(rplcd);
+				}
+			});	
+		}
 		//Dummy request to...
 		var reqUriTx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/transmitBytes/AVERAGE/minute";
 		//alert (reqUriTx);
 		//Obtained DUMMYajax response
-		var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
-		$.ajax({
-			type: "GET",
-			url: reqUriTx,
-			//contentType: 'application/json',
-			//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//			headers: {
-//			Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//			},
-			success : function(result) {
-				response2 = result;
-			}
-		});	//Transmitted bytes
-		//Recieved bytes
+		//var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
+		if(dataTerminals.terminals[i].portAPId!=undefined){
+			$.ajax({
+				type: "GET",
+				url: reqUriTx,
+				//contentType: 'application/json',
+				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+//				headers: {
+//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+//				},
+				success : function(result) {
+					txResponseTerminals = result;
+					console.log("TERMINALS TX RESULT:");
+					console.log(result);
+				},
+				error: function(xhr, msg) {
+					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+					txResponseTerminals = JSON.parse(rplcd);
+				}
+			});	//Transmitted bytes
+			//Recieved bytes
+			$.ajaxSetup({
+				async : true
+			}); //execute synchronously
+		}
 		var sumRx=0;
 		var sumTx=0;
 
-		for (var j=0; j<response1.valueAxxis.length;j++){
-			sumRx+=response1.valueAxxis[j];
-			sumTx+=response2.valueAxxis[j];
+		for (var j=0; j<rxResponseTerminals.valueAxxis.length;j++){
+			sumRx+=rxResponseTerminals.valueAxxis[j];
+			sumTx+=txResponseTerminals.valueAxxis[j];
 		}
 
 		sumRx = ((sumRx/60)*8/1000000).toFixed(2);
@@ -261,10 +317,11 @@ function getTopoWeatherMap(){
 
 
 function createTopologyGraph(){
+	getTopoWeatherMap();
 
 	//Represenació grafic 
 	var width = 400,
-	height = 300
+	height = 300;
 
 	var force = d3.layout.force()
 	.nodes(nodes)
@@ -354,9 +411,9 @@ function createTopologyGraph(){
 
 	node.append("image")
 	.attr("xlink:href", function (d)	{	if (d.portAPId ==null){
-		return "/img/switch.svg"
+		return "/AppServer/img/switch.svg"
 	}else{
-		return "/img/terminal.svg"
+		return "/AppServer/img/terminal.svg"
 	}
 	})
 	.attr("x", function (d)	{	if (d.portAPId ==null){
@@ -411,7 +468,6 @@ function createTopologyGraph(){
 
 
 	//TODO SET INTERVAL WEATHER MAP HERE
-	
 	refreshIntervalTWM = setInterval(function() {
 		getTopoWeatherMap();
 	},60000);
