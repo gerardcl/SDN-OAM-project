@@ -1457,7 +1457,7 @@
                         <td><%= terminal.get('ipAddress') %></td>
                         <td><%= terminal.get('ifaceSpeed') %></td>
                         <td><%= terminal.get('mac') %></td>
-                        <td>
+                        <td> 
 
                           <center>
                             <div class="btn-group dropdown">
@@ -1468,9 +1468,9 @@
 
                             <ul class="dropdown-menu">
                               <div class="listScroll"> 
-                                <% _.each(organizations, function(organization) { %>
+                                <% _.each(organizations, function(org) { %>
 
-                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' id="infoAssignation" data-id="<%= terminal.get('identifier') %>" data-orgname="<%= organization.get('name') %>" data-orgid="<%= organization.get('identifier') %>" onclick=""><span class="badge"><%= organization.get('identifier') %></span> <%= organization.get('name') %></a>
+                                  <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' id="infoAssignation" data-id="<%= terminal.get('identifier') %>" data-orgname="<%= org.get('name') %>" data-orgid="<%= org.get('identifier') %>" ><span class="badge"><%= org.get('identifier') %></span> <%= org.get('name') %></a>
     
                                 <% }); %>
                               </div>
@@ -1547,19 +1547,18 @@
                 <h4 class="modal-title">Assign organization to terminal</h4>
               </div>
               <div class="modal-body">
-                Are you sure you want to assign terminal 
+                Are you sure you want to assign terminal: <br> 
 
                 <input type="text" name="terminalId" id="terminalId" value=""/>
-                <input type="text" name="orgId" id="orgId" value=""/>
-                <input type="text" name="orgName" id="orgName" value=""/>
+                <input type="hidden" name="orgId" id="orgId" value=""/>
 
-                <center><span class="label label-info" name="assignation" id="assignation"><%= $(this).data('id') %></span></center>
-
+                <br> to organization: <br>
+                <input type="text" name="orgName" id="orgName" value=""/>  ?
              
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
-                <button type="button" id="assign-terminal" class="btn btn-success"><i class="fa fa-link"></i> Assign terminal</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+                <button type="submit" id="assign-terminal" class="btn btn-success"><i class="fa fa-link"></i> Assign terminal</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->

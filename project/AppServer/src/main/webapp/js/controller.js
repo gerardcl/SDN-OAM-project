@@ -21,11 +21,18 @@
 	  return o;
 	};
 
+
 	$(document).on("click", ".assignationModal", function () {
-		var infoAssignation = document.getElementById('infoAssignation');
-    	var terminalId = $(this).data('id');
-    	var orgId = infoAssignation.getAttribute('data-orgid');
-    	var orgName = infoAssignation.getAttribute('data-orgname');
+		//we get the object with the selected data
+    	var objectToAssign = $(this).data();
+    	console.log(objectToAssign);
+
+    	var terminalId = objectToAssign.id; 
+    	var orgId = objectToAssign.orgid;
+    	var orgName = objectToAssign.orgname;
+    	console.log(terminalId);
+    	console.log(orgId);
+    	console.log(orgName);
     	$(".modal-body #terminalId").val( terminalId );
     	$(".modal-body #orgId").val( orgId );
     	$(".modal-body #orgName").val( orgName );
@@ -518,6 +525,29 @@
 					});
 				}
 			});
+		},
+		events: {
+			'submit #assign-terminal': 'assign'
+		},
+		assign: function (ev){
+			var termDetails = $(ev.currentTarget).serializeObject();
+			console.log(termDetails);
+
+			var terminal = new Terminal();
+			terminal.url = '/AppServer/webapp/manager/terminal/'+ev.orgId;
+			terminal.save(termDetails, {
+				//type: "POST",
+			    contentType: "application/vmd.dxat.appserver.manager.terminal.collection+json",
+				success: function (ev) {
+					console.log(ev);
+					if(ev.attributes.identifier == "") alert("this terminal already exists");
+					else router.navigate('adminTerminals/'+ev.attributes.identifier, {trigger: true});
+				},
+				error: function(model, response) {
+				    alert('wrong');
+				}
+			});
+			return false;
 		}
 	});
 
