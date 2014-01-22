@@ -2082,62 +2082,37 @@
         <div class="panel-body">
           <form class="form-horizontal edit-terminal-form well" role="form">
 
-            <div class="row">
-
-
-
-
-
-
-                    <% _.each(organizations, function(organization) { %>
-
-                      <label><%= organization.get('name') %></label>                    
-                    <% }); %>
-
-
-
-
-              <div class="btn-group dropdown">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="orgsList">
-                  Select organization
-                  <span class="caret"></span>
-                </button>
-
-                <ul class="dropdown-menu">
-                  <div class="listScroll"> 
-
-                    <% _.each(organizations, function(organization) { %>
-
-                      <li class='list-group-item' id="orgTerminal" onclick=""><%= organization.get('name') %></li>                    
-                    <% }); %>
-                  </div>
-                </ul>
-              </div>
-            </div>
-
+            
+ 
             <div class="row">
               <div class="col-lg-6 col-md-6 col-sm-12">
 
                 <div class="form-group">
+                  <label for="organization" class="col-sm-4 control-label">Organization</label>
+                  <div class="col-sm-8">
+                    <select class="form-control">
+                      <div class="listScroll"> 
+                        <% _.each(organizations, function(organization) { %>
+
+                          <option id="organization" value="<%= organization.get('identifier') %>"><%= organization.get('name') %></option>
+
+                        <% }); %>
+                      </div>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
                   <label for="name" class="col-sm-4 control-label">Name</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" name="name" value="<%= terminal ? terminal.get('name') : '' %>" >
+                    <input type="text" class="form-control" name="hostName" value="<%= terminal ? terminal.get('hostName') : '' %>" >
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label for="description" class="col-sm-4 control-label">Description</label>
                   <div class="col-sm-8">
-                    <input type="description" class="form-control" name="email" value="<%= terminal ? terminal.get('description') : '' %>"  >
-                  </div>
-                </div>
-
-              
-
-                <div class="form-group">
-                  <label for="ifaceSpeed" class="col-sm-4 control-label">Interface</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" name="ifaceSpeed" value="<%= terminal ? terminal.get('ifaceSpeed') : '' %>"  >
+                    <input type="text" class="form-control" name="description" value="<%= terminal ? terminal.get('description') : '' %>"  >
                   </div>
                 </div>
 
@@ -2146,27 +2121,27 @@
               <div class="col-lg-6 col-md-6 col-sm-12">
 
                 <div class="form-group">
-                  <label for="ipAddress" class="col-sm-4 control-label">Password</label>
+                  <label for="ipAddress" class="col-sm-4 control-label">IP address</label>
                   <div class="col-sm-8">
-                    <input type="ipAddress" class="form-control" name="ipAddress" value="<%= terminal ? terminal.get('ipAddress') : '' %>"  >
+                    <input type="ipAddress" class="form-control" name="ipAddress" value="<%= terminal ? terminal.get('ipAddress') : '' %>"  readonly>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label for="admin" class="col-sm-4 control-label">is admin?</label>
+                  <label for="mac" class="col-sm-4 control-label">MAC</label>
                   <div class="col-sm-8">
-                  <input type="hidden" id="orgId" value="<%= orgId %>" />
-                  
-                    <% if(terminal){ %>
-                      <input type="hidden" name="identifier" value="<%= terminal.get('identifier') %>" />
-                      <input type="checkbox" class="form-control" id="admin" 
-                          <%= terminal.get('admin') ? 'checked' : ''%> />
-                    <% }else{ %> 
-                      <input type="checkbox" class="form-control" id="admin" />
-                    <% } %>
-
+                    <input type="mac" class="form-control" name="mac" value="<%= terminal ? terminal.get('mac') : '' %>"  readonly>
                   </div>
                 </div>
+
+                <div class="form-group">
+                  <label for="ifaceSpeed" class="col-sm-4 control-label">Interface</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" name="ifaceSpeed" value="<%= terminal ? terminal.get('ifaceSpeed') : '' %>"  readonly>
+                  </div>
+                </div>
+
+                
               </div>
             </div>
 
@@ -2174,8 +2149,8 @@
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="form-group">
                   <center>
-                    <button type="submit" class="btn btn-lg <%= terminal ? 'btn-warning' : 'btn-success' %> "><%= terminal ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create Terminal'%></button>
-                    <%= terminal ? '<a data-toggle="modal" href="#confirmationTerminal" class="btn btn-lg btn-danger"><i class="fa fa-trash-o"></i> Remove Terminal </a>' : '' %> 
+                    <button type="submit" class="btn btn-lg <%= terminal ? 'btn-warning' : 'btn-success' %> "><%= terminal ? '<i class="fa fa-edit"></i> Save changes' : ''%></button>
+                    <%= terminal ? '<a data-toggle="modal" href="#confirmationTerminal" class="btn btn-lg btn-danger"><i class="fa fa-unlink"></i> Unassign Terminal </a>' : '' %> 
                   </center>
                 </div>
               </div>
@@ -2184,22 +2159,22 @@
         </div>
       </div>
 
-      <!-- Modal -->
+      <!-- UNASSIGN TERMINAL Modal -->
         <div class="modal fade" id="confirmationTerminal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Remove terminal <%= terminal ? terminal.get('name') : '' %></h4>
+                <h4 class="modal-title">Unassign terminal <%= terminal.get('hostName') %> from <%= terminal.get('hostName') %></h4>
               </div>
               <div class="modal-body">
-                Are you sure you want to remove <center><h2 class="well"><%= terminal ? terminal.get('name') : '' %>?</h2> </center> 
+                Are you sure you want to unassign terminal:<center><h2 class="well"><%= terminal ? terminal.get('hostName') : '' %></h2></center> <center>from: <h4 class="well"><%= terminal ? terminal.get('orgId') : '' %>?</h4></center> 
                 <br>
                 <%= terminal ? terminal.get('identifier') : '' %>  
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
-                <button type="button" id="unassign-terminal" class="btn btn-danger delete"><i class="fa fa-trash-o"></i> Remove</button>
+                <button type="button" id="unassign-terminal" class="btn btn-danger delete"><i class="fa fa-unlink"></i> Unassign</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->

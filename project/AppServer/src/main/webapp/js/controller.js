@@ -27,7 +27,7 @@ function copyTo(obj) {
 	};
 
 	
-
+	//passing data to ASSIGN ORG TO TERMINAL modal
 	$(document).on("click", ".assignationModal", function () {
 		//we get the object with the selected data
 		var objectToAssign = $(this).data();
@@ -36,15 +36,11 @@ function copyTo(obj) {
 		var terminalId = objectToAssign.id; 
 		var orgId = objectToAssign.orgid;
 		var orgName = objectToAssign.orgname;
-
 		var ipAddress = objectToAssign.terminaladdress;
 		var mac = objectToAssign.terminalmac;
 		var ifaceSpeed = objectToAssign.terminaliface;
 		var hostName = objectToAssign.terminalname;
 
-		console.log(terminalId);
-		console.log(orgId);
-		console.log(orgName);
 		$(".modal-body #terminalId").val( terminalId );
 		$(".modal-body #orgId").val( orgId );
 		$(".modal-body #orgName").val( orgName );
