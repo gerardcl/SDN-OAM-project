@@ -723,6 +723,7 @@ function copyTo(obj) {
 		},
 		createFlow: function (ev) { //event object to have access to the event just happened 
 			var flowDetails = $(ev.currentTarget).serializeObject();
+			console.log(flowDetails);
 			var flow = new Flow();
 			flow.urlRoot = '/AppServer/webapi/manager/flow/'+flowDetails.orgId+'/';
 			flow.save(flowDetails, { //SEND object to the server

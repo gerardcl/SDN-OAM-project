@@ -1897,33 +1897,116 @@
 
                 <div class="panel-body">
 
-                  <form class="new-flow-form">
+                  <form class="new-flow-form well">
                   
-                      <label>Source</label>
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-desktop"></i> Select source <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu">
+                    <div class="row">
 
-                            <div class="listScroll">
-                             <% _.each(terminals, function(terminal) { 
-                                if(terminal.get('active')==true){ %>
+                      <div class="col-sm-6 col-md-6 col-lg-6">
 
-                              <li><a href=""> <%= terminal.get('hostName') %> </a></li>
-                                  
-                              <%  }
-                                }); %>
-                             </div>
-                            
-                          </ul>
-                        </div>                  
-                      <input name="src" type="text">
-                      <label>Destination</label>
-                        
+                        <div class="form-group"><!-- NAME -->
+                          <label for="name" class="col-sm-4 control-label">Name</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control" name="name" value="" required><br>
+                          </div>
+                        </div>
 
-                      <input name="dst" type="text">
+                        <div class="form-group"><!-- SOURCE -->
+                          <label for="srcTerm" class="col-sm-4 control-label">Source terminal</label>
+                          <div class="col-sm-8">
 
-                      <input type="" name="orgId" value="<%= orgId %>" />
+                            <select class="form-control" name="srcOTidentifier">
+                              <div class="listScroll"> 
+                                <option id="srcTerm">Select SOURCE</option>
+                                <% _.each(terminals, function(terminal) { 
+                                      if(terminal.get('active')==true){ %>
+
+                                  <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
+
+                                <%  }
+                                  }); %>
+                              </div>
+                            </select><br>
+
+                          </div>
+                        </div>
+
+                        <div class="form-group"><!-- DESTINATION -->
+                          <label for="dstTerm" class="col-sm-4 control-label">Destination terminal</label>
+                          <div class="col-sm-8">
+                            <select class="form-control" name="dstOTidentifier">
+                              <div class="listScroll"> 
+                                <option id="dstTerm">Select SOURCE</option>
+                                <% _.each(terminals, function(terminal) { 
+                                      if(terminal.get('active')==true){ %>
+
+                                  <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
+
+                                <%  }
+                                  }); %>
+                              </div>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="col-sm-6 col-md-6 col-lg-6">
+
+                        <div class="row">
+
+                          <div class="form-group"><!-- PORTS -->
+                            <div class="col-sm-4">
+                              <label for="ports" >Ports</label>
+                            </div>
+                            <div class="col-sm-4" id="ports">
+                              <input type="text" class="form-control" name="srcPort" value="" placeholder="Source">
+                              <br>
+                            </div>
+                            <div class="col-sm-4" id="ports">
+                              <input type="text" class="form-control" name="dstPort" value="" placeholder="Destination">
+                              <br>
+                            </div>
+                          </div>
+
+                          <div class="form-group"><!-- BANDWIDTH -->
+                            <label for="bwOpt" class="col-sm-4 control-label">Bandwidth</label>
+                            <div class="col-sm-8">
+                              <select class="form-control" name="bandwidth">
+                                <div class="listScroll"> 
+                                  <option id="bwOpt" value="">Select BANDWIDTH</option>
+
+                                    <option value="1000" >1 Kbps</option>
+                                    <option value="10000" >10 Kbps</option>
+                                    <option value="100000" >100 Kbps</option>
+                                    <option value="1000000" >1 Mbps</option>
+                                    <option value="10000000" >10 Mbps</option>
+                                    <option value="100000000" >100 Mbps</option>
+                                    <option value="1000000000" >1 Gbps</option>
+                                </div>
+                              </select><br>
+                            </div>
+                          </div>
+
+                          <div class="form-group"><!-- PROTOCOL -->
+                            <label for="protoFlow" class="col-sm-4 control-label">Protocol</label>
+                            <div class="col-sm-8">
+                              <select class="form-control" name="protocol">
+                                <div class="listScroll"> 
+                                  <option id="protoFlow" value="">Select Protocol</option>
+                                    <option value="tcp">TCP</option>
+                                    <option value="udp">UDP</option>
+                                </div>
+                              </select><br>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                      <input type="hidden" name="orgId" value="<%= orgId %>" />
                       <hr />
                      <center><button type="submit" class="btn btn-lg btn-success">CREATE</button></center>
 
