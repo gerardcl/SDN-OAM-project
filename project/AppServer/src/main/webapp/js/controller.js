@@ -774,7 +774,7 @@
 					console.log('success saveUser');
 					console.log(ev);
 					if(ev.attributes.identifier == "") alert("this user already exists");
-					else router.navigate('adminUsers/'+ev.attributes.identifier, {trigger: true});
+					else router.navigate('adminUsers/'+userOrgId, {trigger: true});
 				},
 				error: function(model, response) {
 					alert('wrong');

@@ -145,7 +145,6 @@ public class OrgManager {
 	}
 	
 	public TOrg updateTOrg(String orgId, TOrg torg){
-		System.out.println("org exists! ("+orgId+")");
 		dbupdate = new Update();
 		TOrg utorg = torgs.get(orgId);
 		utorg.setIdentifier(orgId);
@@ -158,7 +157,6 @@ public class OrgManager {
 			dbupdate.updateOrg(utorg);
 			torgs.put(orgId, utorg);
 			updateOrg(utorg);
-			System.out.println("org updated: "+orgId);
 			return utorg;
 		} catch (OrgNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -242,16 +240,13 @@ public class OrgManager {
 	public boolean existOrg(TOrg org){
 		for (Entry<String, TOrg> entry1 : torgs.entrySet()) {
 			TOrg torg = entry1.getValue();
-			System.out.println("searching if org "+org.getName()+" exists");
 			if(org.getName().equals(torg.getName())) return true;
 		}
-		System.out.println("this org does not exists");
 		return false;
 	}
 
 	public boolean existOrg(String orgId){
 		if(orgs.containsKey(orgId)) return true;
-		System.out.println("org does not exists...");
 		return false;
 	}
 	
@@ -273,7 +268,6 @@ public class OrgManager {
 		for (Entry<String, OrgUser> entry : users.entrySet()) {
 		    Object value = entry.getValue();
 		    if(((OrgUser) value).getName().equals(username)) {
-		    	System.out.println("OK");
 		    	OrgSession session = new OrgSession();
 		    	session.setUserId(((OrgUser) value).getIdentifier());
 		    	session.setSession(UUID.randomUUID().toString());
@@ -290,7 +284,6 @@ public class OrgManager {
 		//TODO
 		return null;
 	}
-	
 	
 	//INIT MANAGER
 	private void initOrgManager(){

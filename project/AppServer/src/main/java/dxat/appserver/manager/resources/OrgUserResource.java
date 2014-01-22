@@ -17,15 +17,6 @@ import dxat.appserver.manager.pojos.OrgSession;
 import dxat.appserver.manager.pojos.OrgUser;
 import dxat.appserver.manager.pojos.OrgUserCollection;
 
-//import net.sf.json.JSONArray;
-//import net.sf.json.JSONObject;
-//import org.json.JSONObject;
-//import com.google.gson.Gson;
-
-
-
-import dxat.appserver.manager.pojos.TOrg;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +31,7 @@ public class OrgUserResource {
 //+ updateOrgUser(String, User)
 //+ CheckPassword(String, String): Boolean
 	private OrgUserManager orgUserManager = OrgUserManager.getInstance();
-	
+
 	//AQUESTA ES PASSARÀ AL ORGMANAGER QUE TINDRÀ TOTES LES ORGS ALLÀ
 	//EL QUE FAREM AQUÍ SERÀ TRACTARO JA COM FLOWS D'UNA ORG
 	//LA INTENCIÓ ÉS PASSAR AQUÍ SEMPRE LES ORGID
@@ -59,7 +50,7 @@ public class OrgUserResource {
 	@Path("/user/{orgId}/all")	
 	@Produces(AppServerMediaType.ORG_USER_COLLECTION) 
 	public OrgUserCollection getAllOrgUsers(@PathParam("orgId") String orgId) {
-		List<OrgUser> orgUserList = new ArrayList<OrgUser>(OrgManager.getInstance().getOrg(orgId).getUsers().values());
+		List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserManager.orgManager.getInstance().getOrg(orgId).getUsers().values());
 		OrgUserCollection orgUsers = new OrgUserCollection();
 		orgUsers.setOrgUsers(orgUserList);
 		return orgUsers;//(OrgFlowCollection) orgFlowManager.getAllFlows();
@@ -75,26 +66,29 @@ public class OrgUserResource {
 	//INSERT USER -> CREATE USER IF POSSIBLE
 	@POST
 	@Path("/user/{orgId}")
-	@Consumes(AppServerMediaType.ORG_COLLECTION)
-	@Produces(AppServerMediaType.ORG_COLLECTION)
+	@Consumes(AppServerMediaType.ORG_USER_COLLECTION)
+	@Produces(AppServerMediaType.ORG_USER_COLLECTION)
 	public OrgUser insertUser(@PathParam("orgId") String orgId, OrgUser user){
 		System.out.println("trying to insert new user");
 		if(!orgUserManager.orgManager.existOrg(orgId)) return null;
+		if(orgUserManager.existUserInOrg(user, user.getIdentifier(), orgId)) return null;
 		if(orgUserManager.existUser(user))return null;
+		System.out.println("creating...user "+user.getName());
 		return orgUserManager.addOrgUser(orgId,user);
 	}
 	
 	@PUT
 	@Path("/user/{orgId}/{userId}")
-	@Consumes(AppServerMediaType.ORG_COLLECTION)
-	@Produces(AppServerMediaType.ORG_COLLECTION)
+	@Consumes(AppServerMediaType.ORG_USER_COLLECTION)
+	@Produces(AppServerMediaType.ORG_USER_COLLECTION)
 	public OrgUser updateOrg(@PathParam("orgId") String orgId, @PathParam("userId") String userId, OrgUser user){
 		System.out.println("trying to update user");	
 		if(!orgUserManager.orgManager.existOrg(orgId)) return null;
-		if(!orgUserManager.existUser(user))return null;
+		if(!orgUserManager.existUser(user))return null;  //here checking name
 		if(!orgUserManager.existUser(userId))return null;
+		if(!orgUserManager.existUserInOrg(user, userId, orgId))return null;
 		if(!orgUserManager.existUser(user.getIdentifier()))return null;
-		System.out.println("updating...");
+		System.out.println("updating...user "+user.getName());
 		return orgUserManager.updateOrgUser(orgId, user);	
 	}
 	
@@ -103,6 +97,7 @@ public class OrgUserResource {
 	public String deleteOrg(@PathParam("orgId") String orgId, @PathParam("userId") String userId){
 		if(!orgUserManager.orgManager.existOrg(orgId)) return "this org does not exists!";
 		if(!orgUserManager.existUser(userId))return null;
+		if(!orgUserManager.existUserInOrg(OrgManager.getInstance().getOrg(orgId).getUsers().get(userId), userId, orgId))return null;
 		if(orgUserManager.deleteOrgUser(orgId,userId)==null) System.out.println("something went wrong when deleting user: "+userId);
 		return userId;
 	}
