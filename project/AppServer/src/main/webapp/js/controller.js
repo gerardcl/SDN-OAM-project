@@ -1,3 +1,8 @@
+function copyTo(obj) {
+	console.log('copyTo');
+	   	document.getElementById("terminalNameLabel").textContent= obj.value;
+}
+
 (function($){
 	var cntActiveFlows = 0;
 	var cntPrgFlows = 0;
@@ -21,6 +26,8 @@
 		return o;
 	};
 
+	
+	//passing data to ASSIGN ORG TO TERMINAL modal
 	$(document).on("click", ".assignationModal", function () {
 		//we get the object with the selected data
 		var objectToAssign = $(this).data();
@@ -29,15 +36,11 @@
 		var terminalId = objectToAssign.id; 
 		var orgId = objectToAssign.orgid;
 		var orgName = objectToAssign.orgname;
-
 		var ipAddress = objectToAssign.terminaladdress;
 		var mac = objectToAssign.terminalmac;
 		var ifaceSpeed = objectToAssign.terminaliface;
 		var hostName = objectToAssign.terminalname;
 
-		console.log(terminalId);
-		console.log(orgId);
-		console.log(orgName);
 		$(".modal-body #terminalId").val( terminalId );
 		$(".modal-body #orgId").val( orgId );
 		$(".modal-body #orgName").val( orgName );
@@ -45,7 +48,10 @@
 		$(".modal-body #terminalMac").val( mac );
 		$(".modal-body #terminalSpeed").val( ifaceSpeed );
 		$(".modal-body #terminalName").val( hostName );
+		document.getElementById("terminalIdLabel").textContent= terminalId;
+		document.getElementById("terminalOrgLabel").textContent= orgName;
 	});
+
 
 //	Models
 	//TOrg data model  
@@ -556,6 +562,11 @@
 
 			var terminal = new Terminal();
 			terminal.url = '/AppServer/webapi/manager/terminal/'+termDetails.orgId;
+
+			terminal.orgId = null;
+			terminal.orgName = null;
+			console.log(termDetails);
+
 			terminal.save(termDetails, {
 				//type: "POST",
 				contentType: "application/vmd.dxat.appserver.manager.terminal.collection+json",
@@ -693,11 +704,15 @@
 		render: function (options) {
 			var that = this;
 			var terminals = new Terminals ();
-			terminals.url = '/manager/terminal/all';
+			if(options.admin==true)terminals.url = '/AppServer/webapi/manager/terminal/all';
+			if(options.admin==false)terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
 			terminals.fetch({
 				success: function (terminals){
 					var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier});
 					that.$el.html(template);
+					$('.listScroll').slimScroll({
+						height: '150px'
+					});
 				}
 			});
 
@@ -708,8 +723,9 @@
 		},
 		createFlow: function (ev) { //event object to have access to the event just happened 
 			var flowDetails = $(ev.currentTarget).serializeObject();
+			console.log(flowDetails);
 			var flow = new Flow();
-			flow.urlRoot = '/manager/flow/'+flowDetails.orgId+'/';
+			flow.urlRoot = '/AppServer/webapi/manager/flow/'+flowDetails.orgId+'/';
 			flow.save(flowDetails, { //SEND object to the server
 				success: function (flow) {
 					console.log(flow);
@@ -890,10 +906,9 @@
 			"clientTerminals/:identifier": "clientTerminals",
 			"clientTraffic/:identifier": "clientTraffic",
 			//SHARED ROUTES
-			"newFlow/:identifier": "newFlow",
+			"newFlow/:identifier": "newFlowAdmin",
 			"newUser/:orgId": "editUser", //NEW USER template
 			"editUser/:orgId/:identifier": "editUser", //EDIT USER template
-			"assignTerminal/:identifier": "editTerminal", //ASSIGN org to terminal
 			"editTerminal/:orgId/:identifier": "editTerminal" //EDIT terminal
 		}
 	});
@@ -1038,8 +1053,8 @@
 	});
 
 	//SHARED
-	router.on('route:newFlow', function(id) {
-		newFlowView.render({identifier: id});
+	router.on('route:newFlowAdmin', function(id) {
+		newFlowView.render({identifier: id, admin: true});
 
 	});
 
