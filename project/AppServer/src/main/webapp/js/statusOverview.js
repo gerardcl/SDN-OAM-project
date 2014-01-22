@@ -1,5 +1,34 @@
-$(document).ready(function(){
+var opts = {
+  lines: 13, // The number of lines to draw
+  length: 20, // The length of each line
+  width: 10, // The line thickness
+  radius: 30, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 0, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb or array of colors
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: 'auto' // Left position relative to parent in px
+};
+//var target = $("#preview");
+//var targetspin = target.parent().spin();
 
+$(document).ready(function(){
+	//$('#preview').hide();
+	//$('#preview').after(new Spinner(opts).spin().el);
+	//$('#preview').removeClass('spinner');
+	//spin.spin(false);
+	//$('#preview').after(new Spinner(opts).spin().el);
+	//var spinner = new Spinner(opts).spin(target);
+
+//			var spinner = new Spinner(opts).spin();
+//			$(".body").appendChild(spinner.el);
 	//initStatusOverview();
 
 	//ONCE REST LOADED THEN OPEN WEBSOCKET FOR REALTIME CHANGES
@@ -82,7 +111,7 @@ function getTopoWeatherMap(){
 	$.ajaxSetup({
 		async : true
 	}); //execute asynchronously
-	var terminals =[];// abans era... dataTerminals.terminals;
+	var terminals =[];
 	for (var i=0; i < dataTerminals.terminals.length; i++){
 		if ((dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0")&&(dataTerminals.terminals[i].ipv4!="0.0.0.0")){
 			terminals.push(dataTerminals.terminals[i]);
@@ -97,11 +126,6 @@ function getTopoWeatherMap(){
 	dataTerminals.terminals.push( new_obj );
 
 	for (var i=0; i<dataLinks.links.length; i++){
-		//alert(i);
-		//Dummy request to..
-		//alert (reqUriRx);
-		//Obtained DUMMYajax response
-		//var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
 		if(dataLinks.links[i].dstPortId==undefined){}else if(dataLinks.links[i].dstPortId != "00:00:00:00:00:00:00:00:0"){
 			var reqUriRx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].dstPortId+"/receiveBytes/AVERAGE/minute";
 			$.ajaxSetup({
@@ -118,13 +142,13 @@ function getTopoWeatherMap(){
 //				},
 				success : function(result) {
 					rxResponseLinks = result;
-					console.log("LINKS RX RESULT:");
-					console.log(result);
+					//console.log("LINKS RX RESULT:");
+					//console.log(result);
 				},
 				error: function(xhr, msg) {
-					console.log(xhr.responseText);
+					//console.log(xhr.responseText);
 					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					console.log(rplcd);
+					//console.log(rplcd);
 					rxResponseLinks = JSON.parse(rplcd);
 				}
 			});
@@ -132,10 +156,7 @@ function getTopoWeatherMap(){
 				async : true
 			}); //execute synchronously	
 		}else console.log("undefined!!!");
-		//Dummy request to...
-		//alert (reqUriTx);
-		//Obtained DUMMYajax response
-		//var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
+		
 		if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
 			var reqUriTx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].srcPortId+"/transmitBytes/AVERAGE/minute";
 			$.ajaxSetup({
@@ -151,44 +172,42 @@ function getTopoWeatherMap(){
 //				},
 				success : function(result) {
 					txResponseLinks = result;
-					console.log("LINKS TX RESULT:");
-					console.log(result);
+					//console.log("LINKS TX RESULT:");
+					//console.log(result);
 				},
 				error: function(xhr, msg) {
-					console.log(xhr.responseText);
+					//console.log(xhr.responseText);
 					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					console.log(rplcd);
+					//console.log(rplcd);
 					txResponseLinks = JSON.parse(rplcd);
 				}
 			});
 			$.ajaxSetup({
 				async : true
 			}); //execute synchronously
-
-			//Transmitted bytes
-			//Recieved bytes
 		}else console.log("undefined!!!");
+
 		var sumRx=0;
 		var sumTx=0;
+		
 		if(dataLinks.links[i].dstPortId==undefined){}else if(dataLinks.links[i].dstPortId != "00:00:00:00:00:00:00:00:0"){
 			if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
-
 				for (var j=0; j<rxResponseLinks.valueAxxis.length;j++){
-					sumRx+=rxResponseLinks.valueAxxis[j];
-					sumTx+=txResponseLinks.valueAxxis[j];
+					if(rxResponseLinks.valueAxxis[j]==null){}else if(txResponseLinks.valueAxxis[j]!=null){
+						sumRx+=rxResponseLinks.valueAxxis[j];
+						sumTx+=txResponseLinks.valueAxxis[j];
+						//console.log("sumRX = "+sumRx+"  -- sumTX = "+sumTx);
+					}
 				}
 			}
 		}
-		sumRx = ((sumRx/60)*8/1000000).toFixed(2);
-		sumTx = ((sumTx/60)*8/1000000).toFixed(2);
+		sumRx = ((sumRx/60)*8/100000).toFixed(2);
+		sumTx = ((sumTx/60)*8/100000).toFixed(2);
 		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
 		var colorRx = getGreenToRed(sumRx);
 		var colorTx = getGreenToRed(sumTx);
 		dataLinks.links[i].colorRx=colorRx;
 		dataLinks.links[i].colorTx=colorTx;
-
-		//alert("RECIBIDO AQUI: "+dataLinks.links[i].colorRx+" TRANSM AQUI: "+dataLinks.links[i].colorTx);
-
 	}
 
 
@@ -204,10 +223,6 @@ function getTopoWeatherMap(){
 				}
 			}
 			if (!((src==null)||(trg==null))){
-
-				//alert(src+" "+trg);
-
-
 				links.push({"source":src,"target":trg,"value":8,"type":"suit","color":dataLinks.links[i].colorTx});
 				links.push({"source":trg,"target":src,"value":8,"type":"suit","color":dataLinks.links[i].colorRx});
 				src= null;
@@ -218,13 +233,6 @@ function getTopoWeatherMap(){
 
 
 	for (var i=0; i<dataTerminals.terminals.length; i++){
-		//alert(i);
-		//Dummy request to..
-
-
-		//alert (reqUriRx);
-		//Obtained DUMMYajax response
-		//var response1;// = {"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"receiveBytes","timeAxxis":[1389907545,1389907546,1389907547,1389907548,1389907549,1389907550,1389907551,1389907552,1389907553,1389907554,1389907555,1389907556,1389907557,1389907558,1389907559,1389907560,1389907561,1389907562,1389907563,1389907564,1389907565,1389907566,1389907567,1389907568,1389907569,1389907570,1389907571,1389907572,1389907573,1389907574,1389907575,1389907576,1389907577,1389907578,1389907579,1389907580,1389907581,1389907582,1389907583,1389907584,1389907585,1389907586,1389907587,1389907588,1389907589,1389907590,1389907591,1389907592,1389907593,1389907594,1389907595,1389907596,1389907597,1389907598,1389907599,1389907600,1389907601,1389907602,1389907603,1389907604],"valueAxxis":[0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,695.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]};
 		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
 			var reqUriRx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/receiveBytes/AVERAGE/minute";
 			$.ajaxSetup({
@@ -240,13 +248,9 @@ function getTopoWeatherMap(){
 //				},
 				success : function(result) {
 					rxResponseTerminals = result;
-					console.log("TERMINALS RX RESULT:");
-					console.log(result);
 				},
 				error: function(xhr, msg) {
-					console.log(xhr.responseText);
 					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					console.log(rplcd);
 					rxResponseTerminals = JSON.parse(rplcd);
 				}
 			});
@@ -254,10 +258,6 @@ function getTopoWeatherMap(){
 				async : true
 			}); //execute synchronously
 		}
-		//Dummy request to...
-		//alert (reqUriTx);
-		//Obtained DUMMYajax response
-		//var response2;//={"idObject":"00:01:d4:ca:6d:c4:44:1e:3","parameter":"transmitBytes","timeAxxis":[1389908038,1389908039,1389908040,1389908041,1389908042,1389908043,1389908044,1389908045,1389908046,1389908047,1389908048,1389908049,1389908050,1389908051,1389908052,1389908053,1389908054,1389908055,1389908056,1389908057,1389908058,1389908059,1389908060,1389908061,1389908062,1389908063,1389908064,1389908065,1389908066,1389908067,1389908068,1389908069,1389908070,1389908071,1389908072,1389908073,1389908074,1389908075,1389908076,1389908077,1389908078,1389908079,1389908080,1389908081,1389908082,1389908083,1389908084,1389908085,1389908086,1389908087,1389908088,1389908089,1389908090,1389908091,1389908092,1389908093,1389908094,1389908095,1389908096,1389908097],"valueAxxis":[12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0,12500000.0]};
 		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
 			var reqUriTx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/transmitBytes/AVERAGE/minute";
 			$.ajaxSetup({
@@ -273,31 +273,29 @@ function getTopoWeatherMap(){
 //				},
 				success : function(result) {
 					txResponseTerminals = result;
-					console.log("TERMINALS TX RESULT:");
-					console.log(result);
 				},
 				error: function(xhr, msg) {
-					console.log(xhr.responseText);
 					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					console.log(rplcd);
 					txResponseTerminals = JSON.parse(rplcd);
 				}
 			});	//Transmitted bytes
-			//Recieved bytes
 			$.ajaxSetup({
 				async : true
 			}); //execute synchronously
 		}
 		var sumRx=0;
 		var sumTx=0;
-
-		for (var j=0; j<rxResponseTerminals.valueAxxis.length;j++){
-			sumRx+=rxResponseTerminals.valueAxxis[j];
-			sumTx+=txResponseTerminals.valueAxxis[j];
+		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
+			for (var j=0; j<rxResponseTerminals.valueAxxis.length;j++){
+				if(rxResponseLinks.valueAxxis[j]==null){}else if(txResponseLinks.valueAxxis[j]!=null){
+					sumRx+=rxResponseTerminals.valueAxxis[j];
+					sumTx+=txResponseTerminals.valueAxxis[j];
+					//console.log("sumRX = "+sumRx+"  -- sumTX = "+sumTx);
+				}
+			}
 		}
-
-		sumRx = ((sumRx/60)*8/1000000).toFixed(2);
-		sumTx = ((sumTx/60)*8/1000000).toFixed(2);
+		sumRx = ((sumRx/60)*8/100000).toFixed(2);
+		sumTx = ((sumTx/60)*8/100000).toFixed(2);
 		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
 		var colorRx = getGreenToRed(sumRx);
 		var colorTx = getGreenToRed(sumTx);
@@ -330,6 +328,7 @@ function getTopoWeatherMap(){
 	}
 
 	function getGreenToRed(percent){
+		//console.log(percent);
 		g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
 		r = percent>50 ? 255 : Math.floor((percent*2)*255/100);
 		return 'rgb('+r+','+g+',0)';
@@ -352,26 +351,13 @@ function createTopologyGraph(){
 	.links(links)
 	.size([width, height])
 	.linkDistance(110)
-	.charge(-1000)
+	.charge(-1200)
 	.on("tick", tick)
 	.start();
-
-	/*var force = d3.layout.force()
-    .gravity(.05)
-    .distance(100)
-    .charge(-1000)
-    .linkDistance(80)
-    .size([width, height]);
-
-  force
-      .nodes(nodes)
-      .links(links)
-      .start();*/
 
 	var svg = d3.select("#topo").append("svg")
 	.attr("width", "100%")
 	.attr("height", height);
-
 
 	svg.append("defs").selectAll("marker")
 	.data(["suit", "licensing", "resolved"])
@@ -391,30 +377,13 @@ function createTopologyGraph(){
 	.enter().append("path")
 	.attr("class", function(d) { return "link " + d.type; })
 	.attr("marker-end", function(d) { return "url(#" + d.type + ")"; })
-	.style("stroke",  function(d) {return d.color;/*	var color="#000";
-    								switch (d.color){
-    									case 2:
-    										return d.color;
-    									case 10:
-    										return color = "#F00";
-        								default:
-            								var color="#00F";
-        								return color;
-    									}*/}); //Amb aixó canviarem el color!
-
-
-	/* var link = svg.selectAll(".link")
-     .data(links)
-     .enter().append("line")
-     .attr("class", "link")
-     //.style("stroke", "#F00") //Amb aixo es canvia el color del link
-     .style("stroke-width", function(d) { return Math.sqrt(d.value); });*/
-
+	.style("stroke",  function(d) {return d.color;}); 
+	
 	var node = 	svg.selectAll(".node")
 	.data(nodes)
 	.enter().append("g")
 	.attr("class", "node")
-	.on("tick",  function (d){return path.attr("d", linkArc)})
+	.on("tick",  function (d){return path.attr("d", linkArc);})
 	.call(force.drag);
 
 
@@ -434,47 +403,39 @@ function createTopologyGraph(){
 
 	node.append("image")
 	.attr("xlink:href", function (d)	{	if (d.portAPId ==null){
-		return "/AppServer/img/switch.svg"
+		return "/AppServer/img/switch.svg";
 	}else{
-		return "/AppServer/img/terminal.svg"
+		return "/AppServer/img/terminal.svg";
 	}
 	})
 	.attr("x", function (d)	{	if (d.portAPId ==null){
-		return -50
+		return -50;
 	}else{
-		return -20
+		return -20;
 	}
 	})
 	.attr("y", function (d)	{	if (d.portAPId ==null){
-		return -50
+		return -50;
 	}else{
-		return -20
+		return -20;
 	}
 	})
 	.attr("width", function (d)	{	if (d.portAPId ==null){
-		return 100
+		return 100;
 	}else{
-		return 50
+		return 50;
 	}
 	})
 	.attr("height", function (d)	{	if (d.portAPId ==null){
-		return 100
+		return 100;
 	}else{
-		return 50
+		return 50;
 	}
 	});
 
-	/*force.on("tick", function() {
-		link.attr("x1", function(d) { return d.source.x; })
-		    .attr("y1", function(d) { return d.source.y; })
-		    .attr("x2", function(d) { return d.target.x; })
-		    .attr("y2", function(d) { return d.target.y; });
-	    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });	
-		});*/
 	function tick() {
 		path.attr("d", linkArc);
 		node.attr("transform", transform);
-		// text.attr("transform", transform);
 	}
 
 	function linkArc(d) {
@@ -488,9 +449,6 @@ function createTopologyGraph(){
 		return "translate(" + d.x + "," + d.y + ")";
 	}
 
-
-
-	//TODO SET INTERVAL WEATHER MAP HERE
 	refreshIntervalTWM = setInterval(function() {
 		getTopoWeatherMap();
 	},60000);
