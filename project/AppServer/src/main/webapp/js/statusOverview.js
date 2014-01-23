@@ -1,20 +1,20 @@
 var opts = {
-  lines: 13, // The number of lines to draw
-  length: 20, // The length of each line
-  width: 10, // The line thickness
-  radius: 30, // The radius of the inner circle
-  corners: 1, // Corner roundness (0..1)
-  rotate: 0, // The rotation offset
-  direction: 1, // 1: clockwise, -1: counterclockwise
-  color: '#000', // #rgb or #rrggbb or array of colors
-  speed: 1, // Rounds per second
-  trail: 60, // Afterglow percentage
-  shadow: false, // Whether to render a shadow
-  hwaccel: false, // Whether to use hardware acceleration
-  className: 'spinner', // The CSS class to assign to the spinner
-  zIndex: 2e9, // The z-index (defaults to 2000000000)
-  top: 'auto', // Top position relative to parent in px
-  left: 'auto' // Left position relative to parent in px
+		lines: 13, // The number of lines to draw
+		length: 20, // The length of each line
+		width: 10, // The line thickness
+		radius: 30, // The radius of the inner circle
+		corners: 1, // Corner roundness (0..1)
+		rotate: 0, // The rotation offset
+		direction: 1, // 1: clockwise, -1: counterclockwise
+		color: '#000', // #rgb or #rrggbb or array of colors
+		speed: 1, // Rounds per second
+		trail: 60, // Afterglow percentage
+		shadow: false, // Whether to render a shadow
+		hwaccel: false, // Whether to use hardware acceleration
+		className: 'spinner', // The CSS class to assign to the spinner
+		zIndex: 2e9, // The z-index (defaults to 2000000000)
+		top: 'auto', // Top position relative to parent in px
+		left: 'auto' // Left position relative to parent in px
 };
 //var target = $("#preview");
 //var targetspin = target.parent().spin();
@@ -27,8 +27,8 @@ $(document).ready(function(){
 	//$('#preview').after(new Spinner(opts).spin().el);
 	//var spinner = new Spinner(opts).spin(target);
 
-//			var spinner = new Spinner(opts).spin();
-//			$(".body").appendChild(spinner.el);
+//	var spinner = new Spinner(opts).spin();
+//	$(".body").appendChild(spinner.el);
 	//initStatusOverview();
 
 	//ONCE REST LOADED THEN OPEN WEBSOCKET FOR REALTIME CHANGES
@@ -156,7 +156,7 @@ function getTopoWeatherMap(){
 				async : true
 			}); //execute synchronously	
 		}else console.log("undefined!!!");
-		
+
 		if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
 			var reqUriTx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].srcPortId+"/transmitBytes/AVERAGE/minute";
 			$.ajaxSetup({
@@ -189,7 +189,7 @@ function getTopoWeatherMap(){
 
 		var sumRx=0;
 		var sumTx=0;
-		
+
 		if(dataLinks.links[i].dstPortId==undefined){}else if(dataLinks.links[i].dstPortId != "00:00:00:00:00:00:00:00:0"){
 			if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
 				for (var j=0; j<rxResponseLinks.valueAxxis.length;j++){
@@ -378,7 +378,7 @@ function createTopologyGraph(){
 	.attr("class", function(d) { return "link " + d.type; })
 	.attr("marker-end", function(d) { return "url(#" + d.type + ")"; })
 	.style("stroke",  function(d) {return d.color;}); 
-	
+
 	var node = 	svg.selectAll(".node")
 	.data(nodes)
 	.enter().append("g")
@@ -1216,7 +1216,7 @@ function getControllerData(key){
 	}); //execute asynchronously
 	return datastats.valueAxxis[0];;
 }
-////TODO CHANGE THE RANDOM VALUE TO AJAX REQUEST!!!
+////OLD RANDOM DUMMY VALUE
 //function getRandomValue(gauge)
 //{
 //var overflow = 0; //10;
@@ -1227,4 +1227,129 @@ function initializeControllerStats()
 {
 	createGauges();
 	refreshIntervalController = setInterval(updateGauges, 3000);
+}
+
+
+//TRAFFIC MATRIX
+function setTrafficMatrix(){
+	//DUMMY STATIC TEST REQUEST
+	var matrix ={
+			"matrix": [
+			           {
+			        	   "dst": "10.0.0.4",
+			        	   "src": "10.0.0.1",
+			        	   "traffic": 12500000
+			           },
+			           {
+			        	   "dst": "10.0.0.3",
+			        	   "src": "10.0.0.2",
+			        	   "traffic": 6250000
+			           },
+			           {
+			        	   "dst": "10.0.0.2",
+			        	   "src": "10.0.0.3",
+			        	   "traffic": 3125000
+			           },
+			           {
+			        	   "dst": "10.0.0.1",
+			        	   "src": "10.0.0.4",
+			        	   "traffic": 9000000
+			           }
+			           ]
+	};
+	var nodes=[];
+	var links=[];
+	var pushSrc=true;
+	var pushDst=true;
+
+	//alert(matrix.matrix.length);
+	for (var i=0; i<matrix.matrix.length;i++){
+		for(var j=0; j<nodes.length;j++){
+			if(matrix.matrix[i].src==nodes[j].name){
+				pushSrc=false;	
+			}
+		}
+
+		if (pushSrc){
+			nodes.push({"name":matrix.matrix[i].src});
+			pushSrc=true;
+		}
+
+		//alert(nodes[0].name);
+		for(var j=0; j<nodes.length;j++){
+			if(matrix.matrix[i].dst==nodes[j].name){
+				pushDst=false;	
+			}
+		}
+
+		if (pushDst){
+			nodes.push({"name":matrix.matrix[i].dst});
+			pushDst=true;
+		}
+	}
+
+	sorting(nodes,'name');
+	for (var i=0; i<matrix.matrix.length;i++){
+		for(var j=0;j<nodes.length;j++){
+			if (matrix.matrix[i].src==nodes[j].name){
+				var src = j;
+			}
+			if(matrix.matrix[i].dst==nodes[j].name){
+				var dst = j;
+			}
+		}
+
+		links.push({"source":src,"target":dst,"value":matrix.matrix[i].traffic});
+
+	}
+
+
+
+
+
+	function getGreenToRed(percent){
+		g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
+		r = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+		//var col = "#"+r+""+g+"0";
+		//alert(col);
+		return 'rgb('+r+','+g+',0)';
+	}
+
+	function sorting(json_object, key_to_sort_by) {
+		function sortByKey(a, b) {
+			var x = a[key_to_sort_by];
+			var y = b[key_to_sort_by];
+			return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+		}
+
+		json_object.sort(sortByKey);
+	}
+
+	var color = pv.Colors.category19();//.by(function(d) d.group);
+
+	var vis = new pv.Panel()
+	.canvas('Tmatrix')
+	.width(500)
+	.height(500)
+	.top(90)
+	.left(90);
+
+	var layout = vis.add(pv.Layout.Matrix)
+	.nodes(nodes)
+	.directed(true)
+	.links(links)
+	.sort(function(a, b) {return b.name;});
+	//.sort(function(a, b) {alert(b.name);return b.group - a.group});
+
+	layout.link.add(pv.Bar)
+	.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/1000000);})
+	.antialias(false)
+	.lineWidth(8);
+
+	layout.label.add(pv.Label)
+	.textStyle(color)
+	.text(function(d){return d.name;});
+
+	vis.render();
+
 }

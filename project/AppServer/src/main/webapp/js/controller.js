@@ -1,6 +1,6 @@
 function copyTo(obj) {
 	console.log('copyTo');
-	   	document.getElementById("terminalNameLabel").textContent= obj.value;
+	document.getElementById("terminalNameLabel").textContent= obj.value;
 }
 
 (function($){
@@ -26,7 +26,7 @@ function copyTo(obj) {
 		return o;
 	};
 
-	
+
 	//passing data to ASSIGN ORG TO TERMINAL modal
 	$(document).on("click", ".assignationModal", function () {
 		//we get the object with the selected data
@@ -594,9 +594,10 @@ function copyTo(obj) {
 			var template = _.template($('#traffic-template').html());
 			that.$el.html(template);
 			//SlimScroll HEIGHTS
-			$('#TA-matrix').slimScroll({
-				height: '520px'
-			});
+			setTrafficMatrix();
+//			$('#TA-matrix').slimScroll({
+//			height: '520px'
+//			});
 		}
 	});
 

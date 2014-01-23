@@ -349,9 +349,9 @@
 
 	<!--ADMIN TEMPLATES-->
 
-  	<!-- GLOBAL VIEW -->
-  	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
-  	<script type="text/template" id="admin-overview-template">
+	<!-- GLOBAL VIEW -->
+	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
+	<script type="text/template" id="admin-overview-template">
 
                   <div class="row"> <!-- TOPOLOGY and CONTROLLER ROW -->
 
@@ -667,12 +667,12 @@
                     </div>
                   </div><!-- /ALERTS row -->
         </script>
-  	<!-- /GLOBAL VIEW TEMPLATE -->
-  	<!-- /ADMIN OVERVIEW VIEW -->
+	<!-- /GLOBAL VIEW TEMPLATE -->
+	<!-- /ADMIN OVERVIEW VIEW -->
 
-  	<!-- ORGANIZATIONS VIEW -->
-    	<!-- organizations-list-template -->
-    	<script type="text/template" id="organizations-list-template">
+	<!-- ORGANIZATIONS VIEW -->
+	<!-- organizations-list-template -->
+	<script type="text/template" id="organizations-list-template">
                 <!-- Org LIST column -->
                 <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
 
@@ -711,11 +711,11 @@
                 </div>
                 <!-- /Org LIST column -->     
           </script>
-    	<!-- /organizations-list-template -->
+	<!-- /organizations-list-template -->
 
-    	<!-- ORGANIZATION DATA TEMPLATE -->
-    	<!-- orgData View [TOrg] -->
-    	<script type="text/template" id="organizations-data-template">
+	<!-- ORGANIZATION DATA TEMPLATE -->
+	<!-- orgData View [TOrg] -->
+	<script type="text/template" id="organizations-data-template">
               <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
                 <div class="panel panel-primary">
                   <div class="panel-heading">
@@ -855,10 +855,10 @@
                 </div>
               </div><!-- /ORG INFO --> 
             </script>
-    	<!-- /TOrg View -->
+	<!-- /TOrg View -->
 
-      <!-- EDIT-CREATE ORG TEMPLATE  -->
-      <script type="text/template" id="edit-org-template">
+	<!-- EDIT-CREATE ORG TEMPLATE  -->
+	<script type="text/template" id="edit-org-template">
 
         <div class="panel <%= organization ? 'panel-danger' : 'panel-success' %>">
           <div class="panel-heading">
@@ -970,10 +970,10 @@
             </div><!-- /.modal-dialog -->
           </div><!-- /.modal -->
       </script>
-      <!-- /EDIT-CREATE ORG TEMPLATE  -->
+	<!-- /EDIT-CREATE ORG TEMPLATE  -->
 
-    	<!-- org USERS View -->
-    	<script type="text/template" id="organizations-users-template">
+	<!-- org USERS View -->
+	<script type="text/template" id="organizations-users-template">
 
                   <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
                     <div class="panel panel-primary">
@@ -1115,10 +1115,10 @@
                     </div>
                   </div><!-- /ORG INFO --> 
             </script>
-    	<!-- /org USERS View -->
+	<!-- /org USERS View -->
 
-    	<!-- org TERMINALS -->
-    	<script type="text/template" id="organizations-terminals-template">
+	<!-- org TERMINALS -->
+	<script type="text/template" id="organizations-terminals-template">
 
               <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
                 <div class="panel panel-primary">
@@ -1246,10 +1246,10 @@
               </div><!-- /ORG INFO --> 
 
             </script>
-    	<!-- /org TERMINALS -->
+	<!-- /org TERMINALS -->
 
-    	<!-- org FLOWS -->
-    	<script type="text/template" id="organizations-flows-template">
+	<!-- org FLOWS -->
+	<script type="text/template" id="organizations-flows-template">
 
               <div class="col-md-12 col-sm-12 slim-flows"> <!-- Org INFO  -->
                 <div class="panel panel-primary">
@@ -1410,13 +1410,13 @@
                 </div>
               </div><!-- /ORG INFO --> 
             </script>
-    	<!-- /org FLOWS -->
+	<!-- /org FLOWS -->
 
-    	<!-- /ORGANIZATION DATA TEMPLATE -->
-  	<!-- /ORGANIZATIONS VIEW -->
+	<!-- /ORGANIZATION DATA TEMPLATE -->
+	<!-- /ORGANIZATIONS VIEW -->
 
-  	<!-- FLOWS VIEW -->
-  	<script type="text/template" id="flows-template">
+	<!-- FLOWS VIEW -->
+	<script type="text/template" id="flows-template">
 
             <div class="padding-10-bot">
               <a href="#/newFlow/<%= loginOrg %>"><button class="btn btn-success"> Create new FLOW [<%= loginOrg %>]</button></a>
@@ -1532,10 +1532,10 @@
               </div>
             </div><!-- /Programmed FLOWS -->
         </script>
-  	<!-- /FLOWS VIEW -->
+	<!-- /FLOWS VIEW -->
 
-  	<!-- TERMINALS VIEW -->
-  	<script type="text/template" id="terminals-template">
+	<!-- TERMINALS VIEW -->
+	<script type="text/template" id="terminals-template">
       <div class="row"><!-- Acccess Points -->
         <div class="col-sm-12">
 
@@ -1704,10 +1704,11 @@
              </div><!-- /.modal-content -->
            </div><!-- /.modal-dialog -->
          </div><!-- /.modal -->
-    </script>	<!-- /TERMINALS VIEW -->
+    </script>
+	<!-- /TERMINALS VIEW -->
 
-  	<!-- TRAFFIC VIEW -->
-  	<script type="text/template" id="traffic-template">
+	<!-- TRAFFIC VIEW -->
+	<script type="text/template" id="traffic-template">
             <div class="row"> <!-- Traffic Matrix -->
               <div class="col-lg-12">
 
@@ -1718,25 +1719,22 @@
                   </div>
 
                   <div class="panel-body">
-                
-                    <div id="TA-matrix">
-                      <p class="text-center">
-                        <img src="http://placehold.it/600x600">
-                      </p>
+               		<center>
+                    <div id="Tmatrix">
                     </div>
-
+					</center>
                   </div>
 
                 </div>
               </div>
             </div><!-- /Traffic Matrix -->
         </script>
-  	<!-- /TRAFFIC VIEW -->
+	<!-- /TRAFFIC VIEW -->
 	<!-- /ADMIN TEMPLATES -->
 
 	<!-- CLIENT TEMPLATES -->
-  	<!-- CLIENT OVERVIEW-->
-  	<script type="text/template" id="client-overview-template">
+	<!-- CLIENT OVERVIEW-->
+	<script type="text/template" id="client-overview-template">
           <div class="col-md-12 col-sm-12 slim-flows"> 
               <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -1783,10 +1781,10 @@
               </div>
           </div>
         </script>
-  	<!-- /CLIENT OVERVIEW-->
+	<!-- /CLIENT OVERVIEW-->
 
-  	<!-- CLIENT ORG DATA -->
-  	<script type="text/template" id="client-data-template">
+	<!-- CLIENT ORG DATA -->
+	<script type="text/template" id="client-data-template">
       <div class="col-md-12 col-sm-12 slim-flows"> 
             <div class="panel panel-primary">
               <div class="panel-heading">
@@ -1900,10 +1898,10 @@
             </div>
       </div>
         </script>
-  	<!-- /CLIENT ORG DATA -->
+	<!-- /CLIENT ORG DATA -->
 
-  	<!-- CLIENT USERS DATA -->
-  	<script type="text/template" id="client-users-template">
+	<!-- CLIENT USERS DATA -->
+	<script type="text/template" id="client-users-template">
           <div class="col-md-12 col-sm-12 slim-flows"> 
                 <div class="panel panel-primary">
                   <div class="panel-heading">
@@ -1992,12 +1990,12 @@
                 </div>
           </div>
         </script>
-  	<!-- /CLIENT USERS DATA -->
+	<!-- /CLIENT USERS DATA -->
 	<!-- /CLIENT TEMPLATES -->
 
-  <!-- SHARED TEMPLATES -->
-    <!-- NEW FLOW TEMPLATE -->
-    <script type="text/template" id="new-flow-template">
+	<!-- SHARED TEMPLATES -->
+	<!-- NEW FLOW TEMPLATE -->
+	<script type="text/template" id="new-flow-template">
       <div class="col-md-12 col-sm-12 slim-flows"> 
             <div class="panel panel-danger">
               <div class="panel-heading">
@@ -2126,10 +2124,10 @@
             </div>
       </div>
     </script>
-    <!-- /NEW FLOW TEMPLATE -->
+	<!-- /NEW FLOW TEMPLATE -->
 
-    <!-- EDIT-CREATE USER TEMPLATE -->
-    <script type="text/template" id="edit-user-template">
+	<!-- EDIT-CREATE USER TEMPLATE -->
+	<script type="text/template" id="edit-user-template">
 
       <div class="panel <%= user ? 'panel-danger' : 'panel-success' %>">
         <div class="panel-heading">
@@ -2245,10 +2243,10 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
     </script>
-    <!-- /EDIT-CREATE USER TEMPLATE -->
+	<!-- /EDIT-CREATE USER TEMPLATE -->
 
-    <!-- EDIT TERMINAL TEMPLATE -->
-    <script type="text/template" id="edit-terminal-template">
+	<!-- EDIT TERMINAL TEMPLATE -->
+	<script type="text/template" id="edit-terminal-template">
 
       <div class="panel panel-danger">
         <div class="panel-heading">
@@ -2372,8 +2370,8 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
     </script>
-    <!-- /EDIT TERMINAL TEMPLATE -->
-  <!-- /SHARED TEMPLATES -->
+	<!-- /EDIT TERMINAL TEMPLATE -->
+	<!-- /SHARED TEMPLATES -->
 
 	<!-- /TEMPLATES -->
 
@@ -2391,10 +2389,12 @@
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/backbone-min.js"></script>
-	<script type="text/javascript" src="js/tablesorter/jquery.tablesorter.js"></script>
+	<script type="text/javascript"
+		src="js/tablesorter/jquery.tablesorter.js"></script>
 	<script type="text/javascript" src="js/tablesorter/tables.js"></script>
 	<script type="text/javascript" src="js/d3.v3.min.js"></script>
-	<script src="js/spin.min.js"></script>
+	<script type="text/javascript" src="js/spin.min.js"></script>
+	<script type="text/javascript" src="js/protovis.js"></script>
 	<!-- CONTROLLER -->
 	<script type="text/javascript" src="js/gauge.js"></script>
 	<script type="text/javascript" src="js/statusOverview.js"></script>
