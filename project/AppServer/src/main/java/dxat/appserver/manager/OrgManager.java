@@ -263,6 +263,19 @@ public class OrgManager {
 		}
 		return orgId;
 	}
+	
+	private String getOrgNameFromUserId(String userId){
+		for (Entry<String, Org> entry1 : orgs.entrySet()) {
+			Org org = entry1.getValue();
+			for (Entry<String, OrgUser> entry2 : org.getUsers().entrySet()) {
+				if(entry2.getValue().getIdentifier().equals(userId)){
+					return org.getName();
+				}
+			}
+		}
+		return null;
+	}
+	
 	public OrgSession existUser(String username){
 		//TO CHECK IT BY GOING THROUGH EACH ORG?¿ NEXT STEPS...
 		for (Entry<String, OrgUser> entry : users.entrySet()) {
@@ -271,6 +284,8 @@ public class OrgManager {
 		    	OrgSession session = new OrgSession();
 		    	session.setUserId(((OrgUser) value).getIdentifier());
 		    	session.setSession(UUID.randomUUID().toString());
+		    	session.setOrgName(getOrgNameFromUserId(session.getUserId()));
+		    	session.setUserName(((OrgUser) value).getName());
 		    	session.setToken("notoken");
 		    	//CHECK IF ORGID == NULL THEN...
 		    	session.setOrgId(getOrgIdFromUserId(session.getUserId()));

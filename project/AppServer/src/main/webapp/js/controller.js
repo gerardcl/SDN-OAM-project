@@ -274,9 +274,14 @@ function copyTo(obj) {
 		el: '.page',
 		render: function () {
 			var that = this;
-			var oamSDNloggedtext = $('#oamSDNlogged').text();
-			var res = oamSDNloggedtext.split('| ');
-			loginOrg = res[1];
+//			var oamSDNloggedtext = $('#oamSDNlogged').text();
+//			var res = oamSDNloggedtext.split('| ');
+//			loginOrg = res[1];
+			var thesession = getSession();
+			console.log(thesession);
+			loginOrg = session.orgId;
+			loginOrgName = session.orgName;
+			loginUserName = session.userName;
 			var template = _.template($('#admin-overview-template').html());
 			that.$el.html(template);
 			//SlimScroll HEIGHTS
@@ -1086,7 +1091,8 @@ function copyTo(obj) {
 	var loginUser = '';
 	var loginOrg = '';
 	var activeOrgName = '';
-
+	var loginOrgName = '';;
+	var loginUserName = '';
 
 
 })(jQuery);

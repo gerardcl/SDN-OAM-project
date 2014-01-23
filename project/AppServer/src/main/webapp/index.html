@@ -126,7 +126,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/adminOverview" id="oamSDNlogged"><i class="fa fa-gamepad"></i> OAM SDN | <%= loginOrg %></a>
+            <a class="navbar-brand" href="#/adminOverview" id="oamSDNlogged"><i class="fa fa-gamepad"></i> OAM SDN | <%= loginOrgName %></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -137,7 +137,7 @@
               <li class="<% if(btnHL==4){%> active <%}%>"><a href="#/adminTerminals"><i class="fa fa-desktop"></i> Terminals</a></li>
               
               <li class="<% if(btnHL==5){%> active <%}%>"><a href="#/adminTraffic"><i class="fa fa-th"></i> Traffic Analysis</a></li>
-              <li class="<% if(btnHL==6){%> active <%}%>"><a data-toggle="modal" href="#aboutUs"><i class="fa fa-users"></i> About US</a></li>
+              <li class="<% if(btnHL==6){%> active <%}%>"><a data-toggle="modal" href="#aboutUs"><i class="fa fa-users"></i> About us</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right navbar-user">
@@ -187,7 +187,7 @@
                 </ul>
               </li>
               <li class="dropdown user-dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUser %> <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUserName %> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">3</span></a></li>
@@ -316,7 +316,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/clientOverview/<%= loginOrg %>"><i class="fa fa-gears"></i> SDN [ <%= loginOrg %> ]</a>
+            <a class="navbar-brand" href="#/clientOverview/<%= loginOrg %>"><i class="fa fa-gears"></i> SDN [ <%= loginOrgName %> ]</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -327,12 +327,12 @@
               <li class="<% if(btnHL==3){%> active <%}%>"><a href="#/clientFlows/<%= loginOrg %>"><i class="fa fa-link"></i> Flows</a></li>
               <li class="<% if(btnHL==4){%> active <%}%>"><a href="#/clientTerminals/<%= loginOrg %>"><i class="fa fa-desktop"></i> Terminals</a></li>
               <li class="<% if(btnHL==5){%> active <%}%>"><a href="#/clientTraffic/<%= loginOrg %>"><i class="fa fa-th"></i> Traffic Analysis</a></li>
-              <li class="<% if(btnHL==6){%> active <%}%>"><a href="#"><i class="fa fa-th"></i> About US</a></li>
+              <li class="<% if(btnHL==6){%> active <%}%>"><a href="#"><i class="fa fa-th"></i> About us</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right navbar-user">
               <li class="dropdown user-dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUser %> <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUserName %> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
@@ -1419,7 +1419,7 @@
 	<script type="text/template" id="flows-template">
 
             <div class="padding-10-bot">
-              <a href="#/newFlow/<%= loginOrg %>"><button class="btn btn-success"> Create new FLOW [<%= loginOrg %>]</button></a>
+              <a href="#/newFlow/<%= loginOrg %>"><button class="btn btn-success"> Create new FLOW for [<%= loginOrgName %>]</button></a>
             </div>
 
             <div class="row"><!-- Active FLOWS -->
