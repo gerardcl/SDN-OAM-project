@@ -1326,11 +1326,13 @@ function setTrafficMatrix(){
 	}
 
 	var color = pv.Colors.category19();//.by(function(d) d.group);
-
+	var h = $("#tMatrixTAB").width()/2;
+	var w = $("#tMatrixTAB").width()/2;
+	console.log("NEW SIZE: "+w+" x "+h);
 	var vis = new pv.Panel()
 	.canvas('Tmatrix')
-	.width(500)
-	.height(500)
+	.width(w)
+	.height(h)
 	.top(90)
 	.left(90);
 
@@ -1352,4 +1354,38 @@ function setTrafficMatrix(){
 
 	vis.render();
 
+	$('#Tmatrix').bind('resize', function(){
+		console.log('Tmatrix resized');
+	});
+	$(window).resize(function(){
+		var color = pv.Colors.category19();//.by(function(d) d.group);
+
+		var h = $("#tMatrixTAB").width()/2;
+		var w = $("#tMatrixTAB").width()/2;
+		console.log("NEW SIZE: "+w+" x "+h);
+		var vis = new pv.Panel()
+		.canvas('Tmatrix')
+		.width(w)
+		.height(h)
+		.top(90)
+		.left(90);
+
+		var layout = vis.add(pv.Layout.Matrix)
+		.nodes(nodes)
+		.directed(true)
+		.links(links)
+		.sort(function(a, b) {return b.name;});
+		//.sort(function(a, b) {alert(b.name);return b.group - a.group});
+
+		layout.link.add(pv.Bar)
+		.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/1000000);})
+		.antialias(false)
+		.lineWidth(8);
+
+		layout.label.add(pv.Label)
+		.textStyle(color)
+		.text(function(d){return d.name;});
+
+		vis.render();		
+	});
 }
