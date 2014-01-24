@@ -183,13 +183,13 @@
                   <li><a href="#">Something could be a problem <span class="label label-warning">Host unreachable</span></a></li>
                   <li><a href="#">Something Really wrong <span class="label label-danger">Link down!</span></a></li>
                   <li class="divider"></li>
-                  <li><a href="#">View All</a></li>
+                  <li><a href="#/adminOverview#alarmsAll">View All</a></li>
                 </ul>
               </li>
               <li class="dropdown user-dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUserName %> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                  <li><a href="#/editUser/<%= loginOrg %>/<%= loginUser %>"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">3</span></a></li>
                   <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
                   <li class="divider"></li>
@@ -238,7 +238,7 @@
 
                       <div class="item">
                       <center>
-                        <img class="img-responsive" src="img/xa.jpg" alt="Xavier Arteaga">
+                        <img class="img-responsive" src="img/net.gif" alt="Xavier Arteaga">
                       </center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/xavi.png"></center>
@@ -247,7 +247,7 @@
                       </div>
 
                       <div class="item">
-                        <center><img class="img-responsive" src="img/sushi.jpg" alt="Jesus Gavilan"></center>
+                        <center><img class="img-responsive" src="img/net.gif" alt="Jesus Gavilan"></center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/jesus.png"></center>
 
@@ -257,15 +257,15 @@
                       </div>
                       
                       <div class="item">
-                        <center><img class="img-responsive img-circle" src="img/geri.jpg" alt="Gerard Castillo"></center>
+                        <center><img class="img-responsive img-circle" src="img/net.gif" alt="Gerard Castillo"></center>
                         <div class="carousel-caption">
-                          <center><img class="img-responsive img-circle" src="img/gerard.png"></center>
+                          <center><img class="img-responsive" src="img/gerard.png"></center>
                           <p><code>Gerard Castillo</code></p> <p><code>The man in the middle</code></p>
                         </div>
                       </div>
 
                       <div class="item">
-                        <center><img class="img-responsive" src="img/bass.jpg" alt="Alex Nasarre"></center>
+                        <center><img class="img-responsive" src="img/net.gif" alt="Alex Nasarre"></center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/alex.png"></center>
 
@@ -274,7 +274,7 @@
                       </div>
 
                       <div class="item">
-                        <center><img class="img-responsive" src="img/jamaica.jpg" alt="Martí Boada"></center>
+                        <center><img class="img-responsive" src="img/net.gif" alt="Martí Boada"></center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/marti.png"></center>
                         <p><code>Martí Boada</code></p> <p><code>The Front-Ended</code></p>
@@ -499,7 +499,7 @@
                   </div> <!-- /GRAPH ROW -->
     			  </div> <!-- /STATISTICS BIG COL -->
 
-                  <div class="row"> <!-- ALERTS row -->  
+                  <div class="row" id="alarmsAll"> <!-- ALERTS row -->  
                     <div class="col-lg-12">
                       <div class="panel">
                         <div class="tabbable">
