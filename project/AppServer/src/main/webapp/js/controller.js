@@ -1,6 +1,12 @@
 function copyTo(obj) {
 	console.log('copyTo');
-	document.getElementById("terminalNameLabel").textContent= obj.value;
+	document.getElementById("terminalNameLabel").textContent = obj.value;
+}
+
+function fetchTerminals(obj){
+	console.log(obj.value);
+	var orgSelected = obj.value;
+
 }
 
 (function($){
@@ -510,7 +516,7 @@ function copyTo(obj) {
 			if(options.all==false){flows.url = '/AppServer/webapi/manager/flow/'+options.identifier+'/all';}			
 			flows.fetch({
 				success: function (flows) {
-					var template = _.template($('#flows-template').html(), {flows: flows.models});
+					var template = _.template($('#flows-template').html(), {flows: flows.models, admin: options.all});
 					that.$el.html(template);
 					//SlimScroll
 					$('#FLW-active').slimScroll({
@@ -600,9 +606,6 @@ function copyTo(obj) {
 			that.$el.html(template);
 			//SlimScroll HEIGHTS
 			setTrafficMatrix();
-//			$('#TA-matrix').slimScroll({
-//			height: '520px'
-//			});
 		}
 	});
 
@@ -708,19 +711,53 @@ function copyTo(obj) {
 	var NewFlowView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) {
+
 			var that = this;
-			var terminals = new Terminals ();
-			if(options.admin==true)terminals.url = '/AppServer/webapi/manager/terminal/all';
-			if(options.admin==false)terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
-			terminals.fetch({
-				success: function (terminals){
-					var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier});
-					that.$el.html(template);
-					$('.listScroll').slimScroll({
-						height: '150px'
-					});
+			if(options.flowId){ //EDIT FLOW
+				var terminals = new Terminals ();
+				if(options.admin==true){
+					terminals.url = '/AppServer/webapi/manager/terminal/all';
+					//if is ADMIN we fetch the organizations
+					var organizations = new Organizations();
+					organizations.url = '/AppServer/webapi/manager/org/all';
+					organizations.fetch();
+				};
+				if(options.admin==false){
+					terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
+					var organizations = new Organizations();
 				}
-			});
+				terminals.fetch({
+					success: function (terminals){
+						var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier, organizations: organizations.models, admin: options.admin, flow: null});
+						that.$el.html(template);
+						$('.listScroll').slimScroll({
+							height: '150px'
+						});
+					}
+				});
+			} else { //NEW FLOW
+				var terminals = new Terminals ();
+				if(options.admin==true){
+					terminals.url = '/AppServer/webapi/manager/terminal/all';
+					//if is ADMIN we fetch the organizations
+					var organizations = new Organizations();
+					organizations.url = '/AppServer/webapi/manager/org/all';
+					organizations.fetch();
+				};
+				if(options.admin==false){
+					terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
+					var organizations = new Organizations();
+				}
+				terminals.fetch({
+					success: function (terminals){
+						var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier, organizations: organizations.models, admin: options.admin, flow: null});
+						that.$el.html(template);
+						$('.listScroll').slimScroll({
+							height: '150px'
+						});
+					}
+				});
+			}
 
 		},
 		events: {
@@ -912,7 +949,9 @@ function copyTo(obj) {
 			"clientTerminals/:identifier": "clientTerminals",
 			"clientTraffic/:identifier": "clientTraffic",
 			//SHARED ROUTES
-			"newFlow/:identifier": "newFlowAdmin",
+			"newFlowAdmin/:identifier": "newFlowAdmin",
+			"newFlow/:identifier": "newFlow",
+			"editFlowAdmin/:orgId/:flowId": "editFlowAdmin",
 			"newUser/:orgId": "editUser", //NEW USER template
 			"editUser/:orgId/:identifier": "editUser", //EDIT USER template
 			"editTerminal/:orgId/:identifier": "editTerminal" //EDIT terminal
@@ -1061,6 +1100,18 @@ function copyTo(obj) {
 	//SHARED
 	router.on('route:newFlowAdmin', function(id) {
 		newFlowView.render({identifier: id, admin: true});
+		console.log(id);
+
+	});
+
+	router.on('route:editFlowAdmin', function(options) {
+		newFlowView.render({identifier: options.orgId, admin: true, flowId: options.flowId});
+		console.log(options);
+
+	});
+
+	router.on('route:newFlow', function(id) {
+		newFlowView.render({identifier: id, admin: false});
 
 	});
 
