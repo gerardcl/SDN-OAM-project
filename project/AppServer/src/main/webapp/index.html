@@ -183,13 +183,13 @@
                   <li><a href="#">Something could be a problem <span class="label label-warning">Host unreachable</span></a></li>
                   <li><a href="#">Something Really wrong <span class="label label-danger">Link down!</span></a></li>
                   <li class="divider"></li>
-                  <li><a href="#">View All</a></li>
+                  <li><a href="#/adminOverview#alarmsAll">View All</a></li>
                 </ul>
               </li>
               <li class="dropdown user-dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUserName %> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                  <li><a href="#/editUser/<%= loginOrg %>/<%= loginUser %>"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">3</span></a></li>
                   <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
                   <li class="divider"></li>
@@ -238,7 +238,7 @@
 
                       <div class="item">
                       <center>
-                        <img class="img-responsive" src="img/xa.jpg" alt="Xavier Arteaga">
+                        <img class="img-responsive" src="img/net.gif" alt="Xavier Arteaga">
                       </center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/xavi.png"></center>
@@ -247,7 +247,7 @@
                       </div>
 
                       <div class="item">
-                        <center><img class="img-responsive" src="img/sushi.jpg" alt="Jesus Gavilan"></center>
+                        <center><img class="img-responsive" src="img/net.gif" alt="Jesus Gavilan"></center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/jesus.png"></center>
 
@@ -257,15 +257,15 @@
                       </div>
                       
                       <div class="item">
-                        <center><img class="img-responsive img-circle" src="img/geri.jpg" alt="Gerard Castillo"></center>
+                        <center><img class="img-responsive img-circle" src="img/net.gif" alt="Gerard Castillo"></center>
                         <div class="carousel-caption">
-                          <center><img class="img-responsive img-circle" src="img/gerard.png"></center>
+                          <center><img class="img-responsive" src="img/gerard.png"></center>
                           <p><code>Gerard Castillo</code></p> <p><code>The man in the middle</code></p>
                         </div>
                       </div>
 
                       <div class="item">
-                        <center><img class="img-responsive" src="img/bass.jpg" alt="Alex Nasarre"></center>
+                        <center><img class="img-responsive" src="img/net.gif" alt="Alex Nasarre"></center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/alex.png"></center>
 
@@ -274,7 +274,7 @@
                       </div>
 
                       <div class="item">
-                        <center><img class="img-responsive" src="img/jamaica.jpg" alt="Martí Boada"></center>
+                        <center><img class="img-responsive" src="img/net.gif" alt="Martí Boada"></center>
                         <div class="carousel-caption">
                         <center><img class="img-responsive img-circle" src="img/marti.png"></center>
                         <p><code>Martí Boada</code></p> <p><code>The Front-Ended</code></p>
@@ -499,7 +499,7 @@
                   </div> <!-- /GRAPH ROW -->
     			  </div> <!-- /STATISTICS BIG COL -->
 
-                  <div class="row"> <!-- ALERTS row -->  
+                  <div class="row" id="alarmsAll"> <!-- ALERTS row -->  
                     <div class="col-lg-12">
                       <div class="panel">
                         <div class="tabbable">
@@ -1415,124 +1415,7 @@
 	<!-- /ORGANIZATION DATA TEMPLATE -->
 	<!-- /ORGANIZATIONS VIEW -->
 
-	<!-- FLOWS VIEW -->
-	<script type="text/template" id="flows-template">
 
-            <div class="padding-10-bot">
-              <a href="#/newFlow/<%= loginOrg %>"><button class="btn btn-success"> Create new FLOW for [<%= loginOrgName %>]</button></a>
-            </div>
-
-            <div class="row"><!-- Active FLOWS -->
-              <div class="col-sm-12">
-                <div class="panel panel-success">    
-                  <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-bolt"></i> Active flows</h3>
-                  </div>
-                  <div class="panel-body">
-                    <div id="FLW-active">
-                      <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-striped tablesorter">
-                          <thead>
-                            <tr>
-                              <th>Flow ID <i class="fa fa-sort"></i></th>
-                              <th>Name <i class="fa fa-sort"></i></th>
-                              <th>From <i class="fa fa-sort"></i></th>
-                              <th>To <i class="fa fa-sort"></i></th>
-                              <th>Bandwidth <i class="fa fa-sort"></i></th>
-                              <th>SRC Port <i class="fa fa-sort"></i></th>
-                              <th>DST Port <i class="fa fa-sort"></i></th>
-                              <th>Protocol <i class="fa fa-sort"></i></th>
-                              <th>QoS <i class="fa fa-sort"></i></th>
-                              <th><center><i class="fa fa-bar-chart-o"></i></center></th>
-                              <th><center><i class="fa fa-edit"></i></center></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-
-                            <% _.each(flows, function(flow) { 
-                                if(flow.get('active')==true){ %>
-                            
-                              <tr>
-                                <td><%= flow.get('identifier') %></td>                
-                                <td><%= flow.get('name') %></td>
-                                <td><%= flow.get('srcOTidentifier') %></td>
-                                <td><%= flow.get('dstOTidentifier') %></td>
-                                <td><%= flow.get('bandwidth') %></td>
-                                <td><%= flow.get('srcPort') %></td>
-                                <td><%= flow.get('dstPort') %></td>
-                                <td><%= flow.get('protocol') %></td>
-                                <td><%= flow.get('qos') %></td>
-                                <td><center><a href="#"><button class="btn btn-info btn-sm" >Statistics</button></a></center></td>
-                                <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
-                              </tr>
-
-                            <%  }
-                              }); %>
-                          
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>             
-                </div>
-              </div>
-            </div><!-- /Active FLOWS -->
-
-            <div class="row"><!-- Programmed FLOWS -->
-              <div class="col-sm-12">
-                <div class="panel panel-primary">    
-                  <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-calendar"></i> Programmed flows</h3>
-                  </div>
-                  <div class="panel-body">
-                    <div id="FLW-prg">
-                      <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-striped tablesorter">
-                          <thead>
-                            <tr>
-                              <th>Flow ID <i class="fa fa-sort"></i></th>
-                              <th>Name <i class="fa fa-sort"></i></th>
-                              <th>From <i class="fa fa-sort"></i></th>
-                              <th>To <i class="fa fa-sort"></i></th>
-                              <th>Bandwidth <i class="fa fa-sort"></i></th>
-                              <th>SRC Port <i class="fa fa-sort"></i></th>
-                              <th>DST Port <i class="fa fa-sort"></i></th>
-                              <th>Protocol <i class="fa fa-sort"></i></th>
-                              <th>QoS <i class="fa fa-sort"></i></th>
-                              <th><center><i class="fa fa-edit"></i></center></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-
-                            <% _.each(flows, function(flow) { 
-                                if(flow.get('active')==false){ %>
-
-                              <tr>
-                                <td><%= flow.get('identifier') %></td>                
-                                <td><%= flow.get('name') %></td>
-                                <td><%= flow.get('srcOTidentifier') %></td>
-                                <td><%= flow.get('dstOTidentifier') %></td>
-                                <td><%= flow.get('bandwidth') %></td>
-                                <td><%= flow.get('srcPort') %></td>
-                                <td><%= flow.get('dstPort') %></td>
-                                <td><%= flow.get('protocol') %></td>
-                                <td><%= flow.get('qos') %></td>
-                                <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
-                              </tr>
-
-                            <%  }
-                              }); %>
-
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>             
-                </div>
-              </div>
-            </div><!-- /Programmed FLOWS -->
-        </script>
-	<!-- /FLOWS VIEW -->
 
 	<!-- TERMINALS VIEW -->
 	<script type="text/template" id="terminals-template">
@@ -1994,383 +1877,544 @@
 	<!-- /CLIENT TEMPLATES -->
 
 	<!-- SHARED TEMPLATES -->
-	<!-- NEW FLOW TEMPLATE -->
-	<script type="text/template" id="new-flow-template">
-      <div class="col-md-12 col-sm-12 slim-flows"> 
-            <div class="panel panel-danger">
-              <div class="panel-heading">
-                <h3 class="panel-title"> <center> CREATE NEW FLOW </center></h3>
+
+    <!-- FLOWS VIEW -->
+    <script type="text/template" id="flows-template">
+      <div class="padding-10-bot">
+        <a href="#/newFlow<%= admin ? 'Admin' : '' %>/<%= loginOrg %>"><button class="btn btn-success"> Create new FLOW  </button></a>
+      </div>
+
+      <div class="row"><!-- Active FLOWS -->
+        <div class="col-sm-12">
+          <div class="panel panel-success">    
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-bolt"></i> Active flows</h3>
+            </div>
+            <div class="panel-body">
+              <div id="FLW-active">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped tablesorter">
+                    <thead>
+                      <tr>
+                        <th>Flow ID <i class="fa fa-sort"></i></th>
+                        <th>Name <i class="fa fa-sort"></i></th>
+                        <th>From <i class="fa fa-sort"></i></th>
+                        <th>To <i class="fa fa-sort"></i></th>
+                        <th>Bandwidth <i class="fa fa-sort"></i></th>
+                        <th>SRC Port <i class="fa fa-sort"></i></th>
+                        <th>DST Port <i class="fa fa-sort"></i></th>
+                        <th>Protocol <i class="fa fa-sort"></i></th>
+                        <th>QoS <i class="fa fa-sort"></i></th>
+                        <th><center><i class="fa fa-bar-chart-o"></i></center></th>
+                        <th><center><i class="fa fa-edit"></i></center></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <% _.each(flows, function(flow) { 
+                          if(flow.get('active')==true){ %>
+                      
+                        <tr>
+                          <td><%= flow.get('identifier') %></td>                
+                          <td><%= flow.get('name') %></td>
+                          <td><%= flow.get('srcOTidentifier') %></td>
+                          <td><%= flow.get('dstOTidentifier') %></td>
+                          <td><%= flow.get('bandwidth') %></td>
+                          <td><%= flow.get('srcPort') %></td>
+                          <td><%= flow.get('dstPort') %></td>
+                          <td><%= flow.get('protocol') %></td>
+                          <td><%= flow.get('qos') %></td>
+                          <td><center><a href="#"><button class="btn btn-info btn-sm" >Statistics</button></a></center></td>
+                          <td><center><a href="#/editFlow<%= admin ? 'Admin' : '' %>/<%= loginOrg %>/<%= flow.get('identifier') %>"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                        </tr>
+
+                      <%  }
+                        }); %>
+                    
+                    </tbody>
+                  </table>
+                </div>
               </div>
+            </div>             
+          </div>
+        </div>
+      </div><!-- /Active FLOWS -->
 
-                <div class="panel-body">
+      <div class="row"><!-- Programmed FLOWS -->
+        <div class="col-sm-12">
+          <div class="panel panel-primary">    
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-calendar"></i> Programmed flows</h3>
+            </div>
+            <div class="panel-body">
+              <div id="FLW-prg">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped tablesorter">
+                    <thead>
+                      <tr>
+                        <th>Flow ID <i class="fa fa-sort"></i></th>
+                        <th>Name <i class="fa fa-sort"></i></th>
+                        <th>From <i class="fa fa-sort"></i></th>
+                        <th>To <i class="fa fa-sort"></i></th>
+                        <th>Bandwidth <i class="fa fa-sort"></i></th>
+                        <th>SRC Port <i class="fa fa-sort"></i></th>
+                        <th>DST Port <i class="fa fa-sort"></i></th>
+                        <th>Protocol <i class="fa fa-sort"></i></th>
+                        <th>QoS <i class="fa fa-sort"></i></th>
+                        <th><center><i class="fa fa-edit"></i></center></th>
+                      </tr>
+                    </thead>
+                    <tbody>
 
-                  <form class="new-flow-form well">
-                  
-                    <div class="row">
+                      <% _.each(flows, function(flow) { 
+                          if(flow.get('active')==false){ %>
 
-                      <div class="col-sm-6 col-md-6 col-lg-6">
+                        <tr>
+                          <td><%= flow.get('identifier') %></td>                
+                          <td><%= flow.get('name') %></td>
+                          <td><%= flow.get('srcOTidentifier') %></td>
+                          <td><%= flow.get('dstOTidentifier') %></td>
+                          <td><%= flow.get('bandwidth') %></td>
+                          <td><%= flow.get('srcPort') %></td>
+                          <td><%= flow.get('dstPort') %></td>
+                          <td><%= flow.get('protocol') %></td>
+                          <td><%= flow.get('qos') %></td>
+                          <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                        </tr>
 
-                        <div class="form-group"><!-- NAME -->
-                          <label for="name" class="col-sm-4 control-label">Name</label>
-                          <div class="col-sm-8">
-                            <input type="text" class="form-control" name="name" value="" required><br>
-                          </div>
-                        </div>
+                      <%  }
+                        }); %>
 
-                        <div class="form-group"><!-- SOURCE -->
-                          <label for="srcTerm" class="col-sm-4 control-label">Source terminal</label>
-                          <div class="col-sm-8">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>             
+          </div>
+        </div>
+      </div><!-- /Programmed FLOWS -->
+    </script>
+    <!-- /FLOWS VIEW -->
 
-                            <select class="form-control" name="srcOTidentifier">
-                              <div class="listScroll"> 
-                                <option id="srcTerm">Select SOURCE</option>
-                                <% _.each(terminals, function(terminal) { 
-                                      if(terminal.get('active')==true){ %>
+  	<!-- NEW FLOW TEMPLATE -->
+  	<script type="text/template" id="new-flow-template">
+        <div class="col-md-12 col-sm-12 slim-flows"> 
+              <div class="panel <%= flow ? 'panel-warning' : 'panel-danger' %>">
 
-                                  <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
+                <div class="panel-heading">
+                  <div class="row">
 
-                                <%  }
-                                  }); %>
-                              </div>
-                            </select><br>
-
-                          </div>
-                        </div>
-
-                        <div class="form-group"><!-- DESTINATION -->
-                          <label for="dstTerm" class="col-sm-4 control-label">Destination terminal</label>
-                          <div class="col-sm-8">
-                            <select class="form-control" name="dstOTidentifier">
-                              <div class="listScroll"> 
-                                <option id="dstTerm">Select SOURCE</option>
-                                <% _.each(terminals, function(terminal) { 
-                                      if(terminal.get('active')==true){ %>
-
-                                  <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
-
-                                <%  }
-                                  }); %>
-                              </div>
-                            </select>
-                          </div>
-                        </div>
-
-                      </div>
-
-                      <div class="col-sm-6 col-md-6 col-lg-6">
-
-                        <div class="row">
-
-                          <div class="form-group"><!-- PORTS -->
-                            <div class="col-sm-4">
-                              <label for="ports" >Ports</label>
-                            </div>
-                            <div class="col-sm-4" id="ports">
-                              <input type="text" class="form-control" name="srcPort" value="" placeholder="Source">
-                              <br>
-                            </div>
-                            <div class="col-sm-4" id="ports">
-                              <input type="text" class="form-control" name="dstPort" value="" placeholder="Destination">
-                              <br>
-                            </div>
-                          </div>
-
-                          <div class="form-group"><!-- BANDWIDTH -->
-                            <label for="bwOpt" class="col-sm-4 control-label">Bandwidth</label>
-                            <div class="col-sm-8">
-                              <select class="form-control" name="bandwidth">
-                                <div class="listScroll"> 
-                                  <option id="bwOpt" value="">Select BANDWIDTH</option>
-
-                                    <option value="1000" >1 Kbps</option>
-                                    <option value="10000" >10 Kbps</option>
-                                    <option value="100000" >100 Kbps</option>
-                                    <option value="1000000" >1 Mbps</option>
-                                    <option value="10000000" >10 Mbps</option>
-                                    <option value="100000000" >100 Mbps</option>
-                                    <option value="1000000000" >1 Gbps</option>
-                                </div>
-                              </select><br>
-                            </div>
-                          </div>
-
-                          <div class="form-group"><!-- PROTOCOL -->
-                            <label for="protoFlow" class="col-sm-4 control-label">Protocol</label>
-                            <div class="col-sm-8">
-                              <select class="form-control" name="protocol">
-                                <div class="listScroll"> 
-                                  <option id="protoFlow" value="">Select Protocol</option>
-                                    <option value="tcp">TCP</option>
-                                    <option value="udp">UDP</option>
-                                </div>
-                              </select><br>
-                            </div>
-                          </div>
-
-                        </div>
-
-                      </div>
-
+                    <div class="col-md-4 col-sm-4">
+                      <a href="#<%= admin ? 'adminFlows' : 'clientFlows/'+loginOrg  %>">
+                        <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
+                        </button>
+                      </a>
                     </div>
 
-                      <input type="hidden" name="orgId" value="<%= orgId %>" />
-                      <hr />
-                     <center><button type="submit" class="btn btn-lg btn-success">CREATE</button></center>
+                    <div class="col-md-4 col-sm-4">
+                      <h3 class="panel-title"> <center> <%= flow ? 'EDIT FLOW '+flowId : 'CREATE NEW FLOW' %> </center></h3>
+                    </div>
 
-                  </form>
-
-                </div>
-              
-            </div>
-      </div>
-    </script>
-	<!-- /NEW FLOW TEMPLATE -->
-
-	<!-- EDIT-CREATE USER TEMPLATE -->
-	<script type="text/template" id="edit-user-template">
-
-      <div class="panel <%= user ? 'panel-danger' : 'panel-success' %>">
-        <div class="panel-heading">
-
-          <div class="row">
-
-            <div class="col-md-4 col-sm-4">
-              <a href="#/adminUsers/<%= orgId  %>">
-                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
-                </button>
-              </a>
-            </div>
-
-            <div class="col-md-4 col-sm-4">
-              <h2 class="panel-title"> <center> <%= user ? 'Edit User: '+user.get('name') : 'Create User' %> </center> </h2>
-            </div>
-
-            <div class="col-md-4 col-sm-4">
-            </div>
-          </div>
-
-        </div>
-
-        <div class="panel-body">
-          <form class="form-horizontal edit-user-form well" role="form">
-            <div class="row">
-              <div class="col-lg-6 col-md-6 col-sm-12">
-
-                <div class="form-group">
-                  <label for="name" class="col-sm-4 control-label">Name</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" name="name" value="<%= user ? user.get('name') : '' %>" >
+                    <div class="col-md-4 col-sm-4">
+                    </div>
                   </div>
+
                 </div>
 
-                <div class="form-group">
-                  <label for="email" class="col-sm-4 control-label">Email</label>
-                  <div class="col-sm-8">
-                    <input type="email" class="form-control" name="email" value="<%= user ? user.get('email') : '' %>"  >
-                  </div>
-                </div>
+                  <div class="panel-body">
 
-              
+                    <form class="new-flow-form well">
+                    
+                      <div class="row">
 
-                <div class="form-group">
-                  <label for="telephone" class="col-sm-4 control-label">Telephone</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" name="telephone" value="<%= user ? user.get('telephone') : '' %>"  >
-                  </div>
-                </div>
+                        <% if(admin){ %>
+                          <div class="col-sm-12 col-md-12 col-lg-12">
+                            
+                            <div class="form-group"><!-- ORGANIZATION -->
+                              <label for="orgId" class="col-sm-2 control-label">Organization</label>
+                              <div class="col-sm-10">
+                                <select class="form-control" name="orgId" id="selectOrg" onchange="fetchTerminals(this)">
+                                  <div class="listScroll"> 
+                                    <option name="orgId" value="<%= loginOrg %>"> <%= loginOrgName %> </option>
+                                    
+                                    <% _.each(organizations, function(organization) { %>
 
-              </div>
+                                      <option value="<%= organization.get('identifier') %>" name="orgId"><%= organization.get('name') %></option>
 
-              <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <% }); %>
+                                  </div>
 
-                <div class="form-group">
-                  <label for="password" class="col-sm-4 control-label">Password</label>
-                  <div class="col-sm-8">
-                    <input type="password" class="form-control" name="password" value="<%= user ? user.get('password') : '' %>"  >
-                  </div>
-                </div>
+                                </select><br>
+                              </div>  
+                            </div>
+                          </div>
+                        <% }else{ %>
+                        <input type="hidden" name="orgId" value="<%= orgId %>" />
+                          <% } %>
+                        <div class="col-sm-6 col-md-6 col-lg-6">
 
-                <div class="form-group">
-                  <label for="admin" class="col-sm-4 control-label">is admin?</label>
-                  <div class="col-sm-8">
-                  <input type="hidden" id="orgId" value="<%= orgId %>" />
-                  
-                    <% if(user){ %>
-                      <input type="hidden" name="identifier" value="<%= user.get('identifier') %>" />
-                      <input type="checkbox" class="form-control" id="admin" 
-                          <%= user.get('admin') ? 'checked' : ''%> />
-                    <% }else{ %> 
-                      <input type="checkbox" class="form-control" id="admin" />
-                    <% } %>
+                          <div class="form-group"><!-- NAME -->
+                            <label for="name" class="col-sm-4 control-label">Flow Name</label>
+                            <div class="col-sm-8">
+                              <input type="text" class="form-control" name="name" value="" required><br>
+                            </div>
+                          </div>
 
-                  </div>
-                </div>
-              </div>
-            </div>
+                          <div class="form-group"><!-- SOURCE -->
+                            <label for="srcTerm" class="col-sm-4 control-label">Source terminal</label>
+                            <div class="col-sm-8">
 
-            <div class="row">    
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="form-group">
-                  <center>
-                    <button type="submit" class="btn btn-lg <%= user ? 'btn-warning' : 'btn-success' %> "><%= user ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create User'%></button>
-                    <%= user ? '<a data-toggle="modal" href="#confirmationUser" class="btn btn-lg btn-danger"><i class="fa fa-trash-o"></i> Remove User </a>' : '' %> 
-                  </center>
-                </div>
-              </div>
-            </div>
-          </form>  
-        </div>
-      </div>
+                              <select class="form-control" name="srcOTidentifier">
+                                
+                                  <option id="srcTerm">Select SOURCE</option>
+                                  <div class="listScroll"> 
+                                  <% _.each(terminals, function(terminal) { 
+                                        if(terminal.get('active')==true){ %>
 
-      <!-- DELETE USER Modal -->
-        <div class="modal fade" id="confirmationUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Remove user <%= user ? user.get('name') : '' %></h4>
-              </div>
-              <div class="modal-body">
-                Are you sure you want to remove <center><h2 class="well"><%= user ? user.get('name') : '' %>?</h2> </center> 
-                <br>
-                <%= user ? user.get('identifier') : '' %>  
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
-                <button type="button" id="delete-user" class="btn btn-danger delete"><i class="fa fa-trash-o"></i> Remove</button>
-              </div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-    </script>
-	<!-- /EDIT-CREATE USER TEMPLATE -->
+                                    <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
 
-	<!-- EDIT TERMINAL TEMPLATE -->
-	<script type="text/template" id="edit-terminal-template">
+                                  <%  }
+                                    }); %>
+                                </div>
+                              </select><br>
 
-      <div class="panel panel-danger">
-        <div class="panel-heading">
-          
-          <div class="row">
-            <div class="col-md-4 col-sm-4">
-              <a href="#/adminTerminals">
-                <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
-                </button>
-              </a>
-            </div>
+                            </div>
+                          </div>
 
-            <div class="col-md-4 col-sm-4">
-              <h2 class="panel-title"> <center> <%= terminal ? 'Edit Terminal: '+terminal.get('hostName') : '' %> </center> </h2>
-            </div>
+                          <div class="form-group"><!-- DESTINATION -->
+                            <label for="dstTerm" class="col-sm-4 control-label">Destination terminal</label>
+                            <div class="col-sm-8">
+                              <select class="form-control" name="dstOTidentifier">
+                                <div class="listScroll"> 
+                                  <option id="dstTerm">Select SOURCE</option>
+                                  <% _.each(terminals, function(terminal) { 
+                                        if(terminal.get('active')==true){ %>
 
-            <div class="col-md-4 col-sm-4">
-            </div>
-          </div>
+                                    <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
 
-        </div>
+                                  <%  }
+                                    }); %>
+                                </div>
+                              </select>
+                            </div>
+                          </div>
 
-        <div class="panel-body">
-          <form class="form-horizontal edit-terminal-form well" role="form">
+                        </div>
 
-            
- 
-            <div class="row">
-              <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
 
-                <div class="form-group">
-                  <label for="organization" class="col-sm-4 control-label">Organization</label>
-                  <div class="col-sm-8">
-                    <select class="form-control">
-                      <div class="listScroll"> 
-                        <% _.each(organizations, function(organization) { %>
+                          <div class="row">
 
-                          <option id="organization" value="<%= organization.get('identifier') %>"><%= organization.get('name') %></option>
+                            <div class="form-group"><!-- PORTS -->
+                              <div class="col-sm-4">
+                                <label for="ports" >Ports</label>
+                              </div>
+                              <div class="col-sm-4" id="ports">
+                                <input type="text" class="form-control" name="srcPort" value="" placeholder="Source">
+                                <br>
+                              </div>
+                              <div class="col-sm-4" id="ports">
+                                <input type="text" class="form-control" name="dstPort" value="" placeholder="Destination">
+                                <br>
+                              </div>
+                            </div>
 
-                        <% }); %>
+                            <div class="form-group"><!-- BANDWIDTH -->
+                              <label for="bwOpt" class="col-sm-4 control-label">Bandwidth</label>
+                              <div class="col-sm-8">
+                                <select class="form-control" name="bandwidth">
+                                  <div class="listScroll"> 
+                                    <option id="bwOpt" value="">Select BANDWIDTH</option>
+
+                                      <option value="1000" >1 Kbps</option>
+                                      <option value="10000" >10 Kbps</option>
+                                      <option value="100000" >100 Kbps</option>
+                                      <option value="1000000" >1 Mbps</option>
+                                      <option value="10000000" >10 Mbps</option>
+                                      <option value="100000000" >100 Mbps</option>
+                                      <option value="1000000000" >1 Gbps</option>
+                                  </div>
+                                </select><br>
+                              </div>
+                            </div>
+
+                            <div class="form-group"><!-- PROTOCOL -->
+                              <label for="protoFlow" class="col-sm-4 control-label">Protocol</label>
+                              <div class="col-sm-8">
+                                <select class="form-control" name="protocol">
+                                  <div class="listScroll"> 
+                                    <option id="protoFlow" value="">Select Protocol</option>
+                                      <option value="tcp">TCP</option>
+                                      <option value="udp">UDP</option>
+                                  </div>
+                                </select><br>
+                              </div>
+                            </div>
+
+                          </div>
+
+                        </div>
+
                       </div>
-                    </select>
+
+                        
+                        <hr />
+                       <center><button type="submit" class="btn btn-lg btn-success">CREATE</button></center>
+
+                    </form>
+
                   </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="name" class="col-sm-4 control-label">Name</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" name="hostName" value="<%= terminal ? terminal.get('hostName') : '' %>" >
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="description" class="col-sm-4 control-label">Description</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" name="description" value="<%= terminal ? terminal.get('description') : '' %>"  >
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="col-lg-6 col-md-6 col-sm-12">
-
-                <div class="form-group">
-                  <label for="ipAddress" class="col-sm-4 control-label">IP address</label>
-                  <div class="col-sm-8">
-                    <input type="ipAddress" class="form-control" name="ipAddress" value="<%= terminal ? terminal.get('ipAddress') : '' %>"  readonly>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="mac" class="col-sm-4 control-label">MAC</label>
-                  <div class="col-sm-8">
-                    <input type="mac" class="form-control" name="mac" value="<%= terminal ? terminal.get('mac') : '' %>"  readonly>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="ifaceSpeed" class="col-sm-4 control-label">Interface</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" name="ifaceSpeed" value="<%= terminal ? terminal.get('ifaceSpeed') : '' %>"  readonly>
-                  </div>
-                </div>
-
                 
               </div>
+        </div>
+      </script>
+  	<!-- /NEW FLOW TEMPLATE -->
+
+  	<!-- EDIT-CREATE USER TEMPLATE -->
+  	<script type="text/template" id="edit-user-template">
+
+        <div class="panel <%= user ? 'panel-danger' : 'panel-success' %>">
+          <div class="panel-heading">
+
+            <div class="row">
+
+              <div class="col-md-4 col-sm-4">
+                <a href="#/adminUsers/<%= orgId  %>">
+                  <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
+                  </button>
+                </a>
+              </div>
+
+              <div class="col-md-4 col-sm-4">
+                <h2 class="panel-title"> <center> <%= user ? 'Edit User: '+user.get('name') : 'Create User' %> </center> </h2>
+              </div>
+
+              <div class="col-md-4 col-sm-4">
+              </div>
             </div>
 
-            <div class="row">    
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="form-group">
-                  <center>
-                    <button type="submit" class="btn btn-lg <%= terminal ? 'btn-warning' : 'btn-success' %> "><%= terminal ? '<i class="fa fa-edit"></i> Save changes' : ''%></button>
-                    <%= terminal ? '<a data-toggle="modal" href="#confirmationTerminal" class="btn btn-lg btn-danger"><i class="fa fa-unlink"></i> Unassign Terminal </a>' : '' %> 
-                  </center>
+          </div>
+
+          <div class="panel-body">
+            <form class="form-horizontal edit-user-form well" role="form">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+
+                  <div class="form-group">
+                    <label for="name" class="col-sm-4 control-label">Name</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" name="name" value="<%= user ? user.get('name') : '' %>" >
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email" class="col-sm-4 control-label">Email</label>
+                    <div class="col-sm-8">
+                      <input type="email" class="form-control" name="email" value="<%= user ? user.get('email') : '' %>"  >
+                    </div>
+                  </div>
+
+                
+
+                  <div class="form-group">
+                    <label for="telephone" class="col-sm-4 control-label">Telephone</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" name="telephone" value="<%= user ? user.get('telephone') : '' %>"  >
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+
+                  <div class="form-group">
+                    <label for="password" class="col-sm-4 control-label">Password</label>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" name="password" value="<%= user ? user.get('password') : '' %>"  >
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="admin" class="col-sm-4 control-label">is admin?</label>
+                    <div class="col-sm-8">
+                    <input type="hidden" id="orgId" value="<%= orgId %>" />
+                    
+                      <% if(user){ %>
+                        <input type="hidden" name="identifier" value="<%= user.get('identifier') %>" />
+                        <input type="checkbox" class="form-control" id="admin" 
+                            <%= user.get('admin') ? 'checked' : ''%> />
+                      <% }else{ %> 
+                        <input type="checkbox" class="form-control" id="admin" />
+                      <% } %>
+
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>  
-        </div>
-      </div>
 
-      <!-- UNASSIGN TERMINAL Modal -->
-        <div class="modal fade" id="confirmationTerminal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Unassign terminal <%= terminal.get('hostName') %> from <%= terminal.get('hostName') %></h4>
+              <div class="row">    
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                  <div class="form-group">
+                    <center>
+                      <button type="submit" class="btn btn-lg <%= user ? 'btn-warning' : 'btn-success' %> "><%= user ? '<i class="fa fa-edit"></i> Save changes' : '<i class="fa fa-pencil"></i> Create User'%></button>
+                      <%= user ? '<a data-toggle="modal" href="#confirmationUser" class="btn btn-lg btn-danger"><i class="fa fa-trash-o"></i> Remove User </a>' : '' %> 
+                    </center>
+                  </div>
+                </div>
               </div>
-              <div class="modal-body">
-                Are you sure you want to unassign terminal:<center><h2 class="well"><%= terminal ? terminal.get('hostName') : '' %></h2></center> <center>from: <h4 class="well"><%= terminal ? terminal.get('orgId') : '' %>?</h4></center> 
-                <br>
-                <%= terminal ? terminal.get('identifier') : '' %>  
+            </form>  
+          </div>
+        </div>
+
+        <!-- DELETE USER Modal -->
+          <div class="modal fade" id="confirmationUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">Remove user <%= user ? user.get('name') : '' %></h4>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to remove <center><h2 class="well"><%= user ? user.get('name') : '' %>?</h2> </center> 
+                  <br>
+                  <%= user ? user.get('identifier') : '' %>  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+                  <button type="button" id="delete-user" class="btn btn-danger delete"><i class="fa fa-trash-o"></i> Remove</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+      </script>
+  	<!-- /EDIT-CREATE USER TEMPLATE -->
+
+  	<!-- EDIT TERMINAL TEMPLATE -->
+  	<script type="text/template" id="edit-terminal-template">
+
+        <div class="panel panel-danger">
+          <div class="panel-heading">
+            
+            <div class="row">
+              <div class="col-md-4 col-sm-4">
+                <a href="#/adminTerminals">
+                  <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
+                  </button>
+                </a>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
-                <button type="button" id="unassign-terminal" class="btn btn-danger delete"><i class="fa fa-unlink"></i> Unassign</button>
+
+              <div class="col-md-4 col-sm-4">
+                <h2 class="panel-title"> <center> <%= terminal ? 'Edit Terminal: '+terminal.get('hostName') : '' %> </center> </h2>
               </div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-    </script>
-	<!-- /EDIT TERMINAL TEMPLATE -->
+
+              <div class="col-md-4 col-sm-4">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel-body">
+            <form class="form-horizontal edit-terminal-form well" role="form">
+
+              
+   
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+
+                  <div class="form-group">
+                    <label for="organization" class="col-sm-4 control-label">Organization</label>
+                    <div class="col-sm-8">
+                      <select class="form-control">
+                        <div class="listScroll"> 
+                          <% _.each(organizations, function(organization) { %>
+
+                            <option id="organization" value="<%= organization.get('identifier') %>"><%= organization.get('name') %></option>
+
+                          <% }); %>
+                        </div>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="name" class="col-sm-4 control-label">Name</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" name="hostName" value="<%= terminal ? terminal.get('hostName') : '' %>" >
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="description" class="col-sm-4 control-label">Description</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" name="description" value="<%= terminal ? terminal.get('description') : '' %>"  >
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+
+                  <div class="form-group">
+                    <label for="ipAddress" class="col-sm-4 control-label">IP address</label>
+                    <div class="col-sm-8">
+                      <input type="ipAddress" class="form-control" name="ipAddress" value="<%= terminal ? terminal.get('ipAddress') : '' %>"  readonly>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="mac" class="col-sm-4 control-label">MAC</label>
+                    <div class="col-sm-8">
+                      <input type="mac" class="form-control" name="mac" value="<%= terminal ? terminal.get('mac') : '' %>"  readonly>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="ifaceSpeed" class="col-sm-4 control-label">Interface</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" name="ifaceSpeed" value="<%= terminal ? terminal.get('ifaceSpeed') : '' %>"  readonly>
+                    </div>
+                  </div>
+
+                  
+                </div>
+              </div>
+
+              <div class="row">    
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                  <div class="form-group">
+                    <center>
+                      <button type="submit" class="btn btn-lg <%= terminal ? 'btn-warning' : 'btn-success' %> "><%= terminal ? '<i class="fa fa-edit"></i> Save changes' : ''%></button>
+                      <%= terminal ? '<a data-toggle="modal" href="#confirmationTerminal" class="btn btn-lg btn-danger"><i class="fa fa-unlink"></i> Unassign Terminal </a>' : '' %> 
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </form>  
+          </div>
+        </div>
+
+        <!-- UNASSIGN TERMINAL Modal -->
+          <div class="modal fade" id="confirmationTerminal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">Unassign terminal <%= terminal.get('hostName') %> from <%= terminal.get('hostName') %></h4>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to unassign terminal:<center><h2 class="well"><%= terminal ? terminal.get('hostName') : '' %></h2></center> <center>from: <h4 class="well"><%= terminal ? terminal.get('orgId') : '' %>?</h4></center> 
+                  <br>
+                  <%= terminal ? terminal.get('identifier') : '' %>  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-reply"></i> Cancel</button>
+                  <button type="button" id="unassign-terminal" class="btn btn-danger delete"><i class="fa fa-unlink"></i> Unassign</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+      </script>
+  	<!-- /EDIT TERMINAL TEMPLATE -->
 	<!-- /SHARED TEMPLATES -->
 
 	<!-- /TEMPLATES -->
