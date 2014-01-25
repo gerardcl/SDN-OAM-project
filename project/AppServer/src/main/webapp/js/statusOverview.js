@@ -351,7 +351,7 @@ function createTopologyGraph(){
 	.links(links)
 	.size([width, height])
 	.linkDistance(110)
-	.charge(-1200)
+	.charge(-2200)
 	.on("tick", tick)
 	.start();
 
