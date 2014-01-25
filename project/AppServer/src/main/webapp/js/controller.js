@@ -748,6 +748,7 @@ function copyTo(obj) {
 	// USER EDIT view
 	var EditUserView = Backbone.View.extend({
 		el: '.page',
+		selectedOrg: '',
 		render: function (options) {
 			console.log(options);
 			var that = this;
@@ -760,6 +761,7 @@ function copyTo(obj) {
 				that.user.fetch({
 					success: function (user){
 						console.log('orgId inside success: '+options.orgId);
+						selectedOrg = options.orgId;
 						var template = _.template($('#edit-user-template').html(), {user: user, orgId: options.orgId});
 						that.$el.html(template);
 					}
@@ -807,11 +809,16 @@ function copyTo(obj) {
 		deleteUser: function (ev){
 			this.user.destroy({
 				success: function () {
+					router.navigate('adminUsers/'+selectedOrg, {trigger: true});
 					$('#confirmationUser').modal('hide');
-					router.navigate('adminOrgs/', {trigger: true});
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
 				},
 				error: function () {
+					router.navigate('adminUsers/'+selectedOrg, {trigger: true});
 					$('#confirmationUser').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
 				}
 			});
 			return false;
