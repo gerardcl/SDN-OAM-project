@@ -27,17 +27,25 @@ $(document).ready(function(){
 	//$('#preview').after(new Spinner(opts).spin().el);
 	//var spinner = new Spinner(opts).spin(target);
 
-//	var spinner = new Spinner(opts).spin();
-//	$(".body").appendChild(spinner.el);
+	//	var spinner = new Spinner(opts).spin();
+	//	$(".body").appendChild(spinner.el);
 	//initStatusOverview();
 
-	//ONCE REST LOADED THEN OPEN WEBSOCKET FOR REALTIME CHANGES
 });
 
 function initStatusOverview(){
+		
 	$("#statistics").hide();
 	createTopologyGraph();
 	initializeControllerStats();
+	
+	
+	
+	
+	//HIDE LOADING MODAL
+	
+	
+	
 }
 
 //TOPOLOGY GRAPH
@@ -65,6 +73,13 @@ function stopTopoWeatherMapRefresh(){
 }
 
 function getTopoWeatherMap(){
+	
+	
+	
+	//SHOW LOADING MODAL
+	
+	
+	
 	$.ajaxSetup({
 		async : false
 	}); //execute synchronously
@@ -1228,6 +1243,7 @@ function getControllerData(key){
 function initializeControllerStats()
 {
 	createGauges();
+	updateGauges();
 	refreshIntervalController = setInterval(updateGauges, 3000);
 }
 

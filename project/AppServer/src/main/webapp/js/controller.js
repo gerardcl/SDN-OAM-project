@@ -298,7 +298,7 @@ function fetchTerminals(obj){
 
 	//ALARMS
 
-		
+
 
 	var AdminAlarmsView = Backbone.View.extend({
 		el: '.page',
@@ -798,6 +798,7 @@ function fetchTerminals(obj){
 	var EditUserView = Backbone.View.extend({
 		el: '.page',
 		selectedOrg: '',
+		selectedUser: '',
 		render: function (options) {
 			console.log(options);
 			var that = this;
@@ -811,6 +812,7 @@ function fetchTerminals(obj){
 					success: function (user){
 						console.log('orgId inside success: '+options.orgId);
 						selectedOrg = options.orgId;
+						selectedUser = options.identifier;
 						var template = _.template($('#edit-user-template').html(), {user: user, orgId: options.orgId});
 						that.$el.html(template);
 					}
@@ -856,20 +858,24 @@ function fetchTerminals(obj){
 			return false;
 		},
 		deleteUser: function (ev){
-			this.user.destroy({
-				success: function () {
-					router.navigate('adminUsers/'+selectedOrg, {trigger: true});
-					$('#confirmationUser').modal('hide');
-					$('body').removeClass('modal-open');
-					$('.modal-backdrop').remove();
-				},
-				error: function () {
-					router.navigate('adminUsers/'+selectedOrg, {trigger: true});
-					$('#confirmationUser').modal('hide');
-					$('body').removeClass('modal-open');
-					$('.modal-backdrop').remove();
-				}
-			});
+			if(selectedUser == loginUser){
+				alert("You are not able to delete your organization! are you all right?");
+			}else{		
+				this.user.destroy({
+					success: function () {
+						router.navigate('adminUsers/'+selectedOrg, {trigger: true});
+						$('#confirmationUser').modal('hide');
+						$('body').removeClass('modal-open');
+						$('.modal-backdrop').remove();
+					},
+					error: function () {
+						router.navigate('adminUsers/'+selectedOrg, {trigger: true});
+						$('#confirmationUser').modal('hide');
+						$('body').removeClass('modal-open');
+						$('.modal-backdrop').remove();
+					}
+				});
+			}
 			return false;
 		}
 	});
@@ -995,7 +1001,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		initStatusOverview();
-		
+
 	});
 
 	router.on('route:adminAlarms', function() {

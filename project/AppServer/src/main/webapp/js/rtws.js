@@ -159,18 +159,21 @@ function checkAlarm(){
 			if(filterTerminalEvent()) break;
 			alarmCounter++;
 			alarmsHistory.push(newMessage);
+			setAlarmView();
 			break;
 		case msgLink:
 			console.log("NEW LINK ALARM");
 			if(filterLinkEvent()) break;
 			alarmCounter++;
 			alarmsHistory.push(newMessage);
+			setAlarmView();
 			break;
 		case msgFlow:
 			console.log("NEW FLOW ALARM");
 			if(filterFlowEvent()) break;
 			alarmCounter++;
 			alarmsHistory.push(newMessage);
+			setAlarmView();
 			break;
 		default: console.log('NO MESSAGE RECOGNIZED.....');
 		break;
