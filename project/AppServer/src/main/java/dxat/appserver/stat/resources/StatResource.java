@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import dxat.appserver.flows.FlowManager;
 import dxat.appserver.flows.pojos.DeployedFlow;
 import dxat.appserver.stat.StatManager;
+import dxat.appserver.stat.pojos.AggregatedFlow;
 import dxat.appserver.stat.pojos.MatrixStat;
 import dxat.appserver.stat.pojos.StatResponse;
 
@@ -133,29 +134,29 @@ public class StatResource {
 	@Path("/trafficmatrix/")
 	@Produces(MediaType.MATRIXSTATS)
 	public MatrixStat getFlowStat() throws IOException {
-		HashMap<AgregatedFlow, AgregatedFlow> agregatedFlows = new HashMap<AgregatedFlow, AgregatedFlow>();
+		HashMap<AggregatedFlow, AggregatedFlow> aggregatedFlows = new HashMap<AggregatedFlow, AggregatedFlow>();
 
 		List<DeployedFlow> deployedFlowList = FlowManager.getInstance().getFlows().getFlows();
 		for (DeployedFlow deployedFlow : deployedFlowList) {
-			AgregatedFlow agregatedFlow = new AgregatedFlow();
+			AggregatedFlow agregatedFlow = new AggregatedFlow();
 			agregatedFlow.setForward(deployedFlow);
-			if (!agregatedFlows.containsKey(agregatedFlow)) {
-				agregatedFlows.put(agregatedFlow,agregatedFlow);
+			if (!aggregatedFlows.containsKey(agregatedFlow)) {
+				aggregatedFlows.put(agregatedFlow,agregatedFlow);
 			}
-			agregatedFlows.get(agregatedFlow).aggregate(statMngr.getInstance().getFlowStat(deployedFlow.getFlowId()+".forward", "byteCount", "AVERAGE", "second").getValueAxxis()[0]);
+			aggregatedFlows.get(agregatedFlow).aggregate(statMngr.getInstance().getFlowStat(deployedFlow.getFlowId()+".forward", "byteCount", "AVERAGE", "second").getValueAxxis()[0]);
 			
-			agregatedFlow = new AgregatedFlow();
+			agregatedFlow = new AggregatedFlow();
 			agregatedFlow.setBackward(deployedFlow);
-			if (!agregatedFlows.containsKey(agregatedFlow)) {
-				agregatedFlows.put(agregatedFlow,agregatedFlow);
+			if (!aggregatedFlows.containsKey(agregatedFlow)) {
+				aggregatedFlows.put(agregatedFlow,agregatedFlow);
 			}
-			agregatedFlows.get(agregatedFlow).aggregate(statMngr.getInstance().getFlowStat(deployedFlow.getFlowId()+".backward", "byteCount", "AVERAGE", "second").getValueAxxis()[0]);
+			aggregatedFlows.get(agregatedFlow).aggregate(statMngr.getInstance().getFlowStat(deployedFlow.getFlowId()+".backward", "byteCount", "AVERAGE", "second").getValueAxxis()[0]);
 			
 		}
-		List<AgregatedFlow> agregatedFlowList = new ArrayList<AgregatedFlow>(agregatedFlows.values());
-		Collections.sort(agregatedFlowList);
+		List<AggregatedFlow> aggregatedFlowList = new ArrayList<AggregatedFlow>(aggregatedFlows.values());
+		Collections.sort(aggregatedFlowList);
 		MatrixStat matrix = new MatrixStat();
-		matrix.setMatrix(agregatedFlowList);
+		matrix.setMatrix(aggregatedFlowList);
 		
 		return matrix;
 	}

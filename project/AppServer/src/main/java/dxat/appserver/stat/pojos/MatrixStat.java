@@ -4,13 +4,13 @@ import java.util.List;
 
 public class MatrixStat {
 
-	private List<AgregatedFlow> matrix ;
+	private List<AggregatedFlow> matrix ;
 
-	public List<AgregatedFlow> getMatrix() {
+	public List<AggregatedFlow> getMatrix() {
 		return matrix;
 	}
 
-	public void setMatrix(List<AgregatedFlow> matrix) {
+	public void setMatrix(List<AggregatedFlow> matrix) {
 		this.matrix = matrix;
 	}
 

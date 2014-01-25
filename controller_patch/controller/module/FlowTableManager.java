@@ -175,11 +175,7 @@ LinkedHashSet<Link> linkedHashSet;
                 fm.setPriority(Short.MAX_VALUE);
                 StaticFlowEntries.initDefaultFlowMod(fm, entryName);
 
-                //fm.setActions()
-
                 LoadBalancer.parseActionString(fm, actionString);
-
-                fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
 
                 OFMatch ofMatch = new OFMatch();
                 try {
@@ -218,8 +214,6 @@ LinkedHashSet<Link> linkedHashSet;
                 StaticFlowEntries.initDefaultFlowMod(fm, entryName);
 
                 LoadBalancer.parseActionString(fm, actionString);
-
-                fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
 
                 ofMatch = new OFMatch();
                 try {

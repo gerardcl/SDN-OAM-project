@@ -85,9 +85,9 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
         } else if (updateStr.equals(UpdateOperation.SWITCH_UPDATED)) {
             controllerEvent.setEvent(LINK_UPDATED);
         } else if (updateStr.equals(UpdateOperation.TUNNEL_PORT_ADDED)) {
-            controllerEvent.setEvent(TUNEL_PORT_ADDED);
+            controllerEvent.setEvent(TUNNEL_PORT_ADDED);
         } else if (updateStr.equals(UpdateOperation.TUNNEL_PORT_REMOVED)) {
-            controllerEvent.setEvent(TUNEL_PORT_REMOVED);
+            controllerEvent.setEvent(TUNNEL_PORT_ADDED);
         } else {
             controllerEvent.setEvent(LINK_UPDATED);
             if (!enabled)

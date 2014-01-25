@@ -83,7 +83,6 @@ public class FlowManager {
                 eventStr.equals(IFlowEvents.PUSH_FLOW_UNREACHABLE_TERMINALS) ||
                 eventStr.equals(IFlowEvents.DELETE_FLOW_FAILED) ||
                 eventStr.equals(IFlowEvents.REROUTE_FLOW_DST_TERMINAL_NOT_FOUND) ||
-                eventStr.equals(IFlowEvents.REROUTE_FLOW_FLOW_ALREADY_EXIST) ||
                 eventStr.equals(IFlowEvents.REROUTE_FLOW_ILLEGAL_FLOW_ENTRY) ||
                 eventStr.equals(IFlowEvents.REROUTE_FLOW_SRC_TERMINAL_NOT_FOUND) ||
                 eventStr.equals(IFlowEvents.REROUTE_FLOW_UNREACHABLE_TERMINALS)) {
@@ -121,7 +120,7 @@ public class FlowManager {
                 update.setMessage("The flow with id '" + deployedFlow.getFlowId() + "' has been deleted successfully.");
             }
             flows.clear();
-        } else if (eventStr.equals(IFlowEvents.FLOW_COLLECTION)) {
+        } else if (eventStr.equals(IFlowEvents.FLOWS_COLLECTION)) {
             DeployedFlowCollection deployedFlowCollection = new Gson().fromJson(controllerEvent.getObject(),
                     DeployedFlowCollection.class);
             System.out.println("Flow collection: " + controllerEvent.getObject());

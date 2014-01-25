@@ -26,11 +26,11 @@ import net.floodlightcontroller.core.module.IFloodlightModule;
 import net.floodlightcontroller.core.module.IFloodlightService;
 import net.floodlightcontroller.counter.ICounterStoreService;
 import net.floodlightcontroller.devicemanager.IDeviceService;
-import net.floodlightcontroller.packet.Ethernet;
 import net.floodlightcontroller.routing.ForwardingBase;
 import net.floodlightcontroller.routing.IRoutingDecision;
 import net.floodlightcontroller.routing.IRoutingService;
 import net.floodlightcontroller.topology.ITopologyService;
+import net.floodlightcontroller.topology.NodePortTuple;
 import org.openflow.protocol.*;
 import org.openflow.protocol.action.OFAction;
 import org.openflow.protocol.action.OFActionOutput;
@@ -46,33 +46,33 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
     @Override
     public Command processPacketInMessage(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision,
                                           FloodlightContext cntx) {
-        Ethernet eth = IFloodlightProviderService.bcStore.get(cntx,
-                IFloodlightProviderService.CONTEXT_PI_PAYLOAD);
-
-        OFMatch match = new OFMatch();
-        match.loadFromPacket(pi.getPacketData(), (short) 0);
-
-        // Filter (ARP)
-        if (match.getDataLayerType() == 0x806) {
-            doFlood(sw, pi, cntx);
-            return Command.CONTINUE;
-        }
-
-
         OFMatch ofMatch = new OFMatch();
         ofMatch.loadFromPacket(pi.getPacketData(), pi.getInPort());
-        pushDropMatch(sw, ofMatch, cntx);
+
+        // Filter (ARP)
+        if (ofMatch.getDataLayerType() == 0x806) {
+            NodePortTuple attachmentPoint = DxatAppModule.getInstance().getDeviceListener().getAttachmentPoint(ofMatch.getNetworkDestination());
+            if (attachmentPoint != null) {
+                System.out.println("Doing ARP Smart forwarding Attachment point: " + attachmentPoint.toString());
+                doSmartForward(attachmentPoint, pi, cntx);
+            } else {
+                doFlood(sw, pi, cntx);
+            }
+            return Command.CONTINUE;
+        } else {
+            // Push Drop entry for this entry
+            pushDropMatch(sw, ofMatch, cntx);
+        }
 
         return Command.CONTINUE;
     }
 
     private void pushDropMatch(IOFSwitch sw, OFMatch match, FloodlightContext cntx) {
-        System.out.println("Pushing drop entry with identifier '" + sw.getStringId() + "." + match.getInputPort() + "'.");
+        System.out.println("Pushing drop entry with match: '" + match.toString() + "'.");
 
         match = new OFMatch();
 
         // Create flow-mod based on packet-in and src-switch
-        //match.setInputPort(port);
         OFFlowMod fm = (OFFlowMod) floodlightProvider.getOFMessageFactory().getMessage(OFType.FLOW_MOD);
         List<OFAction> actions = new ArrayList<OFAction>(); // no actions = drop
         fm.setCookie(0)
@@ -99,14 +99,52 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
      * @param pi   The OFPacketIn that came to the switch
      * @param cntx The FloodlightContext associated with this OFPacketIn
      */
+    /**
+     * Creates a OFPacketOut with the OFPacketIn data that is flooded on all ports unless
+     * the port is blocked, in which case the packet will be dropped.
+     *
+     * @param attachmentPoint Attachment point of the ARP message destination
+     * @param pi Packet in
+     * @param cntx Floodlight context
+     */
+    protected void doSmartForward(NodePortTuple attachmentPoint, OFPacketIn pi, FloodlightContext cntx) {
+        IOFSwitch sw = DxatAppModule.getInstance().getSwitchService().getSwitch(attachmentPoint.getNodeId());
+
+        // Set Action to flood
+        OFPacketOut po =
+                (OFPacketOut) floodlightProvider.getOFMessageFactory().getMessage(OFType.PACKET_OUT);
+        List<OFAction> actions = new ArrayList<OFAction>();
+        actions.add(new OFActionOutput(attachmentPoint.getPortId(), (short) 0xFFFF));
+
+        po.setActions(actions);
+        po.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
+
+        // set buffer-id, in-port and packet-data based on packet-in
+        short poLength = (short) (po.getActionsLength() + OFPacketOut.MINIMUM_LENGTH);
+        po.setBufferId(OFPacketOut.BUFFER_ID_NONE);
+        po.setInPort(pi.getInPort());
+        byte[] packetData = pi.getPacketData();
+        poLength += packetData.length;
+        po.setPacketData(packetData);
+        po.setLength(poLength);
+
+        try {
+            messageDamper.write(sw, po, cntx);
+        } catch (IOException ignored) {
+        }
+    }
+
+    /**
+     * Creates a OFPacketOut with the OFPacketIn data that is flooded on all ports unless
+     * the port is blocked, in which case the packet will be dropped.
+     *
+     * @param sw   The switch that receives the OFPacketIn
+     * @param pi   The OFPacketIn that came to the switch
+     * @param cntx The FloodlightContext associated with this OFPacketIn
+     */
     protected void doFlood(IOFSwitch sw, OFPacketIn pi, FloodlightContext cntx) {
-        if (topology.isIncomingBroadcastAllowed(sw.getId(),
-                pi.getInPort()) == false) {
-            if (log.isTraceEnabled()) {
-                log.trace("doFlood, drop broadcast packet, pi={}, " +
-                        "from a blocked port, srcSwitch=[{},{}], linkInfo={}",
-                        new Object[]{pi, sw.getId(), pi.getInPort()});
-            }
+        if (!topology.isIncomingBroadcastAllowed(sw.getId(),
+                pi.getInPort())) {
             return;
         }
 
@@ -135,10 +173,9 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
 
         try {
             messageDamper.write(sw, po, cntx);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
 
-        return;
     }
 
     // IFloodlightModule methods

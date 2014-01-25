@@ -122,8 +122,17 @@ public class DeviceListener implements IDeviceListener, ITerminalEvents {
      * @return It return a NodePortTuple if the terminal has been found or a null pointer if has not been found.
      */
     public NodePortTuple getAttachmentPoint(String ipAddr) {
+        return getAttachmentPoint(IPv4.toIPv4Address(ipAddr));
+    }
+
+    /**
+     * This method is for get the attachment point of a terminal. It has been programed for the flow push manager.
+     *
+     * @param intAddr The IP v4 address of the desired terminal (or network device) in integer format notation.
+     * @return It return a NodePortTuple if the terminal has been found or a null pointer if has not been found.
+     */
+    public NodePortTuple getAttachmentPoint(int intAddr) {
         NodePortTuple attachmentPoint = null;
-        Integer intAddr = IPv4.toIPv4Address(ipAddr);
 
         @SuppressWarnings("unchecked")
         Collection<IDevice> devices = (Collection<IDevice>) DxatAppModule
