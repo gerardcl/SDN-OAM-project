@@ -126,13 +126,13 @@ public class StatResource {
 				granularity);
 	}
 
-	/*****************************************************************************
-	 * 
+	/*
+	 * @return the traffic matrix as a lists of ip src, ip dst and instant value 
 	 * 
 	 */
 
 	@GET
-	@Path("/traficmatrix/")
+	@Path("/trafficmatrix/")
 	@Produces(MediaType.MATRIXSTATS)
 	public MatrixStat getFlowStat() throws IOException {
 		HashMap<AgregatedFlow, AgregatedFlow> agregatedFlows = new HashMap<AgregatedFlow, AgregatedFlow>();
