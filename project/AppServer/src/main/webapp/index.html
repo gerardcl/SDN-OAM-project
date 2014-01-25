@@ -132,6 +132,7 @@
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
               <li class="<% if(btnHL==1){%> active <%}%>"><a href="#/adminOverview"><i class="fa fa-globe"></i> Global State</a></li>
+              <li class="<% if(btnHL==7){%> active <%}%>"><a href="#/adminAlarms"><i class="fa fa-bell"></i> Alarms</a></li>
               <li class="<% if(btnHL==2){%> active <%}%>"><a href="#/adminOrgs"><i class="fa fa-briefcase"></i> Organizations</a></li>
               <li class="<% if(btnHL==3){%> active <%}%>"><a href="#/adminFlows"><i class="fa fa-link"></i> Flows</a></li>
               <li class="<% if(btnHL==4){%> active <%}%>"><a href="#/adminTerminals"><i class="fa fa-desktop"></i> Terminals</a></li>
@@ -206,15 +207,15 @@
                 <div class="modal-body">
                    
 
-                  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                  <div id="carousel-aboutUs" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
                     <ol class="carousel-indicators">
-                      <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                      <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                      <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                      <li data-target="#carousel-example-generic" data-slide-to="3"></li>
-                      <li data-target="#carousel-example-generic" data-slide-to="4"></li>
-                      <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+                      <li data-target="#carousel-aboutUs" data-slide-to="0" class="active"></li>
+                      <li data-target="#carousel-aboutUs" data-slide-to="1"></li>
+                      <li data-target="#carousel-aboutUs" data-slide-to="2"></li>
+                      <li data-target="#carousel-aboutUs" data-slide-to="3"></li>
+                      <li data-target="#carousel-aboutUs" data-slide-to="4"></li>
+                      <li data-target="#carousel-aboutUs" data-slide-to="5"></li>
                     </ol>
 
                     <!-- Wrapper for slides -->
@@ -280,10 +281,10 @@
                     </div>
 
                     <!-- Controls -->
-                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                    <a class="left carousel-control" href="#carousel-aboutUs" data-slide="prev">
                       <span class="fa fa-hand-o-left"></span>
                     </a>
-                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                    <a class="right carousel-control" href="#carousel-aboutUs" data-slide="next">
                       <span class="fa fa-hand-o-right"></span>
                     </a>
                   </div>
@@ -348,7 +349,7 @@
 	<!-- ADMIN OVERVIEW VIEW TEMPLATE -->
 	<script type="text/template" id="admin-overview-template">
 
-                  <div class="row"> <!-- TOPOLOGY and CONTROLLER ROW -->
+              <div class="row"> <!-- TOPOLOGY and CONTROLLER ROW -->
 
                   <!-- TOPOLOGY col -->
                   <div class="col-lg-9 col-md-9 col-sm-9">
@@ -383,6 +384,10 @@
                   </div>
                   <!-- /CONTROLLER col -->
               </div><!-- /TOPOLOGY and CONTROLLER ROW -->
+
+              <div id="advisementClick">
+                <center> <h1> <p class="text-muted"> Click a switch from the graph above </p> <h1> </center>
+              </div>
 
   			       <div id="statistics"> <!-- STATISTICS BIG COL -->
                 <div class="row"> <!-- STATISTICS ROW -->
@@ -496,6 +501,41 @@
         </script>
 	<!-- /GLOBAL VIEW TEMPLATE -->
 	<!-- /ADMIN OVERVIEW VIEW -->
+
+  <!-- ALARMS VIEW -->
+  <script type="text/template" id="admin-alarms-template">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <i class="fa fa-bell"></i> Alarms</a>
+      </div>
+      <div class="panel-body">
+        <div id="GS-alerts">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped tablesorter">
+              <thead>
+                <tr>
+                  <th>Alert <i class="fa fa-sort"></i></th>
+                  <th>Date <i class="fa fa-sort"></i></th>
+                  <th>Time <i class="fa fa-sort"></i></th>
+                  <th>Details <i class="fa fa-sort"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="label label-success">Flow succeeded</span></td>
+                  <td>11/21/2013</td>
+                  <td>3:29 PM</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>    
+
+      </div>
+    </div>
+  </script>
+  <!-- /ALARMS VIEW -->
 
 	<!-- ORGANIZATIONS VIEW -->
 	<!-- organizations-list-template -->

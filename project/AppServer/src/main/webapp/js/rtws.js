@@ -101,23 +101,22 @@ function filterLinkEvent(){
 
 //SET ALARM STATS
 function getLIsucceeded(alarm){
-	return '<li><a href="#"><span class="label label-success"> '+alarm+' </span></a></li>';
+	return '<li><a href="#/adminAlarms"><span class="label label-success"> '+alarm+' </span></a></li>';
 }
 function getLIinfo(alarm){
-	return '<li><a href="#"><span class="label label-info"> '+alarm+' </span></a></li>';
+	return '<li><a href="#/adminAlarms"><span class="label label-info"> '+alarm+' </span></a></li>';
 }
 function getLIwarning(alarm){
-	return '<li><a href="#"><span class="label label-warning"> '+alarm+' </span></a></li>';
+	return '<li><a href="#/adminAlarms"><span class="label label-warning"> '+alarm+' </span></a></li>';
 }
 function getLIdanger(alarm){
-	return '<li><a href="#"><span class="label label-danger"> '+alarm+' </span></a></li>';
+	return '<li><a href="#/adminAlarms"><span class="label label-danger"> '+alarm+' </span></a></li>';
 }
 
 function setAlarmView(){
-	//#alarmsDropDown
-	//#alarmsList
-	
+
 	//TODO check view properly
+	
 	var dropDoWn ="";
 	if(getalarmCounter()>0) dropDoWn = '<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:red"><i class="fa fa-bell"></i> Alarms <span class="badge" > '+getalarmCounter()+' </span> <b class="caret"></b></a><ul class="dropdown-menu" id="alarmsList"> </ul>';
 	else dropDoWn = '<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> Alarms <b class="caret"></b></a><ul class="dropdown-menu" id="alarmsList"> </ul>';
@@ -128,17 +127,14 @@ function setAlarmView(){
 	console.log(acount);
 	//$("#alarmsDropDown").html(getLIsucceeded());
 	var l=0;
-	$("#alarmsList").append('<li><a href="#/adminOverview#alarmsAll">View All</a></li><li class="divider"></li>');
+	if(getalarmCounter()>0) $("#alarmsList").append('<li><a href="#/adminAlarms">View All</a></li><li class="divider"></li>');
+	else $("#alarmsList").append('<li><a href="#/adminAlarms">View All</a></li>');
 	for(l=alarmsHistory.length-1;l>=alarmsHistory.length-acount;l--){
 		$("#alarmsList").append(getLIsucceeded(alarmsHistory[l].event));	
 	}
 }
 function resetAlarmView(){
 	alarmCounter=0;
-    var dropDoWn = '<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> Alarms <b class="caret"></b></a><ul class="dropdown-menu" id="alarmsList"><li><a href="#/adminOverview#alarmsAll">View All</a></li> </ul>';
-    $("#alarmsDropDown").html(dropDoWn);
-	$("#alarmsList").html('<li><a href="#/adminOverview#alarmsAll">View All</a></li>');
-
 }
 
 

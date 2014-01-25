@@ -455,7 +455,9 @@ function createTopologyGraph(){
 
 	node.on("click", function(d) {
 		StopSwitchStats();
-
+		
+		$('#advisementClick').hide();
+		
 		console.log("node " + d.swId + " was clicked");
 		var switchInfo = "<h4> Switch info</h4>";
 		switchInfo += "<b>ID:</b>  "+d.swId+"<p>";
@@ -1042,7 +1044,6 @@ function bySecondGraph(){
 function loadDefaultStatValues(){
 	clearInterval(refreshIntervalIdPort);
 	clearInterval(refreshIntervalController);
-
 	$('#textgraph').show();
 	$('#statisticsGraph').hide();
 	selectedPort = "";
@@ -1060,6 +1061,7 @@ function printPortGraph(){
 	clearInterval(refreshIntervalController);
 
 	if(selectedPort != ""){
+		$('#advisementClick').hide();
 		$('#textgraph').hide();
 		$('#statisticsGraph').show();
 		console.log("PORT STATS");

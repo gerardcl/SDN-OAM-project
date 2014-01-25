@@ -279,9 +279,6 @@ function fetchTerminals(obj){
 		el: '.page',
 		render: function () {
 			var that = this;
-//			var oamSDNloggedtext = $('#oamSDNlogged').text();
-//			var res = oamSDNloggedtext.split('| ');
-//			loginOrg = res[1];
 			var thesession = getSession();
 			console.log(thesession);
 			loginOrg = session.orgId;
@@ -298,6 +295,23 @@ function fetchTerminals(obj){
 
 	var adminOverviewView = new AdminOverviewView();
 	// /GLOBAL VIEW #admin-overview-template
+
+	//ALARMS
+
+		
+
+	var AdminAlarmsView = Backbone.View.extend({
+		el: '.page',
+		render: function () {
+			var that = this;
+			var template = _.template($('#admin-alarms-template').html());
+			that.$el.html(template);
+		}
+	});
+
+	var adminAlarmsView = new AdminAlarmsView();
+
+	// /ALARMS
 
 	//ORGANIZATIONS
 
@@ -935,6 +949,7 @@ function fetchTerminals(obj){
 			"": "login", //LOGIN view
 			//ADMIN ROUTES
 			"adminOverview" : "adminOverview", //Admin First View
+			"adminAlarms" : "adminAlarms", //Admin ALARMS
 			"adminOrgs": "adminOrgs", //Organizations list
 			"adminOrgs/:identifier": "orgData", //Org informtion
 			"newOrg": "editOrg", // CREATE Org
@@ -980,10 +995,18 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		initStatusOverview();
-		//SlimScroll HEIGHTS
-		$('#GS-alerts').slimScroll({
-			height: '180px'
-		});
+		
+	});
+
+	router.on('route:adminAlarms', function() {
+		//resetAlarmView();
+		adminSidebarView.render({btnHL: 7});
+		adminAlarmsView.render();
+		loadDefaultStatValues();
+		StopSwitchStats();
+		stopTopoWeatherMapRefresh();
+		resetAlarmView();
+		setAlarmView();
 	});
 
 	router.on('route:adminOrgs', function() {
