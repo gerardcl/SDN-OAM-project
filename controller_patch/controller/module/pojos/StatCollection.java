@@ -4,50 +4,50 @@ import java.util.List;
 
 public class StatCollection {
 
-	private long timeStamp;
-	private ControllerStat controllerStat;
-	private List<PortStat> portStatCollection;
-	private List<SwitchStat> switchStatCollection;
-	private List<FlowStat> flowStatCollection;
+    private long timeStamp;
+    private ControllerStat controllerStat;
+    private List<PortStat> portStatCollection;
+    private List<SwitchStat> switchStatCollection;
+    private List<FlowStat> flowStatCollection;
 
-	public List<FlowStat> getFlowStatCollection() {
-		return flowStatCollection;
-	}
+    public List<FlowStat> getFlowStatCollection() {
+        return flowStatCollection;
+    }
 
-	public void setFlowStatCollection(List<FlowStat> flowStatCollection) {
-		this.flowStatCollection = flowStatCollection;
-	}
+    public void setFlowStatCollection(List<FlowStat> flowStatCollection) {
+        this.flowStatCollection = flowStatCollection;
+    }
 
-	public long getTimeStamp() {
-		return timeStamp;
-	}
+    public long getTimeStamp() {
+        return timeStamp;
+    }
 
-	public void setTimeStamp(long timeStamp) {
-		this.timeStamp = timeStamp;
-	}
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
-	public ControllerStat getControllerStat() {
-		return controllerStat;
-	}
+    public ControllerStat getControllerStat() {
+        return controllerStat;
+    }
 
-	public void setControllerStat(ControllerStat controllerStat) {
-		this.controllerStat = controllerStat;
-	}
+    public void setControllerStat(ControllerStat controllerStat) {
+        this.controllerStat = controllerStat;
+    }
 
-	public List<PortStat> getPortStatCollection() {
-		return portStatCollection;
-	}
+    public List<PortStat> getPortStatCollection() {
+        return portStatCollection;
+    }
 
-	public void setPortStatCollection(List<PortStat> portStatCollection) {
-		this.portStatCollection = portStatCollection;
-	}
+    public void setPortStatCollection(List<PortStat> portStatCollection) {
+        this.portStatCollection = portStatCollection;
+    }
 
-	public List<SwitchStat> getSwitchStatCollection() {
-		return switchStatCollection;
-	}
+    public List<SwitchStat> getSwitchStatCollection() {
+        return switchStatCollection;
+    }
 
-	public void setSwitchStatCollection(List<SwitchStat> switchStatCollection) {
-		this.switchStatCollection = switchStatCollection;
-	}
+    public void setSwitchStatCollection(List<SwitchStat> switchStatCollection) {
+        this.switchStatCollection = switchStatCollection;
+    }
 
 }

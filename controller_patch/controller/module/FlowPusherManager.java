@@ -11,11 +11,9 @@ import dxat.controller.module.pojos.Flow;
 import net.floodlightcontroller.linkdiscovery.ILinkDiscoveryService;
 import net.floodlightcontroller.routing.Link;
 import net.floodlightcontroller.routing.Route;
-import net.floodlightcontroller.staticflowentry.IStaticFlowEntryPusherService;
 import net.floodlightcontroller.topology.Cluster;
 import net.floodlightcontroller.topology.NodePortTuple;
 import net.floodlightcontroller.topology.TopologyInstance;
-import org.openflow.protocol.OFFlowMod;
 import org.openflow.util.HexString;
 
 import java.util.*;
@@ -104,11 +102,6 @@ public class FlowPusherManager {
         System.out.println("--- DELETING FLOW '" + flow.getFlowId() + "' ---");
         Chronometer chronometer = new Chronometer();
         chronometer.tic();
-
-        IStaticFlowEntryPusherService flowPusherService = DxatAppModule
-                .getInstance().getFlowPusherService();
-        Map<String, Map<String, OFFlowMod>> switchFlowMap = flowPusherService
-                .getFlows();
 
         // Check if the flow exists
         if (!currentFlows.containsKey(flow.getFlowId()))

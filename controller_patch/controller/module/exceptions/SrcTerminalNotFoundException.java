@@ -7,6 +7,6 @@ import dxat.controller.module.pojos.Flow;
  */
 public class SrcTerminalNotFoundException extends Exception {
     public SrcTerminalNotFoundException(Flow flow) {
-        super("Source terminal with IPv4 '"+flow.getSrcIpAddr()+"' not found.");
+        super("Source terminal with IPv4 '" + flow.getSrcIpAddr() + "' not found.");
     }
 }

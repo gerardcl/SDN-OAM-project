@@ -30,13 +30,11 @@ public class DeviceListener implements IDeviceListener, ITerminalEvents {
 
     @Override
     public boolean isCallbackOrderingPrereq(String type, String name) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isCallbackOrderingPostreq(String type, String name) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -87,6 +85,7 @@ public class DeviceListener implements IDeviceListener, ITerminalEvents {
     @Override
     public void deviceVlanChanged(IDevice device) {
         ControllerEvent controllerEvent = new ControllerEvent();
+        controllerEvent.setEvent(TERMINAL_VLAN_CHANGED);
         controllerEvent.setTimestamp(new Date().getTime());
         controllerEvent.setObject(new Gson().toJson(PojoTranslator
                 .terminal2Pojo(device)));
@@ -145,7 +144,7 @@ public class DeviceListener implements IDeviceListener, ITerminalEvents {
                     if (attachments.length > 0) {
                         SwitchPort attachment = attachments[0];
                         attachmentPoint = new NodePortTuple(attachment.getSwitchDPID(), attachment.getPort());
-                        continue;
+                        break;
                     }
                 }
             }

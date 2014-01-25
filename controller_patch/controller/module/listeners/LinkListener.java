@@ -7,13 +7,12 @@ import dxat.controller.module.PojoTranslator;
 import dxat.controller.module.events.ILinkEvents;
 import dxat.controller.module.pojos.ControllerEvent;
 import dxat.controller.module.pojos.LinkCollection;
-import dxat.controller.module.pojos.TranferLink;
+import dxat.controller.module.pojos.TransferLink;
 import net.floodlightcontroller.linkdiscovery.ILinkDiscoveryListener;
 import net.floodlightcontroller.linkdiscovery.ILinkDiscoveryService;
 import net.floodlightcontroller.linkdiscovery.LinkInfo;
 import net.floodlightcontroller.routing.Link;
 import net.floodlightcontroller.topology.NodePortTuple;
-import org.openflow.util.HexString;
 
 import java.util.*;
 
@@ -39,7 +38,7 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
 
         Set<Link> portLinks = linkService.getPortLinks().get(srcPort);
 
-        if (portLinks==null)
+        if (portLinks == null)
             return null;
 
         if (portLinks.contains(link))
@@ -58,7 +57,7 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
         // Check if the link is available
         boolean enabled = true;
         Link link = getLinkFromUpdate(update);
-        if (link == null){
+        if (link == null) {
             enabled = false;
             link = new Link();
             link.setSrcPort(update.getSrcPort());
@@ -70,24 +69,24 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
         ControllerEvent controllerEvent = new ControllerEvent();
         controllerEvent.setTimestamp(new Date().getTime());
         String updateStr = update.getOperation().toString();
-        TranferLink tLink = PojoTranslator.linkUpdate2Pojo(update, enabled);
-        if (updateStr.equals(UpdateOperation.LINK_REMOVED)) {
+        TransferLink tLink = PojoTranslator.linkUpdate2Pojo(update, enabled);
+        if (updateStr.equals(UpdateOperation.LINK_REMOVED.toString())) {
             controllerEvent.setEvent(LINK_REMOVED);
             DxatAppModule.getInstance().getFlowPusherManager().rerouteFlow(link);
-        } else if (updateStr.equals(UpdateOperation.LINK_UPDATED)) {
+        } else if (updateStr.equals(UpdateOperation.LINK_UPDATED.toString())) {
             controllerEvent.setEvent(LINK_UPDATED);
-        } else if (updateStr.equals(UpdateOperation.PORT_DOWN)) {
+        } else if (updateStr.equals(UpdateOperation.PORT_DOWN.toString())) {
             controllerEvent.setEvent(PORT_DOWN);
-        } else if (updateStr.equals(UpdateOperation.PORT_UP)) {
+        } else if (updateStr.equals(UpdateOperation.PORT_UP.toString())) {
             controllerEvent.setEvent(PORT_UP);
-        } else if (updateStr.equals(UpdateOperation.SWITCH_REMOVED)) {
+        } else if (updateStr.equals(UpdateOperation.SWITCH_REMOVED.toString())) {
             controllerEvent.setEvent(SWITCH_REMOVED);
-        } else if (updateStr.equals(UpdateOperation.SWITCH_UPDATED)) {
+        } else if (updateStr.equals(UpdateOperation.SWITCH_UPDATED.toString())) {
             controllerEvent.setEvent(LINK_UPDATED);
-        } else if (updateStr.equals(UpdateOperation.TUNNEL_PORT_ADDED)) {
+        } else if (updateStr.equals(UpdateOperation.TUNNEL_PORT_ADDED.toString())) {
             controllerEvent.setEvent(TUNNEL_PORT_ADDED);
-        } else if (updateStr.equals(UpdateOperation.TUNNEL_PORT_REMOVED)) {
-            controllerEvent.setEvent(TUNNEL_PORT_ADDED);
+        } else if (updateStr.equals(UpdateOperation.TUNNEL_PORT_REMOVED.toString())) {
+            controllerEvent.setEvent(TUNNEL_PORT_REMOVED);
         } else {
             controllerEvent.setEvent(LINK_UPDATED);
             if (!enabled)
@@ -107,11 +106,11 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
 
     public LinkCollection getAllLinkCollection() {
         LinkCollection linkCollection = new LinkCollection();
-        linkCollection.setLinks(new ArrayList<TranferLink>());
+        linkCollection.setLinks(new ArrayList<TransferLink>());
         Map<net.floodlightcontroller.routing.Link, LinkInfo> linksMap = linkService
                 .getLinks();
         for (net.floodlightcontroller.routing.Link ofLink : linksMap.keySet()) {
-            TranferLink link = PojoTranslator.link2Pojo(ofLink);
+            TransferLink link = PojoTranslator.link2Pojo(ofLink);
             linkCollection.getLinks().add(link);
         }
         return linkCollection;

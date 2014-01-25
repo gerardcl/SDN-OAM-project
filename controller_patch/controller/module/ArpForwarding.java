@@ -53,7 +53,7 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
         if (ofMatch.getDataLayerType() == 0x806) {
             NodePortTuple attachmentPoint = DxatAppModule.getInstance().getDeviceListener().getAttachmentPoint(ofMatch.getNetworkDestination());
             if (attachmentPoint != null) {
-                System.out.println("Doing ARP Smart forwarding Attachment point: " + attachmentPoint.toString());
+                System.out.println("Doing ARP Smart forwarding to Attachment point: " + attachmentPoint.toString());
                 doSmartForward(attachmentPoint, pi, cntx);
             } else {
                 doFlood(sw, pi, cntx);
@@ -104,8 +104,8 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
      * the port is blocked, in which case the packet will be dropped.
      *
      * @param attachmentPoint Attachment point of the ARP message destination
-     * @param pi Packet in
-     * @param cntx Floodlight context
+     * @param pi              Packet in
+     * @param cntx            Floodlight context
      */
     protected void doSmartForward(NodePortTuple attachmentPoint, OFPacketIn pi, FloodlightContext cntx) {
         IOFSwitch sw = DxatAppModule.getInstance().getSwitchService().getSwitch(attachmentPoint.getNodeId());

@@ -1,8 +1,5 @@
 package dxat.controller.module;
 
-/**
- * Created by xavier on 1/11/14.
- */
 public interface IServerRequests {
     public final static String LINKS_REQUEST = "LINKS_REQUEST";
     public final static String TERMINALS_REQUEST = "TERMINALS_REQUEST";

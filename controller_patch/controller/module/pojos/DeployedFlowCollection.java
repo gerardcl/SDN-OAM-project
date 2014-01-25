@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeployedFlowCollection {
-	private List<DeployedFlow> flows = null;
+    private List<DeployedFlow> flows = null;
 
-	public DeployedFlowCollection() {
-		flows = new ArrayList<DeployedFlow>();
-	}
+    public DeployedFlowCollection() {
+        flows = new ArrayList<DeployedFlow>();
+    }
 
-	public List<DeployedFlow> getFlows() {
-		return flows;
-	}
+    public List<DeployedFlow> getFlows() {
+        return flows;
+    }
 
-	public void setFlows(List<DeployedFlow> flows) {
-		this.flows = flows;
-	}
+    public void setFlows(List<DeployedFlow> flows) {
+        this.flows = flows;
+    }
 
 }

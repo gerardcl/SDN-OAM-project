@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkCollection {
-	private List<TranferLink> links;
+    private List<TransferLink> links;
 
-	public LinkCollection() {
-		links = new ArrayList<TranferLink>();
-	}
+    public LinkCollection() {
+        links = new ArrayList<TransferLink>();
+    }
 
-	public List<TranferLink> getLinks() {
-		return links;
-	}
+    public List<TransferLink> getLinks() {
+        return links;
+    }
 
-	public void setLinks(List<TranferLink> links) {
-		this.links = links;
-	}
+    public void setLinks(List<TransferLink> links) {
+        this.links = links;
+    }
 
 }
