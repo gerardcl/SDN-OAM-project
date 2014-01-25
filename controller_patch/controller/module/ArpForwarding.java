@@ -53,11 +53,42 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
         match.loadFromPacket(pi.getPacketData(), (short) 0);
 
         // Filter (ARP)
-        if (match.getDataLayerType() != 0x806)
-            return null;
+        if (match.getDataLayerType() == 0x806) {
+            doFlood(sw, pi, cntx);
+            return Command.CONTINUE;
+        }
 
-        doFlood(sw, pi, cntx);
+
+        OFMatch ofMatch = new OFMatch();
+        ofMatch.loadFromPacket(pi.getPacketData(), pi.getInPort());
+        pushDropMatch(sw, ofMatch, cntx);
+
         return Command.CONTINUE;
+    }
+
+    private void pushDropMatch(IOFSwitch sw, OFMatch match, FloodlightContext cntx) {
+        System.out.println("Pushing drop entry with identifier '" + sw.getStringId() + "." + match.getInputPort() + "'.");
+
+        match = new OFMatch();
+
+        // Create flow-mod based on packet-in and src-switch
+        //match.setInputPort(port);
+        OFFlowMod fm = (OFFlowMod) floodlightProvider.getOFMessageFactory().getMessage(OFType.FLOW_MOD);
+        List<OFAction> actions = new ArrayList<OFAction>(); // no actions = drop
+        fm.setCookie(0)
+                .setPriority((short) 1)
+                .setIdleTimeout((short) 5)
+                .setHardTimeout((short) 60)
+                .setBufferId(OFPacketOut.BUFFER_ID_NONE)
+                .setMatch(match)
+                .setActions(actions)
+                .setLengthU(OFFlowMod.MINIMUM_LENGTH);
+
+        try {
+            sw.write(fm, cntx);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

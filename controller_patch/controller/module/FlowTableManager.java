@@ -3,6 +3,7 @@ package dxat.controller.module;
 import dxat.controller.module.exceptions.IllegalFlowEntryException;
 import dxat.controller.module.pojos.Flow;
 import net.floodlightcontroller.core.IFloodlightProviderService;
+import net.floodlightcontroller.core.IOFSwitch;
 import net.floodlightcontroller.loadbalancer.LoadBalancer;
 import net.floodlightcontroller.routing.Link;
 import net.floodlightcontroller.routing.Route;
@@ -10,6 +11,9 @@ import net.floodlightcontroller.staticflowentry.IStaticFlowEntryPusherService;
 import net.floodlightcontroller.staticflowentry.StaticFlowEntries;
 import net.floodlightcontroller.topology.NodePortTuple;
 import org.openflow.protocol.*;
+import org.openflow.protocol.action.OFAction;
+import org.openflow.protocol.action.OFActionEnqueue;
+import org.openflow.protocol.action.OFActionType;
 import org.openflow.util.HexString;
 import org.openflow.util.U16;
 
@@ -27,7 +31,7 @@ public class FlowTableManager {
         flowCostMap = new HashMap<Link, HashMap<String, Integer>>();
     }
 
-    public void deleteAllEntries (){
+    public void deleteAllEntries() {
         // Delete all flow tables
         DxatAppModule.getInstance().getFlowPusherService().deleteAllFlows();
 
@@ -84,6 +88,13 @@ public class FlowTableManager {
         for (HashMap<String, Integer> flowHashMap : flowMapCollection) {
             flowHashMap.remove(flow.getFlowId());
         }
+    }
+
+    public List<String> getRelatedFlows(Link link) {
+        if (!flowCostMap.containsKey(link))
+            return null;
+
+        return new ArrayList<String>(flowCostMap.get(link).keySet());
     }
 
     public void pushFlowEntries(Route route, Flow flow) throws IllegalFlowEntryException {
@@ -150,11 +161,11 @@ public class FlowTableManager {
                 matchString += "in_port=" + port1;
 
                 String actionString = "output=" + port2;
-
+LinkedHashSet<Link> linkedHashSet;
                 OFFlowMod fm = (OFFlowMod) switchService.getOFMessageFactory()
                         .getMessage(OFType.FLOW_MOD);
 
-                fm.setIdleTimeout((short) 0); // infinite
+                fm.setIdleTimeout((short) 1); // infinite
                 fm.setHardTimeout((short) 0); // infinite
                 fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
                 fm.setCommand((short) 0);
@@ -163,6 +174,8 @@ public class FlowTableManager {
                 fm.setCookie((long) 0);
                 fm.setPriority(Short.MAX_VALUE);
                 StaticFlowEntries.initDefaultFlowMod(fm, entryName);
+
+                //fm.setActions()
 
                 LoadBalancer.parseActionString(fm, actionString);
 
@@ -219,81 +232,6 @@ public class FlowTableManager {
                 fm.setMatch(ofMatch);
                 flowPusherService.addFlow(entryName, fm, dpid);
 
-                // ARP Forward
-                /*entryName = dpid + "." + port1 + "." + port2 + ".arp";
-                if (!flowPusherService.getFlows(dpid).containsKey(entryName)) {
-                    matchString = "";
-                    matchString += "dl_type=" + 0x806 + ",";
-                    matchString += "in_port=" + port1;
-
-                    actionString = "output=" + port2;
-
-                    fm = (OFFlowMod) switchService.getOFMessageFactory()
-                            .getMessage(OFType.FLOW_MOD);
-
-                    fm.setIdleTimeout((short) 0); // infinite
-                    fm.setHardTimeout((short) 0); // infinite
-                    fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
-                    fm.setCommand((short) 0);
-                    fm.setFlags((short) 0);
-                    fm.setOutPort(OFPort.OFPP_NONE.getValue());
-                    fm.setCookie((long) 0);
-                    fm.setPriority(Short.MAX_VALUE);
-                    StaticFlowEntries.initDefaultFlowMod(fm, entryName);
-
-                    LoadBalancer.parseActionString(fm, actionString);
-
-                    fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
-
-                    ofMatch = new OFMatch();
-                    try {
-                        ofMatch.fromString(matchString);
-                    } catch (IllegalArgumentException e) {
-                        deleteFlowEntries(flow);
-                        throw new IllegalFlowEntryException(flow, dpid,
-                                matchString);
-                    }
-                    fm.setMatch(ofMatch);
-                    flowPusherService.addFlow(entryName, fm, dpid);
-                }
-
-                // ARP Backward
-                entryName = dpid + "." + port1 + "." + port2 + ".arp";
-                if (!flowPusherService.getFlows(dpid).containsKey(entryName)) {
-                    matchString = "";
-                    matchString += "dl_type=" + 0x806 + ",";
-                    matchString += "in_port=" + port2;
-
-                    actionString = "output=" + port1;
-
-                    fm = (OFFlowMod) switchService.getOFMessageFactory()
-                            .getMessage(OFType.FLOW_MOD);
-
-                    fm.setIdleTimeout((short) 0); // infinite
-                    fm.setHardTimeout((short) 0); // infinite
-                    fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
-                    fm.setCommand((short) 0);
-                    fm.setFlags((short) 0);
-                    fm.setOutPort(OFPort.OFPP_NONE.getValue());
-                    fm.setCookie((long) 0);
-                    fm.setPriority(Short.MAX_VALUE);
-                    StaticFlowEntries.initDefaultFlowMod(fm, entryName);
-
-                    LoadBalancer.parseActionString(fm, actionString);
-
-                    fm.setPriority(U16.t(LoadBalancer.LB_PRIORITY));
-
-                    ofMatch = new OFMatch();
-                    try {
-                        ofMatch.fromString(matchString);
-                    } catch (IllegalArgumentException e) {
-                        deleteFlowEntries(flow);
-                        throw new IllegalFlowEntryException(flow, dpid,
-                                matchString);
-                    }
-                    fm.setMatch(ofMatch);
-                    flowPusherService.addFlow(entryName, fm, dpid);
-                }*/
             }
         }
     }

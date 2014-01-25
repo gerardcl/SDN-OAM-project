@@ -28,6 +28,26 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
         this.linkService = linkService;
     }
 
+    private Link getLinkFromUpdate(LDUpdate update) {
+        NodePortTuple srcPort = new NodePortTuple(update.getSrc(),
+                update.getSrcPort());
+        Link link = new Link();
+        link.setSrcPort(update.getSrcPort());
+        link.setSrc(update.getSrc());
+        link.setDstPort(update.getDstPort());
+        link.setDst(update.getDst());
+
+        Set<Link> portLinks = linkService.getPortLinks().get(srcPort);
+
+        if (portLinks==null)
+            return null;
+
+        if (portLinks.contains(link))
+            return link;
+
+        return null;
+    }
+
     @Override
     public void linkDiscoveryUpdate(LDUpdate update) {
         // If no switch detected return
@@ -36,27 +56,24 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
         }
 
         // Check if the link is available
-        NodePortTuple srcPort = new NodePortTuple(update.getSrc(),
-                update.getSrcPort());
-        Set<Link> portLinks = linkService.getPortLinks().get(srcPort);
-        boolean enabled = false;
-        long dstSw = update.getDst();
-        short dstPort = update.getDstPort();
-        if (portLinks != null) {
-            for (Link link : portLinks) {
-                if (link.getDst() == dstSw && link.getDstPort() == dstPort) {
-                    enabled = true;
-                    break;
-                }
-            }
+        boolean enabled = true;
+        Link link = getLinkFromUpdate(update);
+        if (link == null){
+            enabled = false;
+            link = new Link();
+            link.setSrcPort(update.getSrcPort());
+            link.setSrc(update.getSrc());
+            link.setDstPort(update.getDstPort());
+            link.setDst(update.getDst());
         }
 
         ControllerEvent controllerEvent = new ControllerEvent();
         controllerEvent.setTimestamp(new Date().getTime());
         String updateStr = update.getOperation().toString();
-        TranferLink link = PojoTranslator.linkUpdate2Pojo(update, enabled);
+        TranferLink tLink = PojoTranslator.linkUpdate2Pojo(update, enabled);
         if (updateStr.equals(UpdateOperation.LINK_REMOVED)) {
             controllerEvent.setEvent(LINK_REMOVED);
+            DxatAppModule.getInstance().getFlowPusherManager().rerouteFlow(link);
         } else if (updateStr.equals(UpdateOperation.LINK_UPDATED)) {
             controllerEvent.setEvent(LINK_UPDATED);
         } else if (updateStr.equals(UpdateOperation.PORT_DOWN)) {
@@ -73,36 +90,11 @@ public class LinkListener implements ILinkDiscoveryListener, ILinkEvents {
             controllerEvent.setEvent(TUNEL_PORT_REMOVED);
         } else {
             controllerEvent.setEvent(LINK_UPDATED);
-            if (!enabled) {
-                ReroutingThread reroutingThread = new ReroutingThread(update);
-                Thread thread = new Thread(reroutingThread, "Reroute thread");
-                thread.start();
-            }
+            if (!enabled)
+                DxatAppModule.getInstance().getFlowPusherManager().rerouteFlow(link);
         }
-        controllerEvent.setObject(new Gson().toJson(link));
+        controllerEvent.setObject(new Gson().toJson(tLink));
         moduleServerThread.broadcastControllerEvent(controllerEvent);
-    }
-
-    public class ReroutingThread implements Runnable {
-        private LDUpdate update;
-
-        public ReroutingThread(LDUpdate update) {
-            this.update = update;
-        }
-
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            String portId;
-            portId = HexString.toHexString(update.getSrc()) + ":" + update.getSrcPort();
-            DxatAppModule.getInstance().getFlowPusherManager().rerouteFlow(portId);
-            portId = HexString.toHexString(update.getDst()) + ":" + update.getDstPort();
-            DxatAppModule.getInstance().getFlowPusherManager().rerouteFlow(portId);
-        }
     }
 
     @Override

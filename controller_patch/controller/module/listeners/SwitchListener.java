@@ -95,8 +95,6 @@ public class SwitchListener implements IOFSwitchListener, ISwitchEvents {
     }
 
     public SwitchCollection getAllSwitchCollection() {
-        ModuleServerThread moduleServerThread = DxatAppModule.getInstance()
-                .getModuleServerThread();
         IFloodlightProviderService switchService = DxatAppModule.getInstance()
                 .getSwitchService();
         Set<Long> switchIds = switchService.getAllSwitchDpids();

@@ -2,69 +2,99 @@
 <html>
 
 <head>
-<script type="text/javascript">
-	var webSocket = null;
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
 
-	function onOpen(eventObject) {
-		console.log("open");
-	}
+    <script type="text/javascript">
+        var webSocket = null;
 
-	function onMessage(eventObject) {
-		console.log("message");
-		console.log(eventObject);
+        function onOpen(eventObject) {
+            console.log("open");
+        }
 
-		var message = "<br/> " + eventObject.data;
-		document.getElementById('log').innerHTML = message + document.getElementById('log').innerHTML; //Add the message recieved from the server 
-	}
+        function onMessage(eventObject) {
+            console.log("message");
+            console.log(eventObject);
 
-	function onClose(eventObject) {
-		console.log("close");
-		console.log(eventObject);
-	}
+            var message = "<br/> " + eventObject.data;
+            document.getElementById('log').innerHTML = message + document.getElementById('log').innerHTML; //Add the message recieved from the server
+        }
 
-	function onError(eventObject) {
-		console.log("error");
-		console.log(eventObject);
-	}
+        function onClose(eventObject) {
+            console.log("close");
+            console.log(eventObject);
+        }
 
-	webSocket = new WebSocket("ws://" + window.location.host
-			+ "/AppServer/realtimewebsocket");
-	webSocket.onopen = onOpen;
-	webSocket.onmessage = onMessage;
-	webSocket.onclose = onClose;
-	webSocket.onerror = onError;
+        function onError(eventObject) {
+            console.log("error");
+            console.log(eventObject);
+        }
 
-	function sendCustomMessage(message) {
-		if (webSocket != null) {
-			webSocket.send(message);
-		}
-	}
+        webSocket = new WebSocket("ws://" + window.location.host
+                + "/AppServer/realtimewebsocket");
+        webSocket.onopen = onOpen;
+        webSocket.onmessage = onMessage;
+        webSocket.onclose = onClose;
+        webSocket.onerror = onError;
 
-	function sendMessage() {
-		if (webSocket != null) {
-			var message = document.getElementById('message').value;
-			webSocket.send(message);
-		}
-	}
-</script>
+        function sendCustomMessage(message) {
+            if (webSocket != null) {
+                webSocket.send(message);
+            }
+        }
+
+        function sendMessage() {
+            if (webSocket != null) {
+                var message = document.getElementById('message').value;
+                webSocket.send(message);
+            }
+        }
+    </script>
 </head>
 
 <body>
-	<h1>Example Websocket</h1>
+<h1>Preset flow pusher</h1>
 
-	<input id="message" name="message" type="text" placeholder="message" />
-	<button onclick="sendMessage()">Send Message</button>
-	<button onclick="sendCustomMessage('PushDefaultFlow1')">Push
-		Default Flow 1</button>
-	<button onclick="sendCustomMessage('DeleteDefaultFlow1')">Delete
-		Default Flow 1</button>
-    <button onclick="sendCustomMessage('PushDefaultFlow2')">Push
-        Default Flow 2</button>
-    <button onclick="sendCustomMessage('DeleteDefaultFlow2')">Delete
-        Default Flow 2</button>
-	<button onclick="sendCustomMessage('DeleteAllFlows')">Delete
-		All Flows</button>
-	<div id="log"></div>
+<div class='btn-group'>
+    <button type="button" data-toggle='dropdown' class='btn btn-default dropdown-toggle'>
+        Push Flow <span class='caret'></span>
+    </button>
+    <ul class='dropdown-menu' role="menu">
+        <li><a type="button" onclick="sendCustomMessage('PushSSHFlows')">SSH 192.168.0.7 To All Pi</a></li>
+        <li><a type="button" onclick="sendCustomMessage('PushFlowH1H2')">Flow between H1 and H2</a></li>
+        <li><a type="button" onclick="sendCustomMessage('PushFlowH1H4')">Flow between H1 and H4</a></li>
+        <li><a type="button" onclick="sendCustomMessage('PushFlowH3H2')">Flow between H3 and H2</a></li>
+        <li><a type="button" onclick="sendCustomMessage('PushFlowH3H4')">Flow between H3 and H4</a></li>
+        <li class="divider"></li>
+        <li><a type="button" onclick="sendCustomMessage('PushDefaultFlow1')">Mininet H1 and H4</a></li>
+        <li><a type="button" onclick="sendCustomMessage('PushDefaultFlow2')">Mininet H2 and H3</a></li>
+    </ul>
+</div>
+<div class='btn-group'>
+    <button data-toggle='dropdown' class='btn btn-default dropdown-toggle' align='right'>
+        Delete Flow <span class='caret'></span>
+    </button>
+    <ul class='dropdown-menu'>
+        <li><a type="button" onclick="sendCustomMessage('DeleteSSHFlows')">SSH 192.168.0.7 To All Pi</a></li>
+        <li><a type="button" onclick="sendCustomMessage('DeleteFlowH1H2')">Flow between H1 and H2</a></li>
+        <li><a type="button" onclick="sendCustomMessage('DeleteFlowH1H4')">Flow between H1 and H4</a></li>
+        <li><a type="button" onclick="sendCustomMessage('DeleteFlowH3H2')">Flow between H3 and H2</a></li>
+        <li><a type="button" onclick="sendCustomMessage('DeleteFlowH3H4')">Flow between H3 and H4</a></li>
+        <li class="divider"></li>
+        <li><a type="button" onclick="sendCustomMessage('DeleteDefaultFlow2')">Mininet H2 and H3</a></li>
+        <li><a type="button" onclick="sendCustomMessage('DeleteDefaultFlow1')">Mininet H1 and H4</a></li>
+        <li class="divider"></li>
+        <li><a type="button" onclick="sendCustomMessage('DeleteAllFlows')">All </a></li>
+    </ul>
+</div>
+<input id="message" name="message" type="text" placeholder="message"/>
+<button onclick="sendMessage()">Send Message</button>
+
+<h1>Event Logger</h1>
+
+<div id="log"></div>
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/bootstrap.js"></script>
 </body>
 
 </html>

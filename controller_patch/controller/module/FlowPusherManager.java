@@ -8,16 +8,9 @@ import dxat.controller.module.pojos.ControllerEvent;
 import dxat.controller.module.pojos.DeployedFlow;
 import dxat.controller.module.pojos.DeployedFlowCollection;
 import dxat.controller.module.pojos.Flow;
-import net.floodlightcontroller.core.IFloodlightProviderService;
-import net.floodlightcontroller.devicemanager.IDevice;
-import net.floodlightcontroller.devicemanager.IDeviceService;
-import net.floodlightcontroller.devicemanager.SwitchPort;
 import net.floodlightcontroller.linkdiscovery.ILinkDiscoveryService;
-import net.floodlightcontroller.packet.IPv4;
-import net.floodlightcontroller.routing.IRoutingService;
 import net.floodlightcontroller.routing.Link;
 import net.floodlightcontroller.routing.Route;
-import net.floodlightcontroller.routing.RouteId;
 import net.floodlightcontroller.staticflowentry.IStaticFlowEntryPusherService;
 import net.floodlightcontroller.topology.Cluster;
 import net.floodlightcontroller.topology.NodePortTuple;
@@ -45,7 +38,7 @@ public class FlowPusherManager {
     }
 
     private static Route getRoute(NodePortTuple srcNode, NodePortTuple dstNode, List<Link> links,
-                                                      HashMap<Link, Integer> cost) {
+                                  HashMap<Link, Integer> cost) {
         // Get source and destination nodes identifiers
         long srcId = srcNode.getNodeId();
         long dstId = dstNode.getNodeId();
@@ -65,6 +58,9 @@ public class FlowPusherManager {
         NodePortTuple npt;
         while (srcId != dstId) {
             Link l = nexthoplinks.get(srcId);
+            if (l == null) {
+                return null;
+            }
             npt = new NodePortTuple(l.getSrc(), l.getSrcPort());
             route.addLast(npt);
             npt = new NodePortTuple(l.getDst(), l.getDstPort());
@@ -74,7 +70,7 @@ public class FlowPusherManager {
 
         // Add Sourcer and destination nodes
         Route result = null;
-        if (!route.isEmpty()){
+        if (!route.isEmpty()) {
             route.addFirst(srcNode);
             route.addLast(dstNode);
             result = new Route(null, route);
@@ -87,11 +83,15 @@ public class FlowPusherManager {
      *
      */
     public void deleteAllFlows() {
+        System.out.println("--- DELETING ALL FLOWS ---");
+        Chronometer chronometer = new Chronometer();
+        chronometer.tic();
         // Delete all flow tables
         flowTableManager.deleteAllEntries();
 
         // Clear current flows
         currentFlows.clear();
+        System.out.println("The controller spend " + chronometer.toc() + " ms deleting all flow entries");
     }
 
     /**
@@ -101,6 +101,10 @@ public class FlowPusherManager {
      * @return True if the flow is running or false if not.
      */
     public boolean deleteFlow(Flow flow) {
+        System.out.println("--- DELETING FLOW '" + flow.getFlowId() + "' ---");
+        Chronometer chronometer = new Chronometer();
+        chronometer.tic();
+
         IStaticFlowEntryPusherService flowPusherService = DxatAppModule
                 .getInstance().getFlowPusherService();
         Map<String, Map<String, OFFlowMod>> switchFlowMap = flowPusherService
@@ -115,6 +119,8 @@ public class FlowPusherManager {
 
         // Delete flow entry in the current flow list
         currentFlows.remove(flow.getFlowId());
+
+        System.out.println("The controller spend " + chronometer.toc() + " ms deleting the flow '" + flow.getFlowId() + "' entries");
 
         // Return
         return true;
@@ -141,6 +147,8 @@ public class FlowPusherManager {
             FlowAlreadyExistsException {
 
         System.out.println("--- PUSHING FLOW! ---");
+        Chronometer chronometer = new Chronometer();
+        chronometer.tic();
 
         // Check if this flow has been already pushed
         if (currentFlows.containsKey(flow.getFlowId())) {
@@ -173,7 +181,7 @@ public class FlowPusherManager {
             throw new UnreachableTerminalsException(flow);
         }
 
-        flowTableManager.pushFlowEntries(route,flow);
+        flowTableManager.pushFlowEntries(route, flow);
 
         // Print route
         List<NodePortTuple> forwardPath = route.getPath();
@@ -202,42 +210,37 @@ public class FlowPusherManager {
         // Add flow to the registry of flows
         currentFlows.put(flow.getFlowId(), deployedFlow);
 
+        System.out.println("The flow '" + flow.getFlowId() + "' has been pushed in " + chronometer.toc() + " ms from request arrival.");
+
         // Return the deployed flow
         return deployedFlow;
     }
 
-    private List<Flow> getRelatedFlowsWithPort(String portId) {
-        List<Flow> flowList = new ArrayList<Flow>();
+    public void rerouteFlow(Link link) {
+        System.out.println("--- LINK REMOVED: '" + link.toString() + "' ---");
+        Chronometer chronometer = new Chronometer();
+        chronometer.tic();
 
-        // Fill the flow list which use the port
-        Set<String> flowIdSet = currentFlows.keySet();
-        for (String flowId : flowIdSet) {
-            // Get the deployed flow
-            DeployedFlow deployedFlow = currentFlows.get(flowId);
+        // Get related flows
+        List<String> relatedFlows = flowTableManager.getRelatedFlows(link);
 
-            // Get the set of ports
-            Set<String> portSet = new HashSet<String>(deployedFlow.getRoute());
-
-            // Check if the flow uses the port
-            if (portSet.contains(portId)) {
-                // Add the flow to a list of flows
-                flowList.add(new Flow(deployedFlow));
-
-                // Print related flows
-                System.out.println("[FLOW FALLEN] " + deployedFlow.getFlowId());
-            }
-        }
-        return flowList;
-    }
-
-    public void rerouteFlow(String portId) {
-        // List of the flows which use this port
-        List<Flow> relatedFlows = getRelatedFlowsWithPort(portId);
-
+        // If no related flows with the link return
+        if (relatedFlows == null)
+            return;
+        else if (relatedFlows.size() == 0)
+            return;
 
         // Delete and push the flows related with the port
-        for (Flow flow : relatedFlows) {
+        for (String flowId : relatedFlows) {
+            System.out.println("--- REROUTING FLOW: '" + flowId + "' ---");
+
+            // Get the flow id from the current deployed flows
+            Flow flow = new Flow(currentFlows.get(flowId));
+
+            // Delete the flow
             deleteFlow(flow);
+
+            // Try to deploy the new flow
             ControllerEvent controllerEvent = new ControllerEvent();
             controllerEvent.setTimestamp(new Date().getTime());
             try {
@@ -270,6 +273,7 @@ public class FlowPusherManager {
             DxatAppModule.getInstance().getModuleServerThread()
                     .broadcastControllerEvent(controllerEvent);
         }
+        System.out.println("All flows have been rerouted in " + chronometer.toc() + " ms.");
     }
 
     public DeployedFlowCollection getDeployedFlows() {

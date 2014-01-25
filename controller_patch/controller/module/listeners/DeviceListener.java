@@ -94,6 +94,12 @@ public class DeviceListener implements IDeviceListener, ITerminalEvents {
                 .broadcastControllerEvent(controllerEvent);
     }
 
+    /**
+     * This method is for get all the terminals (network devices) connected in the network. It is used when the Application
+     * Server wants know all the available terminals in the network.
+     *
+     * @return Terminal Collection
+     */
     public TerminalCollection getAllTerminalCollection() {
         TerminalCollection terminalCollection = new TerminalCollection();
         terminalCollection.setTerminals(new ArrayList<Terminal>());
@@ -109,6 +115,12 @@ public class DeviceListener implements IDeviceListener, ITerminalEvents {
         return terminalCollection;
     }
 
+    /**
+     * This method is for get the attachment point of a terminal. It has been programed for the flow push manager.
+     *
+     * @param ipAddr The IP v4 address of the desired terminal (or network device) in string format notation.
+     * @return It return a NodePortTuple if the terminal has been found or a null pointer if has not been found.
+     */
     public NodePortTuple getAttachmentPoint(String ipAddr) {
         NodePortTuple attachmentPoint = null;
         Integer intAddr = IPv4.toIPv4Address(ipAddr);

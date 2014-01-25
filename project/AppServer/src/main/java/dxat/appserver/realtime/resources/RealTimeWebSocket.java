@@ -60,31 +60,7 @@ public class RealTimeWebSocket extends WebSocketServlet {
 		@Override
 		protected void onTextMessage(CharBuffer buffer) throws IOException {
 			String data = buffer.toString();
-            if (data.equals("PushDefaultFlow1")){
-                Flow flow = new Flow();
-                flow.setFlowId("DefaultFlow1");
-                flow.setBandwidth(10e3);
-                flow.setDstIpAddr("10.0.0.4");
-                flow.setSrcIpAddr("10.0.0.1");
-                RealTimeManager.getInstance().pushFlow(flow);
-            } else if (data.equals("DeleteDefaultFlow1")){
-                Flow flow = new Flow();
-                flow.setFlowId("DefaultFlow1");
-                RealTimeManager.getInstance().deleteFlow(flow);
-            } else if (data.equals("PushDefaultFlow2")){
-                Flow flow = new Flow();
-                flow.setFlowId("DefaultFlow2");
-                flow.setBandwidth(20e3);
-                flow.setDstIpAddr("10.0.0.3");
-                flow.setSrcIpAddr("10.0.0.2");
-                RealTimeManager.getInstance().pushFlow(flow);
-            } else if (data.equals("DeleteDefaultFlow2")){
-                Flow flow = new Flow();
-                flow.setFlowId("DefaultFlow2");
-                RealTimeManager.getInstance().deleteFlow(flow);
-            } else if (data.equals("DeleteAllFlows")){
-				RealTimeManager.getInstance().deleteAllFlows();
-			}
+            PushPresetFlow.presetFlowManager(data);
 			System.out.println("Message recieved: " + data);
 			send(connection, data);
 			broadcast("broadcasted: " + data);
