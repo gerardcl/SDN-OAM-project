@@ -6,7 +6,6 @@ function copyTo(obj) {
 function fetchTerminals(obj){
 	console.log(obj.value);
 	var orgSelected = obj.value;
-
 }
 
 (function($){
@@ -267,7 +266,7 @@ function fetchTerminals(obj){
 		},
 		render: function (options) {
 			var that = this;
-			var template = _.template($('#admin-sidebar-template').html(), {btnHL: options.btnHL});
+			var template = _.template($('#admin-sidebar-template').html(), {btnHL: options.btnHL , alarmCounting: getalarmCounter()});
 			that.$el.html(template);
 		}
 	});
@@ -444,7 +443,6 @@ function fetchTerminals(obj){
 	});
 
 	var orgUsersView = new OrgUsersView();
-
 
 	// org TERMINAL
 	var OrgTerminalsView = Backbone.View.extend({
@@ -975,9 +973,9 @@ function fetchTerminals(obj){
 	});
 
 	router.on('route:adminOverview', function() {
-		adminSidebarView.render({btnHL: 1});
-		// render global view
+		adminSidebarView.render({btnHL: 1 , alarmCounting: getalarmCounter()});		// render global view
 		adminOverviewView.render();
+		setAlarmView();
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
@@ -992,8 +990,9 @@ function fetchTerminals(obj){
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
-		adminSidebarView.render({btnHL: 2});
+		adminSidebarView.render({btnHL: 2 , alarmCounting: getalarmCounter()});
 		orgsListBSView.render();  
+		setAlarmView();
 	});
 
 	router.on('route:editOrg', function(id) {
@@ -1001,6 +1000,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		newOrgView.render({identifier: id});
+		setAlarmView();
 	});
 
 	router.on('route:orgData', function(id) {
@@ -1008,6 +1008,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgDataView.render({identifier: id});
+		setAlarmView();
 	});
 
 	router.on('route:orgUsers', function(id) {
@@ -1015,6 +1016,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgUsersView.render({identifier: id});
+		setAlarmView();
 	});
 
 	router.on('route:orgFlows', function(id) {	
@@ -1022,6 +1024,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgFlowsView.render({identifier: id, active: true});
+		setAlarmView();
 	});
 
 	router.on('route:orgPrgFlows', function(id) {
@@ -1029,6 +1032,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgFlowsView.render({identifier: id, active: false});
+		setAlarmView();
 	});
 
 	router.on('route:orgTerminals', function(id) {
@@ -1036,22 +1040,25 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgTerminalsView.render({identifier: id});
+		setAlarmView();
 	});
 
 	router.on('route:flows', function(id) {
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
-		adminSidebarView.render({btnHL: 3});
+		adminSidebarView.render({btnHL: 3 , alarmCounting: getalarmCounter()});
 		flowsView.render({identifier: id, all: true});
+		setAlarmView();
 	});
 
 	router.on('route:terminals', function() {
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
-		adminSidebarView.render({btnHL: 4});
+		adminSidebarView.render({btnHL: 4 , alarmCounting: getalarmCounter()});
 		terminalsView.render({all: true});
+		setAlarmView();
 	});
 
 
@@ -1059,7 +1066,8 @@ function fetchTerminals(obj){
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
-		adminSidebarView.render({btnHL: 5});
+		adminSidebarView.render({btnHL: 5 , alarmCounting: getalarmCounter()});
+		setAlarmView();
 		trafficView.render();
 	});
 
