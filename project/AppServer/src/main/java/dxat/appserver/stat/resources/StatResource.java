@@ -2,7 +2,6 @@ package dxat.appserver.stat.resources;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import javax.ws.rs.Produces;
 import dxat.appserver.flows.FlowManager;
 import dxat.appserver.flows.pojos.DeployedFlow;
 import dxat.appserver.stat.StatManager;
-import dxat.appserver.stat.pojos.AgregatedFlow;
 import dxat.appserver.stat.pojos.MatrixStat;
 import dxat.appserver.stat.pojos.StatResponse;
 
