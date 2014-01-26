@@ -988,6 +988,7 @@ function fetchTerminals(obj){
 	});
 
 	router.on('route:adminOverview', function() {
+		$('#modal-loading').modal('show');
 		adminSidebarView.render({btnHL: 1 , alarmCounting: getalarmCounter()});		// render global view
 		adminOverviewView.render();
 		setAlarmView();
