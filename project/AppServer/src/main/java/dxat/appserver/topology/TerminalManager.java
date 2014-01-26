@@ -1,6 +1,8 @@
 package dxat.appserver.topology;
 
 import com.google.gson.Gson;
+
+import dxat.appserver.manager.OrgTerminalManager;
 import dxat.appserver.realtime.events.ITerminalEvents;
 import dxat.appserver.realtime.pojos.ControllerEvent;
 import dxat.appserver.realtime.pojos.DbUpdate;
@@ -17,9 +19,11 @@ import java.util.List;
 
 public class TerminalManager {
     private static TerminalManager instance = null;
-
+    private OrgTerminalManager orgTerminalManager = null;
+    
     private TerminalManager() {
         super();
+        orgTerminalManager = OrgTerminalManager.getInstance();
     }
 
     public static TerminalManager getInstance() {
@@ -92,7 +96,10 @@ public class TerminalManager {
             terminalDB.closedb();
         }
 
-        
+        TerminalTopologyDB terminalDB = new TerminalTopologyDB();
+        terminalDB.opendb();
+        orgTerminalManager.updateOrgTerminals(terminalDB.getAllTerminals());        
+        terminalDB.closedb();
         
         return updates;
     }

@@ -40,8 +40,6 @@ function initStatusOverview(){
 	initializeControllerStats();
 	
 	
-	
-	
 	//HIDE LOADING MODAL
 	
 	
@@ -573,7 +571,7 @@ function InitSwitchStats(idSwitch){
 			async : false
 		}); //execute synchronously
 
-		console.log("GETTING STATS");
+		//console.log("GETTING STATS");
 		$.ajax({
 			type: "GET",
 			url: datastatsuri,
@@ -603,7 +601,7 @@ function InitSwitchStats(idSwitch){
 			async : false
 		}); //execute synchronously
 
-		console.log("GETTING STATS");
+		//console.log("GETTING STATS");
 		$.ajax({
 			type: "GET",
 			url: datastatsuri,
@@ -708,7 +706,7 @@ function byHourGraph(){
 			async : false
 		}); //execute synchronously
 
-		console.log("GETTING STATS");
+		//console.log("GETTING STATS");
 		$.ajax({
 			type: "GET",
 			url: datastatsuri,
@@ -841,7 +839,7 @@ function byMinuteGraph(){
 			async : false
 		}); //execute synchronously
 
-		console.log("GETTING STATS");
+		//console.log("GETTING STATS");
 		$.ajax({
 			type: "GET",
 			url: datastatsuri,
@@ -909,8 +907,6 @@ function bySecondGraph(){
 	var timeAxis=[];
 	timeAxis = getXAxis(timeData);
 
-	var lastTime = timeData[(timeData.length-1)*1000];
-
 	$('#statisticsGraph').highcharts({
 		chart: {
 			type: 'areaspline',
@@ -960,17 +956,13 @@ function bySecondGraph(){
 
 	var j=0;
 	var RefreshChart = 60;
-	lastTime=data.timeAxxis[0];
 	refreshIntervalIdPort = setInterval(function() {
 		refresh();
 	},1000);
 
 
 	function refresh() {
-		//PART A: PART QUAN ESTIGUI INTEGRAT ES ESBORRABLE
 		var data2 = getData();
-		lastTime = data2.timeAxxis[0];
-		//FINAL PART A
 
 		var chart = $('#statisticsGraph').highcharts();
 
@@ -1027,12 +1019,13 @@ function bySecondGraph(){
 
 	function getData(){
 		var datastats = {};
+		//console.log('PORT:'+selectedPort+' PARAM:'+selectedParam+' TYPE:'+selectedValueType);
 		var datastatsuri = "/AppServer/webapi/statistics/port/"+selectedPort+"/"+selectedParam+"/"+selectedValueType+"/second";
 		$.ajaxSetup({
 			async : false
 		}); //execute synchronously
 
-		console.log("GETTING STATS");
+		//console.log("GETTING STATS");
 		$.ajax({
 			type: "GET",
 			url: datastatsuri,
@@ -1079,10 +1072,10 @@ function printPortGraph(){
 		$('#advisementClick').hide();
 		$('#textgraph').hide();
 		$('#statisticsGraph').show();
-		console.log("PORT STATS");
-		console.log("Port ID: ");
-		console.log(selectedPort);
-		console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
+		//console.log("PORT STATS");
+		//console.log("Port ID: ");
+		//console.log(selectedPort);
+		//console.log("Selected port stats: "+ selectedParam+ " with "+ selectedValueType+" "+selectedTimeInterval);
 		switch(selectedParam){
 		case "receivePackets": valueSuffix = " Packets/s";
 		break;
@@ -1193,8 +1186,8 @@ function updateGauges()
 {
 	for (var key in gauges)
 	{
-		console.log("updating gauge:");
-		console.log(key);
+		//console.log("updating gauge:");
+		//console.log(key);
 		var value = getControllerData(key);//getRandomValue(gauges[key]);
 		gauges[key].redraw(value);
 	}
@@ -1210,7 +1203,7 @@ function getControllerData(key){
 		async : false
 	}); //execute synchronously
 
-	console.log("GETTING STATS");
+	//console.log("GETTING STATS");
 	$.ajax({
 		type: "GET",
 		url: datastatsuri,
@@ -1346,7 +1339,7 @@ function setTrafficMatrix(){
 	var color = pv.Colors.category19();//.by(function(d) d.group);
 	var h = $("#tMatrixTAB").width()/2;
 	var w = $("#tMatrixTAB").width()/2;
-	console.log("NEW SIZE: "+w+" x "+h);
+	//console.log("NEW SIZE: "+w+" x "+h);
 	var vis = new pv.Panel()
 	.canvas('Tmatrix')
 	.width(w)
@@ -1373,14 +1366,14 @@ function setTrafficMatrix(){
 	vis.render();
 
 	$('#Tmatrix').bind('resize', function(){
-		console.log('Tmatrix resized');
+		//console.log('Tmatrix resized');
 	});
 	$(window).resize(function(){
 		var color = pv.Colors.category19();//.by(function(d) d.group);
 
 		var h = $("#tMatrixTAB").width()/2;
 		var w = $("#tMatrixTAB").width()/2;
-		console.log("NEW SIZE: "+w+" x "+h);
+		//console.log("NEW SIZE: "+w+" x "+h);
 		var vis = new pv.Panel()
 		.canvas('Tmatrix')
 		.width(w)

@@ -418,34 +418,36 @@ public class OrgManager {
 				}
 				org.setUsers(tempUsers);
 				tempTerminals = new HashMap<String, OrgTerminal>();
-				for(i=0; i<10; i++){
-					OrgTerminal terminal = new OrgTerminal();
-					String tid = "terminall";
-					String tname = "namee";
-					tid += Integer.toString(j);
-					tid += Integer.toString(i);
-					tname += Integer.toString(j);
-					tname += Integer.toString(i);
-					terminal.setIdentifier(tid);
-					terminal.setHostName(tname);
-					terminal.setDescription("terminal host for ");
-					terminal.setDescription(terminal.getDescription() + org.getName());
-					terminal.setIfaceSpeed(i*10000);
-					terminal.setIpAddress("192.168."+Integer.toString(i)+"."+Integer.toString(j)+"0");
-					terminal.setMac("DD:XX:AA:TT:"+Integer.toString(j)+"B:"+Integer.toString(i)+"C");
-					terminal.setActive(i%2==0?true:false);
-					terminal.setAssigned(i%2==0?true:false);
-					tempTerminals.put(terminal.getIdentifier(), terminal);
-					System.out.println("new terminal with id = "+terminal.getIdentifier());
-					terminals.put(terminal.getIdentifier(), terminal);
-					try {
-						dbcreate.createTerminal(terminal, org.getIdentifier());
-					} catch (TerminalAlreadyExistsException e) {
-						e.printStackTrace();
-					} catch (OrgNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
+
+//no create dummy terminals -> get/create it from topology 				
+//				for(i=0; i<10; i++){
+//					OrgTerminal terminal = new OrgTerminal();
+//					String tid = "terminall";
+//					String tname = "namee";
+//					tid += Integer.toString(j);
+//					tid += Integer.toString(i);
+//					tname += Integer.toString(j);
+//					tname += Integer.toString(i);
+//					terminal.setIdentifier(tid);
+//					terminal.setHostName(tname);
+//					terminal.setDescription("terminal host for ");
+//					terminal.setDescription(terminal.getDescription() + org.getName());
+//					terminal.setIfaceSpeed(i*10000);
+//					terminal.setIpAddress("192.168."+Integer.toString(i)+"."+Integer.toString(j)+"0");
+//					terminal.setMac("DD:XX:AA:TT:"+Integer.toString(j)+"B:"+Integer.toString(i)+"C");
+//					terminal.setActive(i%2==0?true:false);
+//					terminal.setAssigned(i%2==0?true:false);
+//					tempTerminals.put(terminal.getIdentifier(), terminal);
+//					System.out.println("new terminal with id = "+terminal.getIdentifier());
+//					terminals.put(terminal.getIdentifier(), terminal);
+//					try {
+//						dbcreate.createTerminal(terminal, org.getIdentifier());
+//					} catch (TerminalAlreadyExistsException e) {
+//						e.printStackTrace();
+//					} catch (OrgNotFoundException e) {
+//						e.printStackTrace();
+//					}
+//				}
 				org.setTerminals(tempTerminals);
 				orgs.put(org.getIdentifier(), org);
 				torgs.put(torg.getIdentifier(), torg);
