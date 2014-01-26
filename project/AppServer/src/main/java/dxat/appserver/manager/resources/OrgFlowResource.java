@@ -39,7 +39,7 @@ public class OrgFlowResource {
 	@Path("/flow/all")	
 	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION) 
 	public OrgFlowCollection getAllFlows() {
-		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getFlows().values());
+		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getFlows().values());
 		OrgFlowCollection orgFlows = new OrgFlowCollection();
 		orgFlows.setOrgFlows(orgFlowList);
 		return orgFlows;//(OrgFlowCollection) orgFlowManager.getAllFlows();
@@ -49,7 +49,7 @@ public class OrgFlowResource {
 	@Path("/flow/{orgId}/all")	
 	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION) 
 	public OrgFlowCollection getAllOrgFlows(@PathParam("orgId") String orgId) {
-		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getInstance().getOrg(orgId).getFlows().values());
+		List<OrgFlow> orgFlowList = new ArrayList<OrgFlow>(orgFlowManager.orgManager.getOrg(orgId).getFlows().values());
 		OrgFlowCollection orgFlows = new OrgFlowCollection();
 		orgFlows.setOrgFlows(orgFlowList);
 		return orgFlows;//(OrgFlowCollection) orgFlowManager.getAllFlows();
@@ -62,26 +62,36 @@ public class OrgFlowResource {
 		return orgFlowManager.orgManager.getOrg(orgId).getFlows().get(flowId);
 	}
 
-//	@POST
-//	@Path("/routers")
-//	@Consumes(MediaType.ROUTER)
-//	@Produces(MediaType.ROUTER)
-//	public Router insertRouter(Router router){
-//		repo.insertRouter(router);
-//		return router;
-//	}
-//	
-//	@DELETE
-//	@Path("/routers/{inventoryId}")
-//	public void deleteRouter(@PathParam("inventoryId") String inventoryId){
-//		repo.deleteRouter(inventoryId);
-//	}
-//	
-//	@PUT
-//	@Path("/routers/{inventoryId}")
-//	@Consumes(MediaType.ROUTER)
-//	@Produces(MediaType.ROUTER)
-//	public Router updateRouter(Router router){
-//		return repo.updateRouter(router);
-//	}
+	//FLOWS ALWAYS ASSIGNED TO A ORG
+	@POST
+	@Path("/flow/{orgId}")
+	@Consumes(AppServerMediaType.ORG_FLOW_COLLECTION)
+	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION)
+	public OrgFlow insertRouter(@PathParam("orgId") String orgId, OrgFlow flow){
+		if(!orgFlowManager.orgManager.existOrg(orgId)) return null;
+		if(orgFlowManager.existFlowInOrg(flow, flow.getIdentifier(), orgId)) return null;
+		
+		return orgFlowManager.addOrgFlow(orgId, flow);
+	}
+	
+	@PUT
+	@Path("/flow/{orgId}/{flowId}")
+	@Consumes(AppServerMediaType.ORG_FLOW_COLLECTION)
+	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION)
+	public OrgFlow updateRouter(@PathParam("orgId") String orgId, @PathParam("flowId") String flowId, OrgFlow flow){
+		if(!orgFlowManager.orgManager.existOrg(orgId)) return null;
+		if(!orgFlowManager.existFlowInOrg(flow, flowId, orgId)) return null;
+		if(!flow.getIdentifier().equals(flowId)) return null;
+		return orgFlowManager.updateOrgFlow(orgId, flow);
+	}
+	
+	@DELETE
+	@Path("/flow/{orgId}/{flowId}")
+	public String deleteRouter(@PathParam("orgId") String orgId, @PathParam("flowId") String flowId){
+		if(!orgFlowManager.orgManager.existOrg(orgId)) return null;
+		if(!orgFlowManager.orgManager.getOrg(orgId).getFlows().containsKey(flowId)) return null;
+		if(orgFlowManager.deleteOrgFlow(orgId, flowId)!= null) return flowId;
+		return null;
+	}
+
 }

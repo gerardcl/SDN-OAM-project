@@ -50,8 +50,10 @@ public class TerminalManager {
             try {
                 try {
                     updates.addAll(terminalTopologyDB.addTerminal(terminal));
+                    orgTerminalManager.updateOrgTerminals(terminalTopologyDB.getAllTerminals());        
                 } catch (TerminalExistsException e) {
                     updates.addAll(terminalTopologyDB.updateTerminal(terminal));
+                    orgTerminalManager.updateOrgTerminals(terminalTopologyDB.getAllTerminals());        
                 }
             } catch (PortNotFoundException e) {
                 throw e;
@@ -70,6 +72,7 @@ public class TerminalManager {
             Terminal terminal = fromJSON(controllerEvent.getObject());
             try {
                 updates.addAll(terminalTopologyDB.updateTerminal(terminal));
+                orgTerminalManager.updateOrgTerminals(terminalTopologyDB.getAllTerminals());        
             } catch (TerminalNotFoundException e) {
                 throw e;
             } finally {
@@ -79,9 +82,11 @@ public class TerminalManager {
             TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
             terminalTopologyDB.opendb();
             Terminal terminal = fromJSON(controllerEvent.getObject());
+            
             try {
                 updates.addAll(terminalTopologyDB.disableTerminal(terminal
                         .getTerminalId()));
+                orgTerminalManager.updateOrgTerminals(terminalTopologyDB.getAllTerminals());        
             } catch (TerminalNotFoundException e) {
                 throw e;
             } finally {
@@ -93,13 +98,9 @@ public class TerminalManager {
             TerminalTopologyDB terminalDB = new TerminalTopologyDB();
             terminalDB.opendb();
             updates.addAll(terminalDB.mergeCollection(terminalCollection));
+            orgTerminalManager.updateOrgTerminals(terminalDB.getAllTerminals());        
             terminalDB.closedb();
         }
-
-        TerminalTopologyDB terminalDB = new TerminalTopologyDB();
-        terminalDB.opendb();
-        orgTerminalManager.updateOrgTerminals(terminalDB.getAllTerminals());        
-        terminalDB.closedb();
         
         return updates;
     }

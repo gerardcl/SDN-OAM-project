@@ -12,6 +12,7 @@ import dxat.appserver.manager.database.Update;
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
 import dxat.appserver.manager.exceptions.UserAlreadyExistsException;
 import dxat.appserver.manager.exceptions.UserNotFoundException;
+import dxat.appserver.manager.pojos.OrgFlow;
 import dxat.appserver.manager.pojos.OrgSession;
 import dxat.appserver.manager.pojos.OrgUser;
 import dxat.appserver.manager.pojos.TOrg;
@@ -122,23 +123,25 @@ public class OrgUserManager {
 
 	//check name
 	public boolean existUser(OrgUser user) {
-		for(Entry<String, OrgUser> entry1 : orgManager.getInstance().getUsers().entrySet()){
+		for(Entry<String, OrgUser> entry1 : orgManager.getUsers().entrySet()){
 			OrgUser cuser = entry1.getValue();
 			if(user.getName().equals(cuser.getName())) return true; 
 		}
 		return false;
 	}
 	public boolean existUser(String userId) {
-		for(Entry<String, OrgUser> entry1 : orgManager.getInstance().getUsers().entrySet()){
+		for(Entry<String, OrgUser> entry1 : orgManager.getUsers().entrySet()){
 			OrgUser cuser = entry1.getValue();
 			if(cuser.getIdentifier().equals(userId)) return true; 
 		}
 		return false;
 	}
 	public boolean existUserInOrg(OrgUser user, String userId, String orgId){
-		for(Entry<String, OrgUser> entry1 : orgManager.getInstance().getOrg(orgId).getUsers().entrySet()){
+		for(Entry<String, OrgUser> entry1 : orgManager.getOrg(orgId).getUsers().entrySet()){
 			OrgUser cuser = entry1.getValue();
-			if(cuser.getName().equals(user.getName())&&cuser.getIdentifier().equals(userId)&&cuser.getIdentifier().equals(user.getIdentifier()) )return true;
+			
+			//TODO CHECKS TO CHECK...?
+			if(cuser.getName().equals(user.getName())&&/*cuser.getIdentifier().equals(userId)&&*/cuser.getIdentifier().equals(user.getIdentifier()) )return true;
 		}
 		return false;
 	}

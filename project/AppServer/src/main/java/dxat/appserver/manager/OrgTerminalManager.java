@@ -95,7 +95,7 @@ public class OrgTerminalManager {
 						if(!oterminal.getIdentifier().equals(tterminal.getTerminalId())){
 							oterminal.setIdentifier(tterminal.getTerminalId());
 							System.out.println("[TERMINAL TOPOLOGY TO MANAGER] INCONGRUENCE!:");
-							System.out.println("------------> matching of mac but not of ids -> setting id org from topo");
+							System.out.println("------------> matching of mac but not of ids -> setting id O.Term. from topo");
 						}
 						//UPDATE OTERMINAL - setActive
 						//update HM and DB with updated oterminal
@@ -113,7 +113,7 @@ public class OrgTerminalManager {
 						}else{
 							//update oterminal
 							
-							//CHECK IF TERMINAL IN ORG (UPDATE ELSE CREATE - should not be necessary)
+							//CHECK IF TERMINAL IN ORG 
 							
 							updated = true;
 							oterminal.setActive(true);

@@ -276,6 +276,7 @@ public class OrgManager {
 		return null;
 	}
 	
+	//SESSION
 	public OrgSession existUser(String username){
 		//TO CHECK IT BY GOING THROUGH EACH ORG?¿ NEXT STEPS...
 		for (Entry<String, OrgUser> entry : users.entrySet()) {
@@ -295,6 +296,7 @@ public class OrgManager {
 		}
 		return null;
 	}
+	
 	public List<Org> getOrgs(){
 		//TODO
 		return null;
