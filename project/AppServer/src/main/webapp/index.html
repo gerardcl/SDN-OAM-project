@@ -138,44 +138,13 @@
               <li class="<% if(btnHL==4){%> active <%}%>"><a href="#/adminTerminals"><i class="fa fa-desktop"></i> Terminals</a></li>
               
               <li class="<% if(btnHL==5){%> active <%}%>"><a href="#/adminTraffic"><i class="fa fa-th"></i> Traffic Analysis</a></li>
-              <li class="<% if(btnHL==6){%> active <%}%>"><a data-toggle="modal" href="#aboutUs"><i class="fa fa-users"></i> About us</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right navbar-user">
-              <li class="dropdown messages-dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> Flow requests <span class="badge">3</span> <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li class="dropdown-header">3 New Flow Requests</li>
-                  <li class="message-preview">
-                    <a href="#">
-                      <span class="avatar"><img src="http://placehold.it/50x50"></span>
-                      <span class="name">Zara</span>
-                      <span class="message"><p>From: A To: B</p><p>1 Gbps</p></span>
-                      <span class="time"><i class="fa fa-clock-o"></i> 4:34 PM</span>
-                    </a>
-                  </li>
-                  <li class="divider"></li>
-                  <li class="message-preview">
-                    <a href="#">
-                      <span class="avatar"><img src="http://placehold.it/50x50"></span>
-                      <span class="name">Ikea</span>
-                      <span class="message"><p>From: Node 3 To: Node 12</p><p>100 Mbps</p></span>
-                      <span class="time"><i class="fa fa-clock-o"></i> 2:34 PM</span>
-                    </a>
-                  </li>
-                  <li class="divider"></li>
-                  <li class="message-preview">
-                    <a href="#">
-                      <span class="avatar"><img src="http://placehold.it/50x50"></span>
-                      <span class="name">Carrefour</span>
-                      <span class="message"><p>From: WS-8 To: WS-3</p><p>10 Gbps</p></span>
-                      <span class="time"><i class="fa fa-clock-o"></i> 00:34 PM</span>
-                    </a>
-                  </li>
-                  <li class="divider"></li>
-                  <li><a href="#">View Inbox <span class="badge">3</span></a></li>
-                </ul>
-              </li>
+
+              <li class="<% if(btnHL==6){%> active <%}%>"><a data-toggle="modal" href="#aboutUs"><i class="fa fa-users"></i> About this project</a></li>
+              
+            
               <li class="dropdown alerts-dropdown" id="alarmsDropDown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" <% if(alarmCounting>0){' style="color:red"'}%>><i class="fa fa-bell"></i> Alarms <% if(alarmCounting>0){ %><span class="badge" > <% alarmCounting %></span> <b class="caret"></b><%}%></a>
                 <ul class="dropdown-menu" id="alarmsList">
@@ -263,7 +232,7 @@
                       <div class="item">
                         <center><img class="img-responsive" src="img/net.gif" alt="Alex Nasarre"></center>
                         <div class="carousel-caption">
-                        <center><img class="img-responsive img-circle" src="img/alex.png"></center>
+                        <center><img class="img-responsive" src="img/alex.png"></center>
 
                         <p><code>Alex Nasarre</code></p> <p><code>From HW to any graphical dimension</code></p>
                         </div>
@@ -498,6 +467,40 @@
                     </div>
                   </div> <!-- /GRAPH ROW -->
     			  </div> <!-- /STATISTICS BIG COL -->
+
+<a data-toggle="modal" href="#modal-loading" class="btn btn-lg btn-danger"><i class="fa fa-trash-o"></i> Just a fukin test </a>
+
+        <!-- MODAL LOADING -->
+        <div class="modal fade" id="modal-loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><center>LOADING TOPOLOGY</center></h4>
+              </div>
+
+              <div class="modal-body">
+                
+                <div id="loading">
+                  <center>
+                    <img src="img/loading.gif" width="500" height="250">
+                  </center>
+                </div>
+                
+              </div>
+
+              <div class="modal-footer">
+              <p class="text-muted"> Be patient, my friend </p>
+              </button>
+
+                
+               </div>
+             </div><!-- /.modal-content -->
+           </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
         </script>
 	<!-- /GLOBAL VIEW TEMPLATE -->
 	<!-- /ADMIN OVERVIEW VIEW -->
@@ -1453,7 +1456,7 @@
                </div>
              </div><!-- /.modal-content -->
            </div><!-- /.modal-dialog -->
-         </div><!-- /.modal -->
+        </div><!-- /.modal -->
     </script>
 	<!-- /TERMINALS VIEW -->
 
