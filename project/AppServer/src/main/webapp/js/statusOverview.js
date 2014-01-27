@@ -1241,37 +1241,76 @@ function initializeControllerStats()
 }
 
 
+
 //TRAFFIC MATRIX
+var refreshIntervalTrafficMatrix;
+function stopTrafficMatrix(){
+	clearInterval(refreshIntervalTrafficMatrix);
+}
+
+function startTrafficMatrix(){
+	refreshIntervalTrafficMatrix = setInterval(function() {
+		setTrafficMatrix();
+	},60000);
+}
+
 function setTrafficMatrix(){
 	//DUMMY STATIC TEST REQUEST
-	
+	var trafficMatrixData;
 	//http://147.83.113.109:8080/AppServer/webapi/statistics/trafficmatrix	
 	//TODO IF NOT TRAFFIC MATRIX SHOW ALTERNATE MESSAGE
+	var trafficMatrixURI = "/AppServer/webapi/statistics/trafficmatrix";
+	$.ajaxSetup({
+		async : false
+	}); //execute synchronously
+
+	//console.log("GETTING STATS");
+	$.ajax({
+		type: "GET",
+		url: trafficMatrixURI,
+		//contentType: 'json',
+		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+		//headers: {
+		//	Accept : "application/vmd.dxat.appserver.stats+json"
+		//},
+		success : function(result) {
+			trafficMatrixData = result;
+		},
+		error: function(xhr, msg) {
+			var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+			trafficMatrixData = JSON.parse(rplcd);
+		}
+	});
+	//		Tractament de dades obtingudes
+	$.ajaxSetup({
+		async : true
+	}); //execute asynchronously
 	
-	var matrix ={
-			"matrix": [
-			           {
-			        	   "dst": "10.0.0.4",
-			        	   "src": "10.0.0.1",
-			        	   "traffic": 12500000
-			           },
-			           {
-			        	   "dst": "10.0.0.3",
-			        	   "src": "10.0.0.2",
-			        	   "traffic": 6250000
-			           },
-			           {
-			        	   "dst": "10.0.0.2",
-			        	   "src": "10.0.0.3",
-			        	   "traffic": 3125000
-			           },
-			           {
-			        	   "dst": "10.0.0.1",
-			        	   "src": "10.0.0.4",
-			        	   "traffic": 9000000
-			           }
-			           ]
-	};
+	var matrix = trafficMatrixData;
+//	{
+//			"matrix": [
+//			           {
+//			        	   "dst": "10.0.0.4",
+//			        	   "src": "10.0.0.1",
+//			        	   "traffic": 1250000
+//			           },
+//			           {
+//			        	   "dst": "10.0.0.3",
+//			        	   "src": "10.0.0.2",
+//			        	   "traffic": 625000
+//			           },
+//			           {
+//			        	   "dst": "10.0.0.2",
+//			        	   "src": "10.0.0.3",
+//			        	   "traffic": 312500
+//			           },
+//			           {
+//			        	   "dst": "10.0.0.1",
+//			        	   "src": "10.0.0.4",
+//			        	   "traffic": 900000
+//			           }
+//			           ]
+//	};
 	var nodes=[];
 	var links=[];
 	var pushSrc=true;

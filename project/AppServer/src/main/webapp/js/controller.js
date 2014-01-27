@@ -998,8 +998,8 @@ function fetchTerminals(obj){
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
+		stopTrafficMatrix();
 		initStatusOverview();
-
 	});
 
 	router.on('route:adminAlarms', function() {
@@ -1011,6 +1011,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		resetAlarmView();
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1020,6 +1021,7 @@ function fetchTerminals(obj){
 		stopTopoWeatherMapRefresh();
 		adminSidebarView.render({btnHL: 2 , alarmCounting: getalarmCounter()});
 		orgsListBSView.render();  
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1028,6 +1030,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		newOrgView.render({identifier: id});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1036,6 +1039,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgDataView.render({identifier: id});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1044,6 +1048,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgUsersView.render({identifier: id});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1052,6 +1057,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgFlowsView.render({identifier: id, active: true});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1060,6 +1066,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgFlowsView.render({identifier: id, active: false});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1068,6 +1075,7 @@ function fetchTerminals(obj){
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
 		orgTerminalsView.render({identifier: id});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1077,6 +1085,7 @@ function fetchTerminals(obj){
 		stopTopoWeatherMapRefresh();
 		adminSidebarView.render({btnHL: 3 , alarmCounting: getalarmCounter()});
 		flowsView.render({identifier: id, all: true});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1086,6 +1095,7 @@ function fetchTerminals(obj){
 		stopTopoWeatherMapRefresh();
 		adminSidebarView.render({btnHL: 4 , alarmCounting: getalarmCounter()});
 		terminalsView.render({all: true});
+		stopTrafficMatrix();
 		setAlarmView();
 	});
 
@@ -1096,6 +1106,7 @@ function fetchTerminals(obj){
 		stopTopoWeatherMapRefresh();
 		adminSidebarView.render({btnHL: 5 , alarmCounting: getalarmCounter()});
 		setAlarmView();
+		startTrafficMatrix();
 		trafficView.render();
 	});
 
