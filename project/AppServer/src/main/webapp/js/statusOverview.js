@@ -996,7 +996,7 @@ function bySecondGraph(){
 		var seconds;
 
 		for (var i=0; i<axis.length;i++){
-			timeUTC.push(new Date(axis[i]*1000));
+			timeUTC.push(new Date(axis[i]));
 			hours =timeUTC[i].getHours();
 			minutes =timeUTC[i].getMinutes();
 			seconds=timeUTC[i].getSeconds();

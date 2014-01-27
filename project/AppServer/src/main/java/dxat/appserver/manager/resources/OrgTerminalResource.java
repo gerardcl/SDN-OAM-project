@@ -62,10 +62,10 @@ public class OrgTerminalResource {
 //CREATE TERMINAL TO DB OR UPDATE IT-> ONLY POSSIBLE PARAMETERS FROM ORG TO TOPO...
 //ONLY ONE ORG PER TERMINAL AND THE OTHER WAY AROUND
 	@POST
-	@Path("/terminal/{orgId}/{terminalId}")
+	@Path("/terminal/{orgId}/")
 	@Consumes(AppServerMediaType.ORG_TERMINAL_COLLECTION)
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION)
-	public OrgTerminal updateTerminal(@PathParam("orgId") String orgId, @PathParam("terminalId") String terminalId, OrgTerminal terminal){
+	public OrgTerminal updateTerminal(@PathParam("orgId") String orgId, OrgTerminal terminal){
 		System.out.println("trying to assign terminal");
 		OrgTerminal nterm = new OrgTerminal();
 		if(!orgTerminalManager.orgManager.existOrg(orgId)) return nterm;
@@ -74,14 +74,14 @@ public class OrgTerminalResource {
 										//	 -> else return null
 		
 		//ASSIGN/CREATE
-		if(!orgTerminalManager.orgManager.getOrg(orgId).getTerminals().containsKey(terminalId)){
-			if(terminalId.equals(terminal.getIdentifier())){
+		if(!orgTerminalManager.orgManager.getOrg(orgId).getTerminals().containsKey(terminal.getIdentifier())){
+			if(terminal.getIdentifier().equals(terminal.getIdentifier())){
 				nterm = orgTerminalManager.tryCreateOrgTerminal(orgId, terminal);
 			}
 		}
 		//UPDATE
 		else{			
-			if(terminalId.equals(terminal.getIdentifier())){
+			if(terminal.getIdentifier().equals(terminal.getIdentifier())){
 				nterm.setDescription(terminal.getDescription());
 				nterm.setHostName(terminal.getHostName());
 				nterm.setPortApiID(terminal.getPortApiID());
@@ -89,7 +89,7 @@ public class OrgTerminalResource {
 				nterm.setAssigned(terminal.isAssigned()); //assigned IN FLOW
 				
 				nterm.setAssignedOrgId(orgId);
-				nterm.setIdentifier(terminalId);
+				nterm.setIdentifier(terminal.getIdentifier());
 				
 				nterm.setIfaceSpeed(terminal.getIfaceSpeed());
 				nterm.setIpAddress(terminal.getIpAddress());
@@ -97,7 +97,7 @@ public class OrgTerminalResource {
 				
 				try {
 					orgTerminalManager.dbupdate.updateTerminal(nterm, orgId);
-					orgTerminalManager.orgManager.getOrg(orgId).getTerminals().put(terminalId, nterm);
+					orgTerminalManager.orgManager.getOrg(orgId).getTerminals().put(terminal.getIdentifier(), nterm);
 					orgTerminalManager.putOrgTerminal(nterm);					
 					return nterm;
 				} catch (TerminalNotFoundException | OrgNotFoundException e) {
