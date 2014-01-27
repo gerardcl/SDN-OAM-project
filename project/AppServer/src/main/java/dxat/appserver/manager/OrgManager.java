@@ -355,41 +355,43 @@ public class OrgManager {
 					e.printStackTrace();
 				}
 				tempFlows = new HashMap<String, OrgFlow>();
-				for(i=0; i<10; i++){
-					OrgFlow flow = new OrgFlow();
-					String fid = "flouu";
-					String fname = "namee";
-					String orgTS = "src";
-					String orgTD = "dst";
-					fid += Integer.toString(j);
-					fid += Integer.toString(i);
-					fname += Integer.toString(j);
-					fname += Integer.toString(i);
-					orgTS += Integer.toString(j);
-					orgTS += Integer.toString(i);
-					orgTD += Integer.toString(j);
-					orgTD += Integer.toString(i);
-					flow.setIdentifier(fid);
-					flow.setBandwidth(5000000);
-					flow.setDstPort(5000);
-					flow.setSrcPort(6000);
-					flow.setProtocol("TCP");
-					flow.setName(fname);
-					flow.setQos(2000);
-					flow.setActive(i%3==0?true:false);
-					flow.setDstOTidentifier(orgTD);
-					flow.setSrcOTidentifier(orgTS);
-					tempFlows.put(flow.getIdentifier(), flow);
-					System.out.println("new flow with id = "+flow.getIdentifier());
-					flows.put(flow.getIdentifier(), flow);
-					try {
-						dbcreate.createFlow(flow, org.getIdentifier());
-					} catch (FlowAlreadyExistsException e) {
-						e.printStackTrace();
-					} catch (OrgNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
+								
+//no create dummy flows -> get/create it dinamically from manager (checking stats by topo events) 								
+//				for(i=0; i<10; i++){
+//					OrgFlow flow = new OrgFlow();
+//					String fid = "flouu";
+//					String fname = "namee";
+//					String orgTS = "src";
+//					String orgTD = "dst";
+//					fid += Integer.toString(j);
+//					fid += Integer.toString(i);
+//					fname += Integer.toString(j);
+//					fname += Integer.toString(i);
+//					orgTS += Integer.toString(j);
+//					orgTS += Integer.toString(i);
+//					orgTD += Integer.toString(j);
+//					orgTD += Integer.toString(i);
+//					flow.setIdentifier(fid);
+//					flow.setBandwidth(5000000);
+//					flow.setDstPort(5000);
+//					flow.setSrcPort(6000);
+//					flow.setProtocol("TCP");
+//					flow.setName(fname);
+//					flow.setQos(2000);
+//					flow.setActive(i%3==0?true:false);
+//					flow.setDstOTidentifier(orgTD);
+//					flow.setSrcOTidentifier(orgTS);
+//					tempFlows.put(flow.getIdentifier(), flow);
+//					System.out.println("new flow with id = "+flow.getIdentifier());
+//					flows.put(flow.getIdentifier(), flow);
+//					try {
+//						dbcreate.createFlow(flow, org.getIdentifier());
+//					} catch (FlowAlreadyExistsException e) {
+//						e.printStackTrace();
+//					} catch (OrgNotFoundException e) {
+//						e.printStackTrace();
+//					}
+//				}
 				org.setFlows(tempFlows);
 				tempUsers = new HashMap<String, OrgUser>();
 				for(i=0; i<10; i++){

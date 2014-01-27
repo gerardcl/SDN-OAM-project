@@ -1244,6 +1244,10 @@ function initializeControllerStats()
 //TRAFFIC MATRIX
 function setTrafficMatrix(){
 	//DUMMY STATIC TEST REQUEST
+	
+	//http://147.83.113.109:8080/AppServer/webapi/statistics/trafficmatrix	
+	//TODO IF NOT TRAFFIC MATRIX SHOW ALTERNATE MESSAGE
+	
 	var matrix ={
 			"matrix": [
 			           {
@@ -1355,7 +1359,9 @@ function setTrafficMatrix(){
 	//.sort(function(a, b) {alert(b.name);return b.group - a.group});
 
 	layout.link.add(pv.Bar)
-	.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/1000000);})
+	.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/100000);})
+	.anchor("center").add(pv.Label)
+	.text(function(l) {return (l.linkValue*8/100000).toFixed(2)+" %"} )	
 	.antialias(false)
 	.lineWidth(8);
 
@@ -1389,7 +1395,9 @@ function setTrafficMatrix(){
 		//.sort(function(a, b) {alert(b.name);return b.group - a.group});
 
 		layout.link.add(pv.Bar)
-		.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/1000000);})
+		.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/100000);})
+		.anchor("center").add(pv.Label)
+		.text(function(l) {return (l.linkValue*8/100000).toFixed(2)+" %"} )
 		.antialias(false)
 		.lineWidth(8);
 
