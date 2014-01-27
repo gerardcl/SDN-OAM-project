@@ -714,7 +714,7 @@ function fetchTerminals(obj){
 			console.log('options org: '+options.orgId);
 			console.log('options admin: '+options.admin);
 			var that = this;
-			if(options.identifier){ //EDIT FLOW
+			if(options.identifier && options.admin){ //EDIT FLOW
 
 				that.flow = new Flow({identifier: options.identifier});
 				that.flow.urlRoot = '/AppServer/webapi/manager/flow/'+options.orgId;
@@ -897,7 +897,7 @@ function fetchTerminals(obj){
 				that.terminal.fetch({
 					success: function (terminal){
 						console.log('orgId inside edit terminal fetch success: '+options.orgId);
-						var template = _.template($('#edit-terminal-template').html(), {terminal: terminal, organizations: organizations.models, orgId: options.orgId});
+						var template = _.template($('#edit-terminal-template').html(), {terminal: terminal, organizations: organizations.models, orgId: options.orgId, admin: options.admin});
 						that.$el.html(template);
 					}
 				});
@@ -977,7 +977,8 @@ function fetchTerminals(obj){
 			"editFlowAdmin/:orgId/:identifier": "editFlowAdmin",
 			"newUser/:orgId": "editUser", //NEW USER template
 			"editUser/:orgId/:identifier": "editUser", //EDIT USER template
-			"editTerminal/:orgId/:identifier": "editTerminal" //EDIT terminal
+			"editTerminal/:orgId/:identifier": "editTerminal", //EDIT terminal
+			"editTerminalOrg/:orgId/:identifier": "editTerminalOrg" //EDIT terminal
 		}
 	});
 
@@ -1186,9 +1187,22 @@ function fetchTerminals(obj){
 			orgId=undefined;
 		}
 		console.log(orgId+' '+identifier)
-		editTerminalView.render({orgId: orgId, identifier: identifier});
+		editTerminalView.render({orgId: orgId, identifier: identifier, admin: true});
 	});
 
+	router.on('route:editTerminalOrg', function(orgId, identifier) {
+		console.log('editTerminalOrg route trigged');
+		loadDefaultStatValues();
+		StopSwitchStats();
+		if(identifier==null){
+			console.log('id '+identifier);
+			identifier=orgId;
+			console.log('id '+identifier);
+			orgId=undefined;
+		}
+		console.log(orgId+' '+identifier)
+		editTerminalView.render({orgId: orgId, identifier: identifier, admin: false});
+	});
 
 	Backbone.history.start();
 

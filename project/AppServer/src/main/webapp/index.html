@@ -1131,7 +1131,7 @@
                                                         <td><%= terminal.get('ipAddress') %></td>
                                                         <td><%= terminal.get('ifaceSpeed') %></td>
                                                         <td><%= terminal.get('mac') %></td>
-                                                        <td><center><button type="button" class="btn btn-warning btn-sm">Edit</button></center></td>
+                                                        <td><center><a href="#/editTerminalOrg/<%= orgId %>/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Edit</button></a></center></td>
                                                       </tr>
 
                                                     <%  }
@@ -1237,9 +1237,8 @@
                                         
                                         <div class="panel panel-primary">
                                           <div class="panel-body">
-
                                             <div class="padding-10-bot">
-                                              <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#newFlow"><i class="fa fa-bolt"></i> Create new FLOW for <%= orgName %></button>
+                                              <a href="#/newFlow/<%= orgId %>"><button class="btn btn-success"> Create new FLOW for <%= orgName %></button></a>
                                             </div>
 
 
@@ -1856,8 +1855,8 @@
                           <td><%= flow.get('dstPort') %></td>
                           <td><%= flow.get('protocol') %></td>
                           <td><%= flow.get('qos') %></td>
-                          <td><center><a href="#"><button class="btn btn-info btn-sm" >Statistics</button></a></center></td>
-                          <td><center><a href="#/editFlow<%= admin ? 'Admin' : '' %>/<%= loginOrg %>/<%= flow.get('identifier') %>"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                          <td><center><a href=""><button class="btn btn-info btn-sm" >Statistics</button></a></center></td>
+                          <td><center><a href="#/editFlow<%= admin ? 'Admin' : '' %>/<%= orgId %>/<%= flow.get('identifier') %>"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
                         </tr>
 
                       <%  }
@@ -1911,7 +1910,7 @@
                           <td><%= flow.get('dstPort') %></td>
                           <td><%= flow.get('protocol') %></td>
                           <td><%= flow.get('qos') %></td>
-                          <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                          <td><center><a href="#/editFlow<%= admin ? 'Admin' : '' %>/<%= orgId %>/<%= flow.get('identifier') %>"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
                         </tr>
 
                       <%  }
@@ -1937,7 +1936,7 @@
                   <div class="row">
 
                     <div class="col-md-4 col-sm-4">
-                      <a href="#<%= admin ? 'adminFlows' : 'clientFlows/'+loginOrg  %>">
+                      <a href="#<%= admin ? 'adminFlows' : 'adminFlows/'+orgId  %>">
                         <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                         </button>
                       </a>
@@ -2229,7 +2228,7 @@
             
             <div class="row">
               <div class="col-md-4 col-sm-4">
-                <a href="#/adminTerminals">
+                <a href="<%= admin ? '#/adminTerminals' : '#/adminTerminals/'+orgId %>">
                   <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                   </button>
                 </a>
@@ -2254,10 +2253,10 @@
                 <div class="col-lg-6 col-md-6 col-sm-12">
 
                   <div class="form-group">
-                    <label for="organization" class="col-sm-4 control-label">Organization</label>
+                    <label for="orgId" class="col-sm-4 control-label">Organization</label>
                     <div class="col-sm-8">
 
-                      <input type="text" class="form-control" name="hostName" value="<%= orgId %>" >
+                      <input type="text" class="form-control" name="orgId" value="<%= orgId %>" readonly title="Unassign terminal to change the organization">
 
                       <!--
                         <select class="form-control" readonly title="Unassign terminal to change the organization">
