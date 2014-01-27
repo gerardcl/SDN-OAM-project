@@ -9,7 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import scala.util.parsing.json.JSON;
 import dxat.appserver.manager.OrgManager;
 import dxat.appserver.manager.pojos.Org;
 import dxat.appserver.manager.pojos.OrgCollection;

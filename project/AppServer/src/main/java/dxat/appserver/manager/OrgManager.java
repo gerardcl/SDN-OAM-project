@@ -145,7 +145,6 @@ public class OrgManager {
 	}
 	
 	public TOrg updateTOrg(String orgId, TOrg torg){
-		System.out.println("org exists! ("+orgId+")");
 		dbupdate = new Update();
 		TOrg utorg = torgs.get(orgId);
 		utorg.setIdentifier(orgId);
@@ -158,7 +157,6 @@ public class OrgManager {
 			dbupdate.updateOrg(utorg);
 			torgs.put(orgId, utorg);
 			updateOrg(utorg);
-			System.out.println("org updated: "+orgId);
 			return utorg;
 		} catch (OrgNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -242,16 +240,13 @@ public class OrgManager {
 	public boolean existOrg(TOrg org){
 		for (Entry<String, TOrg> entry1 : torgs.entrySet()) {
 			TOrg torg = entry1.getValue();
-			System.out.println("searching if org "+org.getName()+" exists");
 			if(org.getName().equals(torg.getName())) return true;
 		}
-		System.out.println("this org does not exists");
 		return false;
 	}
 
 	public boolean existOrg(String orgId){
 		if(orgs.containsKey(orgId)) return true;
-		System.out.println("org does not exists...");
 		return false;
 	}
 	
@@ -268,15 +263,30 @@ public class OrgManager {
 		}
 		return orgId;
 	}
+	
+	private String getOrgNameFromUserId(String userId){
+		for (Entry<String, Org> entry1 : orgs.entrySet()) {
+			Org org = entry1.getValue();
+			for (Entry<String, OrgUser> entry2 : org.getUsers().entrySet()) {
+				if(entry2.getValue().getIdentifier().equals(userId)){
+					return org.getName();
+				}
+			}
+		}
+		return null;
+	}
+	
+	//SESSION
 	public OrgSession existUser(String username){
 		//TO CHECK IT BY GOING THROUGH EACH ORG?¿ NEXT STEPS...
 		for (Entry<String, OrgUser> entry : users.entrySet()) {
 		    Object value = entry.getValue();
 		    if(((OrgUser) value).getName().equals(username)) {
-		    	System.out.println("OK");
 		    	OrgSession session = new OrgSession();
 		    	session.setUserId(((OrgUser) value).getIdentifier());
 		    	session.setSession(UUID.randomUUID().toString());
+		    	session.setOrgName(getOrgNameFromUserId(session.getUserId()));
+		    	session.setUserName(((OrgUser) value).getName());
 		    	session.setToken("notoken");
 		    	//CHECK IF ORGID == NULL THEN...
 		    	session.setOrgId(getOrgIdFromUserId(session.getUserId()));
@@ -286,11 +296,11 @@ public class OrgManager {
 		}
 		return null;
 	}
+	
 	public List<Org> getOrgs(){
 		//TODO
 		return null;
 	}
-	
 	
 	//INIT MANAGER
 	private void initOrgManager(){
@@ -345,41 +355,43 @@ public class OrgManager {
 					e.printStackTrace();
 				}
 				tempFlows = new HashMap<String, OrgFlow>();
-				for(i=0; i<10; i++){
-					OrgFlow flow = new OrgFlow();
-					String fid = "flouu";
-					String fname = "namee";
-					String orgTS = "src";
-					String orgTD = "dst";
-					fid += Integer.toString(j);
-					fid += Integer.toString(i);
-					fname += Integer.toString(j);
-					fname += Integer.toString(i);
-					orgTS += Integer.toString(j);
-					orgTS += Integer.toString(i);
-					orgTD += Integer.toString(j);
-					orgTD += Integer.toString(i);
-					flow.setIdentifier(fid);
-					flow.setBandwidth(5000000);
-					flow.setDstPort(5000);
-					flow.setSrcPort(6000);
-					flow.setProtocol("TCP");
-					flow.setName(fname);
-					flow.setQos(2000);
-					flow.setActive(i%3==0?true:false);
-					flow.setDstOTidentifier(orgTD);
-					flow.setSrcOTidentifier(orgTS);
-					tempFlows.put(flow.getIdentifier(), flow);
-					System.out.println("new flow with id = "+flow.getIdentifier());
-					flows.put(flow.getIdentifier(), flow);
-					try {
-						dbcreate.createFlow(flow, org.getIdentifier());
-					} catch (FlowAlreadyExistsException e) {
-						e.printStackTrace();
-					} catch (OrgNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
+								
+//no create dummy flows -> get/create it dinamically from manager (checking stats by topo events) 								
+//				for(i=0; i<10; i++){
+//					OrgFlow flow = new OrgFlow();
+//					String fid = "flouu";
+//					String fname = "namee";
+//					String orgTS = "src";
+//					String orgTD = "dst";
+//					fid += Integer.toString(j);
+//					fid += Integer.toString(i);
+//					fname += Integer.toString(j);
+//					fname += Integer.toString(i);
+//					orgTS += Integer.toString(j);
+//					orgTS += Integer.toString(i);
+//					orgTD += Integer.toString(j);
+//					orgTD += Integer.toString(i);
+//					flow.setIdentifier(fid);
+//					flow.setBandwidth(5000000);
+//					flow.setDstPort(5000);
+//					flow.setSrcPort(6000);
+//					flow.setProtocol("TCP");
+//					flow.setName(fname);
+//					flow.setQos(2000);
+//					flow.setActive(i%3==0?true:false);
+//					flow.setDstOTidentifier(orgTD);
+//					flow.setSrcOTidentifier(orgTS);
+//					tempFlows.put(flow.getIdentifier(), flow);
+//					System.out.println("new flow with id = "+flow.getIdentifier());
+//					flows.put(flow.getIdentifier(), flow);
+//					try {
+//						dbcreate.createFlow(flow, org.getIdentifier());
+//					} catch (FlowAlreadyExistsException e) {
+//						e.printStackTrace();
+//					} catch (OrgNotFoundException e) {
+//						e.printStackTrace();
+//					}
+//				}
 				org.setFlows(tempFlows);
 				tempUsers = new HashMap<String, OrgUser>();
 				for(i=0; i<10; i++){
@@ -410,34 +422,36 @@ public class OrgManager {
 				}
 				org.setUsers(tempUsers);
 				tempTerminals = new HashMap<String, OrgTerminal>();
-				for(i=0; i<10; i++){
-					OrgTerminal terminal = new OrgTerminal();
-					String tid = "terminall";
-					String tname = "namee";
-					tid += Integer.toString(j);
-					tid += Integer.toString(i);
-					tname += Integer.toString(j);
-					tname += Integer.toString(i);
-					terminal.setIdentifier(tid);
-					terminal.setHostName(tname);
-					terminal.setDescription("terminal host for ");
-					terminal.setDescription(terminal.getDescription() + org.getName());
-					terminal.setIfaceSpeed(i*10000);
-					terminal.setIpAddress("192.168."+Integer.toString(i)+"."+Integer.toString(j)+"0");
-					terminal.setMac("DD:XX:AA:TT:"+Integer.toString(j)+"B:"+Integer.toString(i)+"C");
-					terminal.setActive(i%2==0?true:false);
-					terminal.setAssigned(i%2==0?true:false);
-					tempTerminals.put(terminal.getIdentifier(), terminal);
-					System.out.println("new terminal with id = "+terminal.getIdentifier());
-					terminals.put(terminal.getIdentifier(), terminal);
-					try {
-						dbcreate.createTerminal(terminal, org.getIdentifier());
-					} catch (TerminalAlreadyExistsException e) {
-						e.printStackTrace();
-					} catch (OrgNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
+
+//no create dummy terminals -> get/create it from topology 				
+//				for(i=0; i<10; i++){
+//					OrgTerminal terminal = new OrgTerminal();
+//					String tid = "terminall";
+//					String tname = "namee";
+//					tid += Integer.toString(j);
+//					tid += Integer.toString(i);
+//					tname += Integer.toString(j);
+//					tname += Integer.toString(i);
+//					terminal.setIdentifier(tid);
+//					terminal.setHostName(tname);
+//					terminal.setDescription("terminal host for ");
+//					terminal.setDescription(terminal.getDescription() + org.getName());
+//					terminal.setIfaceSpeed(i*10000);
+//					terminal.setIpAddress("192.168."+Integer.toString(i)+"."+Integer.toString(j)+"0");
+//					terminal.setMac("DD:XX:AA:TT:"+Integer.toString(j)+"B:"+Integer.toString(i)+"C");
+//					terminal.setActive(i%2==0?true:false);
+//					terminal.setAssigned(i%2==0?true:false);
+//					tempTerminals.put(terminal.getIdentifier(), terminal);
+//					System.out.println("new terminal with id = "+terminal.getIdentifier());
+//					terminals.put(terminal.getIdentifier(), terminal);
+//					try {
+//						dbcreate.createTerminal(terminal, org.getIdentifier());
+//					} catch (TerminalAlreadyExistsException e) {
+//						e.printStackTrace();
+//					} catch (OrgNotFoundException e) {
+//						e.printStackTrace();
+//					}
+//				}
 				org.setTerminals(tempTerminals);
 				orgs.put(org.getIdentifier(), org);
 				torgs.put(torg.getIdentifier(), torg);
