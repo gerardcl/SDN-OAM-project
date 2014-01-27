@@ -59,6 +59,10 @@ function fetchTerminals(obj){
 
 
 //	Models
+
+//Alarm model example
+//{"timestamp":1390671712892,"event":"SWITCH_ADDED","updates":[{"inventoryId":"00:01:d4:ca:6d:b5:f4:0f","propertyId":"enabled","legacyValue":"false","newValue":"true","message":""}]}
+
 	//TOrg data model  
 	var Organization = Backbone.Model.extend({
 		idAttribute: "identifier",
@@ -1007,6 +1011,7 @@ function fetchTerminals(obj){
 
 	router.on('route:adminAlarms', function() {
 		//resetAlarmView();
+		$('#alarmDetails').hide();
 		adminSidebarView.render({btnHL: 7});
 		adminAlarmsView.render();
 		loadDefaultStatValues();
