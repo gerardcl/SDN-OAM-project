@@ -60,8 +60,8 @@ function fetchTerminals(obj){
 
 //	Models
 
-//Alarm model example
-//{"timestamp":1390671712892,"event":"SWITCH_ADDED","updates":[{"inventoryId":"00:01:d4:ca:6d:b5:f4:0f","propertyId":"enabled","legacyValue":"false","newValue":"true","message":""}]}
+	//Alarm model example
+	//{"timestamp":1390671712892,"event":"SWITCH_ADDED","updates":[{"inventoryId":"00:01:d4:ca:6d:b5:f4:0f","propertyId":"enabled","legacyValue":"false","newValue":"true","message":""}]}
 
 	//TOrg data model  
 	var Organization = Backbone.Model.extend({
@@ -79,6 +79,7 @@ function fetchTerminals(obj){
 
 	//flow model  
 	var Flow = Backbone.Model.extend({
+		idAttribute: "identifier",
 		defaults:{
 			//identifier: "",
 			active: "",
@@ -96,7 +97,7 @@ function fetchTerminals(obj){
 	//terminal model  
 	var Terminal = Backbone.Model.extend({
 		idAttribute: "identifier",
-		//urlRoot:'/AppServer/webapi/manager/terminal/all?orgId=',
+		urlRoot:'/AppServer/webapi/manager/terminal',
 		defaults:{
 			//identifier: "",
 			active: "",
@@ -195,6 +196,8 @@ function fetchTerminals(obj){
 				terminalObject.ifaceSpeed = currentValues.ifaceSpeed;
 				terminalObject.ipAddress = currentValues.ipAddress;
 				terminalObject.mac = currentValues.mac;
+				terminalObject.assigned = currentValues.assigned;
+				terminalObject.description = currentValues.description;
 				this.push(terminalObject);
 			}
 			console.log(this.toJSON());
@@ -207,25 +210,6 @@ function fetchTerminals(obj){
 	//Users COLLECTION
 	var Users = Backbone.Collection.extend({
 		model: User,
-		/*url: function(orgId){
-			if(orgId!=null){
-				var aux = orgId.orgId;
-				console.log('Entra a la funcio URL i treu com a uri:');
-				var uri = '/user/all?orgId=' + aux;
-				console.log(uri);
-				return uri;
-			}else{
-				console.log('Entra lelse');
-				return '/user/all';
-
-			}
-
-			var aux = JSON.stringify(orgId)
-			console.log(aux);
-			var uri = '/AppServer/webapi/manager/user/all?orgId=' + aux;
-			console.log(uri);
-			return uri;
-		},*/
 		parse:function (response) {
 			for ( var i = 0, length = response.orgUsers.length; i < length; i++) {
 				var currentValues = response.orgUsers[i];
@@ -346,7 +330,7 @@ function fetchTerminals(obj){
 		render: function (options) {
 			var that = this;
 			if(options.identifier){ //edit
-				// "id" is what backbone takes to GET REST path
+				// "identifier" is what backbone takes to GET REST path
 				that.org = new Organization({identifier: options.identifier});
 				console.log(that.org.isNew());
 				that.org.fetch({
@@ -586,13 +570,12 @@ function fetchTerminals(obj){
 		assign: function (ev){
 			var termDetails = $(ev.currentTarget).serializeObject();
 			console.log(termDetails);
-
 			var terminal = new Terminal();
 			terminal.url = '/AppServer/webapi/manager/terminal/'+termDetails.orgId;
 
-			terminal.orgId = null;
+/*			terminal.orgId = null;
 			terminal.orgName = null;
-			console.log(termDetails);
+			console.log(termDetails);*/
 
 			terminal.save(termDetails, {
 				//type: "POST",
@@ -727,24 +710,34 @@ function fetchTerminals(obj){
 	var NewFlowView = Backbone.View.extend({
 		el: '.page',
 		render: function (options) {
-
+			console.log('options id: '+options.identifier);
+			console.log('options org: '+options.orgId);
+			console.log('options admin: '+options.admin);
 			var that = this;
-			if(options.flowId){ //EDIT FLOW
-				var terminals = new Terminals ();
-				if(options.admin==true){
-					terminals.url = '/AppServer/webapi/manager/terminal/all';
-					//if is ADMIN we fetch the organizations
-					var organizations = new Organizations();
-					organizations.url = '/AppServer/webapi/manager/org/all';
-					organizations.fetch();
-				};
-				if(options.admin==false){
-					terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
-					var organizations = new Organizations();
-				}
-				terminals.fetch({
-					success: function (terminals){
-						var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier, organizations: organizations.models, admin: options.admin, flow: null});
+			if(options.identifier){ //EDIT FLOW
+
+				that.flow = new Flow({identifier: options.identifier});
+				that.flow.urlRoot = '/AppServer/webapi/manager/flow/'+options.orgId;
+				that.flow.fetch({
+					success: function (flow){
+						var terminals = new Terminals ();
+						if(options.admin==true){
+							console.log('admin true');
+							terminals.url = '/AppServer/webapi/manager/terminal/all';
+							//if is ADMIN we fetch ALL terminals and organizations
+							var organizations = new Organizations();
+							organizations.url = '/AppServer/webapi/manager/org/all';
+							organizations.fetch();
+						};
+						if(options.admin==false){
+							console.log('admin false');
+							//if is NO ADMIN we fetch just organization terminals
+							terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';
+							var organizations = new Organizations();
+						};
+						terminals.fetch();
+
+						var template = _.template($('#new-flow-template').html(), {terminals: terminals.models, orgId: options.identifier, organizations: organizations.models, admin: options.admin, flow: flow});
 						that.$el.html(template);
 						$('.listScroll').slimScroll({
 							height: '150px'
@@ -944,7 +937,7 @@ function fetchTerminals(obj){
 		unassignTerminal: function (ev){
 			this.terminal.destroy({
 				success: function () {
-					router.navigate('adminOrgs/', {trigger: true});
+					//router.navigate('adminOrgs/', {trigger: true});
 				}
 			});
 			return false;
@@ -981,7 +974,7 @@ function fetchTerminals(obj){
 			//SHARED ROUTES
 			"newFlowAdmin/:identifier": "newFlowAdmin",
 			"newFlow/:identifier": "newFlow",
-			"editFlowAdmin/:orgId/:flowId": "editFlowAdmin",
+			"editFlowAdmin/:orgId/:identifier": "editFlowAdmin",
 			"newUser/:orgId": "editUser", //NEW USER template
 			"editUser/:orgId/:identifier": "editUser", //EDIT USER template
 			"editTerminal/:orgId/:identifier": "editTerminal" //EDIT terminal
@@ -1149,14 +1142,13 @@ function fetchTerminals(obj){
 
 	//SHARED
 	router.on('route:newFlowAdmin', function(id) {
-		newFlowView.render({identifier: id, admin: true});
+		newFlowView.render({orgId: id.orgId, identifier: id.flowId, admin: true});
 		console.log(id);
 
 	});
 
-	router.on('route:editFlowAdmin', function(options) {
-		newFlowView.render({identifier: options.orgId, admin: true, flowId: options.flowId});
-		console.log(options);
+	router.on('route:editFlowAdmin', function(orgId, identifier) {
+		newFlowView.render({identifier: identifier, admin: true, orgId: orgId});
 
 	});
 

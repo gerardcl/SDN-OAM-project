@@ -1376,7 +1376,7 @@
                     <tbody>
 
                       <% _.each(terminals, function(terminal) { 
-                        if(terminal.get('active')==true){ %>
+                        if(terminal.get('assigned')==false){ %>
 
                         <tr>
                           <td><%= terminal.get('identifier') %></td>
@@ -1387,7 +1387,7 @@
 
                             <center>
                               <div class="btn-group dropdown">
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="assignOrg" onclick="copyTo(this)">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="assignOrg" onclick="copyTo(this);">
                                   Assign organization
                                   <span class="caret"></span>
                                 </button>
@@ -1944,7 +1944,7 @@
                     </div>
 
                     <div class="col-md-4 col-sm-4">
-                      <h3 class="panel-title"> <center> <%= flow ? 'EDIT FLOW '+flowId : 'CREATE NEW FLOW' %> </center></h3>
+                      <h3 class="panel-title"> <center> <%= flow ? 'EDIT FLOW '+flow.get('name') : 'CREATE NEW FLOW' %> </center></h3>
                     </div>
 
                     <div class="col-md-4 col-sm-4">
@@ -1958,7 +1958,7 @@
                     <form class="new-flow-form well">
                     
                       <div class="row">
-
+                        <!-- if admin we allow to select organization for this flow-->
                         <% if(admin){ %>
                           <div class="col-sm-12 col-md-12 col-lg-12">
                             
@@ -1967,7 +1967,7 @@
                               <div class="col-sm-10">
                                 <select class="form-control" name="orgId" id="selectOrg" onchange="fetchTerminals(this)">
                                   <div class="listScroll"> 
-                                    <option name="orgId" value="<%= loginOrg %>"> <%= loginOrgName %> </option>
+                                    <option name="orgId" value="<%= loginOrg %>" required> <%= loginOrgName %> </option>
                                     
                                     <% _.each(organizations, function(organization) { %>
 
@@ -1996,7 +1996,7 @@
                             <label for="srcTerm" class="col-sm-4 control-label">Source terminal</label>
                             <div class="col-sm-8">
 
-                              <select class="form-control" name="srcOTidentifier">
+                              <select class="form-control" name="srcOTidentifier" required>
                                 
                                   <option id="srcTerm">Select SOURCE</option>
                                   <div class="listScroll"> 
@@ -2016,7 +2016,7 @@
                           <div class="form-group"><!-- DESTINATION -->
                             <label for="dstTerm" class="col-sm-4 control-label">Destination terminal</label>
                             <div class="col-sm-8">
-                              <select class="form-control" name="dstOTidentifier">
+                              <select class="form-control" name="dstOTidentifier" required>
                                 <div class="listScroll"> 
                                   <option id="dstTerm">Select SOURCE</option>
                                   <% _.each(terminals, function(terminal) { 
@@ -2042,11 +2042,11 @@
                                 <label for="ports" >Ports</label>
                               </div>
                               <div class="col-sm-4" id="ports">
-                                <input type="text" class="form-control" name="srcPort" value="" placeholder="Source">
+                                <input type="text" class="form-control" name="srcPort" value="" placeholder="Source" required>
                                 <br>
                               </div>
                               <div class="col-sm-4" id="ports">
-                                <input type="text" class="form-control" name="dstPort" value="" placeholder="Destination">
+                                <input type="text" class="form-control" name="dstPort" value="" placeholder="Destination" required>
                                 <br>
                               </div>
                             </div>
@@ -2054,7 +2054,7 @@
                             <div class="form-group"><!-- BANDWIDTH -->
                               <label for="bwOpt" class="col-sm-4 control-label">Bandwidth</label>
                               <div class="col-sm-8">
-                                <select class="form-control" name="bandwidth">
+                                <select class="form-control" name="bandwidth" required>
                                   <div class="listScroll"> 
                                     <option id="bwOpt" value="">Select BANDWIDTH</option>
 
@@ -2073,7 +2073,7 @@
                             <div class="form-group"><!-- PROTOCOL -->
                               <label for="protoFlow" class="col-sm-4 control-label">Protocol</label>
                               <div class="col-sm-8">
-                                <select class="form-control" name="protocol">
+                                <select class="form-control" name="protocol" required>
                                   <div class="listScroll"> 
                                     <option id="protoFlow" value="">Select Protocol</option>
                                       <option value="tcp">TCP</option>
@@ -2256,22 +2256,23 @@
                   <div class="form-group">
                     <label for="organization" class="col-sm-4 control-label">Organization</label>
                     <div class="col-sm-8">
-                      <select class="form-control">
-                        <div class="listScroll"> 
+
+                      <input type="text" class="form-control" name="hostName" value="<%= orgId %>" >
+
+                      <!--
+                        <select class="form-control" readonly title="Unassign terminal to change the organization">
                           <% _.each(organizations, function(organization) { %>
-
-                            <option id="organization" value="<%= organization.get('identifier') %>"><%= organization.get('name') %></option>
-
+                            <option id="organization" value="<%= organization.get('identifier') %>" ><%= organization.get('name') %></option>
                           <% }); %>
-                        </div>
-                      </select>
+                        </select>
+                      -->
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label for="name" class="col-sm-4 control-label">Name</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" name="hostName" value="<%= terminal ? terminal.get('hostName') : '' %>" >
+                      <input type="text" class="form-control" name="hostName" value="<%= terminal ? terminal.get('hostName') : '' %>" autofocus>
                     </div>
                   </div>
 
