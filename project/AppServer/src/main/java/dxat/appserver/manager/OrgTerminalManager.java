@@ -84,59 +84,64 @@ public class OrgTerminalManager {
 	//UPDATE ORG TERMINALS FROM TOPO TERMINALS
 	public void updateOrgTerminals(TerminalCollection allTTerminals) {
 		boolean updated;
+		boolean found;
+		String idFound = null;
 		OrgTerminal newterminal = new OrgTerminal();
 		for(Terminal tterminal : allTTerminals.getTerminals()){
 			updated = false;
+			found = false;
 			if(!orgManager.getTerminals().isEmpty()){
 				for(Entry<String, OrgTerminal> allOTerminals : orgManager.getTerminals().entrySet()){
 					OrgTerminal oterminal = allOTerminals.getValue();
 					
 					if(oterminal.getMac().equals(tterminal.getMac())){
-						if(!oterminal.getIdentifier().equals(tterminal.getTerminalId())){
-							oterminal.setIdentifier(tterminal.getTerminalId());
-							System.out.println("[TERMINAL TOPOLOGY TO MANAGER] INCONGRUENCE!:");
-							System.out.println("------------> matching of mac but not of ids -> setting id O.Term. from topo");
-						}
-						//UPDATE OTERMINAL - setActive
-						//update HM and DB with updated oterminal
-						
-						//FALTA XEQUEJAR SI TÉ ASSIGNED ORG AQUÍ!!!
-						if(oterminal.getAssignedOrgId()==null){
-							//ONLY ADD HM
-							//update oterminal
-							updated = true;
-							oterminal.setActive(true);
-							oterminal.setIdentifier(tterminal.getTerminalId());
-							oterminal.setIpAddress(tterminal.getIpv4());
-							oterminal.setPortApiID(tterminal.getPortAPId());
-							putOrgTerminal(oterminal);
-						}else{
-							//update oterminal
-							
-							//CHECK IF TERMINAL IN ORG 
-							
-							updated = true;
-							oterminal.setActive(true);
-							oterminal.setIdentifier(tterminal.getTerminalId());
-							oterminal.setIpAddress(tterminal.getIpv4());
-							oterminal.setPortApiID(tterminal.getPortAPId());
-							
-							try {
-								dbupdate.updateTerminal(oterminal, oterminal.getAssignedOrgId());
-								orgManager.getOrg(oterminal.getAssignedOrgId()).getTerminals().put(oterminal.getIdentifier(), oterminal);
-								orgManager.getTerminals().put(oterminal.getIdentifier(), oterminal);
-							} catch (TerminalNotFoundException
-									| OrgNotFoundException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-
+						found = true;
+						idFound = oterminal.getIdentifier();
 					}
 				}
-				//TODO ANOTHER FOR HM ORGS->TERMINALS?				
 				
+				if(found){
+					found = false;
+					if(!orgManager.getTerminals().get(idFound).getIdentifier().equals(tterminal.getTerminalId())){
+						orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
+						System.out.println("[TERMINAL TOPOLOGY TO MANAGER] INCONGRUENCE! (but... could be the first check of this terminal! ;) )");
+						System.out.println("------------> matching of mac but not of ids -> setting id O.Term. from topo");
+					}
+					//update HM and DB with updated oterminal
+					//FALTA XEQUEJAR SI TÉ ASSIGNED ORG AQUÍ!!!
+					if(orgManager.getTerminals().get(idFound).getAssignedOrgId()==null){
+						System.out.println("UPDATING TERMINAL: "+tterminal.getTerminalId());
+
+						//ONLY ADD HM
+						//update oterminal
+						updated = true;
+						orgManager.getTerminals().get(idFound).setActive(true);
+						orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
+						orgManager.getTerminals().get(idFound).setIpAddress(tterminal.getIpv4());
+						orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
+						putOrgTerminal(orgManager.getTerminals().get(idFound));
+					}else{
+						System.out.println("UPDATING ORG TERMINAL: "+tterminal.getTerminalId());
+						//update oterminal
+						//CHECK IF TERMINAL IN ORG 
+						updated = true;
+						orgManager.getTerminals().get(idFound).setActive(true);
+						orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
+						orgManager.getTerminals().get(idFound).setIpAddress(tterminal.getIpv4());
+						orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
+						try {
+							dbupdate.updateTerminal(orgManager.getTerminals().get(idFound), orgManager.getTerminals().get(idFound).getAssignedOrgId());
+							orgManager.getOrg(orgManager.getTerminals().get(idFound).getAssignedOrgId()).getTerminals().put(orgManager.getTerminals().get(idFound).getIdentifier(), orgManager.getTerminals().get(idFound));
+							orgManager.getTerminals().put(orgManager.getTerminals().get(idFound).getIdentifier(), orgManager.getTerminals().get(idFound));
+						} catch (TerminalNotFoundException
+								| OrgNotFoundException e) {
+							e.printStackTrace();
+						}
+					}
+				}
 				if(!updated){
+					System.out.println("NEW TERMINAL: "+tterminal.getTerminalId());
+					updated = false;
 					//PUSH OTERMINAL - orgId = null - setActive -
 					newterminal.setActive(true);
 					newterminal.setAssigned(false);
@@ -152,6 +157,7 @@ public class OrgTerminalManager {
 				}
 			}else{
 				//PUSH FIRST OTERMINAL - orgId = null - setActive -
+				System.out.println("FIRST TERMINAL: "+tterminal.getTerminalId());
 				newterminal.setActive(true);
 				newterminal.setAssigned(false);
 				newterminal.setDescription("new terminal from topology");

@@ -6,10 +6,12 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+
 import dxat.appserver.manager.OrgTerminalManager;
 import dxat.appserver.manager.exceptions.OrgNotFoundException;
 import dxat.appserver.manager.exceptions.TerminalNotFoundException;
@@ -57,9 +59,9 @@ public class OrgTerminalResource {
 		return orgTerminalManager.orgManager.getOrg(orgId).getTerminals().get(terminalId);
 	}	
 
-//UPDATE TERMINAL -> ONLY POSSIBLE PARAMETERS FROM ORG TO TOPO...
+//CREATE TERMINAL TO DB OR UPDATE IT-> ONLY POSSIBLE PARAMETERS FROM ORG TO TOPO...
 //ONLY ONE ORG PER TERMINAL AND THE OTHER WAY AROUND
-	@PUT
+	@POST
 	@Path("/terminal/{orgId}/{terminalId}")
 	@Consumes(AppServerMediaType.ORG_TERMINAL_COLLECTION)
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION)

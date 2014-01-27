@@ -41,7 +41,7 @@ public class Delete {
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		if (existsOrg(collection, idOrg)) {
 			if (existsElement(collection, idOrg, id, "users")) {
-				saveElement(idOrg, "users");
+				//saveElement(idOrg, "users");
 				DBObject match = new BasicDBObject("identifier", idOrg);
 				DBObject update = new BasicDBObject("users", new BasicDBObject(
 						"identifier", id));
@@ -63,7 +63,7 @@ public class Delete {
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		if (existsOrg(collection, idOrg)) {
 			if (existsElement(collection, idOrg, id, "terminals")) {
-				saveElement(idOrg, "terminals");
+				//saveElement(idOrg, "terminals");
 				DBObject match = new BasicDBObject("identifier", idOrg);
 				// DBObject documentOrg = collection.findOne(query);
 				DBObject update = new BasicDBObject("terminals",
@@ -86,7 +86,7 @@ public class Delete {
 		DBCollection collection = db.getCollection(OCOLLECTION);
 		if (existsOrg(collection, idOrg)) {
 			if (existsElement(collection, idOrg, id, "flows")) {
-				saveElement(idOrg, "flows");
+				//saveElement(idOrg, "flows");
 				DBObject match = new BasicDBObject("identifier", idOrg);
 				// DBObject documentOrg = collection.findOne(query);
 				DBObject update = new BasicDBObject("flows", new BasicDBObject(

@@ -1316,6 +1316,7 @@ function setTrafficMatrix(){
 	var pushSrc=true;
 	var pushDst=true;
 
+	if(matrix.length>0){
 	//alert(matrix.matrix.length);
 	for (var i=0; i<matrix.matrix.length;i++){
 		for(var j=0; j<nodes.length;j++){
@@ -1446,4 +1447,8 @@ function setTrafficMatrix(){
 
 		vis.render();		
 	});
+	
+	}else{
+		$('#Tmatrix').html('<p class="text-muted"> No Traffic Matrix loaded... no active flows yet?</p>');
+	}
 }
