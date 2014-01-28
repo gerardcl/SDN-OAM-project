@@ -29,11 +29,13 @@ import net.floodlightcontroller.devicemanager.IDeviceService;
 import net.floodlightcontroller.routing.ForwardingBase;
 import net.floodlightcontroller.routing.IRoutingDecision;
 import net.floodlightcontroller.routing.IRoutingService;
+import net.floodlightcontroller.staticflowentry.StaticFlowEntries;
 import net.floodlightcontroller.topology.ITopologyService;
 import net.floodlightcontroller.topology.NodePortTuple;
 import org.openflow.protocol.*;
 import org.openflow.protocol.action.OFAction;
 import org.openflow.protocol.action.OFActionOutput;
+import org.openflow.util.HexString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
         if (ofMatch.getDataLayerType() == 0x806) {
             NodePortTuple attachmentPoint = DxatAppModule.getInstance().getDeviceListener().getAttachmentPoint(ofMatch.getNetworkDestination());
             if (attachmentPoint != null) {
-                System.out.println("Doing ARP Smart forwarding to Attachment point: " + attachmentPoint.toString());
+                //System.out.println("Doing ARP Smart forwarding to Attachment point: " + attachmentPoint.toString());
                 doSmartForward(attachmentPoint, pi, cntx);
             } else {
                 doFlood(sw, pi, cntx);
@@ -68,27 +70,40 @@ public class ArpForwarding extends ForwardingBase implements IFloodlightModule {
     }
 
     private void pushDropMatch(IOFSwitch sw, OFMatch match, FloodlightContext cntx) {
-        System.out.println("Pushing drop entry with match: '" + match.toString() + "'.");
+
+        //System.out.println("Pushing drop entry with match: '" + match.toString() + "'.");
+
+        short inputPort =match.getInputPort();
 
         match = new OFMatch();
+        match.setInputPort(inputPort);
+        match.setDataLayerType((short) 0x800);
 
         // Create flow-mod based on packet-in and src-switch
         OFFlowMod fm = (OFFlowMod) floodlightProvider.getOFMessageFactory().getMessage(OFType.FLOW_MOD);
-        List<OFAction> actions = new ArrayList<OFAction>(); // no actions = drop
-        fm.setCookie(0)
-                .setPriority((short) 1)
-                .setIdleTimeout((short) 5)
-                .setHardTimeout((short) 60)
-                .setBufferId(OFPacketOut.BUFFER_ID_NONE)
-                .setMatch(match)
-                .setActions(actions)
-                .setLengthU(OFFlowMod.MINIMUM_LENGTH);
+        String entryName = sw.getStringId()+":"+match.getInputPort();
+        StaticFlowEntries.initDefaultFlowMod(fm, entryName);
 
-        try {
+        List<OFAction> actions = new ArrayList<OFAction>(); // no actions = drop
+        fm.setIdleTimeout((short) 10); // infinite
+        fm.setHardTimeout((short) 20); // infinite
+        fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
+        fm.setCommand((short) 0);
+        fm.setFlags((short) 0);
+        fm.setOutPort(OFPort.OFPP_NONE.getValue());
+        fm.setCookie((long) 0);
+        fm.setPriority((short)1);
+        fm.setActions(actions);
+        fm.setMatch(match);
+
+        // Push static flow entry
+        DxatAppModule.getInstance().getFlowPusherService().addFlow(entryName, fm, sw.getStringId());
+
+        /*try {
             sw.write(fm, cntx);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
