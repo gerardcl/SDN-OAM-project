@@ -101,9 +101,10 @@ public class OrgTerminalManager {
 		boolean updated;
 		boolean found;
 		String idFound = null;
-		OrgTerminal newterminal = new OrgTerminal();
 		for(Terminal tterminal : allTTerminals.getTerminals()){
-			
+			OrgTerminal newterminal = new OrgTerminal();
+			OrgTerminal oterminal = new OrgTerminal();
+
 			//TODO CHECK NUMBER OF TTERMINALS
 			System.out.println("SIZE OF T.TERMINALS COLLECTION : "+allTTerminals.getTerminals().size());
 			
@@ -112,11 +113,12 @@ public class OrgTerminalManager {
 				found = false;
 				if(!orgManager.getTerminals().isEmpty()){
 					for(Entry<String, OrgTerminal> allOTerminals : orgManager.getTerminals().entrySet()){
-						OrgTerminal oterminal = allOTerminals.getValue();
+						oterminal = allOTerminals.getValue();
 
 						if(oterminal.getMac().equals(tterminal.getMac())){
 							found = true;
 							idFound = tterminal.getTerminalId();
+							break;
 						}
 					}				
 					if(found){
@@ -129,12 +131,11 @@ public class OrgTerminalManager {
 						//update HM and DB with updated oterminal
 						//FALTA XEQUEJAR SI TÉ ASSIGNED ORG AQUÍ!!!
 						if(orgManager.getTerminals().get(idFound).getAssignedOrgId()==null){
-							System.out.println("UPDATING TERMINAL: "+tterminal.getTerminalId());
+							System.out.println("UPDATING TERMINAL HM: "+tterminal.getTerminalId());
 
 							//ONLY ADD HM
 							//update oterminal
 							updated = true;
-							OrgTerminal oterminal = new OrgTerminal();
 							oterminal.setActive(true);
 							oterminal.setIdentifier(tterminal.getMac());
 							oterminal.setIpAddress(tterminal.getIpv4());
@@ -151,11 +152,10 @@ public class OrgTerminalManager {
 //							orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
 							putOrgTerminal(oterminal);
 						}else{
-							System.out.println("UPDATING ORG TERMINAL: "+tterminal.getTerminalId());
+							System.out.println("UPDATING ORG TERMINAL HM AND DB: "+tterminal.getTerminalId());
 							//update oterminal
 							//CHECK IF TERMINAL IN ORG 
 							updated = true;
-							OrgTerminal oterminal = new OrgTerminal();
 							oterminal.setActive(true);
 							oterminal.setIdentifier(tterminal.getMac());
 							oterminal.setIpAddress(tterminal.getIpv4());
