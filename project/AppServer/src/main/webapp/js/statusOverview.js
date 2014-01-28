@@ -407,6 +407,7 @@ function getTopoWeatherMap(){
 		//console.log(percent);
 		g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
 		r = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+		if(g<0)g=0;
 		return 'rgb('+r+','+g+',0)';
 	}
 
@@ -527,7 +528,8 @@ function createTopologyGraph(){
 
 	refreshIntervalTWM = setInterval(function() {
 		getTopoWeatherMap();
-		path.style("stroke",  function(d) {console.log(d.color); return d.color;});
+		path.data(links)
+		.style("stroke",  function(d) {console.log(d.color); return d.color;});
 	},3000);
 
 	node.on("click", function(d) {
@@ -1411,8 +1413,7 @@ function setTrafficMatrix(){
 		function getGreenToRed(percent){
 			g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
 			r = percent>50 ? 255 : Math.floor((percent*2)*255/100);
-			//var col = "#"+r+""+g+"0";
-			//alert(col);
+			if(g<0)g=0;
 			return 'rgb('+r+','+g+',0)';
 		}
 
