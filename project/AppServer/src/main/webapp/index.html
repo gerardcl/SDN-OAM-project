@@ -155,8 +155,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUserName %> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="#/editUser/<%= loginOrg %>/<%= loginUser %>"><i class="fa fa-user"></i> Profile</a></li>
-                  <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">3</span></a></li>
-                  <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+                  <li><a href="#/editUser/<%= loginOrg %>/<%= loginUser %>"><i class="fa fa-gear"></i> Settings</a></li>
                   <li class="divider"></li>
                   <li><a href="/AppServer"><i class="fa fa-power-off"></i> Log Out</a></li>
                 </ul>
@@ -299,8 +298,8 @@
               <li class="dropdown user-dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= loginUserName %> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
-                  <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+                  <li><a href="#/editUser/<%= loginOrg %>/<%= loginUser %>"><i class="fa fa-user"></i> Profile</a></li>
+                  <li><a href="#/editUser/<%= loginOrg %>/<%= loginUser %>"><i class="fa fa-gear"></i> Settings</a></li>
                   <li class="divider"></li>
                   <li><a href="/AppServer"><i class="fa fa-power-off"></i> Log Out</a></li>
                 </ul>
@@ -695,19 +694,6 @@
 
                     </div>
                   </div> <!-- /ORG TABS -->
-
-                  <div class="row" id="OM-topo">
-                    <div class"col-md-12">
-                      <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                      <div>
-                        <p class="text-center">
-                          <img src="http://placehold.it/500x200">
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-
                 </div>
               </div><!-- /ORG INFO --> 
             </script>
@@ -722,7 +708,7 @@
             <div class="row">
 
               <div class="col-md-4 col-sm-4">
-                <a href="#/adminOrgs<%= organization ? '/'+organization.get('identifier') : '' %>">
+                <a href="#/<%= admin ? 'adminOrgs' : 'clientOrgData' %><%= organization ? '/'+organization.get('identifier') : '' %>">
                   <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                   </button>
                 </a>
@@ -956,18 +942,6 @@
                         </div>
                       </div> <!-- /ORG TABS -->
 
-                      <div class="row" id="OM-topo">
-                        <div class"col-md-12">
-                          <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                          <div>
-                            <p class="text-center">
-                              <img src="http://placehold.it/500x200">
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-
                     </div>
                   </div><!-- /ORG INFO --> 
             </script>
@@ -1085,19 +1059,6 @@
                     </div>
                   </div> <!-- /ORG TABS -->
 
-                  <div class="row" id="OM-topo">
-                    <div class"col-md-12">
-                      <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                      <div>
-                        <p class="text-center">
-                          <img src="http://placehold.it/500x200">
-                        </p>
-                      </div>
-
-                    </div>
-                  </div>
-
-
                 </div>
               </div><!-- /ORG INFO --> 
 
@@ -1200,7 +1161,7 @@
                                                         <td><%= flow.get('dstPort') %></td>
                                                         <td><%= flow.get('protocol') %></td>
                                                         <td><%= flow.get('qos') %></td>
-                                                        <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                                                        <td><center><a href="#/editFlow<%= admin ? 'admin':'' %>/<%= assignedOrgId %>/<%= flow.get('identifier') %>"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
                                                       </tr>
 
                                                     <%      }
@@ -1220,7 +1181,7 @@
                                                                 <td><%= flow.get('dstPort') %></td>
                                                                 <td><%= flow.get('protocol') %></td>
                                                                 <td><%= flow.get('qos') %></td>
-                                                                <td><center><a href="#"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
+                                                                <td><center><a href="#/editFlow<%= admin ? 'admin':'' %>/<%= assignedOrgId %>/<%= flow.get('identifier') %>"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
                                                               </tr>
 
                                                           <% }
@@ -1249,19 +1210,6 @@
 
                     </div>
                   </div> <!-- /ORG TABS -->
-
-                  <div class="row" id="OM-topo">
-                    <div class"col-md-12">
-                      <h3 class="margin-0-top"> <center>Logical Topology</center>  </h3>
-                      <div>
-                        <p class="text-center">
-                          <img src="http://placehold.it/500x200">
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-
                 </div>
               </div><!-- /ORG INFO --> 
             </script>
@@ -1277,76 +1225,78 @@
       <div class="row"><!-- Acccess Points -->
         <div class="col-sm-12">
 
-          <div class="panel panel-warning"><!-- UNASSIGNED Terminals -->
-            <div class="panel-heading">
-              <h3 class="panel-title"><i class="fa fa-desktop"></i> Unassigned Terminals</h3>
-            </div>
-            <div class="panel-body">
-
-              <div id="un-AP">
-                <div class="table-responsive">
-                  <table class="table table-bordered table-hover table-striped tablesorter">
-                   
-                    <thead>
-                      <tr>
-                        <th>ID <i class="fa fa-sort"></i></th>
-                        <th>IP <i class="fa fa-sort"></i></th>
-                        <th>Interface <i class="fa fa-sort"></i></th>
-                        <th>MAC <i class="fa fa-sort"></i></th>
-  					  <th><center> Assign Organization <i class="fa fa-edit"></i></center></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                      <% _.each(terminals, function(terminal) { 
-                        if(terminal.get('assigned')==false){ %>
-
-                        <tr>
-                          <td><%= terminal.get('identifier') %></td>
-                          <td><%= terminal.get('ipAddress') %></td>
-                          <td><%= terminal.get('ifaceSpeed') %></td>
-                          <td><%= terminal.get('mac') %></td>
-                          <td> 
-
-                            <center>
-                              <div class="btn-group dropdown">
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="assignOrg" onclick="copyTo(this);">
-                                  Assign organization
-                                  <span class="caret"></span>
-                                </button>
-
-                              <ul class="dropdown-menu">
-                                <div class="listScroll"> 
-                                  <% _.each(organizations, function(org) { %>
-
-                                    <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' 
-                                        id="infoAssignation" 
-                                        data-id="<%= terminal.get('identifier') %>" 
-                                        data-orgname="<%= org.get('name') %>" 
-                                        data-orgid="<%= org.get('identifier') %>" 
-                                        data-terminaladdress="<%= terminal.get('ipAddress') %>" 
-                                        data-terminalname="<%= terminal.get('name') %>" 
-                                        data-terminaliface="<%= terminal.get('ifaceSpeed') %>" 
-                                        data-terminalmac="<%= terminal.get('mac') %>">
-                                        <span class="badge"><%= org.get('identifier') %></span> <%= org.get('name') %></a>
-      
-                                  <% }); %>
-                                </div>
-                              </ul>
-                            </center>
-
-                          </td>
-                        </tr>
-                      <%  }
-                      }); %>
-                    </tbody>
-
-                  </table>
-                </div>
+          <% if(all) { %>
+            <div class="panel panel-warning"><!-- UNASSIGNED Terminals -->
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-desktop"></i> Unassigned Terminals</h3>
               </div>
+              <div class="panel-body">
 
-            </div>
-          </div><!-- /UNASSIGNED Terminals -->
+                <div id="un-AP">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                     
+                      <thead>
+                        <tr>
+                          <th>ID <i class="fa fa-sort"></i></th>
+                          <th>IP <i class="fa fa-sort"></i></th>
+                          <th>Interface <i class="fa fa-sort"></i></th>
+                          <th>MAC <i class="fa fa-sort"></i></th>
+    					  <th><center> Assign Organization <i class="fa fa-edit"></i></center></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <% _.each(terminals, function(terminal) { 
+                          if(terminal.get('assigned')==false){ %>
+
+                          <tr>
+                            <td><%= terminal.get('identifier') %></td>
+                            <td><%= terminal.get('ipAddress') %></td>
+                            <td><%= terminal.get('ifaceSpeed') %></td>
+                            <td><%= terminal.get('mac') %></td>
+                            <td> 
+
+                              <center>
+                                <div class="btn-group dropdown">
+                                  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="assignOrg" onclick="copyTo(this);">
+                                    Assign organization
+                                    <span class="caret"></span>
+                                  </button>
+
+                                <ul class="dropdown-menu">
+                                  <div class="listScroll"> 
+                                    <% _.each(organizations, function(org) { %>
+
+                                      <a data-toggle="modal" href="#confirmationOrgAssign" class='assignationModal list-group-item' 
+                                          id="infoAssignation" 
+                                          data-id="<%= terminal.get('identifier') %>" 
+                                          data-orgname="<%= org.get('name') %>" 
+                                          data-orgid="<%= org.get('identifier') %>" 
+                                          data-terminaladdress="<%= terminal.get('ipAddress') %>" 
+                                          data-terminalname="<%= terminal.get('name') %>" 
+                                          data-terminaliface="<%= terminal.get('ifaceSpeed') %>" 
+                                          data-terminalmac="<%= terminal.get('mac') %>">
+                                          <span class="badge"><%= org.get('identifier') %></span> <%= org.get('name') %></a>
+        
+                                    <% }); %>
+                                  </div>
+                                </ul>
+                              </center>
+
+                            </td>
+                          </tr>
+                        <%  }
+                        }); %>
+                      </tbody>
+
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- /UNASSIGNED Terminals -->
+          <% } %>
 
           <div class="panel panel-primary"><!-- ACTIVE Terminals -->
           
@@ -1427,7 +1377,7 @@
                    You <b>MUST</b> specify a name for this terminal:   <input type="text" onkeyup="copyTo(this)" name="hostName" id="terminalName" value="" required/> <br><br>
                    and you can also add a description: <br> <input type="text" name="description" id="description" size="72" value=""/>
 
-                   <input type="hidden" name="orgId" id="orgId" value=""/>
+                   <input type="hidden" name="assignedOrgId" id="assignedOrgId" value=""/>
                    <input type="hidden" name="ipAddress" id="terminalIP" value=""/>
                    <input type="hidden" name="mac" id="terminalMac" value=""/>
                    <input type="hidden" name="ifaceSpeed" id="terminalSpeed" value=""/>
@@ -1500,18 +1450,6 @@
                           </tbody>
                         </table>
                       </div>                                    
-                    
-                      <div class="row">
-                        <div class"col-md-12">
-                          <h3> <center>Logical Topology</center>  </h3>
-                          <div>
-                            <p class="text-center">
-                              <img src="http://placehold.it/500x300">
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
                     </div>
 
                   </div>
@@ -1606,9 +1544,9 @@
 
                                             <div class="row">    
                                               <div class="col-lg-12 col-md-12 col-sm-12">
-                                                <div class="form-group">
-                                                  <center><button type="submit" class="btn btn-warning btn-lg">Edit Data</button></center>
-                                                </div>
+
+                                                <center><a href="#/editOrg/<%= organization.get('identifier') %>">
+                                                      <button type="button" class="btn btn-lg btn-warning"><i class="fa fa-edit"></i> Edit Organization Data </button></a></center>
                                               </div>
                                             </div>
                                           </form>  
@@ -1668,7 +1606,7 @@
                                           <div class="panel-body">
                                             <div id="client-users">
                                               <div>
-                                                <button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button>
+                                                <a href="#/newUser/<%= orgId %>"><button type="button" class="btn btn-success btn-lg"><i class="fa fa-user"></i> ADD user</button> </a>
                                                 <br>
                                                 <br>
                                               </div>
@@ -1682,6 +1620,7 @@
                                                         <th>e-mail <i class="fa fa-sort"></i></th>
                                                         <th>Admin? <i class="fa fa-sort"></i></th>
                                                         <th>Telephone <i class="fa fa-sort"></i></th>
+                                                        <th><center><i class="fa fa-edit"></i></center></th>
                                                       </tr>
                                                     </thead>
                                                     <tbody >
@@ -1696,6 +1635,7 @@
                                                         <td><%= user.get('email') %></td>
                                                         <td><%= user.get('admin') %></td>
                                                         <td><%= user.get('telephone') %></td>
+                                                        <td><center><a href="#/editUser<%= admin ? 'Admin' : '' %>/<%= orgId %>/<%= user.get('identifier') %>"><button class="btn btn-warning btn-sm" >Edit</button></a></center></td>
                                                       </tr>
 
                                                     
@@ -1860,7 +1800,7 @@
                   <div class="row">
 
                     <div class="col-md-4 col-sm-4">
-                      <a href="#<%= admin ? 'adminFlows' : 'adminFlows/'+orgId  %>">
+                      <a href="#<%= admin ? 'adminFlows' : 'clientFlows/'+orgId  %>">
                         <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                         </button>
                       </a>
@@ -2034,7 +1974,7 @@
             <div class="row">
 
               <div class="col-md-4 col-sm-4">
-                <a href="#/adminUsers/<%= orgId  %>">
+                <a href="#/<%= admin ? 'adminUsers' : 'clientOrgUsers' %>/<%= orgId  %>">
                   <button type="button" class="btn btn-primary margin-10-left"><i class="fa fa-reply"></i>   Go back
                   </button>
                 </a>
