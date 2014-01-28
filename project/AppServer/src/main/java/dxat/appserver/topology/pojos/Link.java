@@ -5,6 +5,16 @@ public class Link {
 	private String dstPortId = "";
 	private Boolean enabled = false;
 
+    public Link (){
+        super();
+    }
+
+    public Link (Link link){
+        this.srcPortId = link.getSrcPortId();
+        this.dstPortId = link.getDstPortId();
+        this.enabled = link.getEnabled();
+    }
+
 	public String getSrcPortId() {
 		return srcPortId;
 	}

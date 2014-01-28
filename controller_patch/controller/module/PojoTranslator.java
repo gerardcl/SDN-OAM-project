@@ -69,7 +69,7 @@ public class PojoTranslator {
     public static Terminal terminal2Pojo(IDevice dev) {
         Terminal terminal = new Terminal();
         terminal.setMac(dev.getMACAddressString());
-        terminal.setTerminalId("T-" + dev.getDeviceKey());
+        terminal.setTerminalId(dev.getMACAddressString());
         terminal.setEnabled(true);
 
         // Set ipv4

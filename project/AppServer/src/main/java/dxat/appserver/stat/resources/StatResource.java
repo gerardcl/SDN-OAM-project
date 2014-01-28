@@ -14,9 +14,9 @@ import javax.ws.rs.Produces;
 import dxat.appserver.flows.FlowManager;
 import dxat.appserver.flows.pojos.DeployedFlow;
 import dxat.appserver.stat.StatManager;
-import dxat.appserver.stat.pojos.AggregatedFlow;
-import dxat.appserver.stat.pojos.MatrixStat;
-import dxat.appserver.stat.pojos.StatResponse;
+import dxat.appserver.stat.pojos.*;
+import dxat.appserver.topology.LinkManager;
+import dxat.appserver.topology.pojos.Link;
 
 @Path("/")
 public class StatResource {
@@ -161,6 +161,34 @@ public class StatResource {
 		return matrix;
 	}
 
+    @GET
+    @Path("/weathermap/")
+    @Produces(MediaType.MATRIXSTATS)
+    public WeatherMap getWeatherMap() throws IOException {
+        WeatherMap weatherMap = new WeatherMap();
 
+        List<Link> links = LinkManager.getInstance().getLinks().getLinks();
+        List<LinkStat> linkStats = new ArrayList<LinkStat>();
 
+        for (Link link:links){
+            // Forward link
+            LinkStat linkStat = new LinkStat();
+            linkStat.setDstPortId(link.getDstPortId());
+            linkStat.setSrcPortId(link.getSrcPortId());
+            linkStat.setEnabled(link.getEnabled());
+            linkStat.setRate(getPortStat(link.getSrcPortId(),"transmitBytes","AVERAGE","second").getValueAxxis()[0]);
+            linkStats.add(linkStat);
+
+            // Backward link
+            linkStat = new LinkStat();
+            linkStat.setSrcPortId(link.getDstPortId());
+            linkStat.setDstPortId(link.getSrcPortId());
+            linkStat.setEnabled(link.getEnabled());
+            linkStat.setRate(getPortStat(link.getDstPortId(),"transmitBytes","AVERAGE","second").getValueAxxis()[0]);
+            linkStats.add(linkStat);
+        }
+
+        weatherMap.setLinkStats(linkStats);
+        return weatherMap;
+    }
 }
