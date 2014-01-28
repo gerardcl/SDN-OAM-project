@@ -197,6 +197,7 @@ function fetchTerminals(obj){
 				terminalObject.ipAddress = currentValues.ipAddress;
 				terminalObject.mac = currentValues.mac;
 				terminalObject.assigned = currentValues.assigned;
+				terminalObject.assignedOrgId = currentValues.assigned;
 				terminalObject.description = currentValues.description;
 				this.push(terminalObject);
 			}
@@ -335,12 +336,12 @@ function fetchTerminals(obj){
 				console.log(that.org.isNew());
 				that.org.fetch({
 					success: function (org){
-						var template = _.template($('#edit-org-template').html(), {organization: org});
+						var template = _.template($('#edit-org-template').html(), {organization: org, admin: options.admin});
 						that.$el.html(template);
 					}
 				});
 			} else { //create
-				var template = _.template($('#edit-org-template').html(), {organization: null});
+				var template = _.template($('#edit-org-template').html(), {organization: null, admin: options.admin});
 				that.$el.html(template);
 			} 
 
@@ -436,7 +437,7 @@ function fetchTerminals(obj){
 					that.$el.html(template); 
 					//SlimScroll
 					$('#OM-users').slimScroll({
-						height: '135px'
+						height: '400px'
 					});
 				}
 			});
@@ -461,7 +462,7 @@ function fetchTerminals(obj){
 						that.$el.html(template); 
 						//SlimScroll
 						$('#OM-ap').slimScroll({
-							height: '135px'
+							height: '400px'
 						});
 					}
 				});
@@ -486,16 +487,16 @@ function fetchTerminals(obj){
 				that.activeFlows.url = '/AppServer/webapi/manager/flow/'+options.identifier+'/all';
 				that.activeFlows.fetch({
 					success: function (flows) {  
-						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active, orgName: activeOrgName});
+						var template = _.template($('#organizations-flows-template').html(), {flows: flows.models, orgId: options.identifier, active: options.active, orgName: activeOrgName, admin: options.admin});
 						that.$el.html(template); 
 						//SlimScroll
 						$('#FLW-prg').slimScroll({
-							height: '135px'
+							height: '400px'
 						});
 					}
 				});
 			} else {
-				var template = _.template($('#organizations-flows-template').html(), {flows: null});
+				var template = _.template($('#organizations-flows-template').html(), {flows: null, admin: options.admin});
 				that.$el.html(template);
 				//SlimScroll
 			}
@@ -516,7 +517,7 @@ function fetchTerminals(obj){
 			if(options.all==false){flows.url = '/AppServer/webapi/manager/flow/'+options.identifier+'/all';}			
 			flows.fetch({
 				success: function (flows) {
-					var template = _.template($('#flows-template').html(), {flows: flows.models, admin: options.all});
+					var template = _.template($('#flows-template').html(), {flows: flows.models, admin: options.all, orgId: options.identifier});
 					that.$el.html(template);
 					//SlimScroll
 					$('#FLW-active').slimScroll({
@@ -550,7 +551,7 @@ function fetchTerminals(obj){
 			if(options.all==false){terminals.url = '/AppServer/webapi/manager/terminal/'+options.identifier+'/all';}
 			terminals.fetch({
 				success: function (terminals) {
-					var template = _.template($('#terminals-template').html(), {terminals: terminals.models, organizations: organizations.models});
+					var template = _.template($('#terminals-template').html(), {terminals: terminals.models, organizations: organizations.models, all: options.all});
 					that.$el.html(template);
 					$('#un-AP').slimScroll({
 						height: '250px'
@@ -573,7 +574,7 @@ function fetchTerminals(obj){
 			var terminal = new Terminal();
 			terminal.url = '/AppServer/webapi/manager/terminal/'+termDetails.orgId;
 
-/*			terminal.orgId = null;
+			/* terminal.orgId = null;
 			terminal.orgName = null;
 			console.log(termDetails);*/
 
@@ -666,16 +667,17 @@ function fetchTerminals(obj){
 			that.organization = new Organization({identifier: options.identifier});
 			that.organization.fetch({
 				success: function (organization) {
-					var template = _.template($('#client-data-template').html(), {organization: organization, activeOrgName: activeOrgName});
+					var template = _.template($('#client-data-template').html(), {organization: organization, activeOrgName: activeOrgName, orgId: options.identifier});
 					that.$el.html(template); 
 					//SlimScroll
 					$('#client-data').slimScroll({
 						height: '380px'
 					});
-
+					return false;
 
 				}
 			});
+			return false;
 		}
 	});
 
@@ -691,7 +693,7 @@ function fetchTerminals(obj){
 			that.users.url = '/AppServer/webapi/manager/user/'+options.identifier+'/all';
 			that.users.fetch({
 				success: function (users) {  
-					var template = _.template($('#client-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName});
+					var template = _.template($('#client-users-template').html(), {users: users.models, orgId: options.identifier, orgName: activeOrgName, admin: options.admin});
 					that.$el.html(template); 
 					//SlimScroll
 					$('#client-users').slimScroll({
@@ -810,12 +812,12 @@ function fetchTerminals(obj){
 						console.log('orgId inside success: '+options.orgId);
 						selectedOrg = options.orgId;
 						selectedUser = options.identifier;
-						var template = _.template($('#edit-user-template').html(), {user: user, orgId: options.orgId});
+						var template = _.template($('#edit-user-template').html(), {user: user, orgId: options.orgId, admin: options.admin});
 						that.$el.html(template);
 					}
 				});
 			} else { //create
-				var template = _.template($('#edit-user-template').html(), {user: null, orgId: options.orgId});
+				var template = _.template($('#edit-user-template').html(), {user: null, orgId: options.orgId, admin: options.admin});
 				that.$el.html(template);
 			} 
 		},
@@ -975,8 +977,11 @@ function fetchTerminals(obj){
 			"newFlowAdmin/:identifier": "newFlowAdmin",
 			"newFlow/:identifier": "newFlow",
 			"editFlowAdmin/:orgId/:identifier": "editFlowAdmin",
+			"editFlowOrg/:orgId/:identifier": "editFlowOrg",
 			"newUser/:orgId": "editUser", //NEW USER template
+			"newUserAdmin/:orgId": "editUserAdmin", //NEW USER template
 			"editUser/:orgId/:identifier": "editUser", //EDIT USER template
+			"editUserAdmin/:orgId/:identifier": "editUserAdmin", //EDIT USER template
 			"editTerminal/:orgId/:identifier": "editTerminal", //EDIT terminal
 			"editTerminalOrg/:orgId/:identifier": "editTerminalOrg" //EDIT terminal
 		}
@@ -1026,11 +1031,20 @@ function fetchTerminals(obj){
 		setAlarmView();
 	});
 
+	router.on('route:editOrgAdmin', function(id) {
+		loadDefaultStatValues();
+		StopSwitchStats();
+		stopTopoWeatherMapRefresh();
+		newOrgView.render({identifier: id, admin: true});
+		stopTrafficMatrix();
+		setAlarmView();
+	});
+
 	router.on('route:editOrg', function(id) {
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
-		newOrgView.render({identifier: id});
+		newOrgView.render({identifier: id, admin: false});
 		stopTrafficMatrix();
 		setAlarmView();
 	});
@@ -1057,7 +1071,7 @@ function fetchTerminals(obj){
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
-		orgFlowsView.render({identifier: id, active: true});
+		orgFlowsView.render({identifier: id, active: true, admin: true});
 		stopTrafficMatrix();
 		setAlarmView();
 	});
@@ -1066,7 +1080,7 @@ function fetchTerminals(obj){
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();
-		orgFlowsView.render({identifier: id, active: false});
+		orgFlowsView.render({identifier: id, active: false, admin: true});
 		stopTrafficMatrix();
 		setAlarmView();
 	});
@@ -1133,7 +1147,7 @@ function fetchTerminals(obj){
 	});
 
 	router.on('route:clientOrgUsers', function(id) {
-		clientUsersView.render({identifier: id});
+		clientUsersView.render({identifier: id, admin: false});
 	});
 
 	router.on('route:clientFlows', function(id) {
@@ -1156,24 +1170,33 @@ function fetchTerminals(obj){
 	router.on('route:newFlowAdmin', function(id) {
 		newFlowView.render({orgId: id.orgId, identifier: id.flowId, admin: true});
 		console.log(id);
-
-	});
-
-	router.on('route:editFlowAdmin', function(orgId, identifier) {
-		newFlowView.render({identifier: identifier, admin: true, orgId: orgId});
-
 	});
 
 	router.on('route:newFlow', function(id) {
 		newFlowView.render({identifier: id, admin: false});
-
 	});
+
+	router.on('route:editFlowAdmin', function(orgId, identifier) {
+		newFlowView.render({identifier: identifier, admin: true, orgId: orgId});
+	});
+
+	router.on('route:editFlowOrg', function(orgId, identifier) {
+		newFlowView.render({identifier: identifier, admin: false, orgId: orgId});
+	});
+
 
 	router.on('route:editUser', function(orgId, identifier) {
 		loadDefaultStatValues();
 		StopSwitchStats();
 		console.log(orgId+' '+identifier)
-		editUserView.render({orgId: orgId, identifier: identifier});
+		editUserView.render({orgId: orgId, identifier: identifier, admin: false});
+	});
+
+	router.on('route:editUserAdmin', function(orgId, identifier) {
+		loadDefaultStatValues();
+		StopSwitchStats();
+		console.log(orgId+' '+identifier)
+		editUserView.render({orgId: orgId, identifier: identifier, admin: true});
 	});
 
 	router.on('route:editTerminal', function(orgId, identifier) {
