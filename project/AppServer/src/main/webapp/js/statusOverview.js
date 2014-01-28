@@ -48,11 +48,13 @@ function initStatusOverview(){
 
 //TOPOLOGY GRAPH
 var switchesURL = "/AppServer/webapi/topology/switches";
-var terminalsURL = "/AppServer/webapi/topology/terminals";
-var linksURL = "/AppServer/webapi/topology/links";
+//var terminalsURL = "/AppServer/webapi/topology/terminals";
+//var linksURL = "/AppServer/webapi/topology/links";
+var weatherMapURL = "/AppServer/webapi/statistics/weathermap";
 var dataSwitches;
-var dataTerminals;
-var dataLinks;
+//var dataTerminals;
+//var dataLinks;
+var weatherMapData;
 var nodes = [];
 var links = [];
 var refreshIntervalTWM;
@@ -64,8 +66,9 @@ var rxResponseTerminals;
 function stopTopoWeatherMapRefresh(){
 	clearInterval(refreshIntervalTWM);
 	dataSwitches ={};
-	dataTerminals ={};
-	dataLinks ={};
+	//dataTerminals ={};
+	//dataLinks ={};
+	weatherMapData ={};
 	nodes = [];
 	links = [];
 }
@@ -91,235 +94,295 @@ function getTopoWeatherMap(){
 //		Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
 //		},
 		success : function(result) {
-			dataSwitches = result;
+			dataSwitches = result;//rplcd;
+		},
+		error: function(xhr, msg) {
+			var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+			dataSwitches = JSON.parse(rplcd);
 		}
 	});
+//	Tractament de dades obtingudes
+	$.ajaxSetup({
+		async : true
+	}); //execute asynchronously
+	$.ajaxSetup({
+		async : false
+	}); //execute synchronously
 	$.ajax({
 		type: "GET",
-		url: terminalsURL,
+		url: weatherMapURL,
 		//contentType: 'application/json',
 		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
 //		headers: {
 //		Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
 //		},
 		success : function(result) {
-			dataTerminals = result;
+			weatherMapData = result;//rplcd;
+		},
+		error: function(xhr, msg) {
+			var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+			weatherMapData = JSON.parse(rplcd);
 		}
 	});
-	$.ajax({
-		type: "GET",
-		url: linksURL,
-		//contentType: 'application/json',
-		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//		headers: {
-//		Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//		},
-		success : function(result) {
-			dataLinks = result;
-		}
-	});
+//	$.ajax({
+//		type: "GET",
+//		url: linksURL,
+//		//contentType: 'application/json',
+//		//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+////		headers: {
+////		Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+////		},
+//		success : function(result) {
+//			dataLinks = result;
+//		}
+//	});
 
 
 //	Tractament de dades obtingudes
 	$.ajaxSetup({
 		async : true
 	}); //execute asynchronously
-	var terminals =[];
-	for (var i=0; i < dataTerminals.terminals.length; i++){
-		if ((dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0")&&(dataTerminals.terminals[i].ipv4!="0.0.0.0")){
-			terminals.push(dataTerminals.terminals[i]);
-		}
-	}
+	var terminals = weatherMapData.terminalStats;
+//	for (var i=0; i < dataTerminals.terminals.length; i++){
+//		if ((dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0")&&(dataTerminals.terminals[i].ipv4!="0.0.0.0")){
+//			terminals.push(dataTerminals.terminals[i]);
+//		}
+//	}
 	nodes = dataSwitches.switches;
 	//var rawLinks = dataLinks.links;
 	var src,trg;
 
-	var new_obj = {"colorTx":0, "colorRx":0};
-	dataLinks.links.push( new_obj );
-	dataTerminals.terminals.push( new_obj );
+	//var new_obj = {"colorTx":0, "colorRx":0};
+	//dataLinks.links.push( new_obj );
+	//dataTerminals.terminals.push( new_obj );
 
-	for (var i=0; i<dataLinks.links.length; i++){
-		if(dataLinks.links[i].dstPortId==undefined){}else if(dataLinks.links[i].dstPortId != "00:00:00:00:00:00:00:00:0"){
-			var reqUriRx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].dstPortId+"/receiveBytes/AVERAGE/minute";
-			$.ajaxSetup({
-				async : false
-			}); //execute synchronously
-
-			$.ajax({
-				type: "GET",
-				url: reqUriRx,
-				//contentType: 'application/json',
-				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//				headers: {
-//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+//	for (var i=0; i<dataLinks.links.length; i++){
+//		if(dataLinks.links[i].dstPortId==undefined){}else if(dataLinks.links[i].dstPortId != "00:00:00:00:00:00:00:00:0"){
+//			var reqUriRx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].dstPortId+"/receiveBytes/AVERAGE/minute";
+//			$.ajaxSetup({
+//				async : false
+//			}); //execute synchronously
+//
+//			$.ajax({
+//				type: "GET",
+//				url: reqUriRx,
+//				//contentType: 'application/json',
+//				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+////				headers: {
+////				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+////				},
+//				success : function(result) {
+//					rxResponseLinks = result;
+//					//console.log("LINKS RX RESULT:");
+//					//console.log(result);
 //				},
-				success : function(result) {
-					rxResponseLinks = result;
-					//console.log("LINKS RX RESULT:");
-					//console.log(result);
-				},
-				error: function(xhr, msg) {
-					//console.log(xhr.responseText);
-					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					//console.log(rplcd);
-					rxResponseLinks = JSON.parse(rplcd);
-				}
-			});
-			$.ajaxSetup({
-				async : true
-			}); //execute synchronously	
-		}else console.log("undefined!!!");
-
-		if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
-			var reqUriTx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].srcPortId+"/transmitBytes/AVERAGE/minute";
-			$.ajaxSetup({
-				async : false
-			}); //execute synchronously
-			$.ajax({
-				type: "GET",
-				url: reqUriTx,
-				//contentType: 'application/json',
-				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//				headers: {
-//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+//				error: function(xhr, msg) {
+//					//console.log(xhr.responseText);
+//					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+//					//console.log(rplcd);
+//					rxResponseLinks = JSON.parse(rplcd);
+//				}
+//			});
+//			$.ajaxSetup({
+//				async : true
+//			}); //execute synchronously	
+//		}else console.log("undefined!!!");
+//
+//		if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
+//			var reqUriTx ="/AppServer/webapi/statistics/port/"+dataLinks.links[i].srcPortId+"/transmitBytes/AVERAGE/minute";
+//			$.ajaxSetup({
+//				async : false
+//			}); //execute synchronously
+//			$.ajax({
+//				type: "GET",
+//				url: reqUriTx,
+//				//contentType: 'application/json',
+//				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+////				headers: {
+////				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+////				},
+//				success : function(result) {
+//					txResponseLinks = result;
+//					//console.log("LINKS TX RESULT:");
+//					//console.log(result);
 //				},
-				success : function(result) {
-					txResponseLinks = result;
-					//console.log("LINKS TX RESULT:");
-					//console.log(result);
-				},
-				error: function(xhr, msg) {
-					//console.log(xhr.responseText);
-					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					//console.log(rplcd);
-					txResponseLinks = JSON.parse(rplcd);
-				}
-			});
-			$.ajaxSetup({
-				async : true
-			}); //execute synchronously
-		}else console.log("undefined!!!");
+//				error: function(xhr, msg) {
+//					//console.log(xhr.responseText);
+//					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+//					//console.log(rplcd);
+//					txResponseLinks = JSON.parse(rplcd);
+//				}
+//			});
+//			$.ajaxSetup({
+//				async : true
+//			}); //execute synchronously
+//		}else console.log("undefined!!!");
+//
+//		var sumRx=0;
+//		var sumTx=0;
+//
+//		if(dataLinks.links[i].dstPortId==undefined){}else if(dataLinks.links[i].dstPortId != "00:00:00:00:00:00:00:00:0"){
+//			if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
+//				for (var j=0; j<rxResponseLinks.valueAxxis.length;j++){
+//					if(rxResponseLinks.valueAxxis[j]==null){}else if(txResponseLinks.valueAxxis[j]!=null){
+//						sumRx+=rxResponseLinks.valueAxxis[j];
+//						sumTx+=txResponseLinks.valueAxxis[j];
+//						//console.log("sumRX = "+sumRx+"  -- sumTX = "+sumTx);
+//					}
+//				}
+//			}
+//		}
+//		sumRx = ((sumRx/60)*8/100000).toFixed(2);
+//		sumTx = ((sumTx/60)*8/100000).toFixed(2);
+//		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
+//		var colorRx = getGreenToRed(sumRx);
+//		var colorTx = getGreenToRed(sumTx);
+//		dataLinks.links[i].colorRx=colorRx;
+//		dataLinks.links[i].colorTx=colorTx;
+//	}
+//
+//
+//
+//	for (var i=0;i<dataLinks.links.length;i++){
+//		for(var j=0;j<nodes.length;j++){
+//			for(var k=0;k<nodes[j].ports.length;k++){
+//				if(dataLinks.links[i].srcPortId == nodes[j].ports[k].portId){
+//					src = j;
+//				}
+//				if(dataLinks.links[i].dstPortId == nodes[j].ports[k].portId){
+//					trg = j;
+//				}
+//			}
+//			if (!((src==null)||(trg==null))){
+//				links.push({"source":src,"target":trg,"value":8,"type":"suit","color":dataLinks.links[i].colorTx});
+//				links.push({"source":trg,"target":src,"value":8,"type":"suit","color":dataLinks.links[i].colorRx});
+//				src= null;
+//				trg=null;
+//			}
+//		}	
+//	}
+//
+//
+//	for (var i=0; i<dataTerminals.terminals.length; i++){
+//		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
+//			var reqUriRx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/receiveBytes/AVERAGE/minute";
+//			$.ajaxSetup({
+//				async : false
+//			}); //execute synchronously
+//			$.ajax({
+//				type: "GET",
+//				url: reqUriRx,
+//				//contentType: 'application/json',
+//				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+////				headers: {
+////				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+////				},
+//				success : function(result) {
+//					rxResponseTerminals = result;
+//				},
+//				error: function(xhr, msg) {
+//					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+//					rxResponseTerminals = JSON.parse(rplcd);
+//				}
+//			});
+//			$.ajaxSetup({
+//				async : true
+//			}); //execute synchronously
+//		}
+//		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
+//			var reqUriTx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/transmitBytes/AVERAGE/minute";
+//			$.ajaxSetup({
+//				async : false
+//			}); //execute synchronously
+//			$.ajax({
+//				type: "GET",
+//				url: reqUriTx,
+//				//contentType: 'application/json',
+//				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
+////				headers: {
+////				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
+////				},
+//				success : function(result) {
+//					txResponseTerminals = result;
+//				},
+//				error: function(xhr, msg) {
+//					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
+//					txResponseTerminals = JSON.parse(rplcd);
+//				}
+//			});	//Transmitted bytes
+//			$.ajaxSetup({
+//				async : true
+//			}); //execute synchronously
+//		}
+//		var sumRx=0;
+//		var sumTx=0;
+//		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
+//			for (var j=0; j<rxResponseTerminals.valueAxxis.length;j++){
+//				if(rxResponseLinks.valueAxxis[j]==null){}else if(txResponseLinks.valueAxxis[j]!=null){
+//					sumRx+=rxResponseTerminals.valueAxxis[j];
+//					sumTx+=txResponseTerminals.valueAxxis[j];
+//					//console.log("sumRX = "+sumRx+"  -- sumTX = "+sumTx);
+//				}
+//			}
+//		}
+//		sumRx = ((sumRx/60)*8/100000).toFixed(2);
+//		sumTx = ((sumTx/60)*8/100000).toFixed(2);
+//		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
+//		var colorRx = getGreenToRed(sumRx);
+//		var colorTx = getGreenToRed(sumTx);
+//		dataTerminals.terminals[i].colorRx=colorRx;
+//		dataTerminals.terminals[i].colorTx=colorTx;
+//	}
+//
+//	for (var i=0; i<terminals.length;i++){
+//		nodes.push(terminals[i]);
+//	} 
+//	//alert(nodes.length);
+//	for(var i=0;i<nodes.length;i++){
+//		if(nodes[i].portAPId !=null){
+//			//alert("STEP1: "+nodes[i].portAPId);
+//			for(var j=0;j<nodes.length;j++){
+//				if(nodes[j].portAPId == null){
+//					for(var k=0;k<nodes[j].ports.length;k++){
+//						//alert("STEP2: "+nodes[j].ports[k].portId);
+//						if (nodes[i].portAPId==nodes[j].ports[k].portId){
+//							src = i;
+//							trg =j;	
+//							//alert("Link Pushed: "+nodes[j].swId+ " TO "+nodes[i].terminalId);
+//							links.push({"source":src,"target":trg,"value":8,"type":"suit","color":nodes[i].colorRx});
+//							links.push({"source":trg,"target":src,"value":8,"type":"suit","color":nodes[i].colorTx});
+//						}
+//					}
+//				}
+//			}
+//		}	
+//	}
+	console.log(weatherMapData);
+	
+	for (var i=0; i<weatherMapData.linkStats.length; i++){
+		var colorTx = getGreenToRed(weatherMapData.linkStats[i].rate*8/100000);
 
-		var sumRx=0;
-		var sumTx=0;
-
-		if(dataLinks.links[i].dstPortId==undefined){}else if(dataLinks.links[i].dstPortId != "00:00:00:00:00:00:00:00:0"){
-			if(dataLinks.links[i].srcPortId==undefined){}else if(dataLinks.links[i].srcPortId != "00:00:00:00:00:00:00:00:0"){
-				for (var j=0; j<rxResponseLinks.valueAxxis.length;j++){
-					if(rxResponseLinks.valueAxxis[j]==null){}else if(txResponseLinks.valueAxxis[j]!=null){
-						sumRx+=rxResponseLinks.valueAxxis[j];
-						sumTx+=txResponseLinks.valueAxxis[j];
-						//console.log("sumRX = "+sumRx+"  -- sumTX = "+sumTx);
-					}
-				}
-			}
-		}
-		sumRx = ((sumRx/60)*8/100000).toFixed(2);
-		sumTx = ((sumTx/60)*8/100000).toFixed(2);
-		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
-		var colorRx = getGreenToRed(sumRx);
-		var colorTx = getGreenToRed(sumTx);
-		dataLinks.links[i].colorRx=colorRx;
-		dataLinks.links[i].colorTx=colorTx;
-	}
-
-
-
-	for (var i=0;i<dataLinks.links.length;i++){
 		for(var j=0;j<nodes.length;j++){
 			for(var k=0;k<nodes[j].ports.length;k++){
-				if(dataLinks.links[i].srcPortId == nodes[j].ports[k].portId){
+				if(weatherMapData.linkStats[i].srcPortId == nodes[j].ports[k].portId){
 					src = j;
 				}
-				if(dataLinks.links[i].dstPortId == nodes[j].ports[k].portId){
+				if(weatherMapData.linkStats[i].dstPortId == nodes[j].ports[k].portId){
 					trg = j;
 				}
 			}
 			if (!((src==null)||(trg==null))){
-				links.push({"source":src,"target":trg,"value":8,"type":"suit","color":dataLinks.links[i].colorTx});
-				links.push({"source":trg,"target":src,"value":8,"type":"suit","color":dataLinks.links[i].colorRx});
+				links.push({"source":src,"target":trg,"value":18,"type":"suit","color":colorTx});
 				src= null;
 				trg=null;
 			}
 		}	
 	}
-
-
-	for (var i=0; i<dataTerminals.terminals.length; i++){
-		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
-			var reqUriRx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/receiveBytes/AVERAGE/minute";
-			$.ajaxSetup({
-				async : false
-			}); //execute synchronously
-			$.ajax({
-				type: "GET",
-				url: reqUriRx,
-				//contentType: 'application/json',
-				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//				headers: {
-//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//				},
-				success : function(result) {
-					rxResponseTerminals = result;
-				},
-				error: function(xhr, msg) {
-					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					rxResponseTerminals = JSON.parse(rplcd);
-				}
-			});
-			$.ajaxSetup({
-				async : true
-			}); //execute synchronously
-		}
-		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
-			var reqUriTx ="/AppServer/webapi/statistics/port/"+dataTerminals.terminals[i].portAPId+"/transmitBytes/AVERAGE/minute";
-			$.ajaxSetup({
-				async : false
-			}); //execute synchronously
-			$.ajax({
-				type: "GET",
-				url: reqUriTx,
-				//contentType: 'application/json',
-				//datatype: "application/vmd.dxat.appserver.topology.switches.collection+json",
-//				headers: {
-//				Accept : "application/vmd.dxat.appserver.topology.switches.collection+json"
-//				},
-				success : function(result) {
-					txResponseTerminals = result;
-				},
-				error: function(xhr, msg) {
-					var rplcd = xhr.responseText.replace(/\bNaN\b/g, "null");
-					txResponseTerminals = JSON.parse(rplcd);
-				}
-			});	//Transmitted bytes
-			$.ajaxSetup({
-				async : true
-			}); //execute synchronously
-		}
-		var sumRx=0;
-		var sumTx=0;
-		if(dataTerminals.terminals[i].portAPId==undefined){}else if(dataTerminals.terminals[i].portAPId != "00:00:00:00:00:00:00:00:0"){
-			for (var j=0; j<rxResponseTerminals.valueAxxis.length;j++){
-				if(rxResponseLinks.valueAxxis[j]==null){}else if(txResponseLinks.valueAxxis[j]!=null){
-					sumRx+=rxResponseTerminals.valueAxxis[j];
-					sumTx+=txResponseTerminals.valueAxxis[j];
-					//console.log("sumRX = "+sumRx+"  -- sumTX = "+sumTx);
-				}
-			}
-		}
-		sumRx = ((sumRx/60)*8/100000).toFixed(2);
-		sumTx = ((sumTx/60)*8/100000).toFixed(2);
-		//alert("REC: "+sumRx+" TRANSM: "+sumTx);
-		var colorRx = getGreenToRed(sumRx);
-		var colorTx = getGreenToRed(sumTx);
-		dataTerminals.terminals[i].colorRx=colorRx;
-		dataTerminals.terminals[i].colorTx=colorTx;
-	}
-
-	for (var i=0; i<terminals.length;i++){
+	
+   	for (var i=0; i<terminals.length;i++){
 		nodes.push(terminals[i]);
 	} 
-	//alert(nodes.length);
+   	//alert(nodes.length);
 	for(var i=0;i<nodes.length;i++){
 		if(nodes[i].portAPId !=null){
 			//alert("STEP1: "+nodes[i].portAPId);
@@ -331,15 +394,15 @@ function getTopoWeatherMap(){
 							src = i;
 							trg =j;	
 							//alert("Link Pushed: "+nodes[j].swId+ " TO "+nodes[i].terminalId);
-							links.push({"source":src,"target":trg,"value":8,"type":"suit","color":nodes[i].colorRx});
-							links.push({"source":trg,"target":src,"value":8,"type":"suit","color":nodes[i].colorTx});
+							links.push({"source":src,"target":trg,"value":8,"type":"suit","color":getGreenToRed(nodes[i].out*8/100000)});
+							links.push({"source":trg,"target":src,"value":8,"type":"suit","color":getGreenToRed(nodes[i].in*8/100000)});
 						}
 					}
 				}
 			}
 		}	
-	}
-
+	}	
+	
 	function getGreenToRed(percent){
 		//console.log(percent);
 		g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
@@ -464,13 +527,8 @@ function createTopologyGraph(){
 
 	refreshIntervalTWM = setInterval(function() {
 		getTopoWeatherMap();
-
-		svg.selectAll("path")
-		.attr("class", function(d) { return "link " + d.type; })
-		.attr("marker-end", function(d) { return "url(#" + d.type + ")";})
-		.style("stroke",  function(d) {return d.color;});
-
-	},2000);
+		path.style("stroke",  function(d) {console.log(d.color); return d.color;});
+	},3000);
 
 	node.on("click", function(d) {
 		StopSwitchStats();

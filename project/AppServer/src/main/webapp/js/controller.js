@@ -781,6 +781,7 @@ function fetchTerminals(obj){
 			var flow = new Flow();
 			flow.urlRoot = '/AppServer/webapi/manager/flow/'+flowDetails.orgId+'/';
 			flow.save(flowDetails, { //SEND object to the server
+				contentType: "application/vmd.dxat.appserver.manager.flow.collection+json",
 				success: function (flow) {
 					console.log(flow);
 					return false;
