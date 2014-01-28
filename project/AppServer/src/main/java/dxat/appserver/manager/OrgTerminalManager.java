@@ -59,6 +59,9 @@ public class OrgTerminalManager {
 		orgManager.getTerminals().put(terminal.getIdentifier(), terminal);
 		if(orgId!=null){
 			try {
+				
+				//TODO HERE CREATE TERMINAL AND ASSIGN ID!!!!!!!!!!!!!!!!!!!!!!!!1
+				
 				dbcreate.createTerminal(terminal, orgId);
 				orgManager.getOrg(orgId).getTerminals().put(terminal.getIdentifier(), terminal);
 				return terminal;

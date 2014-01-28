@@ -70,10 +70,8 @@ public class OrgTerminalResource {
 		OrgTerminal nterm = new OrgTerminal();
 		if(!orgTerminalManager.orgManager.existOrg(orgId)) return null;
 		if(!orgTerminalManager.orgManager.getOrg(orgId).getTerminals().containsKey(terminal.getIdentifier())){
-			if(terminal.getIdentifier().equals(terminal.getIdentifier())){
-				nterm = orgTerminalManager.tryCreateOrgTerminal(orgId, terminal);
-				return nterm;
-			}
+			nterm = orgTerminalManager.tryCreateOrgTerminal(orgId, terminal);
+			return nterm;
 		}
 		return null;	
 	}
@@ -86,7 +84,7 @@ public class OrgTerminalResource {
 		OrgTerminal nterm = new OrgTerminal();
 		if(!orgTerminalManager.orgManager.existOrg(orgId)) return null;
 		if(orgTerminalManager.orgManager.getOrg(orgId).getTerminals().containsKey(terminal.getIdentifier())){
-			if(terminal.getIdentifier().equals(terminal.getIdentifier())){
+			if(terminal.getIdentifier().equals(terminalId)){
 				nterm.setDescription(terminal.getDescription());
 				nterm.setHostName(terminal.getHostName());
 				nterm.setPortApiID(terminal.getPortApiID());
