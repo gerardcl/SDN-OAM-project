@@ -18,7 +18,14 @@ SDN-OAM-project
 
 <h3>Statistics</h3>
 <p>Resources sources availables at 'dxat.appserver.stat.resources'.</p>
-
+| URL                                         | Description                                             |
+| ------------------------------------------- |:-------------------------------------------------------:|
+| AppServer/webapi/statistics/port/{itemId}/{statParameter}/{typeOfStat}/{granularity}   | |
+| AppServer/webapi/statistics/switch/{itemId}/{statParameter}/{typeOfStat}/{granularity} | |
+| AppServer/webapi/statistics/flow/{itemId}/{statParameter}/{typeOfStat}/{granularity} | |
+| AppServer/webapi/statistics/controller/{statParameter}/{typeOfStat}/{granularity} | |
+| AppServer/webapi/statistics/trafficmatrix/ | |
+| AppServer/webapi/statistics/weathermap/ | |
 
 <h3>Manager</h3>
 <p>Resources source availables at 'dxat.appserver.manager.resources'</p>
