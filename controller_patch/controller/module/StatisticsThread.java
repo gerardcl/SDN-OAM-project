@@ -13,10 +13,13 @@ import org.openflow.protocol.OFStatisticsRequest;
 import org.openflow.protocol.statistics.*;
 import org.openflow.util.HexString;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class StatisticsThread implements Runnable {
     public StatisticsThread() {
@@ -132,21 +135,44 @@ public class StatisticsThread implements Runnable {
         for (Long swId : swList) {
             // Get switch
             IOFSwitch sw = switchService.getSwitch(swId);
-
-            // Get Switch Aggregate
-            SwitchStat switchStat = new SwitchStat();
-            switchStat.setByteCount(0);
-            switchStat.setFlowCount(0);
-            switchStat.setPacketCount(0);
-            switchStat.setSwitchId(sw.getStringId());
-            switchStats.add(switchStat);
-
-            // Get Per Port Stats
-            OFStatisticsRequest req = new OFStatisticsRequest();
-            req.setStatisticType(OFStatisticsType.PORT);
-            int requestLength = req.getLengthU();
             Future<List<OFStatistics>> future;
             List<OFStatistics> values;
+            int requestLength;
+            OFStatisticsRequest req;
+
+            // Get Switch Aggregate
+            req = new OFStatisticsRequest();
+            req.setStatisticType(OFStatisticsType.AGGREGATE);
+            requestLength = req.getLengthU();
+            OFAggregateStatisticsRequest specificReq = new OFAggregateStatisticsRequest();
+            OFMatch match = new OFMatch();
+            match.setWildcards(0xffffffff);
+            specificReq.setMatch(match);
+            specificReq.setOutPort(OFPort.OFPP_NONE.getValue());
+            specificReq.setTableId((byte) 0xff);
+            req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
+            requestLength += specificReq.getLength();
+            req.setLengthU(requestLength);
+            try {
+                future = sw.queryStatistics(req);
+                values = future.get(10, TimeUnit.SECONDS);
+                for (OFStatistics ofStatistics : values) {
+                    OFAggregateStatisticsReply ofStat = (OFAggregateStatisticsReply) ofStatistics;
+                    SwitchStat switchStat = new SwitchStat();
+                    switchStat.setByteCount(ofStat.getByteCount());
+                    switchStat.setFlowCount(ofStat.getFlowCount());
+                    switchStat.setPacketCount(ofStat.getPacketCount());
+                    switchStat.setSwitchId(sw.getStringId());
+                    switchStats.add(switchStat);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Get Per Port Stats
+            req = new OFStatisticsRequest();
+            req.setStatisticType(OFStatisticsType.PORT);
+            requestLength = req.getLengthU();
             OFPortStatisticsRequest specificPortReq = new OFPortStatisticsRequest();
             specificPortReq.setPortNumber(OFPort.OFPP_NONE.getValue());
             req.setStatistics(Collections
@@ -157,7 +183,7 @@ public class StatisticsThread implements Runnable {
             try {
                 future = sw.queryStatistics(req);
                 values = future.get(10, TimeUnit.SECONDS);
-                for (OFStatistics ofStatistics:values) {
+                for (OFStatistics ofStatistics : values) {
                     OFPortStatisticsReply ofstat = (OFPortStatisticsReply) ofStatistics;
                     PortStat portStat = new PortStat();
                     portStat.setPortId(sw.getStringId() + ":"
