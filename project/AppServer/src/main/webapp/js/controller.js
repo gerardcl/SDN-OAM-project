@@ -1008,6 +1008,7 @@ function fetchTerminals(obj){
 		$('#alarmDetails').hide();
 		adminSidebarView.render({btnHL: 7});
 		adminAlarmsView.render();
+		setTabAlarmView();
 		loadDefaultStatValues();
 		StopSwitchStats();
 		stopTopoWeatherMapRefresh();

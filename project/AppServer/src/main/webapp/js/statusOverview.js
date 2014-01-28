@@ -34,16 +34,16 @@ $(document).ready(function(){
 });
 
 function initStatusOverview(){
-		
+
 	$("#statistics").hide();
 	createTopologyGraph();
 	initializeControllerStats();
-	
-	
+
+
 	//HIDE LOADING MODAL
-	
-	
-	
+
+
+
 }
 
 //TOPOLOGY GRAPH
@@ -71,13 +71,13 @@ function stopTopoWeatherMapRefresh(){
 }
 
 function getTopoWeatherMap(){
-	
-	
-	
+
+
 	//SHOW LOADING MODAL
-	
-	
-	
+//	TODO	d3.selectAll("#topo").selectAll("svg").remove();
+
+
+
 	$.ajaxSetup({
 		async : false
 	}); //execute synchronously
@@ -464,13 +464,19 @@ function createTopologyGraph(){
 
 	refreshIntervalTWM = setInterval(function() {
 		getTopoWeatherMap();
+		
+		path.selectAll("path")
+		.attr("class", function(d) { return "link " + d.type; })
+		.attr("marker-end", function(d) { return "url(#" + d.type + ")";})
+		.style("stroke",  function(d) {return d.color;});
+	
 	},60000);
 
 	node.on("click", function(d) {
 		StopSwitchStats();
-		
+
 		$('#advisementClick').hide();
-		
+
 		console.log("node " + d.swId + " was clicked");
 		var switchInfo = "<h4> Switch info</h4>";
 		switchInfo += "<b>ID:</b>  "+d.swId+"<p>";
@@ -657,6 +663,7 @@ function byHourGraph(){
 		tooltip: {
 			shared: true,
 			valueSuffix: valueSuffix,
+			valueDecimals: 2,
 			crosshairs: [true, true]
 		},
 		credits: {
@@ -790,6 +797,7 @@ function byMinuteGraph(){
 		tooltip: {
 			shared: true,
 			valueSuffix: valueSuffix,
+			valueDecimals: 2,
 			crosshairs: [true, true]
 		},
 		credits: {
@@ -935,8 +943,8 @@ function bySecondGraph(){
 		tooltip: {
 			shared: true,
 			valueSuffix: valueSuffix,
+			valueDecimals: 2,
 			crosshairs: [true, true],
-			valueDecimals: 2
 		},
 		credits: {
 			enabled: false
@@ -1285,31 +1293,31 @@ function setTrafficMatrix(){
 	$.ajaxSetup({
 		async : true
 	}); //execute asynchronously
-	
-	var matrix = trafficMatrixData;
+
+	var matrix = trafficMatrixData.matrix;
 //	{
-//			"matrix": [
-//			           {
-//			        	   "dst": "10.0.0.4",
-//			        	   "src": "10.0.0.1",
-//			        	   "traffic": 1250000
-//			           },
-//			           {
-//			        	   "dst": "10.0.0.3",
-//			        	   "src": "10.0.0.2",
-//			        	   "traffic": 625000
-//			           },
-//			           {
-//			        	   "dst": "10.0.0.2",
-//			        	   "src": "10.0.0.3",
-//			        	   "traffic": 312500
-//			           },
-//			           {
-//			        	   "dst": "10.0.0.1",
-//			        	   "src": "10.0.0.4",
-//			        	   "traffic": 900000
-//			           }
-//			           ]
+//	"matrix": [
+//	{
+//	"dst": "10.0.0.4",
+//	"src": "10.0.0.1",
+//	"traffic": 1250000
+//	},
+//	{
+//	"dst": "10.0.0.3",
+//	"src": "10.0.0.2",
+//	"traffic": 625000
+//	},
+//	{
+//	"dst": "10.0.0.2",
+//	"src": "10.0.0.3",
+//	"traffic": 312500
+//	},
+//	{
+//	"dst": "10.0.0.1",
+//	"src": "10.0.0.4",
+//	"traffic": 900000
+//	}
+//	]
 //	};
 	var nodes=[];
 	var links=[];
@@ -1317,106 +1325,73 @@ function setTrafficMatrix(){
 	var pushDst=true;
 
 	if(matrix.length>0){
-	//alert(matrix.matrix.length);
-	for (var i=0; i<matrix.matrix.length;i++){
-		for(var j=0; j<nodes.length;j++){
-			if(matrix.matrix[i].src==nodes[j].name){
-				pushSrc=false;	
+		
+		console.log(matrix);
+
+		//alert(matrix.matrix.length);
+		for (var i=0; i<matrix.matrix.length;i++){
+			for(var j=0; j<nodes.length;j++){
+				if(matrix.matrix[i].src==nodes[j].name){
+					pushSrc=false;	
+				}
+			}
+
+			if (pushSrc){
+				nodes.push({"name":matrix.matrix[i].src});
+				pushSrc=true;
+			}
+
+			//alert(nodes[0].name);
+			for(var j=0; j<nodes.length;j++){
+				if(matrix.matrix[i].dst==nodes[j].name){
+					pushDst=false;	
+				}
+			}
+
+			if (pushDst){
+				nodes.push({"name":matrix.matrix[i].dst});
+				pushDst=true;
 			}
 		}
 
-		if (pushSrc){
-			nodes.push({"name":matrix.matrix[i].src});
-			pushSrc=true;
-		}
-
-		//alert(nodes[0].name);
-		for(var j=0; j<nodes.length;j++){
-			if(matrix.matrix[i].dst==nodes[j].name){
-				pushDst=false;	
+		sorting(nodes,'name');
+		for (var i=0; i<matrix.matrix.length;i++){
+			for(var j=0;j<nodes.length;j++){
+				if (matrix.matrix[i].src==nodes[j].name){
+					var src = j;
+				}
+				if(matrix.matrix[i].dst==nodes[j].name){
+					var dst = j;
+				}
 			}
+
+			links.push({"source":src,"target":dst,"value":matrix.matrix[i].traffic});
+
 		}
 
-		if (pushDst){
-			nodes.push({"name":matrix.matrix[i].dst});
-			pushDst=true;
-		}
-	}
 
-	sorting(nodes,'name');
-	for (var i=0; i<matrix.matrix.length;i++){
-		for(var j=0;j<nodes.length;j++){
-			if (matrix.matrix[i].src==nodes[j].name){
-				var src = j;
+
+
+
+		function getGreenToRed(percent){
+			g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
+			r = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+			//var col = "#"+r+""+g+"0";
+			//alert(col);
+			return 'rgb('+r+','+g+',0)';
+		}
+
+		function sorting(json_object, key_to_sort_by) {
+			function sortByKey(a, b) {
+				var x = a[key_to_sort_by];
+				var y = b[key_to_sort_by];
+				return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 			}
-			if(matrix.matrix[i].dst==nodes[j].name){
-				var dst = j;
-			}
+
+			json_object.sort(sortByKey);
 		}
 
-		links.push({"source":src,"target":dst,"value":matrix.matrix[i].traffic});
-
-	}
-
-
-
-
-
-	function getGreenToRed(percent){
-		g = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
-		r = percent>50 ? 255 : Math.floor((percent*2)*255/100);
-		//var col = "#"+r+""+g+"0";
-		//alert(col);
-		return 'rgb('+r+','+g+',0)';
-	}
-
-	function sorting(json_object, key_to_sort_by) {
-		function sortByKey(a, b) {
-			var x = a[key_to_sort_by];
-			var y = b[key_to_sort_by];
-			return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-		}
-
-		json_object.sort(sortByKey);
-	}
-
-	var color = pv.Colors.category19();//.by(function(d) d.group);
-	var h = $("#tMatrixTAB").width()/2;
-	var w = $("#tMatrixTAB").width()/2;
-	//console.log("NEW SIZE: "+w+" x "+h);
-	var vis = new pv.Panel()
-	.canvas('Tmatrix')
-	.width(w)
-	.height(h)
-	.top(90)
-	.left(90);
-
-	var layout = vis.add(pv.Layout.Matrix)
-	.nodes(nodes)
-	.directed(true)
-	.links(links)
-	.sort(function(a, b) {return b.name;});
-	//.sort(function(a, b) {alert(b.name);return b.group - a.group});
-
-	layout.link.add(pv.Bar)
-	.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/100000);})
-	.anchor("center").add(pv.Label)
-	.text(function(l) {return (l.linkValue*8/100000).toFixed(2)+" %"} )	
-	.antialias(false)
-	.lineWidth(8);
-
-	layout.label.add(pv.Label)
-	.textStyle(color)
-	.text(function(d){return d.name;});
-
-	vis.render();
-
-	$('#Tmatrix').bind('resize', function(){
-		//console.log('Tmatrix resized');
-	});
-	$(window).resize(function(){
 		var color = pv.Colors.category19();//.by(function(d) d.group);
-
 		var h = $("#tMatrixTAB").width()/2;
 		var w = $("#tMatrixTAB").width()/2;
 		//console.log("NEW SIZE: "+w+" x "+h);
@@ -1437,7 +1412,7 @@ function setTrafficMatrix(){
 		layout.link.add(pv.Bar)
 		.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/100000);})
 		.anchor("center").add(pv.Label)
-		.text(function(l) {return (l.linkValue*8/100000).toFixed(2)+" %"} )
+		.text(function(l) {return (l.linkValue*8/100000).toFixed(2)+" %"} )	
 		.antialias(false)
 		.lineWidth(8);
 
@@ -1445,10 +1420,46 @@ function setTrafficMatrix(){
 		.textStyle(color)
 		.text(function(d){return d.name;});
 
-		vis.render();		
-	});
-	
+		vis.render();
+
+		$('#Tmatrix').bind('resize', function(){
+			//console.log('Tmatrix resized');
+		});
+		$(window).resize(function(){
+			var color = pv.Colors.category19();//.by(function(d) d.group);
+
+			var h = $("#tMatrixTAB").width()/2;
+			var w = $("#tMatrixTAB").width()/2;
+			//console.log("NEW SIZE: "+w+" x "+h);
+			var vis = new pv.Panel()
+			.canvas('Tmatrix')
+			.width(w)
+			.height(h)
+			.top(90)
+			.left(90);
+
+			var layout = vis.add(pv.Layout.Matrix)
+			.nodes(nodes)
+			.directed(true)
+			.links(links)
+			.sort(function(a, b) {return b.name;});
+			//.sort(function(a, b) {alert(b.name);return b.group - a.group});
+
+			layout.link.add(pv.Bar)
+			.fillStyle(function(l){ return getGreenToRed(l.linkValue*8/100000);})
+			.anchor("center").add(pv.Label)
+			.text(function(l) {return (l.linkValue*8/100000).toFixed(2)+" %"} )
+			.antialias(false)
+			.lineWidth(8);
+
+			layout.label.add(pv.Label)
+			.textStyle(color)
+			.text(function(d){return d.name;});
+
+			vis.render();		
+		});
+
 	}else{
-		$('#Tmatrix').html('<p class="text-muted"> No Traffic Matrix loaded... no active flows yet?</p>');
+		$('#Tmatrix').html('<center> <h1> <p class="text-muted"> No Traffic Matrix loaded... no active flows yet? </p> <h1> </center>');
 	}
 }

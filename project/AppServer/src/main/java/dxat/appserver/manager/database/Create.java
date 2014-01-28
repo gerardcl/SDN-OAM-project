@@ -141,6 +141,8 @@ public class Create {
 				userdoc.put("description", terminal.getDescription());
 				userdoc.put("active",terminal.isActive());
 				userdoc.put("assigned",terminal.isAssigned());
+				userdoc.put("assignedOrgId",terminal.getAssignedOrgId());
+				userdoc.put("portApiID",terminal.getPortApiID());
 				
 				BasicDBObject update = new BasicDBObject("$push",
 						new BasicDBObject("terminals", userdoc));

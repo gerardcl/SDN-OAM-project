@@ -283,7 +283,9 @@ public class Read {
 			String description = (String) terminal.get("description");
 			boolean active = (Boolean) terminal.get("active");
 			boolean assigned = (Boolean) terminal.get("assigned");
-
+			String assignedOrgId = (String) terminal.get("assignedOrgId");
+			String portApiID = (String) terminal.get("portApiID");
+			
 			orgTerminal.setIdentifier(identifier);
 			orgTerminal.setHostName(hostName);
 			orgTerminal.setIpAddress(ipAddress);
@@ -292,6 +294,8 @@ public class Read {
 			orgTerminal.setDescription(description);
 			orgTerminal.setActive(active);
 			orgTerminal.setAssigned(assigned);
+			orgTerminal.setAssignedOrgId(assignedOrgId);
+			orgTerminal.setPortApiID(portApiID);
 
 			terminalsHM.put(identifier, orgTerminal);
 		}
@@ -318,6 +322,8 @@ public class Read {
 				String description = (String) terminal.get("description");
 				boolean active = (Boolean) terminal.get("active");
 				boolean assigned = (Boolean) terminal.get("assigned");
+				String assignedOrgId = (String) terminal.get("assignedOrgId");
+				String portApiID = (String) terminal.get("portApiID");
 
 				orgTerminal.setIdentifier(identifier);
 				orgTerminal.setHostName(hostName);
@@ -327,7 +333,9 @@ public class Read {
 				orgTerminal.setDescription(description);
 				orgTerminal.setActive(active);
 				orgTerminal.setAssigned(assigned);
-				
+				orgTerminal.setAssignedOrgId(assignedOrgId);
+				orgTerminal.setPortApiID(portApiID);
+
 				terminalsHM.put(identifier, orgTerminal);
 			}
 		}

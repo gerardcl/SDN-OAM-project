@@ -106,6 +106,10 @@ public class Update {
 						terminal.isActive());
 				terminaldoc.put("terminals.$.assigned",
 						terminal.isAssigned());
+				terminaldoc.put("terminals.$.assignedOrgId",
+						terminal.isAssigned());
+				terminaldoc.put("terminals.$.portApiID",
+						terminal.isAssigned());
 				
 				BasicDBObject update = new BasicDBObject("$set", terminaldoc);
 				collection.update(query, update);

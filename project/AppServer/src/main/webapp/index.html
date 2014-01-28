@@ -514,86 +514,10 @@
       <div class="panel-body">
         <div id="GS-alerts">
           <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped tablesorter">
-              
-
-<!-- //////////// TABLE HEADING //////////////// -->
-              <thead>
-                <tr>
-                  <th>Alert </th>
-                  <th>Date </th>
-                  <th>Time </th>
-                  <th>Details </th>
-                </tr>
-              </thead>
-              <tbody>
-
-<!-- //////////// FOR EACH EVENT [THIS EXAMPLE EVENT IS TAGGED AS alertDetail1] //////////////// -->
-                <tr>
-                  <td id="event"><span class="label label-success">Flow succeeded</span></td>
-                  <td id="timestamp">11/21/2013</td>
-                  <td>3:29 PM</td>
-                  <td><center><button type="button" class="btn btn-primary" data-toggle="collapse" data-target=".alertDetail1">Details</button></center></td> 
-                </tr>
-
-                <!-- //for each (event) -->
-                <tr class="collapse out alertDetail1">
-                  <th>Invntory ID</th>
-                  <th>Property Id</th>
-                  <th>Legacy</th>
-                  <th>New value</th>
-                  <th>Message</th>
-                </tr>
-
-<!-- //////////// FOR EACH UPDATE  //////////////// -->
-                <tr class="collapse out alertDetail1">
-                  <td id="inventoryId">inventory XXXXX</td>
-                  <td id="propertyId">true</td>
-                  <td id="legacyValue">legacyyyyyyy</td>
-                  <td id="newValue">false</td>
-                  <td id="message">message in a bottle</td>
-                </tr>
-                <tr class="collapse out alertDetail1">
-                  <td id="inventoryId">inventory YYYYY</td>
-                  <td id="propertyId">false</td>
-                  <td id="legacyValue">legacyyyyyyy</td>
-                  <td id="newValue">true</td>
-                  <td id="message">message in a table</td>
-                </tr>
-                <tr class="collapse out alertDetail1">
-                  <td id="inventoryId">inventory ZZZZZZZ</td>
-                  <td id="propertyId">false</td>
-                  <td id="legacyValue">legacyyyyyyy</td>
-                  <td id="newValue">false</td>
-                  <td id="message">message in a chair</td>
-                </tr>
-<!-- //////////// END  //////////////// -->
-
-
-                <!-- /////// NEXT EVENT [alertDetail2] ////////-->
-                <tr>
-                  <td><span class="label label-danger">Link down!</span></td>
-                  <td>26/01/2014</td>
-                  <td>6:51 PM</td>
-                  <td><center><button type="button" class="btn btn-primary" data-toggle="collapse" data-target=".alertDetail2">Details</button></center></td>
-                </tr>
-                <tr id="alDtl2" class="collapse out alertDetail2">
-                  <th>Invntory ID</th>
-                  <th>Property Id</th>
-                  <th>Legacy</th>
-                  <th>New value</th>
-                  <th>Message</th>
-                </tr>
-                <tr id="alDtl2" class="collapse out alertDetail2">
-                  <td id="inventoryId">inventory XXXXX</td>
-                  <td id="propertyId">true</td>
-                  <td id="legacyValue">legacyyyyyyy</td>
-                  <td id="newValue">false</td>
-                  <td id="message">message in a bottle</td>
-                </tr>
-                <!-- /////// END NEXT EVENT /////-->
-              </tbody>
-            </table>
+			<table class="table table-bordered table-hover table-striped tablesorter"  id="alertsTable">
+			<thead><tr><th>Alert </th><th>Date </th><th>Time </th><th>Details </th></tr></thead><tbody>
+			</tbody>
+			</table>
           </div>
         </div>    
 
