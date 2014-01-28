@@ -56,15 +56,27 @@ public class OrgTerminalManager {
 	//CREATE TERMINAL TO DB IF ASSIGNING ORG FROM MANAGER
 	//UPDATE  HM AND CREATE(only if assigned orgId) DB
 	public OrgTerminal tryCreateOrgTerminal(String orgId, OrgTerminal terminal){
-		orgManager.getTerminals().put(terminal.getIdentifier(), terminal);
+		OrgTerminal oterminal = new OrgTerminal();
+		oterminal.setActive(true);
+		oterminal.setIdentifier(terminal.getMac());
+		oterminal.setIpAddress(terminal.getIpAddress());
+		oterminal.setPortApiID(terminal.getPortApiID());
+		oterminal.setAssigned(true);
+		oterminal.setAssignedOrgId(orgId);
+		oterminal.setDescription(terminal.getDescription());
+		oterminal.setHostName(terminal.getHostName());
+		oterminal.setIfaceSpeed(terminal.getIfaceSpeed());
+		oterminal.setMac(terminal.getMac());
+		
+		orgManager.getTerminals().put(terminal.getIdentifier(), oterminal);
 		if(orgId!=null){
 			try {
 				
 				//TODO HERE CREATE TERMINAL AND ASSIGN ID!!!!!!!!!!!!!!!!!!!!!!!!1
 				
-				dbcreate.createTerminal(terminal, orgId);
-				orgManager.getOrg(orgId).getTerminals().put(terminal.getIdentifier(), terminal);
-				return terminal;
+				dbcreate.createTerminal(oterminal, orgId);
+				orgManager.getOrg(orgId).getTerminals().put(oterminal.getIdentifier(), oterminal);
+				return oterminal;
 			} catch (TerminalAlreadyExistsException | OrgNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -122,24 +134,46 @@ public class OrgTerminalManager {
 							//ONLY ADD HM
 							//update oterminal
 							updated = true;
-							orgManager.getTerminals().get(idFound).setActive(true);
-							orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
-							orgManager.getTerminals().get(idFound).setIpAddress(tterminal.getIpv4());
-							orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
-							putOrgTerminal(orgManager.getTerminals().get(idFound));
+							OrgTerminal oterminal = new OrgTerminal();
+							oterminal.setActive(true);
+							oterminal.setIdentifier(tterminal.getMac());
+							oterminal.setIpAddress(tterminal.getIpv4());
+							oterminal.setPortApiID(tterminal.getPortAPId());
+							oterminal.setAssigned(true);
+							oterminal.setAssignedOrgId(null);
+							oterminal.setDescription(orgManager.getTerminals().get(idFound).getDescription());
+							oterminal.setHostName(orgManager.getTerminals().get(idFound).getHostName());
+							oterminal.setIfaceSpeed(orgManager.getTerminals().get(idFound).getIfaceSpeed());
+							oterminal.setMac(tterminal.getMac());
+//							orgManager.getTerminals().get(idFound).setActive(true);
+//							orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
+//							orgManager.getTerminals().get(idFound).setIpAddress(tterminal.getIpv4());
+//							orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
+							putOrgTerminal(oterminal);
 						}else{
 							System.out.println("UPDATING ORG TERMINAL: "+tterminal.getTerminalId());
 							//update oterminal
 							//CHECK IF TERMINAL IN ORG 
 							updated = true;
-							orgManager.getTerminals().get(idFound).setActive(true);
-							orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
-							orgManager.getTerminals().get(idFound).setIpAddress(tterminal.getIpv4());
-							orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
+							OrgTerminal oterminal = new OrgTerminal();
+							oterminal.setActive(true);
+							oterminal.setIdentifier(tterminal.getMac());
+							oterminal.setIpAddress(tterminal.getIpv4());
+							oterminal.setPortApiID(tterminal.getPortAPId());
+							oterminal.setAssigned(true);
+							oterminal.setAssignedOrgId(orgManager.getTerminals().get(idFound).getAssignedOrgId());
+							oterminal.setDescription(orgManager.getTerminals().get(idFound).getDescription());
+							oterminal.setHostName(orgManager.getTerminals().get(idFound).getHostName());
+							oterminal.setIfaceSpeed(orgManager.getTerminals().get(idFound).getIfaceSpeed());
+							oterminal.setMac(tterminal.getMac());
+//							orgManager.getTerminals().get(idFound).setActive(true);
+//							orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
+//							orgManager.getTerminals().get(idFound).setIpAddress(tterminal.getIpv4());
+//							orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
 							try {
-								dbupdate.updateTerminal(orgManager.getTerminals().get(idFound), orgManager.getTerminals().get(idFound).getAssignedOrgId());
-								orgManager.getOrg(orgManager.getTerminals().get(idFound).getAssignedOrgId()).getTerminals().put(orgManager.getTerminals().get(idFound).getIdentifier(), orgManager.getTerminals().get(idFound));
-								orgManager.getTerminals().put(orgManager.getTerminals().get(idFound).getIdentifier(), orgManager.getTerminals().get(idFound));
+								dbupdate.updateTerminal(oterminal, oterminal.getAssignedOrgId());
+								orgManager.getOrg(oterminal.getAssignedOrgId()).getTerminals().put(oterminal.getIdentifier(), oterminal);
+								orgManager.getTerminals().put(oterminal.getIdentifier(), oterminal);
 							} catch (TerminalNotFoundException
 									| OrgNotFoundException e) {
 								e.printStackTrace();

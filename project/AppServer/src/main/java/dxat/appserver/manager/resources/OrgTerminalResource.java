@@ -36,7 +36,7 @@ public class OrgTerminalResource {
 	@Path("/terminal/all")	
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION) 
 	public OrgTerminalCollection getAllTerminals() {
-		List<OrgTerminal> orgTerminalList = new ArrayList<OrgTerminal>(orgTerminalManager.orgManager.getInstance().getTerminals().values());
+		List<OrgTerminal> orgTerminalList = new ArrayList<OrgTerminal>(orgTerminalManager.orgManager.getTerminals().values());
 		OrgTerminalCollection orgTerminals = new OrgTerminalCollection();
 		orgTerminals.setOrgTerminals(orgTerminalList);
 		return orgTerminals;//(OrgFlowCollection) orgFlowManager.getAllFlows();
@@ -46,7 +46,7 @@ public class OrgTerminalResource {
 	@Path("/terminal/{orgId}/all")	
 	@Produces(AppServerMediaType.ORG_TERMINAL_COLLECTION) 
 	public OrgTerminalCollection getAllOrgTerminals(@PathParam("orgId") String orgId) {
-		List<OrgTerminal> orgTerminalList = new ArrayList<OrgTerminal>(orgTerminalManager.orgManager.getInstance().getOrg(orgId).getTerminals().values());
+		List<OrgTerminal> orgTerminalList = new ArrayList<OrgTerminal>(orgTerminalManager.orgManager.getOrg(orgId).getTerminals().values());
 		OrgTerminalCollection orgTerminals = new OrgTerminalCollection();
 		orgTerminals.setOrgTerminals(orgTerminalList);
 		return orgTerminals;//(OrgFlowCollection) orgFlowManager.getAllFlows();

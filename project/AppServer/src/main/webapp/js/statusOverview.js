@@ -464,13 +464,13 @@ function createTopologyGraph(){
 
 	refreshIntervalTWM = setInterval(function() {
 		getTopoWeatherMap();
-		
-		path.selectAll("path")
+
+		svg.selectAll("path")
 		.attr("class", function(d) { return "link " + d.type; })
 		.attr("marker-end", function(d) { return "url(#" + d.type + ")";})
 		.style("stroke",  function(d) {return d.color;});
-	
-	},60000);
+
+	},2000);
 
 	node.on("click", function(d) {
 		StopSwitchStats();
@@ -1259,7 +1259,7 @@ function stopTrafficMatrix(){
 function startTrafficMatrix(){
 	refreshIntervalTrafficMatrix = setInterval(function() {
 		setTrafficMatrix();
-	},60000);
+	},1000);
 }
 
 function setTrafficMatrix(){
@@ -1294,64 +1294,41 @@ function setTrafficMatrix(){
 		async : true
 	}); //execute asynchronously
 
-	var matrix = trafficMatrixData.matrix;
-//	{
-//	"matrix": [
-//	{
-//	"dst": "10.0.0.4",
-//	"src": "10.0.0.1",
-//	"traffic": 1250000
-//	},
-//	{
-//	"dst": "10.0.0.3",
-//	"src": "10.0.0.2",
-//	"traffic": 625000
-//	},
-//	{
-//	"dst": "10.0.0.2",
-//	"src": "10.0.0.3",
-//	"traffic": 312500
-//	},
-//	{
-//	"dst": "10.0.0.1",
-//	"src": "10.0.0.4",
-//	"traffic": 900000
-//	}
-//	]
-//	};
+	var matrix = trafficMatrixData;
+
 	var nodes=[];
 	var links=[];
-	var pushSrc=true;
-	var pushDst=true;
+	var countSrc=0;
+	var countDst=0;
 
-	if(matrix.length>0){
-		
-		console.log(matrix);
+	if(matrix.matrix.length>0){
 
-		//alert(matrix.matrix.length);
 		for (var i=0; i<matrix.matrix.length;i++){
+
 			for(var j=0; j<nodes.length;j++){
 				if(matrix.matrix[i].src==nodes[j].name){
-					pushSrc=false;	
+					countSrc++;	
 				}
 			}
 
-			if (pushSrc){
+			if (countSrc==0){
 				nodes.push({"name":matrix.matrix[i].src});
-				pushSrc=true;
+				countSrc=0;
 			}
 
-			//alert(nodes[0].name);
+
 			for(var j=0; j<nodes.length;j++){
 				if(matrix.matrix[i].dst==nodes[j].name){
-					pushDst=false;	
+					countDst++;
 				}
 			}
 
-			if (pushDst){
+			if (countDst==0){
 				nodes.push({"name":matrix.matrix[i].dst});
-				pushDst=true;
+				countDst=0;
 			}
+			countSrc=0;
+			countDst=0;
 		}
 
 		sorting(nodes,'name');
