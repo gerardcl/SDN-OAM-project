@@ -572,7 +572,7 @@ function fetchTerminals(obj){
 			var termDetails = $(ev.currentTarget).serializeObject();
 			console.log(termDetails);
 			var terminal = new Terminal();
-			terminal.url = '/AppServer/webapi/manager/terminal/'+termDetails.orgId;
+			terminal.url = '/AppServer/webapi/manager/terminal/'+termDetails.assignedOrgId;
 
 			/* terminal.orgId = null;
 			terminal.orgName = null;
