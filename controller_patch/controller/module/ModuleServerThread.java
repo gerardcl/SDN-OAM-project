@@ -173,13 +173,6 @@ public class ModuleServerThread implements Runnable {
                             .getFlowPusherManager().pushFlow(flow);
                     controllerEvent.setObject(new Gson().toJson(deployedFlow));
                     controllerEvent.setEvent(IFlowEvents.PUSH_FLOW_SUCCESS); // In
-                    // case
-                    // of
-                    // fail
-                    // are
-                    // call
-                    // the
-                    // exceptions
                 } else if (serverRequest.getRequest().equals(
                         IServerRequests.DELETE_FLOW_REQUEST)) {
                     // Delete flow request
@@ -244,7 +237,8 @@ public class ModuleServerThread implements Runnable {
                         .setEvent(IFlowEvents.PUSH_FLOW_FLOW_ALREADY_EXIST);
             }
             // Send the event to the AppServer
-            sendControllerEvent(controllerEvent);
+            broadcastControllerEvent(controllerEvent);
+            //sendControllerEvent(controllerEvent);
         }
     }
 

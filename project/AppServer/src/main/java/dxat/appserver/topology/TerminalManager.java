@@ -105,6 +105,17 @@ public class TerminalManager {
         return updates;
     }
 
+    public Terminal getTerminalFromIP(String terminalIP) {
+        List<Terminal> terminals = getTerminals().getTerminals();
+        for (Terminal terminal : terminals){
+            if (terminal.getIpv4().equals(terminalIP)){
+                return terminal;
+            }
+        }
+
+        return null;
+    }
+
     public Terminal getTerminal(String terminalId) {
         TerminalTopologyDB terminalTopologyDB = new TerminalTopologyDB();
         Terminal terminal = null;

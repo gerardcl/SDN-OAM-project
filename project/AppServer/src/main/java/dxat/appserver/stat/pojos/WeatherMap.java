@@ -8,6 +8,16 @@ import java.util.List;
 public class WeatherMap {
     private List<LinkStat> linkStats;
 
+    private List<TerminalStat> terminalStats;
+
+    public List<TerminalStat> getTerminalStats() {
+        return terminalStats;
+    }
+
+    public void setTerminalStats(List<TerminalStat> terminalStats) {
+        this.terminalStats = terminalStats;
+    }
+
     public List<LinkStat> getLinkStats() {
         return linkStats;
     }
