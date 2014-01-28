@@ -53,6 +53,7 @@ function fetchTerminals(obj){
 		$(".modal-body #terminalMac").val( mac );
 		$(".modal-body #terminalSpeed").val( ifaceSpeed );
 		$(".modal-body #terminalName").val( hostName );
+		//$(".modal-body #assignedOrgId").val( assignedOrgId );
 		document.getElementById("terminalIdLabel").textContent= terminalId;
 		document.getElementById("terminalOrgLabel").textContent= orgName;
 	});
@@ -197,7 +198,7 @@ function fetchTerminals(obj){
 				terminalObject.ipAddress = currentValues.ipAddress;
 				terminalObject.mac = currentValues.mac;
 				terminalObject.assigned = currentValues.assigned;
-				terminalObject.assignedOrgId = currentValues.assigned;
+				terminalObject.assignedOrgId = currentValues.assignedOrgId;
 				terminalObject.description = currentValues.description;
 				this.push(terminalObject);
 			}
@@ -584,7 +585,12 @@ function fetchTerminals(obj){
 				success: function (ev) {
 					console.log(ev);
 					if(ev.attributes.identifier == "") alert("this terminal already exists");
-					else router.navigate('adminTerminals/'+ev.attributes.identifier, {trigger: true});
+					else{
+						$('#confirmationOrgAssign').modal('hide');
+						$('body').removeClass('modal-open');
+						$('.modal-backdrop').remove();
+						router.navigate('adminTerminals/'+termDetails.assignedOrgId, {trigger: true});
+					}
 				},
 				error: function(model, response) {
 					alert('wrong');
@@ -940,7 +946,10 @@ function fetchTerminals(obj){
 		unassignTerminal: function (ev){
 			this.terminal.destroy({
 				success: function () {
-					//router.navigate('adminOrgs/', {trigger: true});
+					$('#confirmationTerminal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+					router.navigate('adminOrgs/', {trigger: true});
 				}
 			});
 			return false;

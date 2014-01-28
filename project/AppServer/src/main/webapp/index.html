@@ -1215,7 +1215,7 @@
                       <tbody>
 
                         <% _.each(terminals, function(terminal) { 
-                          if(terminal.get('assigned')==false){ %>
+                          if(terminal.get('assignedOrgId')==null){ %>
 
                           <tr>
                             <td><%= terminal.get('identifier') %></td>
@@ -1278,7 +1278,8 @@
                     <tr>
                       <th>Host name <i class="fa fa-sort"></i></th>
                       <th>ID <i class="fa fa-sort"></i></th>
-                      <th>Description <i class="fa fa-sort"></i></th>
+                      <th>AssignedOrg <i class="fa fa-sort"></i></th>
+					  <th>Description <i class="fa fa-sort"></i></th>
                       <th>IP <i class="fa fa-sort"></i></th>
                       <th>Interface <i class="fa fa-sort"></i></th>
                       <th>MAC <i class="fa fa-sort"></i></th>
@@ -1288,16 +1289,17 @@
                   <tbody>
 
                     <% _.each(terminals, function(terminal) { 
-                      if(terminal.get('active')==true){ %>
+                      if(terminal.get('assignedOrgId')!=null){ %>
 
                       <tr>
                         <td><%= terminal.get('hostName') %></td>
                         <td><%= terminal.get('identifier') %></td>
+                        <td><%= terminal.get('assignedOrgId') %></td>
                         <td><%= terminal.get('description') %></td>
                         <td><%= terminal.get('ipAddress') %></td>
                         <td><%= terminal.get('ifaceSpeed') %></td>
                         <td><%= terminal.get('mac') %></td>  <!-- <%= terminal.get('orgId') %> -->
-                        <td><center><a href="#/editTerminal/orgId9/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Edit terminal</button></a></center></td>
+                        <td><center><a href="#/editTerminal/<%= terminal.get('assignedOrgId') %>/<%= terminal.get('identifier') %>"><button type="button" class="btn btn-warning btn-sm">Edit terminal</button></a></center></td>
                       </tr>
 
                     <%  }
@@ -1344,7 +1346,8 @@
                    You <b>MUST</b> specify a name for this terminal:   <input type="text" onkeyup="copyTo(this)" name="hostName" id="terminalName" value="" required/> <br><br>
                    and you can also add a description: <br> <input type="text" name="description" id="description" size="72" value=""/>
 
-                   <input type="hidden" name="assignedOrgId" id="assignedOrgId" value=""/>
+                   <!--<input type="hidden" name="assignedOrgId" id="assignedOrgId" value=""/>-->
+                   <input type="hidden" name="assignedOrgId" id="orgId" value=""/>
                    <input type="hidden" name="ipAddress" id="terminalIP" value=""/>
                    <input type="hidden" name="mac" id="terminalMac" value=""/>
                    <input type="hidden" name="ifaceSpeed" id="terminalSpeed" value=""/>
@@ -2165,7 +2168,7 @@
                   <h4 class="modal-title">Unassign terminal <%= terminal.get('hostName') %> from <%= terminal.get('hostName') %></h4>
                 </div>
                 <div class="modal-body">
-                  Are you sure you want to unassign terminal:<center><h2 class="well"><%= terminal ? terminal.get('hostName') : '' %></h2></center> <center>from: <h4 class="well"><%= terminal ? terminal.get('orgId') : '' %>?</h4></center> 
+                  Are you sure you want to unassign terminal:<center><h2 class="well"><%= terminal ? terminal.get('hostName') : '' %></h2></center> <center>from: <h4 class="well"><%= terminal ? terminal.get('assignedOrgId') : '' %>?</h4></center> 
                   <br>
                   <%= terminal ? terminal.get('identifier') : '' %>  
                 </div>

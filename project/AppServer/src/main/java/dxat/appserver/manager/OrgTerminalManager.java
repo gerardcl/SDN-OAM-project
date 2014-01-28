@@ -58,7 +58,7 @@ public class OrgTerminalManager {
 	public OrgTerminal tryCreateOrgTerminal(String orgId, OrgTerminal terminal){
 		OrgTerminal oterminal = new OrgTerminal();
 		oterminal.setActive(true);
-		oterminal.setIdentifier(terminal.getMac());
+		oterminal.setIdentifier(Integer.toString(terminal.getMac().hashCode()));
 		oterminal.setIpAddress(terminal.getIpAddress());
 		oterminal.setPortApiID(terminal.getPortApiID());
 		oterminal.setAssigned(true);
@@ -117,27 +117,27 @@ public class OrgTerminalManager {
 
 						if(oterminal.getMac().equals(tterminal.getMac())){
 							found = true;
-							idFound = tterminal.getTerminalId();
+							idFound = Integer.toString(tterminal.getTerminalId().hashCode());
 							break;
 						}
 					}				
 					if(found){
 						found = false;
-						if(!orgManager.getTerminals().get(idFound).getIdentifier().equals(tterminal.getTerminalId())){
-							orgManager.getTerminals().get(idFound).setIdentifier(tterminal.getTerminalId());
+						if(!orgManager.getTerminals().get(idFound).getIdentifier().equals(Integer.toString(tterminal.getTerminalId().hashCode()))){
+							orgManager.getTerminals().get(idFound).setIdentifier(Integer.toString(tterminal.getTerminalId().hashCode()));
 							System.out.println("[TERMINAL TOPOLOGY TO MANAGER] INCONGRUENCE! (but... could be the first check of this terminal! ;) )");
 							System.out.println("------------> matching of mac but not of ids -> setting id O.Term. from topo");
 						}
 						//update HM and DB with updated oterminal
 						//FALTA XEQUEJAR SI TÉ ASSIGNED ORG AQUÍ!!!
 						if(orgManager.getTerminals().get(idFound).getAssignedOrgId()==null){
-							System.out.println("UPDATING TERMINAL HM: "+tterminal.getTerminalId());
+							System.out.println("UPDATING TERMINAL HM: "+Integer.toString(tterminal.getTerminalId().hashCode()));
 
 							//ONLY ADD HM
 							//update oterminal
 							updated = true;
 							oterminal.setActive(true);
-							oterminal.setIdentifier(tterminal.getMac());
+							oterminal.setIdentifier(Integer.toString(tterminal.getMac().hashCode()));
 							oterminal.setIpAddress(tterminal.getIpv4());
 							oterminal.setPortApiID(tterminal.getPortAPId());
 							oterminal.setAssigned(true);
@@ -152,12 +152,12 @@ public class OrgTerminalManager {
 //							orgManager.getTerminals().get(idFound).setPortApiID(tterminal.getPortAPId());
 							putOrgTerminal(oterminal);
 						}else{
-							System.out.println("UPDATING ORG TERMINAL HM AND DB: "+tterminal.getTerminalId());
+							System.out.println("UPDATING ORG TERMINAL HM AND DB: "+Integer.toString(tterminal.getTerminalId().hashCode()));
 							//update oterminal
 							//CHECK IF TERMINAL IN ORG 
 							updated = true;
 							oterminal.setActive(true);
-							oterminal.setIdentifier(tterminal.getMac());
+							oterminal.setIdentifier(Integer.toString(tterminal.getMac().hashCode()));
 							oterminal.setIpAddress(tterminal.getIpv4());
 							oterminal.setPortApiID(tterminal.getPortAPId());
 							oterminal.setAssigned(true);
@@ -187,7 +187,7 @@ public class OrgTerminalManager {
 						newterminal.setActive(true);
 						newterminal.setAssigned(false);
 						newterminal.setDescription("new terminal from topology");
-						newterminal.setIdentifier(tterminal.getTerminalId());
+						newterminal.setIdentifier(Integer.toString(tterminal.getMac().hashCode()));
 						newterminal.setPortApiID(tterminal.getPortAPId());
 						newterminal.setHostName("not set");
 						newterminal.setIfaceSpeed(0);
@@ -202,7 +202,7 @@ public class OrgTerminalManager {
 					newterminal.setActive(true);
 					newterminal.setAssigned(false);
 					newterminal.setDescription("new terminal from topology");
-					newterminal.setIdentifier(tterminal.getTerminalId());
+					newterminal.setIdentifier(Integer.toString(tterminal.getMac().hashCode()));
 					newterminal.setPortApiID(tterminal.getPortAPId());
 					newterminal.setHostName("not set");
 					newterminal.setIfaceSpeed(0);
