@@ -1798,13 +1798,13 @@
                             <div class="form-group"><!-- ORGANIZATION -->
                               <label for="orgId" class="col-sm-2 control-label">Organization</label>
                               <div class="col-sm-10">
-                                <select class="form-control" name="orgId" id="selectOrg" onchange="fetchTerminals(this)">
+                                <select class="form-control" id="selectOrg" onchange="fetchTerminals(this)">
                                   <div class="listScroll"> 
-                                    <option name="orgId" value="<%= loginOrg %>" required> <%= loginOrgName %> </option>
+                                    <option name="assignedOrgId" value="<%= loginOrg %>" required> <%= loginOrgName %> </option>
                                     
                                     <% _.each(organizations, function(organization) { %>
 
-                                      <option value="<%= organization.get('identifier') %>" name="orgId"><%= organization.get('name') %></option>
+                                      <option value="<%= organization.get('identifier') %>" name="assignedOrgId"><%= organization.get('name') %></option>
 
                                     <% }); %>
                                   </div>
@@ -1834,7 +1834,7 @@
                                   <option id="srcTerm">Select SOURCE</option>
                                   <div class="listScroll"> 
                                   <% _.each(terminals, function(terminal) { 
-                                        if(terminal.get('active')==true){ %>
+                                        if(terminal.get('assignedOrgId')!=null){ %>
 
                                     <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
 
@@ -1853,7 +1853,7 @@
                                 <div class="listScroll"> 
                                   <option id="dstTerm">Select SOURCE</option>
                                   <% _.each(terminals, function(terminal) { 
-                                        if(terminal.get('active')==true){ %>
+                                        if(terminal.get('assignedOrgId')!=null){ %>
 
                                     <option value="<%= terminal.get('identifier') %>"><%= terminal.get('hostName') %></option>
 

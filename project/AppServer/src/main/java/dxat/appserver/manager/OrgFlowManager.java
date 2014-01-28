@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import dxat.appserver.flows.pojos.Flow;
 import dxat.appserver.manager.database.Create;
 import dxat.appserver.manager.database.Delete;
 import dxat.appserver.manager.database.Update;
@@ -15,6 +16,7 @@ import dxat.appserver.manager.exceptions.OrgNotFoundException;
 import dxat.appserver.manager.pojos.OrgFlow;
 import dxat.appserver.manager.pojos.OrgFlowCollection;
 import dxat.appserver.manager.pojos.Org;
+import dxat.appserver.realtime.RealTimeManager;
 
 public class OrgFlowManager {
 	private static OrgFlowManager instance;
@@ -52,6 +54,12 @@ public class OrgFlowManager {
 	}
 	
 	public OrgFlow addOrgFlow(String orgId, OrgFlow flow){
+		
+		
+		if(!orgManager.getTerminals().containsKey(flow.getDstOTidentifier()))return null;
+		if(!orgManager.getTerminals().containsKey(flow.getSrcOTidentifier()))return null;
+		
+		
 		OrgFlow newflow = new OrgFlow();
 		newflow.setDstOTidentifier(flow.getDstOTidentifier());
 		newflow.setSrcOTidentifier(flow.getSrcOTidentifier());
@@ -73,6 +81,21 @@ public class OrgFlowManager {
 			dbcreate.createFlow(newflow, orgId);
 			orgManager.getOrg(orgId).getFlows().put(newflow.getIdentifier(), newflow);
 			orgManager.getFlows().put(newflow.getIdentifier(), newflow);
+
+			
+			OrgFlow orgFlow =  orgManager.getFlows().get(newflow.getIdentifier());
+			Flow flowing = new Flow();
+			flowing.setBandwidth(orgFlow.getBandwidth());
+			flowing.setDstIpAddr(orgManager.getTerminals().get(orgFlow.getDstOTidentifier()).getIpAddress());
+			flowing.setDstPort(orgFlow.getDstPort());
+			flowing.setFlowId(orgFlow.getIdentifier());
+			flowing.setProtocol((byte)0); //TODO
+			flowing.setQos(orgFlow.getQos());
+			flowing.setSrcIpAddr(orgManager.getTerminals().get(orgFlow.getSrcOTidentifier()).getIpAddress());
+			flowing.setSrcPort(orgFlow.getSrcPort());
+			
+			RealTimeManager.getInstance().pushFlow(flowing);
+			
 			return newflow;
 		} catch (FlowAlreadyExistsException | OrgNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -100,6 +123,12 @@ public class OrgFlowManager {
 			
 //TODO REMOVE ONCE RECEIVED SOCKET EVENT CONFIRMATION FROM CONTROLLER
 			orgManager.getFlows().remove(flowId);
+			
+			OrgFlow orgFlow =  orgManager.getFlows().get(flowId);
+			Flow flow = new Flow();
+			flow.setFlowId(orgFlow.getIdentifier());
+			RealTimeManager.getInstance().deleteFlow(flow);
+			
 			return flowId;
 		} catch (FlowNotFoundException | OrgNotFoundException e) {
 			// TODO Auto-generated catch block

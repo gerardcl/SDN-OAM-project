@@ -138,6 +138,7 @@ public class Update {
 
 				flowdoc.put("flows.$.identifier", flow.getIdentifier());
 				flowdoc.put("flows.$.name", flow.getName());
+				flowdoc.put("flows.$.assignedOrgId", flow.getAssignedOrgId());
 				flowdoc.put("flows.$.srcOTidentifier",
 						flow.getSrcOTidentifier());
 				flowdoc.put("flows.$.dstOTidentifier",

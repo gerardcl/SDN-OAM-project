@@ -202,10 +202,11 @@ public class Read {
 
 			String identifier = (String) flow.get("identifier");
 			String name = (String) flow.get("name");
+			String assignedOrgId = (String) flow.get("assignedOrgId");
 			String srcOTidentifier = (String) flow.get("srcOTidentifier");
 			String dstOTidentifier = (String) flow.get("dstOTidentifier");
-			int srcPort = (Integer) flow.get("srcPort");
-			int dstPort = (Integer) flow.get("dstPort");
+			short srcPort = (short) flow.get("srcPort");
+			short dstPort = (short) flow.get("dstPort");
 			int qos = (Integer) flow.get("qos");
 			double bandwidth = (Double) flow.get("bandwidth");
 			String protocol = (String) flow.get("protocol");
@@ -221,6 +222,7 @@ public class Read {
 			orgFlow.setBandwidth(bandwidth);
 			orgFlow.setProtocol(protocol);
 			orgFlow.setActive(active);
+			orgFlow.setAssignedOrgId(assignedOrgId);
 
 			flowsHM.put(identifier, orgFlow);
 		}
@@ -240,10 +242,11 @@ public class Read {
 
 				String identifier = (String) flow.get("identifier");
 				String name = (String) flow.get("name");
+				String assignedOrgId = (String) flow.get("assignedOrgId");
 				String srcOTidentifier = (String) flow.get("srcOTidentifier");
 				String dstOTidentifier = (String) flow.get("dstOTidentifier");
-				int srcPort = (Integer) flow.get("srcPort");
-				int dstPort = (Integer) flow.get("dstPort");
+				short srcPort = (short) flow.get("srcPort");
+				short dstPort = (short) flow.get("dstPort");
 				int qos = (Integer) flow.get("qos");
 				double bandwidth = (Double) flow.get("bandwidth");
 				String protocol = (String) flow.get("protocol");
@@ -259,6 +262,7 @@ public class Read {
 				orgFlow.setBandwidth(bandwidth);
 				orgFlow.setProtocol(protocol);
 				orgFlow.setActive(active);
+				orgFlow.setAssignedOrgId(assignedOrgId);
 
 				flowsHM.put(identifier, orgFlow);
 			}

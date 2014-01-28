@@ -785,7 +785,7 @@ function fetchTerminals(obj){
 			var flowDetails = $(ev.currentTarget).serializeObject();
 			console.log(flowDetails);
 			var flow = new Flow();
-			flow.urlRoot = '/AppServer/webapi/manager/flow/'+flowDetails.orgId+'/';
+			flow.urlRoot = '/AppServer/webapi/manager/flow/orgId9';//'+flowDetails.orgId+'/';
 			flow.save(flowDetails, { //SEND object to the server
 				contentType: "application/vmd.dxat.appserver.manager.flow.collection+json",
 				success: function (flow) {

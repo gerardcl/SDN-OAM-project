@@ -99,6 +99,7 @@ public class Create {
 				DBObject userdoc = new BasicDBObject();
 				userdoc.put("identifier", flow.getIdentifier());
 				userdoc.put("name", flow.getName());
+				userdoc.put("assignedOrgId", flow.getAssignedOrgId());
 				userdoc.put("srcOTidentifier", flow.getSrcOTidentifier());
 				userdoc.put("dstOTidentifier", flow.getDstOTidentifier());
 				userdoc.put("srcPort", flow.getSrcPort());

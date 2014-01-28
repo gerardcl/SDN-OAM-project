@@ -71,7 +71,7 @@ public class Delete {
 				collection.update(match, new BasicDBObject("$pull", update));
 			} else {
 				throw new TerminalNotFoundException("Terminal with identifier "
-						+ id + "does not exists.");
+						+ id + "does not exists in " +idOrg);
 			}
 		} else {
 			throw new OrgNotFoundException("Organization with identifier "

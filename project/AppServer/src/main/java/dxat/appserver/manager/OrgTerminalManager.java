@@ -68,31 +68,28 @@ public class OrgTerminalManager {
 		oterminal.setIfaceSpeed(terminal.getIfaceSpeed());
 		oterminal.setMac(terminal.getMac());
 		
-		orgManager.getTerminals().put(terminal.getIdentifier(), oterminal);
 		if(orgId!=null){
 			try {
-				
-				//TODO HERE CREATE TERMINAL AND ASSIGN ID!!!!!!!!!!!!!!!!!!!!!!!!1
-				
-				dbcreate.createTerminal(oterminal, orgId);
+				orgManager.getTerminals().put(oterminal.getIdentifier(), oterminal);
 				orgManager.getOrg(orgId).getTerminals().put(oterminal.getIdentifier(), oterminal);
+				dbcreate.createTerminal(oterminal, orgId);
 				return oterminal;
 			} catch (TerminalAlreadyExistsException | OrgNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else{
-
-			//TODO CHECK IF NEED TO EXIST THIS ELSE OPTION (should never enter here)
-
-			try {
-				dbupdate.updateTerminal(terminal, terminal.getAssignedOrgId());
-				return terminal;
-			} catch (TerminalNotFoundException | OrgNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+//		else{
+//
+//			//TODO CHECK IF NEED TO EXIST THIS ELSE OPTION (should never enter here)
+//
+//			try {
+//				dbupdate.updateTerminal(terminal, terminal.getAssignedOrgId());
+//				return terminal;
+//			} catch (TerminalNotFoundException | OrgNotFoundException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		return null;
 	}
 

@@ -43,7 +43,7 @@ function getSession(){
 //			"\"password\" : \"$('#password').val()\"" +
 //			"}" +
 //			"}",
-//			contentType: "application/json; charset=UTF-8",
+			//contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
 			success: function(msg){
 				//console.log(msg);
 				session = msg;

@@ -122,10 +122,12 @@ public class OrgTerminalResource {
 		else {
 			ot = orgTerminalManager.orgManager.getOrg(orgId).getTerminals().get(terminalId);
 			ot.setAssignedOrgId(null);
+			orgTerminalManager.orgManager.getOrg(orgId).getTerminals().remove(terminalId);
+			orgTerminalManager.orgManager.getTerminals().put(terminalId, ot);
+
 			try {
+				System.out.println("DELETING TERMINAL OF ORGID:"+orgId+" "+terminalId);
 				orgTerminalManager.dbdelete.deleteTerminal(orgId, terminalId);
-				orgTerminalManager.orgManager.getOrg(orgId).getTerminals().remove(terminalId);
-				orgTerminalManager.orgManager.getTerminals().put(terminalId, ot);
 				//TODO MAYBE CREATE WS TO BROADCAST UNASSIGNED TERMINAL
 				return ot;
 			} catch (TerminalNotFoundException | OrgNotFoundException e) {

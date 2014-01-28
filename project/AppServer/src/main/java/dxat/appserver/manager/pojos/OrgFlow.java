@@ -5,13 +5,20 @@ public class OrgFlow {
 	private String name;
 	private String srcOTidentifier;
 	private String dstOTidentifier;
-	private int srcPort;
-	private int dstPort;
+	private short srcPort;
+	private short dstPort;
 	private int qos;
 	private double bandwidth;
 	private String protocol;
+	private String assignedOrgId;
 	private boolean active;
 	
+	public String getAssignedOrgId() {
+		return assignedOrgId;
+	}
+	public void setAssignedOrgId(String assignedOrgId) {
+		this.assignedOrgId = assignedOrgId;
+	}
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -36,16 +43,16 @@ public class OrgFlow {
 	public void setDstOTidentifier(String dstOTidentifier) {
 		this.dstOTidentifier = dstOTidentifier;
 	}
-	public int getSrcPort() {
+	public short getSrcPort() {
 		return srcPort;
 	}
-	public void setSrcPort(int srcPort) {
+	public void setSrcPort(short srcPort) {
 		this.srcPort = srcPort;
 	}
-	public int getDstPort() {
+	public short getDstPort() {
 		return dstPort;
 	}
-	public void setDstPort(int dstPort) {
+	public void setDstPort(short dstPort) {
 		this.dstPort = dstPort;
 	}
 	public int getQos() {

@@ -14,12 +14,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import dxat.appserver.flows.pojos.Flow;
 import dxat.appserver.manager.OrgFlowManager;
 import dxat.appserver.manager.OrgManager;
 import dxat.appserver.manager.pojos.Org;
 import dxat.appserver.manager.pojos.OrgCollection;
 import dxat.appserver.manager.pojos.OrgFlow;
 import dxat.appserver.manager.pojos.OrgFlowCollection;
+import dxat.appserver.realtime.RealTimeManager;
 
 @Path("/")
 public class OrgFlowResource {
@@ -60,6 +62,38 @@ public class OrgFlowResource {
 	@Produces(AppServerMediaType.ORG_FLOW_COLLECTION)
 	public OrgFlow getOrgFlow(@PathParam("orgId") String orgId, @PathParam("flowId") String flowId) {
 		return orgFlowManager.orgManager.getOrg(orgId).getFlows().get(flowId);
+	}
+	
+	@GET
+	@Path("/flowpusher/{flowId}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String pushFlow(@PathParam("flowId") String flowId) {
+		OrgFlow orgFlow =  orgFlowManager.orgManager.getFlows().get(flowId);
+		Flow flow = new Flow();
+		flow.setBandwidth(orgFlow.getBandwidth());
+		flow.setDstIpAddr(orgFlow.getDstOTidentifier());
+		flow.setDstPort(orgFlow.getDstPort());
+		flow.setFlowId(orgFlow.getIdentifier());
+		flow.setProtocol((byte)0); //TODO
+		flow.setQos(orgFlow.getQos());
+		flow.setSrcIpAddr(orgFlow.getSrcOTidentifier());
+		flow.setSrcPort(orgFlow.getSrcPort());
+		
+		RealTimeManager.getInstance().pushFlow(flow);
+		return flowId;
+	}
+	
+	
+	@DELETE
+	@Path("/flowpusher/{flowId}") 
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteFlow(@PathParam("flowId") String flowId) {
+		OrgFlow orgFlow =  orgFlowManager.orgManager.getFlows().get(flowId);
+		Flow flow = new Flow();
+		flow.setFlowId(orgFlow.getIdentifier());
+		if(flowId.equals("all")) RealTimeManager.getInstance().deleteAllFlows();
+		RealTimeManager.getInstance().deleteFlow(flow);
+		return flowId;
 	}
 
 	//FLOWS ALWAYS ASSIGNED TO A ORG
