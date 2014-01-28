@@ -68,7 +68,7 @@ public class PushPresetFlow {
         flow.setSrcPort((short) 0);
         flow.setDstIpAddr("10.0.0.4");
         flow.setDstPort((short) 0);
-        flow.setBandwidth(1e3);
+        flow.setBandwidth(5e6);
         RealTimeManager.getInstance().pushFlow(flow);
     }
 
@@ -79,7 +79,7 @@ public class PushPresetFlow {
         flow.setSrcPort((short) 0);
         flow.setDstIpAddr("10.0.0.3");
         flow.setDstPort((short) 0);
-        flow.setBandwidth(2e3);
+        flow.setBandwidth(5e6);
         RealTimeManager.getInstance().pushFlow(flow);
     }
 
@@ -90,7 +90,7 @@ public class PushPresetFlow {
         flow.setSrcPort((short) 0);
         flow.setDstIpAddr("192.168.0.102");
         flow.setDstPort((short) 0);
-        flow.setBandwidth(2e3);
+        flow.setBandwidth(5e6);
         RealTimeManager.getInstance().pushFlow(flow);
     }
 
@@ -101,7 +101,7 @@ public class PushPresetFlow {
         flow.setSrcPort((short) 0);
         flow.setDstIpAddr("192.168.0.104");
         flow.setDstPort((short) 0);
-        flow.setBandwidth(2e3);
+        flow.setBandwidth(5e6);
         RealTimeManager.getInstance().pushFlow(flow);
     }
 
@@ -112,7 +112,7 @@ public class PushPresetFlow {
         flow.setSrcPort((short) 0);
         flow.setDstIpAddr("192.168.0.102");
         flow.setDstPort((short) 0);
-        flow.setBandwidth(2e3);
+        flow.setBandwidth(5e6);
         RealTimeManager.getInstance().pushFlow(flow);
     }
 
@@ -123,7 +123,7 @@ public class PushPresetFlow {
         flow.setSrcPort((short) 0);
         flow.setDstIpAddr("192.168.0.104");
         flow.setDstPort((short) 0);
-        flow.setBandwidth(2e3);
+        flow.setBandwidth(5e6);
         RealTimeManager.getInstance().pushFlow(flow);
     }
 
