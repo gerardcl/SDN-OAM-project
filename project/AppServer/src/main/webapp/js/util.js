@@ -3,7 +3,6 @@ var session ={};
 function getSession(){
 	return session;
 }
-
 (function($){
 	$(document).ready(function(){
 		$("#msg").hide();
@@ -90,7 +89,5 @@ function getSession(){
 			}
 		});
 	});
+
 })(jQuery);
-
-
-

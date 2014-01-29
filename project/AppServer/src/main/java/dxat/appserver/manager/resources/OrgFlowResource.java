@@ -68,32 +68,32 @@ public class OrgFlowResource {
 	@Path("/flowpusher/{flowId}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String pushFlow(@PathParam("flowId") String flowId) {
-		OrgFlow orgFlow =  orgFlowManager.orgManager.getFlows().get(flowId);
-		Flow flow = new Flow();
-		flow.setBandwidth(orgFlow.getBandwidth());
-		flow.setDstIpAddr(orgFlow.getDstOTidentifier());
-		flow.setDstPort(orgFlow.getDstPort());
-		flow.setFlowId(orgFlow.getIdentifier());
-		flow.setProtocol((byte)0); //TODO
-		flow.setQos(orgFlow.getQos());
-		flow.setSrcIpAddr(orgFlow.getSrcOTidentifier());
-		flow.setSrcPort(orgFlow.getSrcPort());
-		
-		RealTimeManager.getInstance().pushFlow(flow);
-		return flowId;
+//		OrgFlow orgFlow =  orgFlowManager.orgManager.getFlows().get(flowId);
+//		Flow flow = new Flow();
+//		flow.setBandwidth(orgFlow.getBandwidth());
+//		flow.setDstIpAddr(orgFlow.getDstOTidentifier());
+//		flow.setDstPort(orgFlow.getDstPort());
+//		flow.setFlowId(orgFlow.getIdentifier());
+//		flow.setProtocol((byte)0); //TODO
+//		flow.setQos(orgFlow.getQos());
+//		flow.setSrcIpAddr(orgFlow.getSrcOTidentifier());
+//		flow.setSrcPort(orgFlow.getSrcPort());
+//		
+//		RealTimeManager.getInstance().pushFlow(flow);
+		return "pushed: "+flowId;
 	}
 	
 	
-	@DELETE
-	@Path("/flowpusher/{flowId}") 
+	@GET
+	@Path("/flowdeleter/{flowId}") 
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteFlow(@PathParam("flowId") String flowId) {
-		OrgFlow orgFlow =  orgFlowManager.orgManager.getFlows().get(flowId);
-		Flow flow = new Flow();
-		flow.setFlowId(orgFlow.getIdentifier());
-		if(flowId.equals("all")) RealTimeManager.getInstance().deleteAllFlows();
-		RealTimeManager.getInstance().deleteFlow(flow);
-		return flowId;
+//		OrgFlow orgFlow =  orgFlowManager.orgManager.getFlows().get(flowId);
+//		Flow flow = new Flow();
+//		flow.setFlowId(orgFlow.getIdentifier());
+//		if(flowId.equals("all")) RealTimeManager.getInstance().deleteAllFlows();
+//		RealTimeManager.getInstance().deleteFlow(flow);
+		return "deleted: "+flowId;
 	}
 
 	//FLOWS ALWAYS ASSIGNED TO A ORG
