@@ -27,6 +27,15 @@ SDN-OAM-project
 | AppServer/webapi/statistics/trafficmatrix/ | |
 | AppServer/webapi/statistics/weathermap/ | |
 
+
+<h3>Flow tables</h3>
+<p>Resources source availables at 'dxat.appserver.flows.resources'</p>
+
+| URL                                         | Description                                             |
+| ------------------------------------------- |:-------------------------------------------------------:|
+| AppServer/webapi/flows/                     | Return all flows (only active in the controller)        |
+
+
 <h3>Manager</h3>
 <p>Resources source availables at 'dxat.appserver.manager.resources'</p>
 
@@ -45,9 +54,12 @@ SDN-OAM-project
 | URL                                         | Description                                             |
 | ------------------------------------------- |:-------------------------------------------------------:|
 | AppServer/webapi/manager/fulluser/all       | GET all users  (this is for testing purposes)          |
-| AppServer/webapi/manager/user/{orgId}/all   | GET all org users                                      |
-| AppServer/webapi/manager/user/{orgId}/{userId}| GET org user                                          |
-| AppServer/webapi/manager/user/auth          | Check authentication (QueryParams: username and pass)   |
+| AppServer/webapi/manager/user/{orgId}/all   | GET all users from an organization                      |
+| AppServer/webapi/manager/user/{orgId}/{userId}| GET a user from an organization                       |
+| AppServer/webapi/manager/user/auth          | GET - authentication (QueryParams: username and pass)   |
+| AppServer/webapi/manager/user/{orgId}       | PUSH new user into selected organization                |
+| AppServer/webapi/manager/user/{orgId}/{userId}| PUT updated user into its organization                |
+| AppServer/webapi/manager/user/{orgId}/{userId}| DELETE user from organization                         |
 
 <h4> - Organization Terminals</h4>
 | URL                                         | Description                                             |
@@ -55,6 +67,9 @@ SDN-OAM-project
 | AppServer/webapi/manager/terminal/all       | GET all terminals                                       |   
 | AppServer/webapi/manager/terminal/{orgId}/all| GET all org terminals                                  |
 | AppServer/webapi/manager/terminal/{orgId}/{terminalId}| GET org terminal                              |
+| AppServer/webapi/manager/terminal/{orgId}/       | PUSH assign new terminal into selected organization|
+| AppServer/webapi/manager/terminal/{orgId}/{terminalId}| PUT updated terminal into its organization    |
+| AppServer/webapi/manager/terminal/{orgId}/{terminalId}| DELETE - unassign terminal from organization  |
 
 <h4> - Organization Flows</h4>
 | URL                                         | Description                                             |
@@ -62,15 +77,9 @@ SDN-OAM-project
 | AppServer/webapi/manager/flow/all           | GET all flows                                           |
 | AppServer/webapi/manager/flow/{orgId}/all   | GET all org flows                                       |
 | AppServer/webapi/manager/flow/{orgId}/{flowId}| GET org flow                                          |
-
-
-<h3>Flow tables</h3>
-<p>Resources source availables at 'dxat.appserver.flows.resources'</p>
-
-| URL                                         | Description                                             |
-| ------------------------------------------- |:-------------------------------------------------------:|
-| AppServer/webapi/flows/                     | Return all flows (only active in the controller)        |
-
+| AppServer/webapi/manager/flow/{orgId}       | PUSH new flow into selected organization                |
+| AppServer/webapi/manager/flow/{orgId}/{flowId}| PUT updated flow into its organization                |
+| AppServer/webapi/manager/flow/{orgId}/{flowId}| DELETE flow from organization                         |
 
 <h2>LaTeX compilation tips</h2>
 <p>For the publication it is recommended use the TeXstudio editor which provides you a complete free LaTeX environment for develop the publication</p>
