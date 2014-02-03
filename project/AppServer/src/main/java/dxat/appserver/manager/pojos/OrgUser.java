@@ -1,7 +1,8 @@
 package dxat.appserver.manager.pojos;
 
 public class OrgUser {
-	private String identifier;
+	public String identifier;
+	public String name;
 	private String password;
 	private String email;
 	private int telephone;
@@ -42,5 +43,11 @@ public class OrgUser {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 }

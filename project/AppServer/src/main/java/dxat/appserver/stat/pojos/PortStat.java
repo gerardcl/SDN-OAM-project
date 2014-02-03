@@ -11,15 +11,28 @@ public class PortStat {
 	private double transmitDropped;
 	private double receiveErrors;
 	private double transmitErrors;
-	private double receiveFrameErros;
+	private double receiveFrameErrors;
 	private double receiveOverrunErrors;
 	private double receiveCRCErrors;
 	private double collisions;
+	
 	public String getPortId() {
 		return portId;
 	}
 	public void setPortId(String portId) {
 		this.portId = portId;
+	}
+	public double getReceivePackets() {
+		return receivePackets;
+	}
+	public void setReceivePackets(double receivePackets) {
+		this.receivePackets = receivePackets;
+	}
+	public double getTransmitPackets() {
+		return transmitPackets;
+	}
+	public void setTransmitPackets(double transmitPackets) {
+		this.transmitPackets = transmitPackets;
 	}
 	public double getReceiveBytes() {
 		return receiveBytes;
@@ -27,11 +40,23 @@ public class PortStat {
 	public void setReceiveBytes(double receiveBytes) {
 		this.receiveBytes = receiveBytes;
 	}
+	public double getTransmitBytes() {
+		return transmitBytes;
+	}
+	public void setTransmitBytes(double transmitBytes) {
+		this.transmitBytes = transmitBytes;
+	}
 	public double getReceiveDropped() {
 		return receiveDropped;
 	}
 	public void setReceiveDropped(double receiveDropped) {
 		this.receiveDropped = receiveDropped;
+	}
+	public double getTransmitDropped() {
+		return transmitDropped;
+	}
+	public void setTransmitDropped(double transmitDropped) {
+		this.transmitDropped = transmitDropped;
 	}
 	public double getReceiveErrors() {
 		return receiveErrors;
@@ -39,11 +64,17 @@ public class PortStat {
 	public void setReceiveErrors(double receiveErrors) {
 		this.receiveErrors = receiveErrors;
 	}
-	public double getReceiveFrameErros() {
-		return receiveFrameErros;
+	public double getTransmitErrors() {
+		return transmitErrors;
 	}
-	public void setReceiveFrameErros(double receiveFrameErros) {
-		this.receiveFrameErros = receiveFrameErros;
+	public void setTransmitErrors(double transmitErrors) {
+		this.transmitErrors = transmitErrors;
+	}
+	public double getReceiveFrameErrors() {
+		return receiveFrameErrors;
+	}
+	public void setReceiveFrameErrors(double receiveFrameErrors) {
+		this.receiveFrameErrors = receiveFrameErrors;
 	}
 	public double getReceiveOverrunErrors() {
 		return receiveOverrunErrors;
@@ -63,6 +94,8 @@ public class PortStat {
 	public void setCollisions(double collisions) {
 		this.collisions = collisions;
 	}
+	
+	
 	
 	
 }

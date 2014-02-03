@@ -1,13 +1,22 @@
 package dxat.appserver.manager.pojos;
 
 public class OrgTerminal {
-	private String identifier;
+	public String identifier;
 	private String hostName;
 	private String ipAddress;
 	private String mac;
 	private double ifaceSpeed;
 	private String description;
 	private boolean active;
+	private boolean assigned;
+	private String assignedOrgId;
+	private String portApiID;
+	public String getPortApiID() {
+		return portApiID;
+	}
+	public void setPortApiID(String portApiID) {
+		this.portApiID = portApiID;
+	}
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -49,5 +58,17 @@ public class OrgTerminal {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	public boolean isAssigned() {
+		return assigned;
+	}
+	public void setAssigned(boolean assigned) {
+		this.assigned = assigned;
+	}
+	public String getAssignedOrgId() {
+		return assignedOrgId;
+	}
+	public void setAssignedOrgId(String assignedOrgId) {
+		this.assignedOrgId = assignedOrgId;
 	}
 }

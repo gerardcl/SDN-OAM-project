@@ -6,4 +6,9 @@
 *.jar
 *.war
 *.ear
+*.log
+*.pdf
+*.aux
+*.gz
 .DS_Store
+project/AppServer/.idea
