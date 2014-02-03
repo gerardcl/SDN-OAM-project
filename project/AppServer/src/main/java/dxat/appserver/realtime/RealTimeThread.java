@@ -166,19 +166,25 @@ public class RealTimeThread implements Runnable {
             getFlows();
 
             while (!socket.isClosed() && socket.isConnected() && !socket.isInputShutdown() && !socket.isOutputShutdown()
-                    && socket.isBound() ) {
+                    && socket.isBound()) {
                 try {
                     String line = new String(reader.readLine());
                     if (line != null) {
                         //System.out.println(line);
                         ControllerEvent controllerEvent = new Gson().fromJson(line, ControllerEvent.class);
-                        if (controllerEvent != null)
-                            processEvent(controllerEvent);
+                        if (controllerEvent != null) {
+                            try {
+                                processEvent(controllerEvent);
+                            } catch (Exception ignored) {
+
+                            }
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     try {
+                        e.printStackTrace();
                         socket.close();
                     } catch (IOException e1) {
                         e1.printStackTrace();

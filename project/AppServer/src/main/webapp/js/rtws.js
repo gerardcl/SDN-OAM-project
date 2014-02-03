@@ -242,6 +242,7 @@ function checkAlarm(){
 		case msgFlow:
 			console.log("NEW FLOW ALARM");
 			if(filterFlowEvent()) break;
+            //orgFlows.render();
 			alarmCounter++;
 			alarmsHistory.push(newMessage);
 			setAlarmView();

@@ -1502,83 +1502,83 @@ function setTrafficMatrix(){
 
 //XAVI: AQUÍ LES FUNCIONS DE PUSH I FLOW PER CADA BOTÓ I FLOW!
 //PUSH
+
 function pushFlow1(){
-	console.log($('#flowID1').text());
-	pushFlow($('#flowID1').text());
+    console.log($('#flowID1').text());
+    pushFlow($('#flowID1').text());
 }
 function pushFlow2(){
-	console.log($('#flowID2').text());
-	pushFlow($('#flowID2').text());
+    console.log($('#flowID2').text());
+    pushFlow($('#flowID2').text());
 }
 function pushFlow3(){
-	console.log($('#flowID3').text());
-	pushFlow($('#flowID3').text());
+    console.log($('#flowID3').text());
+    pushFlow($('#flowID3').text());
 }
 function pushFlow4(){
-	console.log($('#flowID4').text());
-	pushFlow($('#flowID4').text());
+    console.log($('#flowID4').text());
+    pushFlow($('#flowID4').text());
 }
 //funció de crida ajax pel get push
 function pushFlow(id){
-	console.log("pushing flow id:");
-	console.log(id);
-	
-	
-	var requestUrl = "/AppServer/webapi/manager/flowpusher/"+id;
+    console.log("pushing flow id:");
+    console.log(id);
 
-	$.ajax({
-		type: "GET",
-		url: requestUrl,
-		//contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
-		success: function(msg){
-			console.log(msg);
-			
-		},
-		error: function(xhr, msg) { 
-			console.log(msg + '\n' + xhr.responseText);
 
-		}
-	});
+    var requestUrl = "/AppServer/webapi/manager/flowpusher/"+id;
+
+    $.ajax({
+        type: "GET",
+        url: requestUrl,
+        //contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
+        success: function(msg){
+            console.log(msg);
+
+        },
+        error: function(xhr, msg) {
+            console.log(msg + '\n' + xhr.responseText);
+
+        }
+    });
 }
 
 
 //DELETE
 function deleteFlow1(){
-	console.log($('#flowID1').text());
-	deleteFlow($('#flowID1').text());
+    console.log($('#flowID1').text());
+    deleteFlow($('#flowID1').text());
 }
 function deleteFlow2(){
-	console.log($('#flowID2').text());
-	deleteFlow($('#flowID2').text());
+    console.log($('#flowID2').text());
+    deleteFlow($('#flowID2').text());
 }
 function deleteFlow3(){
-	console.log($('#flowID3').text());
-	deleteFlow($('#flowID3').text());
+    console.log($('#flowID3').text());
+    deleteFlow($('#flowID3').text());
 }
 function deleteFlow4(){
-	console.log($('#flowID4').text());
-	deleteFlow($('#flowID4').text());
+    console.log($('#flowID4').text());
+    deleteFlow($('#flowID4').text());
 }
 //funció de crida ajax pel get delete
 function deleteFlow(id){
-	console.log("deleting flow id:");
-	console.log(id);
-	
-	var requestUrl = "/AppServer/webapi/manager/flowdeleter/"+id;
+    console.log("deleting flow id:");
+    console.log(id);
 
-	$.ajax({
-		type: "GET",
-		url: requestUrl,
-		//contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
-		success: function(msg){
-			console.log(msg);
-			
-		},
-		error: function(xhr, msg) { 
-			console.log(msg + '\n' + xhr.responseText);
+    var requestUrl = "/AppServer/webapi/manager/flowdeleter/"+id;
 
-		}
-	});
+    $.ajax({
+        type: "GET",
+        url: requestUrl,
+        //contentType: "application/vmd.dxat.appserver.manager.user.collection+json",
+        success: function(msg){
+            console.log(msg);
+
+        },
+        error: function(xhr, msg) {
+            console.log(msg + '\n' + xhr.responseText);
+
+        }
+    });
 }
-
 //FI DE STATUS OVERVIEW!!!
